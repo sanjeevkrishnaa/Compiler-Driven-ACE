@@ -1,0 +1,18 @@
+hyperparameters:
+
+- memory fidelity: purity of the qubit
+- memory efficiency: prob mem releases photon when excited
+- bsm detection efficiency: prob that photon is detected 
+- gate fidelity: fidelity reduction after gate is applied
+- measurement fidelity: prob that measurement matched true state
+- coherence time: a fixed time amount after which the state is discarded
+- max number of pre-generated EPR: protocol parameter
+
+
+create python files, one to generate random test cases on the 4x4 mesh, both random and hotspot (destination) (as already done in the repo) and one to run these files.
+the test cases this time also need the start time and the end time. there should be a function that assigns start times based on a packet injection ratio ( like 0.1 means 1 packet from every core in 1 ms on avg (like for example put in 0.5 ms for a node, put in 0.7 ms for another node), 0.2 means 2 packets injected per 1ms)
+there is no concept of layer, just keep the end time as very large and stop the request once a first success happens (as implemented already) 
+its important that every node have the same pir.
+run the three experiments on demand, cgp, cgp with adaptation.
+calculate the value of average latency and fidelity, and draw a whisker plot denoting the distribution
+take help of the main3.py and main5.py format to create this.

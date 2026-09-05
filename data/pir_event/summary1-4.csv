@@ -1,0 +1,41 @@
+Pattern,PIR,Experiment,Avg_Latency_ms,Avg_Fidelity
+random,0.1,On-Demand (ODG),1.8388,0.886591
+random,0.1,CGP,1.4459,0.831430
+random,0.1,ACGP,1.4459,0.831430
+random,0.1,CGP-WP,1.3500,0.851352
+random,0.1,ACGP-WP,1.3500,0.851260
+random,0.2,On-Demand (ODG),1.6313,0.890212
+random,0.2,CGP,1.2963,0.867117
+random,0.2,ACGP,1.2963,0.867117
+random,0.2,CGP-WP,1.2111,0.869522
+random,0.2,ACGP-WP,1.1889,0.869267
+random,0.3,On-Demand (ODG),1.5528,0.899514
+random,0.3,CGP,1.3100,0.868025
+random,0.3,ACGP,1.3100,0.868025
+random,0.3,CGP-WP,1.3300,0.870609
+random,0.3,ACGP-WP,1.3483,0.867806
+random,0.4,On-Demand (ODG),1.7213,0.889085
+random,0.4,CGP,1.1734,0.864539
+random,0.4,ACGP,1.1734,0.864487
+random,0.4,CGP-WP,1.1567,0.869201
+random,0.4,ACGP-WP,1.1567,0.869174
+hotspot,0.1,On-Demand (ODG),1.8693,0.888573
+hotspot,0.1,CGP,1.1722,0.839435
+hotspot,0.1,ACGP,1.1722,0.839435
+hotspot,0.1,CGP-WP,1.1445,0.844938
+hotspot,0.1,ACGP-WP,1.2158,0.850457
+hotspot,0.2,On-Demand (ODG),1.7465,0.898888
+hotspot,0.2,CGP,1.3334,0.863662
+hotspot,0.2,ACGP,1.3696,0.859916
+hotspot,0.2,CGP-WP,1.3696,0.873272
+hotspot,0.2,ACGP-WP,1.3696,0.873272
+hotspot,0.3,On-Demand (ODG),1.8134,0.880472
+hotspot,0.3,CGP,1.3042,0.847773
+hotspot,0.3,ACGP,1.3000,0.842617
+hotspot,0.3,CGP-WP,1.2834,0.859127
+hotspot,0.3,ACGP-WP,1.2440,0.863286
+hotspot,0.4,On-Demand (ODG),1.7059,0.898611
+hotspot,0.4,CGP,1.1104,0.856434
+hotspot,0.4,ACGP,1.1104,0.856434
+hotspot,0.4,CGP-WP,1.2100,0.864606
+hotspot,0.4,ACGP-WP,1.1934,0.864715

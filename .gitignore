@@ -1,0 +1,13 @@
+.vscode/
+*tmp*
+log/
+config/*.json
+config/*.png
+__pycache__/
+*.py[cod]
+.DS_Store
+demo/log-*
+env/
+venv/
+.venv/
+.pytest_cache/

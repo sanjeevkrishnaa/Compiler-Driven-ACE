@@ -1,0 +1,295 @@
+QRA router_0_0 created with seed 0
+QRA router_0_1 created with seed 1
+QRA router_0_2 created with seed 2
+QRA router_0_3 created with seed 3
+QRA router_1_0 created with seed 4
+QRA router_1_1 created with seed 5
+QRA router_1_2 created with seed 6
+QRA router_1_3 created with seed 7
+QRA router_2_0 created with seed 8
+QRA router_2_1 created with seed 9
+QRA router_2_2 created with seed 10
+QRA router_2_3 created with seed 11
+QRA router_3_0 created with seed 12
+QRA router_3_1 created with seed 13
+QRA router_3_2 created with seed 14
+QRA router_3_3 created with seed 15
+src: BSM_0_0_0_1, dst: router_0_0, length: 500.0, hop_count: 0, path: ('BSM_0_0_0_1', 'router_0_0')
+src: router_0_0, dst: BSM_0_0_0_1, length: 500.0, hop_count: 0, path: ('router_0_0', 'BSM_0_0_0_1')
+src: BSM_0_0_0_1, dst: router_0_1, length: 500.0, hop_count: 0, path: ('BSM_0_0_0_1', 'router_0_1')
+src: router_0_1, dst: BSM_0_0_0_1, length: 500.0, hop_count: 0, path: ('router_0_1', 'BSM_0_0_0_1')
+src: BSM_0_0_1_0, dst: router_0_0, length: 500.0, hop_count: 0, path: ('BSM_0_0_1_0', 'router_0_0')
+src: router_0_0, dst: BSM_0_0_1_0, length: 500.0, hop_count: 0, path: ('router_0_0', 'BSM_0_0_1_0')
+src: BSM_0_0_1_0, dst: router_1_0, length: 500.0, hop_count: 0, path: ('BSM_0_0_1_0', 'router_1_0')
+src: router_1_0, dst: BSM_0_0_1_0, length: 500.0, hop_count: 0, path: ('router_1_0', 'BSM_0_0_1_0')
+src: BSM_0_1_0_2, dst: router_0_1, length: 500.0, hop_count: 0, path: ('BSM_0_1_0_2', 'router_0_1')
+src: router_0_1, dst: BSM_0_1_0_2, length: 500.0, hop_count: 0, path: ('router_0_1', 'BSM_0_1_0_2')
+src: BSM_0_1_0_2, dst: router_0_2, length: 500.0, hop_count: 0, path: ('BSM_0_1_0_2', 'router_0_2')
+src: router_0_2, dst: BSM_0_1_0_2, length: 500.0, hop_count: 0, path: ('router_0_2', 'BSM_0_1_0_2')
+src: BSM_0_1_1_1, dst: router_0_1, length: 500.0, hop_count: 0, path: ('BSM_0_1_1_1', 'router_0_1')
+src: router_0_1, dst: BSM_0_1_1_1, length: 500.0, hop_count: 0, path: ('router_0_1', 'BSM_0_1_1_1')
+src: BSM_0_1_1_1, dst: router_1_1, length: 500.0, hop_count: 0, path: ('BSM_0_1_1_1', 'router_1_1')
+src: router_1_1, dst: BSM_0_1_1_1, length: 500.0, hop_count: 0, path: ('router_1_1', 'BSM_0_1_1_1')
+src: BSM_0_2_0_3, dst: router_0_2, length: 500.0, hop_count: 0, path: ('BSM_0_2_0_3', 'router_0_2')
+src: router_0_2, dst: BSM_0_2_0_3, length: 500.0, hop_count: 0, path: ('router_0_2', 'BSM_0_2_0_3')
+src: BSM_0_2_0_3, dst: router_0_3, length: 500.0, hop_count: 0, path: ('BSM_0_2_0_3', 'router_0_3')
+src: router_0_3, dst: BSM_0_2_0_3, length: 500.0, hop_count: 0, path: ('router_0_3', 'BSM_0_2_0_3')
+src: BSM_0_2_1_2, dst: router_0_2, length: 500.0, hop_count: 0, path: ('BSM_0_2_1_2', 'router_0_2')
+src: router_0_2, dst: BSM_0_2_1_2, length: 500.0, hop_count: 0, path: ('router_0_2', 'BSM_0_2_1_2')
+src: BSM_0_2_1_2, dst: router_1_2, length: 500.0, hop_count: 0, path: ('BSM_0_2_1_2', 'router_1_2')
+src: router_1_2, dst: BSM_0_2_1_2, length: 500.0, hop_count: 0, path: ('router_1_2', 'BSM_0_2_1_2')
+src: BSM_0_3_1_3, dst: router_0_3, length: 500.0, hop_count: 0, path: ('BSM_0_3_1_3', 'router_0_3')
+src: router_0_3, dst: BSM_0_3_1_3, length: 500.0, hop_count: 0, path: ('router_0_3', 'BSM_0_3_1_3')
+src: BSM_0_3_1_3, dst: router_1_3, length: 500.0, hop_count: 0, path: ('BSM_0_3_1_3', 'router_1_3')
+src: router_1_3, dst: BSM_0_3_1_3, length: 500.0, hop_count: 0, path: ('router_1_3', 'BSM_0_3_1_3')
+src: BSM_1_0_1_1, dst: router_1_0, length: 500.0, hop_count: 0, path: ('BSM_1_0_1_1', 'router_1_0')
+src: router_1_0, dst: BSM_1_0_1_1, length: 500.0, hop_count: 0, path: ('router_1_0', 'BSM_1_0_1_1')
+src: BSM_1_0_1_1, dst: router_1_1, length: 500.0, hop_count: 0, path: ('BSM_1_0_1_1', 'router_1_1')
+src: router_1_1, dst: BSM_1_0_1_1, length: 500.0, hop_count: 0, path: ('router_1_1', 'BSM_1_0_1_1')
+src: BSM_1_0_2_0, dst: router_1_0, length: 500.0, hop_count: 0, path: ('BSM_1_0_2_0', 'router_1_0')
+src: router_1_0, dst: BSM_1_0_2_0, length: 500.0, hop_count: 0, path: ('router_1_0', 'BSM_1_0_2_0')
+src: BSM_1_0_2_0, dst: router_2_0, length: 500.0, hop_count: 0, path: ('BSM_1_0_2_0', 'router_2_0')
+src: router_2_0, dst: BSM_1_0_2_0, length: 500.0, hop_count: 0, path: ('router_2_0', 'BSM_1_0_2_0')
+src: BSM_1_1_1_2, dst: router_1_1, length: 500.0, hop_count: 0, path: ('BSM_1_1_1_2', 'router_1_1')
+src: router_1_1, dst: BSM_1_1_1_2, length: 500.0, hop_count: 0, path: ('router_1_1', 'BSM_1_1_1_2')
+src: BSM_1_1_1_2, dst: router_1_2, length: 500.0, hop_count: 0, path: ('BSM_1_1_1_2', 'router_1_2')
+src: router_1_2, dst: BSM_1_1_1_2, length: 500.0, hop_count: 0, path: ('router_1_2', 'BSM_1_1_1_2')
+src: BSM_1_1_2_1, dst: router_1_1, length: 500.0, hop_count: 0, path: ('BSM_1_1_2_1', 'router_1_1')
+src: router_1_1, dst: BSM_1_1_2_1, length: 500.0, hop_count: 0, path: ('router_1_1', 'BSM_1_1_2_1')
+src: BSM_1_1_2_1, dst: router_2_1, length: 500.0, hop_count: 0, path: ('BSM_1_1_2_1', 'router_2_1')
+src: router_2_1, dst: BSM_1_1_2_1, length: 500.0, hop_count: 0, path: ('router_2_1', 'BSM_1_1_2_1')
+src: BSM_1_2_1_3, dst: router_1_2, length: 500.0, hop_count: 0, path: ('BSM_1_2_1_3', 'router_1_2')
+src: router_1_2, dst: BSM_1_2_1_3, length: 500.0, hop_count: 0, path: ('router_1_2', 'BSM_1_2_1_3')
+src: BSM_1_2_1_3, dst: router_1_3, length: 500.0, hop_count: 0, path: ('BSM_1_2_1_3', 'router_1_3')
+src: router_1_3, dst: BSM_1_2_1_3, length: 500.0, hop_count: 0, path: ('router_1_3', 'BSM_1_2_1_3')
+src: BSM_1_2_2_2, dst: router_1_2, length: 500.0, hop_count: 0, path: ('BSM_1_2_2_2', 'router_1_2')
+src: router_1_2, dst: BSM_1_2_2_2, length: 500.0, hop_count: 0, path: ('router_1_2', 'BSM_1_2_2_2')
+src: BSM_1_2_2_2, dst: router_2_2, length: 500.0, hop_count: 0, path: ('BSM_1_2_2_2', 'router_2_2')
+src: router_2_2, dst: BSM_1_2_2_2, length: 500.0, hop_count: 0, path: ('router_2_2', 'BSM_1_2_2_2')
+src: BSM_1_3_2_3, dst: router_1_3, length: 500.0, hop_count: 0, path: ('BSM_1_3_2_3', 'router_1_3')
+src: router_1_3, dst: BSM_1_3_2_3, length: 500.0, hop_count: 0, path: ('router_1_3', 'BSM_1_3_2_3')
+src: BSM_1_3_2_3, dst: router_2_3, length: 500.0, hop_count: 0, path: ('BSM_1_3_2_3', 'router_2_3')
+src: router_2_3, dst: BSM_1_3_2_3, length: 500.0, hop_count: 0, path: ('router_2_3', 'BSM_1_3_2_3')
+src: BSM_2_0_2_1, dst: router_2_0, length: 500.0, hop_count: 0, path: ('BSM_2_0_2_1', 'router_2_0')
+src: router_2_0, dst: BSM_2_0_2_1, length: 500.0, hop_count: 0, path: ('router_2_0', 'BSM_2_0_2_1')
+src: BSM_2_0_2_1, dst: router_2_1, length: 500.0, hop_count: 0, path: ('BSM_2_0_2_1', 'router_2_1')
+src: router_2_1, dst: BSM_2_0_2_1, length: 500.0, hop_count: 0, path: ('router_2_1', 'BSM_2_0_2_1')
+src: BSM_2_0_3_0, dst: router_2_0, length: 500.0, hop_count: 0, path: ('BSM_2_0_3_0', 'router_2_0')
+src: router_2_0, dst: BSM_2_0_3_0, length: 500.0, hop_count: 0, path: ('router_2_0', 'BSM_2_0_3_0')
+src: BSM_2_0_3_0, dst: router_3_0, length: 500.0, hop_count: 0, path: ('BSM_2_0_3_0', 'router_3_0')
+src: router_3_0, dst: BSM_2_0_3_0, length: 500.0, hop_count: 0, path: ('router_3_0', 'BSM_2_0_3_0')
+src: BSM_2_1_2_2, dst: router_2_1, length: 500.0, hop_count: 0, path: ('BSM_2_1_2_2', 'router_2_1')
+src: router_2_1, dst: BSM_2_1_2_2, length: 500.0, hop_count: 0, path: ('router_2_1', 'BSM_2_1_2_2')
+src: BSM_2_1_2_2, dst: router_2_2, length: 500.0, hop_count: 0, path: ('BSM_2_1_2_2', 'router_2_2')
+src: router_2_2, dst: BSM_2_1_2_2, length: 500.0, hop_count: 0, path: ('router_2_2', 'BSM_2_1_2_2')
+src: BSM_2_1_3_1, dst: router_2_1, length: 500.0, hop_count: 0, path: ('BSM_2_1_3_1', 'router_2_1')
+src: router_2_1, dst: BSM_2_1_3_1, length: 500.0, hop_count: 0, path: ('router_2_1', 'BSM_2_1_3_1')
+src: BSM_2_1_3_1, dst: router_3_1, length: 500.0, hop_count: 0, path: ('BSM_2_1_3_1', 'router_3_1')
+src: router_3_1, dst: BSM_2_1_3_1, length: 500.0, hop_count: 0, path: ('router_3_1', 'BSM_2_1_3_1')
+src: BSM_2_2_2_3, dst: router_2_2, length: 500.0, hop_count: 0, path: ('BSM_2_2_2_3', 'router_2_2')
+src: router_2_2, dst: BSM_2_2_2_3, length: 500.0, hop_count: 0, path: ('router_2_2', 'BSM_2_2_2_3')
+src: BSM_2_2_2_3, dst: router_2_3, length: 500.0, hop_count: 0, path: ('BSM_2_2_2_3', 'router_2_3')
+src: router_2_3, dst: BSM_2_2_2_3, length: 500.0, hop_count: 0, path: ('router_2_3', 'BSM_2_2_2_3')
+src: BSM_2_2_3_2, dst: router_2_2, length: 500.0, hop_count: 0, path: ('BSM_2_2_3_2', 'router_2_2')
+src: router_2_2, dst: BSM_2_2_3_2, length: 500.0, hop_count: 0, path: ('router_2_2', 'BSM_2_2_3_2')
+src: BSM_2_2_3_2, dst: router_3_2, length: 500.0, hop_count: 0, path: ('BSM_2_2_3_2', 'router_3_2')
+src: router_3_2, dst: BSM_2_2_3_2, length: 500.0, hop_count: 0, path: ('router_3_2', 'BSM_2_2_3_2')
+src: BSM_2_3_3_3, dst: router_2_3, length: 500.0, hop_count: 0, path: ('BSM_2_3_3_3', 'router_2_3')
+src: router_2_3, dst: BSM_2_3_3_3, length: 500.0, hop_count: 0, path: ('router_2_3', 'BSM_2_3_3_3')
+src: BSM_2_3_3_3, dst: router_3_3, length: 500.0, hop_count: 0, path: ('BSM_2_3_3_3', 'router_3_3')
+src: router_3_3, dst: BSM_2_3_3_3, length: 500.0, hop_count: 0, path: ('router_3_3', 'BSM_2_3_3_3')
+src: BSM_3_0_3_1, dst: router_3_0, length: 500.0, hop_count: 0, path: ('BSM_3_0_3_1', 'router_3_0')
+src: router_3_0, dst: BSM_3_0_3_1, length: 500.0, hop_count: 0, path: ('router_3_0', 'BSM_3_0_3_1')
+src: BSM_3_0_3_1, dst: router_3_1, length: 500.0, hop_count: 0, path: ('BSM_3_0_3_1', 'router_3_1')
+src: router_3_1, dst: BSM_3_0_3_1, length: 500.0, hop_count: 0, path: ('router_3_1', 'BSM_3_0_3_1')
+src: BSM_3_1_3_2, dst: router_3_1, length: 500.0, hop_count: 0, path: ('BSM_3_1_3_2', 'router_3_1')
+src: router_3_1, dst: BSM_3_1_3_2, length: 500.0, hop_count: 0, path: ('router_3_1', 'BSM_3_1_3_2')
+src: BSM_3_1_3_2, dst: router_3_2, length: 500.0, hop_count: 0, path: ('BSM_3_1_3_2', 'router_3_2')
+src: router_3_2, dst: BSM_3_1_3_2, length: 500.0, hop_count: 0, path: ('router_3_2', 'BSM_3_1_3_2')
+src: BSM_3_2_3_3, dst: router_3_2, length: 500.0, hop_count: 0, path: ('BSM_3_2_3_3', 'router_3_2')
+src: router_3_2, dst: BSM_3_2_3_3, length: 500.0, hop_count: 0, path: ('router_3_2', 'BSM_3_2_3_3')
+src: BSM_3_2_3_3, dst: router_3_3, length: 500.0, hop_count: 0, path: ('BSM_3_2_3_3', 'router_3_3')
+src: router_3_3, dst: BSM_3_2_3_3, length: 500.0, hop_count: 0, path: ('router_3_3', 'BSM_3_2_3_3')
+src: router_0_0, dst: router_0_1, length: 1000.0, hop_count: 0, path: ('router_0_0', 'router_0_1')
+src: router_0_1, dst: router_0_0, length: 1000.0, hop_count: 0, path: ('router_0_1', 'router_0_0')
+src: router_0_0, dst: router_1_0, length: 1000.0, hop_count: 0, path: ('router_0_0', 'router_1_0')
+src: router_1_0, dst: router_0_0, length: 1000.0, hop_count: 0, path: ('router_1_0', 'router_0_0')
+src: router_0_1, dst: router_0_2, length: 1000.0, hop_count: 0, path: ('router_0_1', 'router_0_2')
+src: router_0_2, dst: router_0_1, length: 1000.0, hop_count: 0, path: ('router_0_2', 'router_0_1')
+src: router_0_1, dst: router_1_1, length: 1000.0, hop_count: 0, path: ('router_0_1', 'router_1_1')
+src: router_1_1, dst: router_0_1, length: 1000.0, hop_count: 0, path: ('router_1_1', 'router_0_1')
+src: router_0_2, dst: router_0_3, length: 1000.0, hop_count: 0, path: ('router_0_2', 'router_0_3')
+src: router_0_3, dst: router_0_2, length: 1000.0, hop_count: 0, path: ('router_0_3', 'router_0_2')
+src: router_0_2, dst: router_1_2, length: 1000.0, hop_count: 0, path: ('router_0_2', 'router_1_2')
+src: router_1_2, dst: router_0_2, length: 1000.0, hop_count: 0, path: ('router_1_2', 'router_0_2')
+src: router_0_3, dst: router_1_3, length: 1000.0, hop_count: 0, path: ('router_0_3', 'router_1_3')
+src: router_1_3, dst: router_0_3, length: 1000.0, hop_count: 0, path: ('router_1_3', 'router_0_3')
+src: router_1_0, dst: router_1_1, length: 1000.0, hop_count: 0, path: ('router_1_0', 'router_1_1')
+src: router_1_1, dst: router_1_0, length: 1000.0, hop_count: 0, path: ('router_1_1', 'router_1_0')
+src: router_1_0, dst: router_2_0, length: 1000.0, hop_count: 0, path: ('router_1_0', 'router_2_0')
+src: router_2_0, dst: router_1_0, length: 1000.0, hop_count: 0, path: ('router_2_0', 'router_1_0')
+src: router_1_1, dst: router_1_2, length: 1000.0, hop_count: 0, path: ('router_1_1', 'router_1_2')
+src: router_1_2, dst: router_1_1, length: 1000.0, hop_count: 0, path: ('router_1_2', 'router_1_1')
+src: router_1_1, dst: router_2_1, length: 1000.0, hop_count: 0, path: ('router_1_1', 'router_2_1')
+src: router_2_1, dst: router_1_1, length: 1000.0, hop_count: 0, path: ('router_2_1', 'router_1_1')
+src: router_1_2, dst: router_1_3, length: 1000.0, hop_count: 0, path: ('router_1_2', 'router_1_3')
+src: router_1_3, dst: router_1_2, length: 1000.0, hop_count: 0, path: ('router_1_3', 'router_1_2')
+src: router_1_2, dst: router_2_2, length: 1000.0, hop_count: 0, path: ('router_1_2', 'router_2_2')
+src: router_2_2, dst: router_1_2, length: 1000.0, hop_count: 0, path: ('router_2_2', 'router_1_2')
+src: router_1_3, dst: router_2_3, length: 1000.0, hop_count: 0, path: ('router_1_3', 'router_2_3')
+src: router_2_3, dst: router_1_3, length: 1000.0, hop_count: 0, path: ('router_2_3', 'router_1_3')
+src: router_2_0, dst: router_2_1, length: 1000.0, hop_count: 0, path: ('router_2_0', 'router_2_1')
+src: router_2_1, dst: router_2_0, length: 1000.0, hop_count: 0, path: ('router_2_1', 'router_2_0')
+src: router_2_0, dst: router_3_0, length: 1000.0, hop_count: 0, path: ('router_2_0', 'router_3_0')
+src: router_3_0, dst: router_2_0, length: 1000.0, hop_count: 0, path: ('router_3_0', 'router_2_0')
+src: router_2_1, dst: router_2_2, length: 1000.0, hop_count: 0, path: ('router_2_1', 'router_2_2')
+src: router_2_2, dst: router_2_1, length: 1000.0, hop_count: 0, path: ('router_2_2', 'router_2_1')
+src: router_2_1, dst: router_3_1, length: 1000.0, hop_count: 0, path: ('router_2_1', 'router_3_1')
+src: router_3_1, dst: router_2_1, length: 1000.0, hop_count: 0, path: ('router_3_1', 'router_2_1')
+src: router_2_2, dst: router_2_3, length: 1000.0, hop_count: 0, path: ('router_2_2', 'router_2_3')
+src: router_2_3, dst: router_2_2, length: 1000.0, hop_count: 0, path: ('router_2_3', 'router_2_2')
+src: router_2_2, dst: router_3_2, length: 1000.0, hop_count: 0, path: ('router_2_2', 'router_3_2')
+src: router_3_2, dst: router_2_2, length: 1000.0, hop_count: 0, path: ('router_3_2', 'router_2_2')
+src: router_2_3, dst: router_3_3, length: 1000.0, hop_count: 0, path: ('router_2_3', 'router_3_3')
+src: router_3_3, dst: router_2_3, length: 1000.0, hop_count: 0, path: ('router_3_3', 'router_2_3')
+src: router_3_0, dst: router_3_1, length: 1000.0, hop_count: 0, path: ('router_3_0', 'router_3_1')
+src: router_3_1, dst: router_3_0, length: 1000.0, hop_count: 0, path: ('router_3_1', 'router_3_0')
+src: router_3_1, dst: router_3_2, length: 1000.0, hop_count: 0, path: ('router_3_1', 'router_3_2')
+src: router_3_2, dst: router_3_1, length: 1000.0, hop_count: 0, path: ('router_3_2', 'router_3_1')
+src: router_3_2, dst: router_3_3, length: 1000.0, hop_count: 0, path: ('router_3_2', 'router_3_3')
+src: router_3_3, dst: router_3_2, length: 1000.0, hop_count: 0, path: ('router_3_3', 'router_3_2')
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+100000000000.0 105000000
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+100000000000.0 210000000
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_0 sending message to router_0_1
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_0 sending message to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHBSM_0_0_0_1 sending message to router_0_0
+NEIGHBSM_0_0_0_1 sending message to router_0_1
+NEIGHBSM_0_0_0_1 sending message to router_0_0
+NEIGHBSM_0_0_0_1 sending message to router_0_1
+NEIGHBSM_0_1_0_2 sending message to router_0_1
+NEIGHBSM_0_1_0_2 sending message to router_0_2
+NEIGHBSM_0_1_0_2 sending message to router_0_1
+NEIGHBSM_0_1_0_2 sending message to router_0_2
+node.receive_message:::router_0_0 received message from BSM_0_0_0_1 to router_0_0
+node.receive_message:::router_0_1 received message from BSM_0_0_0_1 to router_0_1
+node.receive_message:::router_0_0 received message from BSM_0_0_0_1 to router_0_0
+node.receive_message:::router_0_1 received message from BSM_0_0_0_1 to router_0_1
+node.receive_message:::router_0_1 received message from BSM_0_1_0_2 to router_0_1
+node.receive_message:::router_0_2 received message from BSM_0_1_0_2 to router_0_2
+node.receive_message:::router_0_1 received message from BSM_0_1_0_2 to router_0_1
+node.receive_message:::router_0_2 received message from BSM_0_1_0_2 to router_0_2
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_2
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_2
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+NEIGHrouter_0_0 sending message to router_0_1
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+NEIGHrouter_0_2 sending message to router_0_1
+node.receive_message:::router_0_2 received message from router_0_1 to router_0_2
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+NEIGHrouter_0_1 sending message to router_0_0
+NEIGHrouter_0_1 sending message to router_0_0
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+node.receive_message:::router_0_1 received message from router_0_2 to router_0_1
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+NEIGHrouter_0_0 sending message to router_0_1
+node.receive_message:::router_0_0 received message from router_0_1 to router_0_0
+node.receive_message:::router_0_1 received message from router_0_0 to router_0_1
+reservation=|initiator=router_0_0; responder=router_0_2; start_time=100,000,000,000; end_time=500,000,000,000; memory_size=2; target_fidelity=0.7; entanglement_number=1; identity=0|, time to serve=1.15501251, fidelity=0.879021

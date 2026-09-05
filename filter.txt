@@ -1,0 +1,55 @@
+Running Experiment: On Demand
+router_0_0 generated: 0, used: 0, unused: 0
+router_0_1 generated: 0, used: 0, unused: 0
+router_0_2 generated: 0, used: 0, unused: 0
+router_0_3 generated: 0, used: 0, unused: 0
+router_1_0 generated: 0, used: 0, unused: 0
+router_1_1 generated: 0, used: 0, unused: 0
+router_1_2 generated: 0, used: 0, unused: 0
+router_1_3 generated: 0, used: 0, unused: 0
+router_2_0 generated: 0, used: 0, unused: 0
+router_2_1 generated: 0, used: 0, unused: 0
+router_2_2 generated: 0, used: 0, unused: 0
+router_2_3 generated: 0, used: 0, unused: 0
+router_3_0 generated: 0, used: 0, unused: 0
+router_3_1 generated: 0, used: 0, unused: 0
+router_3_2 generated: 0, used: 0, unused: 0
+router_3_3 generated: 0, used: 0, unused: 0
+
+
+Running Experiment: CGP
+router_0_0 generated: 1619, used: 797, unused: 818
+router_0_1 generated: 2103, used: 1252, unused: 974
+router_0_2 generated: 2083, used: 1173, unused: 971
+router_0_3 generated: 1584, used: 784, unused: 815
+router_1_0 generated: 1830, used: 846, unused: 982
+router_1_1 generated: 1624, used: 753, unused: 958
+router_1_2 generated: 1646, used: 716, unused: 956
+router_1_3 generated: 1859, used: 887, unused: 976
+router_2_0 generated: 1614, used: 626, unused: 985
+router_2_1 generated: 1307, used: 412, unused: 950
+router_2_2 generated: 1279, used: 366, unused: 949
+router_2_3 generated: 1623, used: 663, unused: 972
+router_3_0 generated: 1040, used: 213, unused: 825
+router_3_1 generated: 1103, used: 167, unused: 976
+router_3_2 generated: 1101, used: 148, unused: 970
+router_3_3 generated: 1053, used: 241, unused: 811
+
+
+Running Experiment: CGP (with Learning)
+router_0_0 generated: 1709, used: 830, unused: 877
+router_0_1 generated: 2220, used: 1401, unused: 961
+router_0_2 generated: 2184, used: 1297, unused: 962
+router_0_3 generated: 1631, used: 795, unused: 859
+router_1_0 generated: 1823, used: 858, unused: 962
+router_1_1 generated: 1858, used: 1037, unused: 934
+router_1_2 generated: 1856, used: 987, unused: 920
+router_1_3 generated: 1866, used: 905, unused: 976
+router_2_0 generated: 1611, used: 617, unused: 990
+router_2_1 generated: 1444, used: 613, unused: 920
+router_2_2 generated: 1358, used: 542, unused: 883
+router_2_3 generated: 1619, used: 643, unused: 993
+router_3_0 generated: 1111, used: 223, unused: 885
+router_3_1 generated: 1093, used: 182, unused: 951
+router_3_2 generated: 1084, used: 162, unused: 942
+router_3_3 generated: 1109, used: 236, unused: 869
