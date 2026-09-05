@@ -225,7 +225,11 @@ class ReservationAdaptive(Reservation):
     """
 
     def __init__(self, initiator: str, responder: str, start_time: int,
-                 end_time: int, memory_size: int, fidelity: float):
+                 end_time: int, memory_size: int, fidelity: float, *,
+                 compiler_target_request_id: int | None = None,
+                 compiler_generation_layer: int | None = None,
+                 compiler_target_layer: int | None = None,
+                 compiler_strategy: str | None = None):
         """Constructor for the reservation class.
 
         Args:
@@ -237,10 +241,20 @@ class ReservationAdaptive(Reservation):
             fidelity (float): desired fidelity of entanglement.
         """
         super().__init__(initiator, responder, start_time, end_time, memory_size, fidelity)
+        self.compiler_target_request_id = compiler_target_request_id
+        self.compiler_generation_layer = compiler_generation_layer
+        self.compiler_target_layer = compiler_target_layer
+        self.compiler_strategy = compiler_strategy
+
+    @property
+    def compiler_directed(self) -> bool:
+        return self.compiler_target_request_id is not None
 
     def __str__(self) -> str:
-        return "|AdaptiveContinuous; initiator={}; responder={}; start_time={:,}; end_time={:,}; memory_size={}; target_fidelity={}|".format(
-                self.initiator, self.responder, int(self.start_time), int(self.end_time), self.memory_size, self.fidelity)
+        kind = "CompilerPreGeneration" if self.compiler_directed else "AdaptiveContinuous"
+        return "|{}; initiator={}; responder={}; start_time={:,}; end_time={:,}; memory_size={}; target_fidelity={}; target_request={}|".format(
+                kind, self.initiator, self.responder, int(self.start_time), int(self.end_time),
+                self.memory_size, self.fidelity, self.compiler_target_request_id)
 
     def __repr__(self) -> str:
         return self.__str__()

@@ -75,7 +75,9 @@ class ResourceManagerAdaptive(ResourceManager):
                 if isinstance(protocol.rule.reservation, ReservationAdaptive): # Adaptive Continuous Protocol's reservation
                     adaptive_continuous = self.get_adaptive_continuous_protocol()
                     entanglement_pair = ((self.owner.name, memory.name), (memory.entangled_memory['node_id'], memory.entangled_memory['memo_id']))
-                    adaptive_continuous.add_generated_entanglement_pair(entanglement_pair)
+                    adaptive_continuous.add_generated_entanglement_pair(
+                        entanglement_pair, protocol.rule.reservation
+                    )
 
                     # entanglement purification
                     if self.purify and protocol.primary:  # the primary node select the EP
@@ -104,7 +106,9 @@ class ResourceManagerAdaptive(ResourceManager):
             if self.purify and isinstance(protocol, BBPSSW_bds) and state == MemoryInfo.ENTANGLED:
                 adaptive_continuous = self.get_adaptive_continuous_protocol()
                 entanglement_pair = ((self.owner.name, memory.name), (memory.entangled_memory['node_id'], memory.entangled_memory['memo_id']))
-                adaptive_continuous.add_generated_entanglement_pair(entanglement_pair)
+                adaptive_continuous.add_generated_entanglement_pair(
+                    entanglement_pair, protocol.rule.reservation
+                )
 
 
         if protocol in self.owner.protocols:
@@ -160,6 +164,12 @@ class ResourceManagerAdaptive(ResourceManager):
 
             for memory in protocol.memories:
                 self.update(protocol, memory, MemoryInfo.RAW)
+
+
+    def memory_expire(self, memory: Memory) -> None:
+        """Report physical cache expiry before returning the memory to RAW."""
+        self.owner.adaptive_continuous.note_memory_expiration(memory)
+        super().memory_expire(memory)
 
 
     def send_request(self, protocol: "EntanglementProtocol", req_dst: Optional[str], req_condition_func: RequestConditionFunc, req_args: Arguments):

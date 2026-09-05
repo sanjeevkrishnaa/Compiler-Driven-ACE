@@ -209,7 +209,10 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
                             adaptive_continuous: AdaptiveContinuousProtocol = self.owner.adaptive_continuous         # first check if there is pre-generated entanglement pair
                             this_node_name = self.owner.name
                             remote_node_name = self.remote_node_name
-                            matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(this_node_name, remote_node_name)
+                            matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
+                                this_node_name, remote_node_name,
+                                request_id=self.rule.reservation.identity,
+                            )
                             if matched_entanglement_pair is None:                        # no pre-generated entanglement pair
                                 self.qc_delay = self.owner.qchannels[self.middle].delay  # send NEGOTIATE message as normal
                                 frequency = self.memory.frequency
@@ -258,7 +261,10 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
                     adaptive_continuous = self.owner.adaptive_continuous         # first check if there is pre-generated entanglement pair
                     this_node_name = self.owner.name
                     remote_node_name = self.remote_node_name
-                    self.matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(this_node_name, remote_node_name)
+                    self.matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
+                        this_node_name, remote_node_name,
+                        request_id=self.rule.reservation.identity,
+                    )
                     if self.matched_entanglement_pair is not None:               # has pre-generated entanglement pair
                         log.logger.info(f'{this_node_name} match pre-generated entanglement pair {self.matched_entanglement_pair}')
                         adaptive_continuous.remove_entanglement_pair(self.matched_entanglement_pair)
@@ -751,7 +757,10 @@ class ShEntanglementGenerationAadaptive(EntanglementProtocol):
                     adaptive_continuous: AdaptiveContinuousProtocol = self.owner.adaptive_continuous         # first check if there is pre-generated entanglement pair
                     this_node_name = self.owner.name
                     remote_node_name = self.remote_node_name
-                    matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(this_node_name, remote_node_name)
+                    matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
+                        this_node_name, remote_node_name,
+                        request_id=self.rule.reservation.identity,
+                    )
                     if matched_entanglement_pair is None:                        # no pre-generated entanglement pair
                         self.qc_delay = self.owner.qchannels[self.middle].delay  # send NEGOTIATE message as normal
                         frequency = self.memory.frequency

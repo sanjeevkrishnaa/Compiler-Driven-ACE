@@ -98,6 +98,8 @@ class AdaptiveContinuousProtocol(Protocol):
         self.probability_table = {}
         self.probability_table_update_count = 0
         self.generated_entanglement_pairs = set()
+        self.generated_pair_metadata = {}
+        self.compiler_observer = None
         self.cache = []  # each item is (timestamp: int, path: list)
         self.update_prob = True
         self.has_empty_neighbor = True
@@ -179,12 +181,55 @@ class AdaptiveContinuousProtocol(Protocol):
         Args:
             delay: schedule the event after some amount of delay (pico seconds) between 0 and delay
         '''
-        if self.adaptive_max_memory > 0:      # only start if AC protocol is assigned some memories
+        if self.owner.active and self.adaptive_max_memory > 0:      # only start autonomous CGP/ACGP cycles
             assert delay >= 0, f'delay = {delay} is negative'
             random_delay = int(self.owner.get_generator().uniform(0, delay))
             process = Process(self, 'start', [])
             event = Event(self.owner.timeline.now() + random_delay, process)
             self.owner.timeline.schedule(event)
+
+
+    def request_compiler_pair(self, neighbor: str, request_metadata: dict) -> bool:
+        """Launch one compiler-directed use of the physical ACE pre-generation path.
+
+        Unlike :meth:`start`, this method never chooses a random neighbor and
+        never schedules another autonomous cycle.  The ordinary ACE handshake,
+        RSVP timecards, rules, memories, BSM and generation protocol are reused.
+        """
+        if neighbor not in self.owner.cchannels:
+            raise ValueError(f"{neighbor} is not a physical neighbor of {self.owner.name}")
+        if self.adaptive_memory_used >= self.adaptive_max_memory:
+            if self.compiler_observer:
+                self.compiler_observer.on_preparation_rejected(
+                    request_metadata["request_id"], "local_memory_quota"
+                )
+            return False
+
+        self.adaptive_memory_used += 1
+        round_trip_time = self.owner.cchannels[neighbor].delay * 2
+        start_time = self.owner.timeline.now() + round_trip_time
+        end_time = self.round_to_period(start_time + self.period)
+        reservation = ReservationAdaptive(
+            self.owner.name, neighbor, start_time, end_time, memory_size=1,
+            fidelity=request_metadata.get("fidelity", 0.01),
+            compiler_target_request_id=request_metadata["request_id"],
+            compiler_generation_layer=request_metadata["generation_layer"],
+            compiler_target_layer=request_metadata["target_layer"],
+            compiler_strategy=request_metadata["strategy"],
+        )
+        if not self.resource_reservation.schedule(reservation):
+            self.adaptive_memory_used -= 1
+            if self.compiler_observer:
+                self.compiler_observer.on_preparation_rejected(
+                    request_metadata["request_id"], "local_timecard"
+                )
+            return False
+        if self.compiler_observer:
+            self.compiler_observer.on_preparation_launched(request_metadata["request_id"])
+        self.owner.send_message(
+            neighbor, AdaptiveContinuousMessage(ACMsgType.REQUEST, reservation)
+        )
+        return True
 
 
     def init_probability_table(self):
@@ -257,10 +302,18 @@ class AdaptiveContinuousProtocol(Protocol):
                     card.remove(msg.reservation) # clear up the timecards
                 log.logger.debug(f'{self.owner.name} not going to establish entanglement link {self.owner.name}-{src}; adaptive_memory_used is decreased from {self.adaptive_memory_used} to {self.adaptive_memory_used - 1}')
                 self.adaptive_memory_used -= 1
+                if (msg.reservation.compiler_directed and self.compiler_observer):
+                    self.compiler_observer.on_preparation_rejected(
+                        msg.reservation.compiler_target_request_id, "remote_memory_or_timecard"
+                    )
             else:                             # neighbor has available memory
                 rules = self.resource_reservation.create_rules_adaptive(msg.path, msg.reservation)
                 self.resource_reservation.load_rules_adaptive(rules, msg.reservation)
                 log.logger.info(f'{self.owner.name} attempting to establish entanglement link {self.owner.name}-{src}')
+                if (msg.reservation.compiler_directed and self.compiler_observer):
+                    self.compiler_observer.on_preparation_accepted(
+                        msg.reservation.compiler_target_request_id
+                    )
             self.start_delay(delay = self.delay_remote_response)
         
         elif msg.msg_type is ACMsgType.CACHE:
@@ -302,9 +355,16 @@ class AdaptiveContinuousProtocol(Protocol):
         Args:
             memory: this is the memory that is set to RAW (due to expired rule), released from the adaptive continuous protocol
         '''
-        assert self.adaptive_memory_used > 0, f"{self.owner.name} adaptive_memory_used={self.adaptive_memory_used}"
-        self.adaptive_memory_used -= 1
-        log.logger.debug(f'{self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
+        if self.adaptive_memory_used > 0:
+            self.adaptive_memory_used -= 1
+            log.logger.debug(f'{self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
+        else:
+            # A cached pair may already have been moved into an application's
+            # reserved memory.  Its old rule-expiry event is then stale and
+            # must not drive the quota counter negative.
+            log.logger.warning(
+                f'{self.owner.name} ignored a stale adaptive-memory release'
+            )
         # print(f'this is used ones tho: {self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
         self.num_unused_entanglement_pairs += 1
 
@@ -321,6 +381,15 @@ class AdaptiveContinuousProtocol(Protocol):
             log.logger.info(f'{self.owner.name} {memory.name} is not found in self.generated_entanglement_pairs!')
         else:
             self.generated_entanglement_pairs.remove(ep_to_delete)
+            metadata = self.generated_pair_metadata.pop(ep_to_delete, None)
+            if metadata is None:
+                metadata = self.generated_pair_metadata.pop(
+                    (ep_to_delete[1], ep_to_delete[0]), None
+                )
+            if metadata and self.compiler_observer:
+                self.compiler_observer.on_pair_expired(
+                    ep_to_delete, self.owner.timeline.now(), "reservation_expired"
+                )
             log.logger.info(f'{self.owner.name} removed EP {ep_to_delete}')
 
 
@@ -384,7 +453,7 @@ class AdaptiveContinuousProtocol(Protocol):
         self.probability_table_update_count += 1
 
 
-    def add_generated_entanglement_pair(self, entanglement_pair: tuple):
+    def add_generated_entanglement_pair(self, entanglement_pair: tuple, reservation=None):
         '''track the new entanglement pair generated by the Adaptive Continuous protocol
         Args:
             entanglement_link: Tuple[(node_name, memory_name), (remote_node_name, remote_memory_name)]
@@ -392,12 +461,26 @@ class AdaptiveContinuousProtocol(Protocol):
         self.num_generated_entanglement_pairs += 1
         if entanglement_pair not in self.generated_entanglement_pairs:
             self.generated_entanglement_pairs.add(entanglement_pair)
+            if getattr(reservation, "compiler_directed", False):
+                metadata = {
+                    "target_request_id": reservation.compiler_target_request_id,
+                    "generation_layer": reservation.compiler_generation_layer,
+                    "target_layer": reservation.compiler_target_layer,
+                    "strategy": reservation.compiler_strategy,
+                }
+                self.generated_pair_metadata[entanglement_pair] = metadata
+                if self.compiler_observer:
+                    fidelity = self.get_fidelity(entanglement_pair)
+                    self.compiler_observer.on_pair_generated(
+                        entanglement_pair, self.owner.timeline.now(), fidelity, metadata
+                    )
             log.logger.info(f'{self.owner.name} added EP {entanglement_pair}')
         else:
             log.logger.warning(f'{self.owner.name} EP {entanglement_pair} already exist')
 
 
-    def match_generated_entanglement_pair(self, this_node_name: str, remote_node_name: str) -> Optional[tuple]:
+    def match_generated_entanglement_pair(self, this_node_name: str, remote_node_name: str,
+                                          request_id: int | None = None) -> Optional[tuple]:
         '''match (this_node_name, remote_node_name) to an existing entanglement pair
         
         Return:
@@ -414,6 +497,14 @@ class AdaptiveContinuousProtocol(Protocol):
         if len(entanglement_pairs) == 0:
             return None
 
+        if request_id is not None:
+            targeted = [
+                pair for pair in entanglement_pairs
+                if self.generated_pair_metadata.get(pair, {}).get("target_request_id") == request_id
+            ]
+            if targeted:
+                entanglement_pairs = targeted
+
         if self.strategy == "random":
             # Filter out stale pairs
             for ep in entanglement_pairs:
@@ -428,6 +519,11 @@ class AdaptiveContinuousProtocol(Protocol):
                 if fidelity > best_fidelity:
                     freshest_ep = ep
                     best_fidelity = fidelity
+            if freshest_ep is not None and request_id is not None and self.compiler_observer:
+                self.compiler_observer.on_pair_utilized(
+                    freshest_ep, request_id, self.owner.timeline.now(), best_fidelity,
+                    self.generated_pair_metadata.get(freshest_ep),
+                )
             return freshest_ep
         else:
             raise Exception(f'{self.strategy} not supported')
@@ -466,12 +562,30 @@ class AdaptiveContinuousProtocol(Protocol):
         entanglement_pair2 = (entanglement_pair[1], entanglement_pair[0])
         if entanglement_pair in self.generated_entanglement_pairs:
             self.generated_entanglement_pairs.remove(entanglement_pair)
+            self.generated_pair_metadata.pop(entanglement_pair, None)
             log.logger.info(f'{self.owner.name} removed EP {entanglement_pair}')
         elif entanglement_pair2 in self.generated_entanglement_pairs:
             self.generated_entanglement_pairs.remove(entanglement_pair2)
+            self.generated_pair_metadata.pop(entanglement_pair2, None)
             log.logger.info(f'{self.owner.name} removed EP {entanglement_pair2}')
         else:
             raise Exception(f"{entanglement_pair} doesn't exist in {self.name}")
+
+
+    def note_memory_expiration(self, memory: Memory) -> None:
+        """Remove an expired cached pair and report compiler wastage immediately."""
+        pair = next((
+            candidate for candidate in self.generated_entanglement_pairs
+            if candidate[0][1] == memory.name or candidate[1][1] == memory.name
+        ), None)
+        if pair is None:
+            return
+        metadata = self.generated_pair_metadata.pop(pair, None)
+        self.generated_entanglement_pairs.remove(pair)
+        if metadata and self.compiler_observer:
+            self.compiler_observer.on_pair_expired(
+                pair, self.owner.timeline.now(), "memory_coherence"
+            )
             
 
     def round_to_period(self, time: int) -> int:

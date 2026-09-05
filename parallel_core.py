@@ -29,8 +29,9 @@ class ParallelLayerRequestManager:
     - Failed requests are retried in a new layer (treated as congestion)
     """
     
-    def __init__(self, timeline, name_to_apps: dict, layered_requests: list, 
-                 pregeneration_time_ms: float, request_duration_ms: float):
+    def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
+                 pregeneration_time_ms: float, request_duration_ms: float,
+                 compiler_controller=None):
         """
         Args:
             timeline: The simulation timeline
@@ -43,6 +44,8 @@ class ParallelLayerRequestManager:
         self.name_to_apps = name_to_apps
         self.original_layered_requests = layered_requests  # Keep original for reporting
         self.layered_requests = layered_requests.copy()  # Working copy that includes retries
+        self.working_layer_origins = list(range(len(layered_requests)))
+        self.compiler_controller = compiler_controller
         self.pregeneration_time = int(pregeneration_time_ms * MILLISECOND)
         self.request_duration = int(request_duration_ms * MILLISECOND)
         
@@ -85,6 +88,9 @@ class ParallelLayerRequestManager:
         
         current_layer = self.layered_requests[self.current_layer_index]
         current_time = self.timeline.now()
+        original_layer = self.working_layer_origins[self.current_layer_index]
+        if self.compiler_controller is not None and original_layer is not None:
+            self.compiler_controller.on_original_layer(original_layer)
         
         # Track when we actually submit this layer (includes reservation setup time)
         self.layer_start_times[self.current_layer_index] = current_time
@@ -94,7 +100,7 @@ class ParallelLayerRequestManager:
         end_time = start_time + self.request_duration
         
         # Determine if this is a retry layer
-        is_retry_layer = self.current_layer_index >= self.original_layer_count
+        is_retry_layer = original_layer is None
         
         print(f"\n--- Layer {self.current_layer_index} {'(RETRY due to congestion)' if is_retry_layer else ''} ---")
         print(f"Current time (reservation submission): {current_time / MILLISECOND:.2f} ms")
@@ -123,6 +129,8 @@ class ParallelLayerRequestManager:
             self.request_submission_times[request_id] = current_time
             # Track when entanglement generation will start (after pre-generation time)
             self.request_generation_start_times[request_id] = start_time
+            if self.compiler_controller is not None:
+                self.compiler_controller.mark_request_start(request_id, start_time)
             
             # Get app and start request
             app = self.name_to_apps[src_name]
@@ -211,6 +219,7 @@ class ParallelLayerRequestManager:
                 if req_id in self.pending_request_data:
                     retry_layer = [self.pending_request_data[req_id]]
                     self.layered_requests.insert(self.current_layer_index + i, retry_layer)
+                    self.working_layer_origins.insert(self.current_layer_index + i, None)
                     self.retry_layer_count += 1
                     print(f"Created retry layer {self.current_layer_index + i} with request {req_id}")
             
@@ -273,7 +282,7 @@ class ParallelLayerRequestManager:
             self.layer_end_times[layer_idx] = completion_time
             
             layer_duration = (completion_time - self.layer_start_times[layer_idx]) / MILLISECOND
-            is_retry_layer = layer_idx >= self.original_layer_count
+            is_retry_layer = self.working_layer_origins[layer_idx] is None
             retry_tag = " (RETRY LAYER)" if is_retry_layer else ""
             
             print(f"\n*** Layer {layer_idx}{retry_tag} COMPLETED at {completion_time / MILLISECOND:.2f} ms ***")
@@ -436,7 +445,8 @@ class ParallelLayerRequestManager:
 
 def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_setting: bool,
                             layered_requests: list, pregeneration_time_ms: float,
-                            request_duration_ms: float, experiment_label: str):
+                            request_duration_ms: float, experiment_label: str,
+                            seed: int = 0, compiler_spec: dict | None = None):
     """
     Run an experiment with parallel layered requests.
     
@@ -447,7 +457,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     
     network_topo = RouterNetTopoAdaptive(config_file)
     tl = network_topo.get_timeline()
-    tl.seed(0)
+    tl.seed(seed)
     
     # Set up logging
     # log.set_logger(__name__, tl, log_filename)
@@ -465,11 +475,40 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         router.adaptive_continuous.has_empty_neighbor = True
         router.adaptive_continuous.update_prob = update_prob_setting
         router.resource_manager.purify = purify_setting
+
+    compiler_controller = None
+    if compiler_spec is not None:
+        from compiler_scheduler import CompilerPreGenerationController
+        routers = {
+            router.name: router
+            for router in network_topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER)
+        }
+        compiler_limit = compiler_spec["compiler_memories_per_core"]
+        for router in routers.values():
+            total_memories = len(router.resource_manager.memory_manager)
+            if not 0 <= compiler_limit < total_memories:
+                raise ValueError(
+                    f"compiler memory limit {compiler_limit} must leave at least one "
+                    f"on-demand memory out of {total_memories} on {router.name}"
+                )
+            router.adaptive_continuous.set_adaptive_max_memory(compiler_limit)
+        compiler_controller = CompilerPreGenerationController(
+            timeline=tl,
+            routers=routers,
+            requests=compiler_spec["requests"],
+            schedule=compiler_spec["schedule"],
+            strategy=compiler_spec["strategy"],
+            columns=compiler_spec["columns"],
+            planner_blocked=compiler_spec["planner_blocked"],
+            planner_peak_memory=compiler_spec["planner_peak_memory"],
+            fidelity=compiler_spec["fidelity"],
+        )
+        compiler_controller.attach()
     
     # Create parallel layer request manager
     request_manager = ParallelLayerRequestManager(
         tl, name_to_apps, layered_requests,
-        pregeneration_time_ms, request_duration_ms
+        pregeneration_time_ms, request_duration_ms, compiler_controller
     )
     
     # Schedule start
@@ -491,6 +530,13 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     
     # Get statistics
     stats = request_manager.get_statistics()
+    compiler_metrics = None
+    if compiler_controller is not None:
+        compiler_metrics = compiler_controller.finalize(request_manager.request_end_times)
+        stats['compiler'] = {
+            key: value for key, value in compiler_metrics.items()
+            if key not in {'epr_utilization_trace', 'rejection_reasons'}
+        }
     
     # Print summary
     print(f"\n{'='*80}")
@@ -527,5 +573,6 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         'stats': stats,
         'latency_dict': latency_dict,
         'fidelity_dict': fidelity_dict,
-        'request_manager': request_manager
+        'request_manager': request_manager,
+        'compiler_metrics': compiler_metrics,
     }
