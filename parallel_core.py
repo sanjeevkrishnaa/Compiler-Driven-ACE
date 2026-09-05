@@ -514,10 +514,10 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         compiler_limit = compiler_spec["compiler_memories_per_core"]
         for router in routers.values():
             total_memories = len(router.resource_manager.memory_manager)
-            if not 0 <= compiler_limit < total_memories:
+            if not 0 <= compiler_limit <= total_memories:
                 raise ValueError(
-                    f"compiler memory limit {compiler_limit} must leave at least one "
-                    f"on-demand memory out of {total_memories} on {router.name}"
+                    f"compiler memory limit {compiler_limit} must be between zero "
+                    f"and the {total_memories} physical memories on {router.name}"
                 )
             router.adaptive_continuous.set_adaptive_max_memory(compiler_limit)
         compiler_controller = CompilerPreGenerationController(

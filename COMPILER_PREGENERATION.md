@@ -20,11 +20,14 @@ adoption by the later application reservation.
   limits. Requests that cannot be scheduled fall back to on-demand generation.
 
 The compiler memory value is a maximum shared quota, not a permanently indexed
-partition. The runner defaults to four total memories and a compiler cap of
-three, so at least one memory per core remains available to demand generation.
+partition. The runner defaults to four total memories and allows the compiler
+to use all four; no memory index is permanently assigned to either strategy.
 It applies the total-memory value to an in-memory copy of the selected ACE
-configuration and does not rewrite the checked-in topology file. The runner
-rejects a quota that leaves no on-demand memory.
+configuration and does not rewrite the checked-in topology file. A compiler
+cap equal to the total memory count is also supported. In that fully shared
+mode, no slot is permanently reserved: an on-demand fallback waits for an ACE
+compiler reservation to release and is retried through the existing serialized
+retry-layer path.
 
 ## Metrics
 
@@ -62,9 +65,9 @@ python run_compiler_pregeneration.py `
   --mesh 4x4 `
   --strategies on-demand,fixed,dynamic `
   --total-memories 4 `
-  --compiler-memories 3 `
-  --generation-capacity 3 `
-  --delta-layers 2 `
+  --compiler-memories 4 `
+  --generation-capacity 4 `
+  --delta-layers 6 `
   --dynamic-lookahead-layers 8 `
   --coherence-time-layers 10 `
   --stop-time-s 200 `
@@ -104,3 +107,23 @@ repeatedly regenerating a request-specific pair. A multi-seed study is required
 before treating the fixed/dynamic ordering as statistically stable. The complete
 seed-0 artifacts are written to
 `output/compiler_qft_3plus1_200s_seed0_final/` when the validation command runs.
+
+## Fully shared fixed-delta validation
+
+The requested fixed scheduler now defaults to delta=6 with all four memories
+eligible for compiler generation. A full seed-0 execution again completed all
+4,954 transfers:
+
+| Configuration | Mean request latency | Reduction vs ODG | Pre-ready success | EPR fidelity at use | Compiler expiry |
+|---|---:|---:|---:|---:|---:|
+| ODG, 4 memories | 1.1073 ms | — | 0% | — | 0% |
+| Fixed delta=2, compiler cap 3 | 0.9905 ms | 10.55% | 14.33% | 0.8846 | 69.14% |
+| Fixed delta=6, compiler cap 4 | 0.9726 ms | 12.17% | 14.37% | 0.8844 | 65.35% |
+
+Compared with the earlier fixed 3+1 run, the fully shared result lowers mean
+latency by 1.80% and expiry by 3.79 percentage points. It does not reserve an
+on-demand memory: a fallback that cannot immediately obtain capacity is placed
+on ACE's existing retry path, where each failed request becomes a separate
+retry layer. These figures are single-seed physical simulation results, so they
+demonstrate integration behavior rather than a statistically averaged claim.
+Artifacts are in `output/compiler_qft_delta6_all4_seed0/`.
