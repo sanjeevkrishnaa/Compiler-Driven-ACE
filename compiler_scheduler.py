@@ -6,6 +6,7 @@ from collections import defaultdict
 from statistics import fmean
 
 from compiler_trace import CompilerRequest, ScheduledPreparation
+from sequence.constants import MILLISECOND
 
 
 def _pair_key(pair: tuple) -> tuple:
@@ -27,6 +28,7 @@ class CompilerPreGenerationController:
         planner_blocked: int,
         planner_peak_memory: int,
         fidelity: float,
+        reservation_duration_ms: float,
     ):
         self.timeline = timeline
         self.routers = routers
@@ -36,12 +38,14 @@ class CompilerPreGenerationController:
         self.planner_blocked = planner_blocked
         self.planner_peak_memory = planner_peak_memory
         self.fidelity = fidelity
+        self.reservation_duration_ms = reservation_duration_ms
         self.schedule = {item.request_id: item.generation_layer for item in schedule}
         self.by_generation_layer = defaultdict(list)
         for item in schedule:
             self.by_generation_layer[item.generation_layer].append(item.request_id)
 
         self.deadlines = {}
+        self.triggered_generation_layers = set()
         self.launched = set()
         self.accepted = set()
         self.rejections = defaultdict(list)
@@ -55,6 +59,9 @@ class CompilerPreGenerationController:
             router.adaptive_continuous.compiler_observer = self
 
     def on_original_layer(self, layer: int) -> None:
+        if layer in self.triggered_generation_layers:
+            return
+        self.triggered_generation_layers.add(layer)
         for request_id in self.by_generation_layer.get(layer, ()):
             request = self.requests[request_id]
             source = self._router_name(request.source_core)
@@ -67,6 +74,7 @@ class CompilerPreGenerationController:
                     "target_layer": request.layer,
                     "strategy": self.strategy,
                     "fidelity": self.fidelity,
+                    "reservation_duration_ms": self.reservation_duration_ms,
                 },
             )
 
@@ -164,6 +172,10 @@ class CompilerPreGenerationController:
 
     def finalize(self, completed_request_ids) -> dict:
         completed = set(completed_request_ids)
+        for record in self.records:
+            record["target_request_start_ps"] = self.deadlines.get(
+                record["target_request_id"]
+            )
         for active_index in tuple(self.active_record_by_pair.values()):
             record = self.records[active_index]
             if record["status"] == "ready":
@@ -175,6 +187,10 @@ class CompilerPreGenerationController:
             if record["prepared_before_request"]
         }
         compiler_served = {record["actual_request_id"] for record in utilized}
+        intended = [
+            record for record in utilized
+            if record["actual_request_id"] == record["target_request_id"]
+        ]
         late_compiler_uses = compiler_served - hits
         expired = [record for record in self.records if record["status"] == "expired"]
         unused = [record for record in self.records if record["status"] in {"expired", "remaining"}]
@@ -198,6 +214,10 @@ class CompilerPreGenerationController:
             "runtime_rejection_events": sum(map(len, self.rejections.values())),
             "pregenerated_hits": len(hits),
             "pregenerated_success_rate": len(hits) / total_requests if total_requests else None,
+            "intended_request_hits": len(intended),
+            "intended_request_hit_rate": (
+                len(intended) / total_requests if total_requests else None
+            ),
             "compiler_not_ready_requests": total_requests - len(hits),
             "late_compiler_pair_uses": len(late_compiler_uses),
             "on_demand_fallbacks": total_requests - len(compiler_served),
@@ -217,6 +237,12 @@ class CompilerPreGenerationController:
             ),
             "average_fidelity_at_utilization": (
                 fmean(utilization_fidelities) if utilization_fidelities else None
+            ),
+            "average_storage_time_ms": (
+                fmean(
+                    (record["utilized_at_ps"] - record["generated_at_ps"]) / MILLISECOND
+                    for record in utilized
+                ) if utilized else None
             ),
             "epr_utilization_trace": self.records,
             "rejection_reasons": dict(self.rejections),

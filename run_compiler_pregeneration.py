@@ -58,20 +58,23 @@ def main() -> None:
     parser.add_argument("--mesh", default="4x4")
     parser.add_argument("--strategies", default="on-demand,fixed,dynamic")
     parser.add_argument("--seeds", default="0")
-    parser.add_argument("--compiler-memories", type=int, default=4)
+    parser.add_argument("--compiler-memories", type=int, default=3)
     parser.add_argument("--total-memories", type=int, default=4)
-    parser.add_argument("--generation-capacity", type=int, default=4)
+    parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
     parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
+    parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
     parser.add_argument("--max-layers", type=int)
     parser.add_argument("--output", type=Path, default=Path("output/compiler_pregeneration"))
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
+    if args.compiler_reservation_ms <= 0:
+        parser.error("--compiler-reservation-ms must be positive")
 
     trace = parse_compiler_trace(args.trace)
     if args.max_layers is not None:
@@ -118,6 +121,7 @@ def main() -> None:
                 "planner_peak_memory": peak,
                 "compiler_memories_per_core": compiler_limit,
                 "fidelity": args.fidelity_threshold,
+                "reservation_duration_ms": args.compiler_reservation_ms,
             }
             label = f"compiler-{strategy}-seed-{seed}"
             if args.verbose:
@@ -159,6 +163,8 @@ def main() -> None:
                 "runtime_rejection_events": metrics["runtime_rejection_events"],
                 "pregenerated_hits": metrics["pregenerated_hits"],
                 "pregenerated_success_rate": metrics["pregenerated_success_rate"],
+                "intended_request_hits": metrics["intended_request_hits"],
+                "intended_request_hit_rate": metrics["intended_request_hit_rate"],
                 "compiler_not_ready_requests": metrics["compiler_not_ready_requests"],
                 "late_compiler_pair_uses": metrics["late_compiler_pair_uses"],
                 "on_demand_fallbacks": metrics["on_demand_fallbacks"],
@@ -170,6 +176,7 @@ def main() -> None:
                 "compiler_waste_percentage": metrics["compiler_waste_percentage"],
                 "average_compiler_fidelity_at_creation": metrics["average_fidelity_at_creation"],
                 "average_compiler_fidelity_at_utilization": metrics["average_fidelity_at_utilization"],
+                "average_compiler_storage_time_ms": metrics["average_storage_time_ms"],
             }
             summary_rows.append(row)
             run_outputs.append({
@@ -207,6 +214,7 @@ def main() -> None:
                 "coherence_time_layers": args.coherence_time_layers,
                 "fidelity_threshold": args.fidelity_threshold,
                 "pregeneration_buffer_ms": args.pregeneration_buffer_ms,
+                "compiler_reservation_ms": args.compiler_reservation_ms,
                 "request_duration_ms": args.request_duration_ms,
                 "stop_time_s": args.stop_time_s,
             },

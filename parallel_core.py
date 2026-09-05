@@ -21,6 +21,32 @@ SECOND = int(1e12)
 # write the new functions here
 
 
+def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
+    """Split layers into batches containing at most one request per core."""
+    batches = []
+    origins = []
+    for layer_index, layer in enumerate(layered_requests):
+        if not layer:
+            batches.append([])
+            origins.append(layer_index)
+            continue
+        pending = list(layer)
+        while pending:
+            used_cores = set()
+            batch = []
+            deferred = []
+            for request in pending:
+                endpoints = {request[1], request[2]}
+                if used_cores.isdisjoint(endpoints):
+                    batch.append(request)
+                    used_cores.update(endpoints)
+                else:
+                    deferred.append(request)
+            batches.append(batch)
+            origins.append(layer_index)
+            pending = deferred
+    return batches, origins
+
 
 class ParallelLayerRequestManager:
     """
@@ -45,8 +71,12 @@ class ParallelLayerRequestManager:
         self.timeline = timeline
         self.name_to_apps = name_to_apps
         self.original_layered_requests = layered_requests  # Keep original for reporting
-        self.layered_requests = layered_requests.copy()  # Working copy that includes retries
-        self.working_layer_origins = list(range(len(layered_requests)))
+        if compiler_controller is None:
+            self.layered_requests = layered_requests.copy()
+            self.working_layer_origins = list(range(len(layered_requests)))
+        else:
+            self.layered_requests, self.working_layer_origins = \
+                serialize_core_conflicts(layered_requests)
         self.compiler_controller = compiler_controller
         self.pregeneration_time = int(pregeneration_time_ms * MILLISECOND)
         self.request_duration = int(request_duration_ms * MILLISECOND)
@@ -530,6 +560,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             planner_blocked=compiler_spec["planner_blocked"],
             planner_peak_memory=compiler_spec["planner_peak_memory"],
             fidelity=compiler_spec["fidelity"],
+            reservation_duration_ms=compiler_spec["reservation_duration_ms"],
         )
         compiler_controller.attach()
     

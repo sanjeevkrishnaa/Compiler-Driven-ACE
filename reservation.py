@@ -88,6 +88,15 @@ def eg_req_func_adaptive(protocols: List["EntanglementProtocol"], args: Argument
             return protocol
 
 
+def eg_rule_condition_one_shot(memory_info: "MemoryInfo", manager, args: Arguments):
+    """Disable regeneration after a compiler reservation creates its first pair."""
+    reservation = args.get("reservation")
+    if (getattr(reservation, "compiler_directed", False)
+            and reservation.compiler_pair_generated):
+        return []
+    return eg_rule_condition(memory_info, manager, args)
+
+
 # 2. entanglement purification #
 
 def ep_rule_action1_adaptive(memories_info: List["MemoryInfo"], args: Arguments) -> Tuple[BBPSSWCircuit | BBPSSW_bds, List[str], List["ep_req_func1_adaptive"], List[Dict]]:
@@ -245,6 +254,9 @@ class ReservationAdaptive(Reservation):
         self.compiler_generation_layer = compiler_generation_layer
         self.compiler_target_layer = compiler_target_layer
         self.compiler_strategy = compiler_strategy
+        # Compiler preparations are one-shot.  Ordinary CGP/ACGP reservations
+        # retain their original continuous-generation behavior.
+        self.compiler_pair_generated = False
 
     @property
     def compiler_directed(self) -> bool:
@@ -292,23 +304,38 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         priority = 20
         # create rules for entanglement generation
         if index > 0:
-            condition_args = {"memory_indices": memory_indices[:reservation.memory_size]}
+            condition_args = {
+                "memory_indices": memory_indices[:reservation.memory_size],
+                "reservation": reservation,
+            }
             action_args = {"mid": self.owner.map_to_middle_node[path[index - 1]], "path": path, "index": index, "from_app_request": False,
                            "encoding_type": "single_heralded", "raw_epr_errors": [1/3, 1/3, 1/3]}
-            rule = Rule(priority, eg_rule_action1_adaptive, eg_rule_condition, action_args, condition_args)
+            rule = Rule(
+                priority, eg_rule_action1_adaptive,
+                eg_rule_condition_one_shot, action_args, condition_args,
+            )
             rules.append(rule)
             priority += 1
 
         if index < len(path) - 1:
             if index == 0:
-                condition_args = {"memory_indices": memory_indices[:reservation.memory_size]}
+                condition_args = {
+                    "memory_indices": memory_indices[:reservation.memory_size],
+                    "reservation": reservation,
+                }
             else:
-                condition_args = {"memory_indices": memory_indices[reservation.memory_size:]}
+                condition_args = {
+                    "memory_indices": memory_indices[reservation.memory_size:],
+                    "reservation": reservation,
+                }
 
             action_args = {"mid": self.owner.map_to_middle_node[path[index + 1]],
                            "path": path, "index": index, "name": self.owner.name, "reservation": reservation, "from_app_request": False,
                            "encoding_type": "single_heralded", "raw_epr_errors": [1/3, 1/3, 1/3]}
-            rule = Rule(10, eg_rule_action2_adaptive, eg_rule_condition, action_args, condition_args)
+            rule = Rule(
+                10, eg_rule_action2_adaptive,
+                eg_rule_condition_one_shot, action_args, condition_args,
+            )
             rules.append(rule)
             priority += 1
 

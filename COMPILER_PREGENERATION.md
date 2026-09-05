@@ -20,14 +20,15 @@ adoption by the later application reservation.
   limits. Requests that cannot be scheduled fall back to on-demand generation.
 
 The compiler memory value is a maximum shared quota, not a permanently indexed
-partition. The runner defaults to four total memories and allows the compiler
-to use all four; no memory index is permanently assigned to either strategy.
+partition. No memory index is permanently assigned to either strategy. ACE
+adopts a cached EPR by swapping it into an application-reserved memory, so the
+runner now limits concurrent compiler reservations to three of the four shared
+memories. The fourth is transient handoff/on-demand capacity, not a statically
+designated physical memory.
 It applies the total-memory value to an in-memory copy of the selected ACE
-configuration and does not rewrite the checked-in topology file. A compiler
-cap equal to the total memory count is also supported. In that fully shared
-mode, no slot is permanently reserved: an on-demand fallback waits for an ACE
-compiler reservation to release and is retried through the existing serialized
-retry-layer path.
+configuration and does not rewrite the checked-in topology file. A cap equal
+to the total memory count remains supported for experiments, but can prevent
+cached-pair adoption because the swap temporarily requires another memory.
 
 ## Metrics
 
@@ -37,6 +38,7 @@ retry-layer path.
 - `pregenerated_success_rate`: fraction of all trace requests that consumed a
   physical compiler-generated EPR pair created no later than that request's
   scheduled inter-core start time;
+- intended-request hit count/rate and mean physical EPR storage time;
 - requests served late by a compiler pair, true on-demand fallbacks, and
   planner/runtime preparation failures;
 - EPR fidelity when generated and again at utilization;
@@ -65,11 +67,12 @@ python run_compiler_pregeneration.py `
   --mesh 4x4 `
   --strategies on-demand,fixed,dynamic `
   --total-memories 4 `
-  --compiler-memories 4 `
-  --generation-capacity 4 `
+  --compiler-memories 3 `
+  --generation-capacity 3 `
   --delta-layers 6 `
   --dynamic-lookahead-layers 8 `
   --coherence-time-layers 10 `
+  --compiler-reservation-ms 1000 `
   --stop-time-s 200 `
   --seeds 0,1,2,3,4,5,6,7,8,9 `
   --output output\compiler_qft_10seed
@@ -108,7 +111,7 @@ before treating the fixed/dynamic ordering as statistically stable. The complete
 seed-0 artifacts are written to
 `output/compiler_qft_3plus1_200s_seed0_final/` when the validation command runs.
 
-## Fully shared fixed-delta validation
+## Earlier fully occupied fixed-delta validation
 
 The requested fixed scheduler now defaults to delta=6 with all four memories
 eligible for compiler generation. A full seed-0 execution again completed all
@@ -127,3 +130,51 @@ on ACE's existing retry path, where each failed request becomes a separate
 retry layer. These figures are single-seed physical simulation results, so they
 demonstrate integration behavior rather than a statistically averaged claim.
 Artifacts are in `output/compiler_qft_delta6_all4_seed0/`.
+
+## Compiler-specific lifecycle and tuned validation
+
+The compiler path no longer behaves like speculative continuous generation:
+
+- each accepted compiler reservation stops after generating one physical pair;
+- a compiler pair is protected for its traced request instead of being taken
+  by an earlier request on the same link;
+- requests sharing a core in one circuit layer are divided into conflict-free
+  batches, while requests on disjoint cores remain parallel;
+- the reservation duration is a physical-time parameter because congestion can
+  delay a target beyond its nominal circuit layer;
+- generated-pair records include the target request's actual physical start
+  time for deadline/age analysis.
+
+With four total memories, the tuned runs use a concurrency cap of three
+compiler reservations so ACE always has transient capacity to adopt a cached
+pair or perform on-demand generation. This is dynamic sharing rather than a
+fixed 3+1 memory-index partition.
+
+Full seed-0 physical results for the 4,954-transfer QFT trace are:
+
+| Strategy | Mean latency | Reduction vs serialized ODG | Pre-ready success | Fidelity at use | Expiry |
+|---|---:|---:|---:|---:|---:|
+| Serialized ODG | 1.1070 ms | — | 0% | — | 0% |
+| Fixed delta=6 | 0.9405 ms | 15.04% | 19.46% | 0.4004 | 4.65% |
+| Dynamic/latest feasible | 0.9203 ms | 16.87% | 21.96% | 0.8205 | 1.81% |
+| Dynamic, zero-waste cap=2 | 1.0070 ms | 9.04% | 11.40% | 0.8955 | **0%** |
+
+All four runs completed 100% of the trace. Every one of the 964 fixed pairs
+and every one of the 1,088 dynamic pairs used by an application went to its
+intended request. Fixed delta=6 is retained as requested, but it holds pairs for
+635 ms on average in this congested run and therefore loses substantial
+fidelity. Dynamic scheduling normally selects the latest feasible layer and is
+the recommended compiler-driven mode. Its lower expiry is close to, but not
+exactly, zero because physical generation and reservation can still fail or a
+congestion-delayed request can miss the one-second holding window.
+
+For experiments that require the stated zero-expiry target, use
+`--strategies dynamic --compiler-memories 2 --generation-capacity 2`. On this
+trace that conservative admission profile generated 565 pairs, used all 565
+for their intended requests, and expired none. It gives up some pre-ready hits
+and latency improvement in exchange for higher fidelity and zero wasted EPRs.
+
+Artifacts are in `output/compiler_qft_serialized_odg_full_seed0/`,
+`output/compiler_qft_serialized_full_seed0/`, and
+`output/compiler_qft_serialized_dynamic_full_seed0/`. The zero-waste profile is
+in `output/compiler_qft_dynamic_cap2_full_seed0/`.

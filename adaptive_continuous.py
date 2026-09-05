@@ -208,7 +208,15 @@ class AdaptiveContinuousProtocol(Protocol):
         self.adaptive_memory_used += 1
         round_trip_time = self.owner.cchannels[neighbor].delay * 2
         start_time = self.owner.timeline.now() + round_trip_time
-        end_time = self.round_to_period(start_time + self.period)
+        # A compiler target may be delayed by congestion/retry layers after its
+        # nominal generation layer.  Keep the one-shot reservation valid for a
+        # physical coherence window instead of ACE's short periodic CGP epoch.
+        reservation_duration = int(
+            request_metadata.get("reservation_duration_ms", 1000) * MILLISECOND
+        )
+        if reservation_duration <= 0:
+            raise ValueError("compiler reservation duration must be positive")
+        end_time = start_time + reservation_duration
         reservation = ReservationAdaptive(
             self.owner.name, neighbor, start_time, end_time, memory_size=1,
             fidelity=request_metadata.get("fidelity", 0.01),
@@ -462,6 +470,7 @@ class AdaptiveContinuousProtocol(Protocol):
         if entanglement_pair not in self.generated_entanglement_pairs:
             self.generated_entanglement_pairs.add(entanglement_pair)
             if getattr(reservation, "compiler_directed", False):
+                reservation.compiler_pair_generated = True
                 metadata = {
                     "target_request_id": reservation.compiler_target_request_id,
                     "generation_layer": reservation.compiler_generation_layer,
@@ -502,8 +511,16 @@ class AdaptiveContinuousProtocol(Protocol):
                 pair for pair in entanglement_pairs
                 if self.generated_pair_metadata.get(pair, {}).get("target_request_id") == request_id
             ]
-            if targeted:
-                entanglement_pairs = targeted
+            # Compiler-directed pairs are reserved for their traced request.
+            # Ordinary CGP/ACGP pairs carry no compiler metadata and remain
+            # available as a generic fallback for any request on the link.
+            generic = [
+                pair for pair in entanglement_pairs
+                if pair not in self.generated_pair_metadata
+            ]
+            entanglement_pairs = targeted or generic
+            if not entanglement_pairs:
+                return None
 
         if self.strategy == "random":
             # Filter out stale pairs
