@@ -59,6 +59,7 @@ def main() -> None:
     parser.add_argument("--strategies", default="on-demand,fixed,dynamic")
     parser.add_argument("--seeds", default="0")
     parser.add_argument("--compiler-memories", type=int, default=3)
+    parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=2)
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
@@ -66,6 +67,7 @@ def main() -> None:
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
     parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
     parser.add_argument("--request-duration-ms", type=float, default=50)
+    parser.add_argument("--stop-time-s", type=float, default=200)
     parser.add_argument("--max-layers", type=int)
     parser.add_argument("--output", type=Path, default=Path("output/compiler_pregeneration"))
     parser.add_argument("--verbose", action="store_true")
@@ -123,6 +125,8 @@ def main() -> None:
                     str(args.config), False, False, layers,
                     args.pregeneration_buffer_ms, args.request_duration_ms,
                     label, seed=seed, compiler_spec=compiler_spec,
+                    total_memories_per_core=args.total_memories,
+                    simulation_stop_time_s=args.stop_time_s,
                 )
             else:
                 with redirect_stdout(StringIO()):
@@ -130,6 +134,8 @@ def main() -> None:
                         str(args.config), False, False, layers,
                         args.pregeneration_buffer_ms, args.request_duration_ms,
                         label, seed=seed, compiler_spec=compiler_spec,
+                        total_memories_per_core=args.total_memories,
+                        simulation_stop_time_s=args.stop_time_s,
                     )
 
             stats = result["stats"]
@@ -194,6 +200,7 @@ def main() -> None:
             "trace_requests": len(trace.requests),
             "parameters": {
                 "compiler_memories": args.compiler_memories,
+                "total_memories": args.total_memories,
                 "generation_capacity": args.generation_capacity,
                 "delta_layers": args.delta_layers,
                 "dynamic_lookahead_layers": args.dynamic_lookahead_layers,
@@ -201,6 +208,7 @@ def main() -> None:
                 "fidelity_threshold": args.fidelity_threshold,
                 "pregeneration_buffer_ms": args.pregeneration_buffer_ms,
                 "request_duration_ms": args.request_duration_ms,
+                "stop_time_s": args.stop_time_s,
             },
             "runs": run_outputs,
         }, indent=2, default=_json_default),

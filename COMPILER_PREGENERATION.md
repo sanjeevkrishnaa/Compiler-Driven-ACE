@@ -20,10 +20,11 @@ adoption by the later application reservation.
   limits. Requests that cannot be scheduled fall back to on-demand generation.
 
 The compiler memory value is a maximum shared quota, not a permanently indexed
-partition. With ACE's current eight-memory topology and
-`--compiler-memories 3`, at most three memories per router may be occupied by
-compiler preparations; at least five remain available to demand reservations.
-The runner rejects a quota that leaves no on-demand memory.
+partition. The runner defaults to four total memories and a compiler cap of
+three, so at least one memory per core remains available to demand generation.
+It applies the total-memory value to an in-memory copy of the selected ACE
+configuration and does not rewrite the checked-in topology file. The runner
+rejects a quota that leaves no on-demand memory.
 
 ## Metrics
 
@@ -60,11 +61,13 @@ python run_compiler_pregeneration.py `
   --config config\final_config\grid_4x4_ace_3.json `
   --mesh 4x4 `
   --strategies on-demand,fixed,dynamic `
+  --total-memories 4 `
   --compiler-memories 3 `
   --generation-capacity 3 `
   --delta-layers 2 `
   --dynamic-lookahead-layers 8 `
   --coherence-time-layers 10 `
+  --stop-time-s 200 `
   --seeds 0,1,2,3,4,5,6,7,8,9 `
   --output output\compiler_qft_10seed
 ```
@@ -83,13 +86,21 @@ One full seed-0 execution of the supplied trace completed all 4,954 transfers:
 
 | Strategy | Mean request latency | Reduction vs ODG | Pre-ready success | EPR fidelity at use | Compiler expiry |
 |---|---:|---:|---:|---:|---:|
-| On-demand | 1.1078 ms | — | 0% | — | 0% |
-| Fixed, delta=2 | 0.7346 ms | 33.68% | 38.15% | 0.8993 | 47.84% |
-| Dynamic, lookahead=8 | 0.7499 ms | 32.30% | 36.66% | 0.9063 | 49.04% |
+| On-demand | 1.1073 ms | — | 0% | — | 0% |
+| Fixed, delta=2 | 0.9905 ms | 10.55% | 14.33% | 0.8846 | 69.14% |
+| Dynamic, lookahead=8 | 0.9829 ms | 11.23% | 14.31% | 0.8953 | 69.82% |
 
-These are physical ACE results, not an analytical estimate. Dynamic generation
-is later and therefore preserves more fidelity, but in this seed it encounters
-more runtime timecard contention and has a slightly lower pre-ready rate than
-fixed scheduling. A multi-seed study is required before treating that ordering
-as statistically stable. The complete seed-0 artifacts are written to
-`output/compiler_qft_seed0_final/` when the validation command is run.
+These are physical ACE results, not an analytical estimate. They use the exact
+3+1 maximum allocation and a common 200-second horizon; all strategies complete
+100% of the workload. Dynamic generation is later and therefore preserves more
+fidelity. Its pre-ready rate is almost identical to fixed in this seed, but the
+slightly lower mean latency produces an 11.23% reduction versus on-demand.
+
+The roughly 70% expiry result is also significant: ACE's continuous reservation
+keeps attempting generation while a compiler pair waits, and the trace advances
+through empty layers in 5 ms steps although memory coherence is 1 ms. The next
+scheduler iteration should use physical-time-aware launch windows to avoid
+repeatedly regenerating a request-specific pair. A multi-seed study is required
+before treating the fixed/dynamic ordering as statistically stable. The complete
+seed-0 artifacts are written to
+`output/compiler_qft_3plus1_200s_seed0_final/` when the validation command runs.

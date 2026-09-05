@@ -13,6 +13,8 @@ import os
 import csv
 import matplotlib.pyplot as plt
 from parallel_core_helper import *
+from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 SECOND = int(1e12)
 
@@ -446,7 +448,9 @@ class ParallelLayerRequestManager:
 def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_setting: bool,
                             layered_requests: list, pregeneration_time_ms: float,
                             request_duration_ms: float, experiment_label: str,
-                            seed: int = 0, compiler_spec: dict | None = None):
+                            seed: int = 0, compiler_spec: dict | None = None,
+                            total_memories_per_core: int | None = None,
+                            simulation_stop_time_s: float | None = None):
     """
     Run an experiment with parallel layered requests.
     
@@ -455,7 +459,31 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     """
     log_filename = f'log/log_{experiment_label.replace(" ", "_")}'
     
-    network_topo = RouterNetTopoAdaptive(config_file)
+    topology_config_file = config_file
+    temporary_config = None
+    if total_memories_per_core is not None or simulation_stop_time_s is not None:
+        if simulation_stop_time_s is not None and simulation_stop_time_s <= 0:
+            raise ValueError("simulation stop time must be positive")
+        if total_memories_per_core is not None and total_memories_per_core < 1:
+            raise ValueError("total memories per core must be positive")
+        config = json.loads(Path(config_file).read_text(encoding="utf-8"))
+        if total_memories_per_core is not None:
+            for node_config in config["nodes"]:
+                if "memo_size" in node_config:
+                    node_config["memo_size"] = total_memories_per_core
+        if simulation_stop_time_s is not None:
+            config["stop_time"] = simulation_stop_time_s * SECOND
+        temporary_config = NamedTemporaryFile(
+            mode="w", encoding="utf-8", suffix=".json", delete=False
+        )
+        json.dump(config, temporary_config)
+        temporary_config.close()
+        topology_config_file = temporary_config.name
+    try:
+        network_topo = RouterNetTopoAdaptive(topology_config_file)
+    finally:
+        if temporary_config is not None:
+            Path(temporary_config.name).unlink(missing_ok=True)
     tl = network_topo.get_timeline()
     tl.seed(seed)
     
