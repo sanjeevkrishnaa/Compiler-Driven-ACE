@@ -1,0 +1,5 @@
+configuration,strategy,compiler_memory_cap,requests,completion_rate,average_request_latency_ms,latency_reduction_vs_odg_percent,pregenerated_success_rate,intended_request_hits,generated_compiler_pairs,utilized_compiler_pairs,expired_compiler_pairs,compiler_expiry_percentage,average_compiler_fidelity_at_utilization,average_delivered_epr_fidelity,average_compiler_storage_time_ms
+serialized_odg,on-demand,0,4954,1.0,1.1070351586152605,0.0,0.0,0,0,0,0,0.0,,0.949813357734806,
+fixed_delta6_balanced,fixed,3,4954,1.0,0.9405173649596286,15.041780051856833,0.1945902301170771,964,1011,964,47,4.648862512363996,0.4003899248168549,0.8428931226698155,635.2920176516183
+dynamic_balanced,dynamic,3,4954,1.0,0.9203106727916837,16.867078192633187,0.21962050867985466,1088,1108,1088,20,1.8050541516245486,0.8205081177838132,0.9213818674573621,82.32141067641544
+dynamic_zero_waste,dynamic,2,4954,1.0,1.0069912691784417,9.037101365593399,0.11404925312878482,565,565,565,0,0.0,0.8954838587381132,0.9435974903323674,31.747243191929204
