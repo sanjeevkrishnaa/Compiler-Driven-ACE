@@ -48,6 +48,8 @@ class CompilerPreGenerationController:
         self.triggered_generation_layers = set()
         self.launched = set()
         self.accepted = set()
+        self.launched_at = {}
+        self.accepted_at = {}
         self.rejections = defaultdict(list)
         self.records = []
         self.active_record_by_pair = {}
@@ -86,9 +88,11 @@ class CompilerPreGenerationController:
 
     def on_preparation_launched(self, request_id: int) -> None:
         self.launched.add(request_id)
+        self.launched_at.setdefault(request_id, self.timeline.now())
 
     def on_preparation_accepted(self, request_id: int) -> None:
         self.accepted.add(request_id)
+        self.accepted_at.setdefault(request_id, self.timeline.now())
 
     def on_preparation_rejected(self, request_id: int, reason: str) -> None:
         self.rejections[request_id].append(reason)
@@ -120,6 +124,12 @@ class CompilerPreGenerationController:
             "generation_layer": metadata["generation_layer"],
             "target_layer": metadata["target_layer"],
             "generated_at_ps": generated_at,
+            "preparation_launched_at_ps": self.launched_at.get(
+                metadata["target_request_id"]
+            ),
+            "preparation_accepted_at_ps": self.accepted_at.get(
+                metadata["target_request_id"]
+            ),
             "utilized_at_ps": None,
             "expired_at_ps": None,
             "expiry_reason": None,

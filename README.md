@@ -9,3 +9,7 @@ traces.  Both fixed-delta and resource-aware dynamic scheduling are available,
 with on-demand fallback plus pair creation/utilization fidelity, pre-ready
 success, expiry, and wastage metrics.  See
 [COMPILER_PREGENERATION.md](COMPILER_PREGENERATION.md) for the model and command.
+
+The research runner also supports measured physical-time lead calibration and
+paired multi-seed 95% confidence intervals. The original single-seed table is a
+validation checkpoint, not a statistical conclusion.

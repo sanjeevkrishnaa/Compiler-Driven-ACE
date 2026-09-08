@@ -178,3 +178,37 @@ Artifacts are in `output/compiler_qft_serialized_odg_full_seed0/`,
 `output/compiler_qft_serialized_full_seed0/`, and
 `output/compiler_qft_serialized_dynamic_full_seed0/`. The zero-waste profile is
 in `output/compiler_qft_dynamic_cap2_full_seed0/`.
+
+## Reproducible multi-seed and calibrated-dynamic workflow
+
+The latest-feasible dynamic policy uses a one-layer minimum lead by default.
+That is the legacy policy, not evidence that one layer is physically sufficient.
+`--dynamic-min-lead-layers` now makes the lead explicit. The value can be
+calibrated from simulator observations rather than guessed:
+
+1. Run ODG and record request setup/generation times and layer durations.
+2. Declare the service-time quantile, layer-duration quantile, and safety factor.
+3. Calculate and record the resulting lead from those physical samples.
+4. Run the calibrated dynamic policy over the same seeds.
+
+The quantiles and safety factor are mandatory inputs because they are
+research-method choices. `run_research_matrix.py` automates the paired matrix:
+ODG, fixed-delta-six/cap-three, latest-dynamic cap two and three, calibration,
+and calibrated-dynamic cap two and three. It first verifies the exact QFT trace
+hash.
+
+```bash
+python run_research_matrix.py \
+  --trace /absolute/path/qft_requests.txt \
+  --sequence-root /absolute/path/qnoc-stress-testing/SeQUeNCe \
+  --service-quantile 0.95 \
+  --layer-quantile 0.50 \
+  --safety-factor 1.0 \
+  --output output/qft_10seed_calibrated
+```
+
+The output contains raw run artifacts, a provenance manifest, physical lead
+calibration, aggregate sample statistics with Student-t 95% intervals, and
+seed-paired latency comparisons against ODG. The compatible modified SeQUeNCe
+dependency remains external. Do not substitute upstream/PyPI SeQUeNCe and call
+the resulting numbers an ACE reproduction.

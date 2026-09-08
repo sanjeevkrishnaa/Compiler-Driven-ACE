@@ -6,9 +6,11 @@ import argparse
 import csv
 from dataclasses import replace
 from datetime import datetime, timezone
+import hashlib
 from io import StringIO
 import json
 from pathlib import Path
+import platform
 from statistics import fmean
 from contextlib import redirect_stdout
 
@@ -46,6 +48,14 @@ def _mean_fidelity(fidelity_dict) -> float | None:
     return fmean(values) if values else None
 
 
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Compiler-driven EPR pre-generation using ACE physical protocols"
@@ -63,6 +73,10 @@ def main() -> None:
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
+    parser.add_argument(
+        "--dynamic-min-lead-layers", type=int, default=1,
+        help="minimum logical-layer lead for dynamic generation; use a calibrated value",
+    )
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
     parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
@@ -71,6 +85,10 @@ def main() -> None:
     parser.add_argument("--stop-time-s", type=float, default=200)
     parser.add_argument("--max-layers", type=int)
     parser.add_argument("--output", type=Path, default=Path("output/compiler_pregeneration"))
+    parser.add_argument(
+        "--configuration-name",
+        help="stable experiment label used when combining several summary files",
+    )
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
     if args.compiler_reservation_ms <= 0:
@@ -110,6 +128,7 @@ def main() -> None:
                 coherence_time_layers=args.coherence_time_layers,
                 delta_layers=args.delta_layers,
                 dynamic_lookahead_layers=args.dynamic_lookahead_layers,
+                dynamic_min_lead_layers=args.dynamic_min_lead_layers,
             )
             compiler_limit = 0 if strategy == "on-demand" else args.compiler_memories
             compiler_spec = {
@@ -145,8 +164,15 @@ def main() -> None:
             stats = result["stats"]
             metrics = result["compiler_metrics"]
             row = {
+                "configuration": args.configuration_name or strategy,
                 "strategy": strategy,
                 "seed": seed,
+                "total_memories": args.total_memories,
+                "compiler_memories": compiler_limit,
+                "generation_capacity": args.generation_capacity,
+                "delta_layers": args.delta_layers,
+                "dynamic_lookahead_layers": args.dynamic_lookahead_layers,
+                "dynamic_min_lead_layers": args.dynamic_min_lead_layers,
                 "requests": metrics["requests"],
                 "completed_requests": stats["completed_requests"],
                 "completion_rate": (
@@ -187,6 +213,8 @@ def main() -> None:
                 ],
                 "epr_utilization_trace": metrics["epr_utilization_trace"],
                 "rejection_reasons": metrics["rejection_reasons"],
+                "simulator_timing_breakdown": stats.get("timing_breakdown", {}),
+                "simulator_layer_latencies_ms": stats.get("layer_latencies", {}),
             })
             print(
                 f"{strategy:9} seed={seed} complete={row['completion_rate']:.2%} "
@@ -201,7 +229,10 @@ def main() -> None:
         json.dumps({
             "created_at": datetime.now(timezone.utc).isoformat(),
             "trace": str(args.trace.resolve()),
+            "trace_sha256": _sha256(args.trace),
             "config": str(args.config.resolve()),
+            "config_sha256": _sha256(args.config),
+            "python": platform.python_version(),
             "mesh": f"{rows}x{columns}",
             "trace_layers": trace.layer_count,
             "trace_requests": len(trace.requests),
@@ -211,6 +242,7 @@ def main() -> None:
                 "generation_capacity": args.generation_capacity,
                 "delta_layers": args.delta_layers,
                 "dynamic_lookahead_layers": args.dynamic_lookahead_layers,
+                "dynamic_min_lead_layers": args.dynamic_min_lead_layers,
                 "coherence_time_layers": args.coherence_time_layers,
                 "fidelity_threshold": args.fidelity_threshold,
                 "pregeneration_buffer_ms": args.pregeneration_buffer_ms,

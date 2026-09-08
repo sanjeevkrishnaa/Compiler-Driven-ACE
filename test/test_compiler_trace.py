@@ -74,6 +74,27 @@ class CompilerTraceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "not 0"):
             self.parse(TRACE.replace("(0, 1, 3)", "(0, 0, 3)"))
 
+    def test_dynamic_minimum_lead_is_enforced(self):
+        trace = self.parse()
+        schedule, blocked, _ = plan_preparations(
+            trace, strategy="dynamic", compiler_memories_per_core=1,
+            generation_capacity_per_core=1, coherence_time_layers=4,
+            dynamic_lookahead_layers=3, dynamic_min_lead_layers=2,
+        )
+        self.assertEqual(
+            [(item.request_id, item.generation_layer) for item in schedule],
+            [(1, 0)],
+        )
+        self.assertEqual(blocked, 1)
+
+    def test_dynamic_minimum_lead_must_fit_lookahead(self):
+        with self.assertRaisesRegex(ValueError, "minimum lead"):
+            plan_preparations(
+                self.parse(), strategy="dynamic", compiler_memories_per_core=1,
+                generation_capacity_per_core=1, coherence_time_layers=4,
+                dynamic_lookahead_layers=2, dynamic_min_lead_layers=3,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

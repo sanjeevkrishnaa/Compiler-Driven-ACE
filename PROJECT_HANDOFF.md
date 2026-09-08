@@ -467,3 +467,29 @@ solves uncertainty, not capacity. The QFT workload can demand 28 EPR endpoints
 at a core in one logical layer, while only four memories exist. Correct
 compiler-driven execution must jointly schedule communication and EPR creation;
 pre-generation by itself cannot make every request ready.
+
+## 13. Continuation update (2026-09-09)
+
+Development continues on `codex/ace-physical-time-scheduler`. The following
+reproducibility infrastructure has been added without changing or replacing the
+single-seed results in Section 7:
+
+- an explicit dynamic minimum lead, separate from total lookahead;
+- physical setup/generation and layer-duration samples in `runs.json`;
+- lead calibration from declared empirical quantiles and safety factor;
+- a QFT matrix runner covering ODG, fixed, cap-two/cap-three dynamic, and
+  calibrated dynamic over common seeds;
+- sample SD and two-sided Student-t 95% intervals;
+- seed-paired latency differences and reductions versus ODG;
+- trace/config hashes and complete experiment parameters in artifacts.
+
+The handoff URL `https://github.com/anub-dota/qnoc-stress-testing` returned a
+GitHub 404 and could not be cloned on the continuation machine. The adjacent
+`SeQUeNCe-compiler-native` checkout is a different native-integration project
+and was not substituted. Consequently, no new physical result is claimed until
+the exact compatible runtime is supplied or access is restored.
+
+The verified GitHub identity requested for future commits and pushes is
+`DhruvPansuriya`; the local Git author matches that identity. No public
+`Compiler-Driven-ACE` repository was visible under that account, so no
+destination remote was invented.
