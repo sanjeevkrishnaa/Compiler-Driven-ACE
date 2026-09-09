@@ -236,6 +236,53 @@ These are validation/smoke checks, **not** publication matrices.
 
 ## Problems encountered and fixes
 
+### ACE compiler-reservation lifecycle defect (discovered during shared-pool validation)
+
+**What happened.** A compiler-directed EPR pair was generated, held for its
+target transfer, and correctly consumed by the application. However, its
+compiler reservation timecards and compiler-memory quota remained active until
+the reservation's nominal 1,000 ms expiry. The EPR pair was already gone, but
+the scheduler continued to treat its compiler capacity as occupied.
+
+```text
+Before the fix:
+compiler EPR generated → compiler slot reserved → EPR consumed
+                                             └→ reservation stayed for 1,000 ms
+                                                and blocked later compiler work
+```
+
+**Why it matters.** This was not real quantum-memory contention. It could
+reject later preparations, reduce readiness, add retry layers and inflate
+latency. It therefore risked measuring stale scheduler bookkeeping rather than
+finite memory, generation failure, endpoint contention or decoherence. Since
+native SeQUeNCe does not use ACE timecards, it also made any final ACE/native
+interpretation unsafe.
+
+**How it was found.** The new shared-pool full-trace smoke accumulated an
+unexpectedly large number of retry layers. Reviewing the compiler-pair
+lifecycle showed that strict 4+0 released its reservation at direct use, while
+the ordinary fallback-enabled application utilization path did not.
+
+**Fix.** At compiler-pair utilization, ACE now releases the compiler
+reservation/timecard and compiler occupancy quota at both endpoint routers.
+The application retains its physical EPR memory through its normal consumption
+path; only stale compiler bookkeeping is removed.
+
+```text
+After the fix:
+compiler EPR generated → compiler slot reserved → EPR consumed
+                                             └→ compiler reservation and quota
+                                                released immediately
+```
+
+**Evidence.** The corrected 12-transfer shared-pool ACE prefix completed
+12/12 transfers, improved compiler readiness from 50% before the correction
+to 100% afterward, and retained only three genuine finite-capacity retry
+layers. A regression test verifies one release at both endpoints on every
+compiler-pair utilization. The prior ACE static-bank matrices are preserved as
+historical artifacts but must be rerun before final ACE claims; the corrected
+30-seed rerun is the current active measurement.
+
 | Problem | Root cause | Resolution |
 |---|---|---|
 | Earlier analytical results were not physical results | No physical generation failure/noise lifecycle | Implemented physical ACE and native execution paths |
