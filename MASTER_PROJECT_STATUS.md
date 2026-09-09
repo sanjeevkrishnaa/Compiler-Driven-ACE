@@ -1,0 +1,212 @@
+# Compiler-Driven ACE / SeQUeNCe: master project status and handoff
+
+## Read this first
+
+This is the consolidated status document for the BTP project: compiler-driven
+EPR pre-generation for inter-core quantum communication. It combines the
+original ACE handoff with the work completed afterward, including the controlled
+physical ACE/native-SeQUeNCe comparison.
+
+The current source of truth is the shared 30-seed experiment contract and its
+audited report:
+
+- [`experiments/qft_4x4_comparison_v1.json`](experiments/qft_4x4_comparison_v1.json)
+- [`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md)
+- [`COMPILER_DRIVEN_ACE_4X4_REPORT.md`](COMPILER_DRIVEN_ACE_4X4_REPORT.md)
+
+Older single-seed, ten-seed, shared-pool, and calibrated-dynamic results remain
+useful development history. They are not replacements for the current
+static-bank 30-seed comparison because their memory allocation and/or schedule
+timing differ. See [`COMPILER_PREGENERATION.md`](COMPILER_PREGENERATION.md) and
+[`results/ACE_VS_NATIVE_SEQUENCE.md`](results/ACE_VS_NATIVE_SEQUENCE.md) as
+historical context only.
+
+## 1. Research question
+
+When a quantum compiler knows that a logical qubit will move from one core to
+an adjacent core in the future, can the network prepare the required EPR pair
+early enough to reduce communication latency? The answer must account for
+finite entanglement memories, physical generation failures, contention,
+decoherence, pair expiry, and an on-demand fallback when preparation is not
+ready.
+
+The project compares three policies:
+
+| Policy | Decision |
+|---|---|
+| ODG | Generate only when the communication request arrives. |
+| Fixed | Attempt a request-specific pair exactly a fixed number of logical sublayers before use. |
+| Dynamic | Search a bounded lookahead window and choose the latest planner-feasible launch. |
+
+This is not an analytical-only cache model. Both ACE and native SeQUeNCe execute
+physical discrete-event simulation paths. The two backends differ in their
+protocol mechanics and latency boundaries, so their raw milliseconds are not
+treated as an absolute simulator-speed comparison.
+
+## 2. Original handoff: what existed at the start
+
+The original handoff described a physical ACE extension that already:
+
+- parsed and validated the complete compiler trace, including evolving qubit
+  placement and adjacent mesh-hop checks;
+- converted core identifiers into ACE routers and serialized same-core
+  communication conflicts;
+- implemented fixed and latest-feasible dynamic offline preparation planners;
+- injected directed, one-shot compiler reservations into ACE's RSVP, timecard,
+  single-heralded generation, cache adoption, memory-decay, and expiry path;
+- protected an EPR pair for the request it was generated to serve;
+- fell back to ordinary on-demand generation when a pair was absent;
+- recorded request completion/latency, readiness, fidelity at creation and
+  use, storage time, expiry, waste, and intended-request utilization; and
+- completed preliminary seed-0 and ten-seed studies.
+
+That work fixed an important early lifecycle bug: compiler generation was
+changed from continuous regeneration to one-shot request-specific generation.
+It also established that compiler knowledge cannot remove finite-memory and
+generation-capacity limits.
+
+## 3. Gap identified after the handoff
+
+The earlier ACE and native studies did **not** yet constitute a fair physical
+cross-repository comparison. In particular, they used different memory models:
+ACE used a shared four-memory pool with a compiler cap, whereas native used a
+static 3+1 compiler/on-demand partition. Labels such as “3+1” therefore did
+not mean the same physical resource allocation in both repositories.
+
+The work carried forward in this session was to remove that ambiguity and test
+the question under one frozen, reproducible experiment definition.
+
+## 4. Work completed in this session
+
+### 4.1 Shared contract and workload equivalence
+
+An identical contract was added to ACE and native SeQUeNCe. It freezes:
+
+- the exact supplied QFT trace: 16 cores, 96 logical qubits, 766 source
+  layers, 4,954 transfers, SHA-256
+  `61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1`;
+- stable deterministic conflict serialization into 2,831 sublayers, with map
+  SHA-256 `6b9520823830c50caaefb57baa737c2a8af834ef9474fe628df35def103a235d`;
+- 30 paired seeds (0–29), fixed lead of two sublayers, dynamic lookahead of
+  eight sublayers, dynamic minimum lead of one sublayer, ten-sublayer
+  coherence horizon, and 100 µs logical sublayer duration;
+- four exact memory profiles: full ODG with four demand memories, static 3+1,
+  static 2+2, and two-total-memory static 1+1; and
+- allowed comparison rules: paired policy effects only within a backend and
+  memory profile; cross-backend comparisons describe direction and trade-offs,
+  not absolute latency.
+
+### 4.2 ACE implementation
+
+ACE now has real static memory banks. Compiler/adaptive reservations use the
+compiler bank and application/on-demand RSVP reservations use the separate
+demand bank. The old shared-pool behavior remains available for legacy work.
+
+The ACE runner now supports contract/profile execution, complete provenance,
+strict rejection of conflicting CLI overrides, exact serialized scheduling,
+full ODG with zero compiler capacity, matched ODG using only the demand bank,
+validation-only runs, and explicitly marked limited smoke runs. The matrix
+runner rejects non-empty output directories so a result cannot be accidentally
+overwritten.
+
+### 4.3 Native SeQUeNCe implementation
+
+Native SeQUeNCe received the same contract loader, profile runner, deterministic
+serialization, dynamic minimum-lead parameter, provenance, matrix runner, and
+stronger invariant auditor. Its physical model includes generation failures,
+retry timing, memory noise/expiry, teleportation, and correction stages.
+
+### 4.4 Verification and documentation
+
+- ACE: 22/22 tests pass against the exact QFT trace.
+- Native: 20 relevant contract/compiler tests pass.
+- ACE audit: 1,486,200 completed request instances and 181,228 compiler-pair
+  records passed accounting, uniqueness, target, expiry, and fidelity checks.
+- Native audit: 1,486,200 completed request instances and zero failures;
+  compressed per-request traces passed pair accounting, memory-bound, timing,
+  uniqueness, and fidelity checks.
+- ACE includes a matrix summarizer, machine-readable aggregate/paired CSVs,
+  the detailed technical report, and this master status document.
+
+## 5. Current controlled result
+
+All results below use the exact shared contract. “Pre-ready” means a
+compiler-generated pair was available before the associated transfer; fidelity
+is measured when that pair is used.
+
+### ACE
+
+| Profile | Fixed: latency / ready / fidelity | Dynamic: latency / ready / fidelity | Dynamic vs fixed |
+|---|---|---|---|
+| 3+1 | 0.805875 ms / 34.65% / 0.7834 | 0.802312 ms / 35.39% / 0.8212 | 0.437% faster, 95% CI [0.121, 0.754]% |
+| 2+2 | 0.983236 ms / 14.06% / 0.8567 | 0.978956 ms / 14.43% / 0.8798 | 0.433% faster, [0.202, 0.665]% |
+| 1+1 | 1.000413 ms / 12.28% / 0.8551 | 1.009635 ms / 10.97% / 0.8039 | 0.923% slower, [−1.117, −0.728]% |
+
+Against the matched on-demand baseline (1.104216 ms), every ACE compiler mode
+reduces mean latency. At 3+1 and 2+2, dynamic is modestly but consistently
+better than fixed and uses fresher pairs. At 1+1, dynamic is worse: it proposes
+many more requests than the physical ACE reservation path can admit, so its
+accepted pairs wait longer (about 90.5 ms versus 62.8 ms for fixed) and decay.
+This is a measured planner/runtime mismatch under severe memory pressure.
+
+### Native SeQUeNCe
+
+| Profile | Fixed: latency / ready / fidelity | Dynamic: latency / ready / fidelity | Dynamic vs fixed |
+|---|---|---|---|
+| 3+1 | 0.005028 ms / 92.29% / 0.7393 | 0.018990 ms / 69.66% / 0.8660 | 279.64% slower |
+| 2+2 | 0.005028 ms / 92.29% / 0.7393 | 0.018990 ms / 69.66% / 0.8660 | 279.64% slower |
+| 1+1 | 0.037042 ms / 51.46% / 0.6671 | 0.018990 ms / 69.66% / 0.8660 | 48.75% faster |
+
+Native fixed has more time for physical generation retries at 3+1 and 2+2,
+so it produces more ready pairs but uses older, lower-fidelity pairs. Dynamic
+uses fresher pairs but has fewer retry opportunities. Under 1+1, dynamic can
+spread work across its window and wins; fixed's rigid lead causes much more
+contention. The 3+1 and 2+2 native cells are identical because the serialized
+workload never makes a third compiler memory useful in this configuration.
+
+## 6. What is complete, and what is not
+
+| Item | Status | Evidence / action |
+|---|---|---|
+| ACE physical compiler integration | Complete | Committed and pushed on `codex/ace-physical-time-scheduler`. |
+| Fair static-bank ACE matrix | Complete | Four profiles × policies × 30 seeds; audited. |
+| Native physical comparison matrix | Complete | Same contract, profiles and seeds; audited. No rerun is currently justified. |
+| Cross-repository statistical report | Complete | `results/shared_contract_30seed/`. |
+| Native code/results version-control packaging | Pending | Native worktree has the implementation, tests, docs, and ignored 113 MB raw matrix output, but its new files/modifications still need a reviewed commit and push. |
+| Physical CGP/ACGP baseline on this same contract | Pending, separate experiment | Do not compare old analytical/speculative values with this physical matrix. A new versioned 30-seed static-bank run is required if the research question includes CGP/ACGP. |
+| Reservation-aware ACE dynamic policy | Pending research improvement | The current 1+1 result identifies the target; do not tune it into this baseline. |
+| Sensitivity analysis | Pending research extension | Vary lookahead, minimum lead, coherence, generation parameters, and workload/topology in a new contract. |
+
+## 7. Decision on rerunning native SeQUeNCe
+
+No full rerun is needed now. The native matrix already has all expected cells,
+complete seed sets, the same trace and contract hashes as ACE, and successful
+invariant audits. A rerun would be necessary only if the native source changes,
+the contract changes, an audit fails, or the raw output is lost before the
+native commit/provenance has been preserved.
+
+The correct immediate task is to commit the native implementation, its tests
+and documentation, then push that branch. The raw output remains ignored due
+to size; its reproducibility comes from the committed contract, code, command,
+provenance embedded in `study.json`, and audit procedure.
+
+## 8. Recommended next sequence of work
+
+1. Review, commit, and push the native SeQUeNCe contract implementation and
+   documentation without staging the pre-existing user config files or large
+   ignored raw output.
+2. Preserve the current shared 30-seed result as the baseline; do not overwrite
+   its output directory.
+3. Define a new versioned contract for an ACE reservation-aware dynamic policy.
+   It should use physical acceptance/admission information, not only offline
+   layer capacity, and test whether it resolves the ACE 1+1 regression.
+4. If CGP/ACGP is part of the thesis comparison, define their physical behavior,
+   static-bank allocation, metrics, and seeds in that new contract; run the
+   same 30 paired seeds and audit them.
+5. Perform a pre-registered sensitivity study over the parameters above and at
+   least one additional workload/topology before making a general claim beyond
+   this QFT 4×4 trace.
+6. Turn the locked baseline and follow-up experiments into thesis/paper figures:
+   paired latency effect with confidence intervals, readiness-versus-fidelity
+   scatter, and memory-profile comparison. Clearly label ACE/native values as
+   within-backend results.

@@ -47,3 +47,7 @@ For the full technical narrative—architecture, code-level changes, exact
 contract, audited 30-seed results, ACE/native interpretation, limitations, and
 reproduction commands—read
 [`COMPILER_DRIVEN_ACE_4X4_REPORT.md`](COMPILER_DRIVEN_ACE_4X4_REPORT.md).
+
+For the complete project history, current verified status, distinction between
+historical and controlled experiments, pending work, and recommended research
+sequence, see [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md).
