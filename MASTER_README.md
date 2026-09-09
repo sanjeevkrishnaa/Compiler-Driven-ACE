@@ -29,9 +29,15 @@ Important native SeQUeNCe commits:
 | [`d3cc4b7`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/d3cc4b7) | Early compiler-driven/native entanglement studies |
 | [`94f3b49`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/94f3b49) | Native physical compiler pre-generation integration |
 
-The current ACE development branch is `codex/strict-compiler-4plus0`. Its
-new commits are documented below once pushed. It is deliberately separate from
-the earlier audited branch because it adds strict 4+0 and shared-pool work.
+The current ACE development branch is
+[`codex/strict-compiler-4plus0`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0).
+It is deliberately separate from the earlier audited branch because it adds
+strict 4+0 and shared-pool work:
+
+| Commit | Contribution |
+|---|---|
+| [`8ddd940`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/commit/8ddd940) | Strict compiler-only 4+0, shared-pool contract support, lifecycle repair and regression tests |
+| [`102635a`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/commit/102635a) | Master BTP narrative, shared-pool design and adaptive-baseline specification |
 
 ## Research idea
 
