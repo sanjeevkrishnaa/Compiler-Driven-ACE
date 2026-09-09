@@ -98,3 +98,18 @@ The runner has completed a non-empty six-transfer physical ODG smoke replay
 expiry, waste, fidelity-at-use and storage-time fields. These smoke checks
 confirm integration only; they are not performance results. The full 30
 paired-seed ODG/CGP/ACGP matrix must use the frozen shared-pool contract.
+
+After a matrix completes, audit both application completion and every adaptive
+pair lifecycle record before interpreting a result:
+
+```bash
+MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python audit_adaptive_baseline_results.py \
+  output/qft_shared_pool_adaptive_30seed/runs.json \
+  --expected-trace-sha256 61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1 \
+  --output output/qft_shared_pool_adaptive_30seed/audit.json
+```
+
+The auditor verifies complete request delivery, trace identity, unique
+policy/seed cells, pair-lifecycle conservation, one adaptive pair per
+application request, timestamp ordering, fidelity range, and agreement between
+the pair trace and all reported lifecycle counters.
