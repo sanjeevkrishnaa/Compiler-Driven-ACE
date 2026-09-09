@@ -349,13 +349,17 @@ artifact audit. Its local source artifacts are in
 `output/qft_static_corrected_30seed/`; its tracked interpretation is
 [`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
 
+The shared-pool compiler matrix has also completed and passed audit. Dynamic
+reduces paired mean latency by 44.22% versus ODG and 6.45% versus fixed under
+the four-memory, cap-three policy. See
+[`results/SHARED_POOL_COMPILER_30SEED.md`](results/SHARED_POOL_COMPILER_30SEED.md).
+
 ### Required sequence
 
-1. Run and audit ACE shared-pool cap-3 matrix.
+1. Run and audit the implemented trace-driven physical ACE ODG/CGP/ACGP baseline.
 2. Run and audit native shared-pool cap-3 matrix.
-3. Run the implemented trace-driven physical ACE ODG/CGP/ACGP baseline.
-4. Compare ODG, CGP, ACGP, fixed and dynamic **within each backend**.
-5. Publish only audited, complete paired-seed results.
+3. Compare ODG, CGP, ACGP, fixed and dynamic **within each backend**.
+4. Publish only audited, complete paired-seed results.
 
 The controlled CGP/ACGP requirements are in
 [`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md). Existing random/PIR
