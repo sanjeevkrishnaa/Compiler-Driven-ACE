@@ -163,7 +163,7 @@ class ParallelLayerRequestManager:
     
     def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
                  pregeneration_time_ms: float, request_duration_ms: float,
-                 compiler_controller=None):
+                 compiler_controller=None, minimum_layer_duration_ps: int | None = None):
         """
         Args:
             timeline: The simulation timeline
@@ -182,6 +182,9 @@ class ParallelLayerRequestManager:
             self.layered_requests, self.working_layer_origins = \
                 serialize_core_conflicts(layered_requests)
         self.compiler_controller = compiler_controller
+        if minimum_layer_duration_ps is not None and minimum_layer_duration_ps < 1:
+            raise ValueError("minimum layer duration must be positive")
+        self.minimum_layer_duration = minimum_layer_duration_ps
         self.pregeneration_time = int(pregeneration_time_ms * MILLISECOND)
         self.request_duration = int(request_duration_ms * MILLISECOND)
         
@@ -298,8 +301,12 @@ class ParallelLayerRequestManager:
                 print(f"Total end-to-end latency: {self.get_end_to_end_latency():.2f} ms")
                 print(f"{'='*80}\n")
             else:
-                # Schedule next layer after a 5ms delay
-                next_layer_time = current_time + 5 * MILLISECOND
+                # Contract runs use an explicit logical sublayer duration;
+                # legacy runs retain the historical five-millisecond empty gap.
+                empty_gap = (self.minimum_layer_duration
+                             if self.minimum_layer_duration is not None
+                             else 5 * MILLISECOND)
+                next_layer_time = current_time + empty_gap
                 print(f"Empty layer - scheduling next layer {self.current_layer_index} at {next_layer_time / MILLISECOND:.2f} ms...\n")
                 process = Process(self, "_send_layer", [])
                 event = Event(next_layer_time, process)
@@ -439,10 +446,16 @@ class ParallelLayerRequestManager:
                 print(f"Total end-to-end latency: {self.get_end_to_end_latency():.2f} ms")
                 print(f"{'='*80}\n")
             else:
-                # Schedule next layer immediately
+                # Enforce the contract's minimum logical sublayer duration.
                 print(f"Scheduling next layer {self.current_layer_index}...\n")
+                next_layer_time = completion_time
+                if self.minimum_layer_duration is not None:
+                    next_layer_time = max(
+                        completion_time,
+                        self.layer_start_times[layer_idx] + self.minimum_layer_duration,
+                    )
                 process = Process(self, "_send_layer", [])
-                event = Event(completion_time, process)
+                event = Event(next_layer_time, process)
                 self.timeline.schedule(event)
     
     def get_end_to_end_latency(self) -> float:
@@ -584,7 +597,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             request_duration_ms: float, experiment_label: str,
                             seed: int = 0, compiler_spec: dict | None = None,
                             total_memories_per_core: int | None = None,
-                            simulation_stop_time_s: float | None = None):
+                            simulation_stop_time_s: float | None = None,
+                            minimum_layer_duration_ps: int | None = None):
     """
     Run an experiment with parallel layered requests.
     
@@ -655,6 +669,9 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                     f"and the {total_memories} physical memories on {router.name}"
                 )
             router.adaptive_continuous.set_adaptive_max_memory(compiler_limit)
+            router.adaptive_continuous.resource_reservation.set_static_memory_partition(
+                compiler_spec.get("static_compiler_memories")
+            )
         compiler_controller = CompilerPreGenerationController(
             timeline=tl,
             routers=routers,
@@ -672,7 +689,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     # Create parallel layer request manager
     request_manager = ParallelLayerRequestManager(
         tl, name_to_apps, layered_requests,
-        pregeneration_time_ms, request_duration_ms, compiler_controller
+        pregeneration_time_ms, request_duration_ms, compiler_controller,
+        minimum_layer_duration_ps,
     )
     
     # Schedule start

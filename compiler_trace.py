@@ -251,14 +251,14 @@ def plan_preparations(
 ) -> tuple[tuple[ScheduledPreparation, ...], int, int]:
     """Plan request-specific preparations under per-layer memory limits."""
 
-    if compiler_memories_per_core < 1 or generation_capacity_per_core < 1:
-        raise ValueError("compiler memory and generation capacities must be positive")
     if coherence_time_layers <= 0 or delta_layers < 1 or dynamic_lookahead_layers < 1:
         raise ValueError("coherence and lookahead values must be positive")
     if not 1 <= dynamic_min_lead_layers <= dynamic_lookahead_layers:
         raise ValueError("dynamic minimum lead must be within the dynamic lookahead")
     if strategy == "on-demand":
         return (), 0, 0
+    if compiler_memories_per_core < 1 or generation_capacity_per_core < 1:
+        raise ValueError("compiler memory and generation capacities must be positive")
 
     memory_load: defaultdict[tuple[int, int], int] = defaultdict(int)
     generation_load: defaultdict[tuple[int, int], int] = defaultdict(int)

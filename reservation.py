@@ -279,6 +279,47 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
 
     def __init__(self, owner: "QuantumRouterAdaptive", name: str, memory_array_name: str):
         super().__init__(owner, name, memory_array_name)
+        self.compiler_memory_indices = None
+
+    def set_static_memory_partition(self, compiler_memories: int | None) -> None:
+        """Restrict adaptive/compiler and application reservations to disjoint banks.
+
+        ``None`` preserves ACE's historical shared-pool behavior.  Otherwise,
+        the first ``compiler_memories`` timecards form the compiler bank and
+        every remaining timecard is reserved for application/on-demand RSVP.
+        """
+        if compiler_memories is None:
+            self.compiler_memory_indices = None
+            return
+        if isinstance(compiler_memories, bool) or not isinstance(compiler_memories, int):
+            raise ValueError("compiler memory partition must be an integer or None")
+        if not 0 <= compiler_memories < len(self.timecards):
+            raise ValueError("static partition must leave at least one on-demand memory")
+        self.compiler_memory_indices = frozenset(range(compiler_memories))
+
+    def schedule(self, reservation) -> bool:
+        """Schedule within the configured compiler or demand bank."""
+        if self.compiler_memory_indices is None:
+            return super().schedule(reservation)
+        uses_compiler_bank = isinstance(reservation, ReservationAdaptive)
+        eligible = self.compiler_memory_indices
+        if not uses_compiler_bank:
+            eligible = set(range(len(self.timecards))) - self.compiler_memory_indices
+        counter = reservation.memory_size if self.owner.name in {
+            reservation.initiator, reservation.responder
+        } else reservation.memory_size * 2
+        accepted = []
+        for timecard in self.timecards:
+            if timecard.memory_index not in eligible:
+                continue
+            if timecard.add(reservation):
+                counter -= 1
+                accepted.append(timecard)
+            if counter == 0:
+                return True
+        for timecard in accepted:
+            timecard.remove(reservation)
+        return False
 
 
     def create_rules_adaptive(self, path: list, reservation: ReservationAdaptive) -> List["Rule"]:

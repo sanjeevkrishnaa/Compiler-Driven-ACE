@@ -4,7 +4,10 @@ import unittest
 
 from adaptive_continuous import AdaptiveContinuousProtocol
 from parallel_core import reseed_topology_nodes, serialize_core_conflicts
-from reservation import ReservationAdaptive, eg_rule_condition_one_shot
+from reservation import (
+    ReservationAdaptive, ResourceReservationProtocolAdaptive,
+    eg_rule_condition_one_shot,
+)
 
 
 class _MemoryInfo:
@@ -13,6 +16,45 @@ class _MemoryInfo:
 
 
 class CompilerOneShotTests(unittest.TestCase):
+    def test_static_partition_keeps_compiler_and_demand_timecards_disjoint(self):
+        class Owner:
+            name = "router_0_0"
+
+        class Card:
+            def __init__(self, index):
+                self.memory_index = index
+                self.reservations = []
+
+            def add(self, reservation):
+                self.reservations.append(reservation)
+                return True
+
+            def remove(self, reservation):
+                self.reservations.remove(reservation)
+
+        class ApplicationReservation:
+            initiator = "router_0_0"
+            responder = "router_0_1"
+            memory_size = 1
+
+        protocol = ResourceReservationProtocolAdaptive.__new__(
+            ResourceReservationProtocolAdaptive
+        )
+        protocol.owner = Owner()
+        protocol.timecards = [Card(index) for index in range(4)]
+        protocol.set_static_memory_partition(2)
+        compiler = ReservationAdaptive(
+            "router_0_0", "router_0_1", 1, 2, 1, 0.9,
+            compiler_target_request_id=1,
+        )
+        self.assertTrue(protocol.schedule(compiler))
+        self.assertTrue(protocol.schedule(ApplicationReservation()))
+        self.assertEqual(protocol.timecards[0].reservations, [compiler])
+        self.assertEqual(protocol.timecards[1].reservations, [])
+        self.assertEqual(protocol.timecards[2].reservations[0].__class__,
+                         ApplicationReservation)
+        self.assertEqual(protocol.timecards[3].reservations, [])
+
     def test_experiment_seed_reseeds_every_node_but_preserves_seed_zero(self):
         class Node:
             def __init__(self, name, seed):
