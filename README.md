@@ -32,3 +32,18 @@ Communication conflicts are scheduled in 2,831 sublayers, the bipartite lower
 bound. Trace order is preserved whenever greedy batching is already optimal;
 exact edge colouring is applied only to the three layers where it removes one
 unnecessary sublayer.
+
+The next controlled study uses an identical, hash-verified experiment contract
+in ACE and native SeQUeNCe. It adds real static `3+1`, `2+2`, and two-total
+memory `1+1` banks, a partition-matched ODG baseline, 30 paired seeds, and
+identical serialized request deadlines. See
+[SHARED_EXPERIMENT_CONTRACT.md](SHARED_EXPERIMENT_CONTRACT.md).
+
+That matrix is now complete and audited. See the 30-seed aggregate and paired
+effects in
+[`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md).
+
+For the full technical narrative—architecture, code-level changes, exact
+contract, audited 30-seed results, ACE/native interpretation, limitations, and
+reproduction commands—read
+[`COMPILER_DRIVEN_ACE_4X4_REPORT.md`](COMPILER_DRIVEN_ACE_4X4_REPORT.md).
