@@ -10,7 +10,6 @@
 | Repository | Purpose | Link |
 |---|---|---|
 | Compiler-Driven ACE | ACE/SeQUeNCe 0.8.1 physical compiler scheduler, contracts, audits, documentation | [GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE) |
-| Personal working fork | Branches used for the BTP implementation and review | [GitHub](https://github.com/DhruvPansuriya/Compiler-Driven-ACE) |
 | Native SeQUeNCe | Independent physical backend with Barrett--Kok generation, swapping and teleportation | [GitHub](https://github.com/sanjeevkrishnaa/SeQUeNCe) |
 
 Important ACE commits:
@@ -30,14 +29,14 @@ Important native SeQUeNCe commits:
 | [`94f3b49`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/94f3b49) | Native physical compiler pre-generation integration |
 
 The current ACE development branch is
-[`codex/strict-compiler-4plus0`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0).
+[`codex/strict-compiler-4plus0`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0).
 It is deliberately separate from the earlier audited branch because it adds
 strict 4+0 and shared-pool work:
 
 | Commit | Contribution |
 |---|---|
-| [`8ddd940`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/commit/8ddd940) | Strict compiler-only 4+0, shared-pool contract support, lifecycle repair and regression tests |
-| [`102635a`](https://github.com/DhruvPansuriya/Compiler-Driven-ACE/commit/102635a) | Master BTP narrative, shared-pool design and adaptive-baseline specification |
+| [`8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) | Strict compiler-only 4+0, shared-pool contract support, lifecycle repair and regression tests |
+| [`102635a`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/102635a) | Master BTP narrative, shared-pool design and adaptive-baseline specification |
 
 ## Research idea
 
