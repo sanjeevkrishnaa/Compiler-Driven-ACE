@@ -363,17 +363,16 @@ class AdaptiveContinuousProtocol(Protocol):
         Args:
             memory: this is the memory that is set to RAW (due to expired rule), released from the adaptive continuous protocol
         '''
-        if self.adaptive_memory_used > 0:
-            self.adaptive_memory_used -= 1
-            log.logger.debug(f'{self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
-        else:
+        if self.adaptive_memory_used <= 0:
             # A cached pair may already have been moved into an application's
             # reserved memory.  Its old rule-expiry event is then stale and
             # must not drive the quota counter negative.
             log.logger.warning(
                 f'{self.owner.name} ignored a stale adaptive-memory release'
             )
-        # print(f'this is used ones tho: {self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
+            return
+        self.adaptive_memory_used -= 1
+        log.logger.debug(f'{self.owner.name} adaptive_memory_used is reduced from {self.adaptive_memory_used + 1} to {self.adaptive_memory_used}')
         self.num_unused_entanglement_pairs += 1
 
         # remove the entanglement pair that memory is in
@@ -399,6 +398,15 @@ class AdaptiveContinuousProtocol(Protocol):
                     ep_to_delete, self.owner.timeline.now(), "reservation_expired"
                 )
             log.logger.info(f'{self.owner.name} removed EP {ep_to_delete}')
+
+    def release_compiler_quota_after_direct_use(self) -> None:
+        """Release one compiler-memory quota without recording a used EPR as waste."""
+        if self.adaptive_memory_used <= 0:
+            log.logger.warning(
+                f'{self.owner.name} ignored a stale strict compiler quota release'
+            )
+            return
+        self.adaptive_memory_used -= 1
 
 
     def update_probability_table(self, elapse: int):
@@ -476,6 +484,7 @@ class AdaptiveContinuousProtocol(Protocol):
                     "generation_layer": reservation.compiler_generation_layer,
                     "target_layer": reservation.compiler_target_layer,
                     "strategy": reservation.compiler_strategy,
+                    "_reservation": reservation,
                 }
                 self.generated_pair_metadata[entanglement_pair] = metadata
                 if self.compiler_observer:

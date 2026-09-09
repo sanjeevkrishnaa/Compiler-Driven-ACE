@@ -3,6 +3,7 @@
 import unittest
 
 from adaptive_continuous import AdaptiveContinuousProtocol
+from compiler_scheduler import CompilerPreGenerationController
 from parallel_core import reseed_topology_nodes, serialize_core_conflicts
 from reservation import (
     ReservationAdaptive, ResourceReservationProtocolAdaptive,
@@ -158,6 +159,43 @@ class CompilerOneShotTests(unittest.TestCase):
             ),
             generic_pair,
         )
+
+    def test_utilized_pair_releases_compiler_bookkeeping_at_both_endpoints(self):
+        class ReservationProtocol:
+            def __init__(self):
+                self.released = []
+
+            def release_compiler_reservation(self, reservation):
+                self.released.append(reservation)
+
+        class Adaptive:
+            def __init__(self):
+                self.resource_reservation = ReservationProtocol()
+                self.quota_releases = 0
+
+            def release_compiler_quota_after_direct_use(self):
+                self.quota_releases += 1
+
+        class Router:
+            def __init__(self):
+                self.adaptive_continuous = Adaptive()
+
+        pair = (("router_0_0", "m0"), ("router_0_1", "m1"))
+        reservation = object()
+        controller = CompilerPreGenerationController.__new__(
+            CompilerPreGenerationController
+        )
+        controller.routers = {"router_0_0": Router(), "router_0_1": Router()}
+        controller.utilization_by_request = {}
+        controller.active_record_by_pair = {tuple(sorted(pair)): 0}
+        controller.records = [{"status": "ready", "generated_at_ps": 5}]
+        controller.deadlines = {17: 10}
+
+        controller.on_pair_utilized(pair, 17, 20, 0.9, {"_reservation": reservation})
+
+        for router in controller.routers.values():
+            self.assertEqual(router.adaptive_continuous.resource_reservation.released, [reservation])
+            self.assertEqual(router.adaptive_continuous.quota_releases, 1)
 
 
 if __name__ == "__main__":

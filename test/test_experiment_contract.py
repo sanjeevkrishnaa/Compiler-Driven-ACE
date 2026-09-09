@@ -50,6 +50,16 @@ class ExperimentContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown experiment profile"):
             select_profile(load_contract(CONTRACT), "3+2")
 
+    def test_shared_pool_contract_declares_capacity_not_a_fake_partition(self):
+        contract = load_contract(
+            Path(__file__).parents[1] / "experiments/qft_4x4_shared_pool_v1.json"
+        )
+        profile = select_profile(contract, "shared-pool-4-cap3")
+        self.assertEqual(profile["memory_allocation"], "shared")
+        self.assertEqual(profile["total_entanglement_memories_per_core"], 4)
+        self.assertEqual(profile["compiler_memories_per_core"], 3)
+        self.assertEqual(profile["on_demand_memories_per_core"], 4)
+
     def test_qft_serialization_matches_contract_fingerprint(self):
         trace_name = os.environ.get("QFT_TRACE")
         if not trace_name:

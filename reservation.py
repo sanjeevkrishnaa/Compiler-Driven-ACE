@@ -293,9 +293,28 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
             return
         if isinstance(compiler_memories, bool) or not isinstance(compiler_memories, int):
             raise ValueError("compiler memory partition must be an integer or None")
-        if not 0 <= compiler_memories < len(self.timecards):
-            raise ValueError("static partition must leave at least one on-demand memory")
+        if not 0 <= compiler_memories <= len(self.timecards):
+            raise ValueError("static partition must not exceed the physical memory count")
         self.compiler_memory_indices = frozenset(range(compiler_memories))
+
+    def release_compiler_reservation(self, reservation: ReservationAdaptive) -> None:
+        """Release a consumed strict-compiler reservation before its scheduled end.
+
+        Strict 4+0 execution consumes a ready EPR directly from the compiler
+        bank.  Its one-shot reservation must be removed from timecards at that
+        point; otherwise the nominal one-second hold window would incorrectly
+        block later compiler preparations after the pair has been consumed.
+        """
+        if not getattr(reservation, "compiler_directed", False):
+            raise ValueError("only compiler-directed reservations may be released early")
+        for timecard in self.timecards:
+            if reservation in timecard.reservations:
+                timecard.remove(reservation)
+        if reservation in self.accepted_reservations:
+            self.accepted_reservations.remove(reservation)
+        for rule in tuple(self.owner.resource_manager.rule_manager.rules):
+            if rule.reservation is reservation:
+                self.owner.resource_manager.expire(rule)
 
     def schedule(self, reservation) -> bool:
         """Schedule within the configured compiler or demand bank."""

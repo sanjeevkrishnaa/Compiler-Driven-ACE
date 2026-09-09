@@ -104,6 +104,10 @@ def main() -> None:
     )
     parser.add_argument("--contract", type=Path)
     parser.add_argument("--profile", help="profile id from --contract")
+    parser.add_argument(
+        "--strict-compiler-only", action="store_true",
+        help="forbid on-demand fallback and consume ready compiler pairs directly",
+    )
     parser.add_argument("--validate-only", action="store_true",
                         help="validate and print the resolved experiment without simulating")
     parser.add_argument(
@@ -117,6 +121,7 @@ def main() -> None:
     contract = None
     contract_profile = None
     contract_hash = None
+    strict_compiler_only = args.strict_compiler_only
     if args.contract:
         controlled = {
             "--mesh", "--strategies", "--seeds", "--compiler-memories",
@@ -127,6 +132,7 @@ def main() -> None:
             "--pregeneration-buffer-ms",
             "--compiler-reservation-ms", "--request-duration-ms",
             "--stop-time-s", "--max-layers", "--configuration-name",
+            "--strict-compiler-only",
         }
         conflicts = sorted(name for name in controlled if any(
             token == name or token.startswith(name + "=") for token in sys.argv[1:]
@@ -162,8 +168,9 @@ def main() -> None:
         )
         args.total_memories = contract_profile["total_entanglement_memories_per_core"]
         args.compiler_memories = contract_profile["compiler_memories_per_core"]
-        args.memory_allocation = (
-            "shared" if contract_profile["id"] == "full-odg-4" else "static"
+        args.memory_allocation = contract_profile.get(
+            "memory_allocation",
+            "shared" if contract_profile["id"] == "full-odg-4" else "static",
         )
         args.on_demand_memories = (
             contract_profile["on_demand_memories_per_core"]
@@ -179,6 +186,9 @@ def main() -> None:
         args.compiler_reservation_ms = runtime["compiler_reservation_ms"]
         args.request_duration_ms = runtime["request_duration_ms"]
         args.stop_time_s = runtime["stop_time_s"]
+        strict_compiler_only = (
+            contract_profile.get("execution_mode") == "strict-compiler-only"
+        )
         if _sha256(args.config) != runtime["topology_config_sha256"]:
             parser.error("ACE topology config SHA-256 does not match experiment contract")
         if args.contract_seed_limit is not None:
@@ -197,10 +207,14 @@ def main() -> None:
             parser.error("--on-demand-memories is required for static allocation")
         if args.compiler_memories + args.on_demand_memories != args.total_memories:
             parser.error("static compiler + on-demand memories must equal total memories")
-        if args.compiler_memories < 1 or args.on_demand_memories < 1:
-            parser.error("static allocation requires nonempty compiler and on-demand banks")
+        if args.compiler_memories < 1 or args.on_demand_memories < 0:
+            parser.error("static allocation requires a nonempty compiler bank")
+        if args.on_demand_memories == 0 and not strict_compiler_only:
+            parser.error("zero on-demand memories requires --strict-compiler-only")
     elif args.on_demand_memories is not None:
         parser.error("--on-demand-memories is only valid with static allocation")
+    if strict_compiler_only and set(item.strip() for item in args.strategies.split(",")) - {"fixed", "dynamic"}:
+        parser.error("strict compiler-only execution supports fixed and dynamic strategies only")
 
     trace = parse_compiler_trace(args.trace)
     if args.max_layers is not None:
@@ -321,6 +335,7 @@ def main() -> None:
                 "static_compiler_memories": (
                     args.compiler_memories if args.memory_allocation == "static" else None
                 ),
+                "strict_compiler_only": strict_compiler_only,
             }
             label = f"compiler-{strategy}-seed-{seed}"
             if args.verbose:
@@ -331,6 +346,7 @@ def main() -> None:
                     total_memories_per_core=args.total_memories,
                     simulation_stop_time_s=args.stop_time_s,
                     minimum_layer_duration_ps=minimum_layer_duration_ps,
+                    strict_compiler_only=strict_compiler_only,
                 )
             else:
                 with redirect_stdout(StringIO()):
@@ -341,6 +357,7 @@ def main() -> None:
                         total_memories_per_core=args.total_memories,
                         simulation_stop_time_s=args.stop_time_s,
                         minimum_layer_duration_ps=minimum_layer_duration_ps,
+                        strict_compiler_only=strict_compiler_only,
                     )
 
             stats = result["stats"]
@@ -363,6 +380,8 @@ def main() -> None:
                     args.on_demand_memories if args.memory_allocation == "static"
                     else args.total_memories
                 ),
+                "strict_compiler_only": strict_compiler_only,
+                "strict_compiler_misses": metrics["strict_compiler_misses"],
                 "delta_layers": args.delta_layers,
                 "dynamic_lookahead_layers": args.dynamic_lookahead_layers,
                 "dynamic_min_lead_layers": args.dynamic_min_lead_layers,
@@ -413,8 +432,8 @@ def main() -> None:
             print(
                 f"{strategy:9} seed={seed} complete={row['completion_rate']:.2%} "
                 f"latency={row['average_request_latency_ms']} ms "
-                f"pre-ready={row['pregenerated_success_rate']:.2%} "
-                f"expiry={row['compiler_expiry_percentage']:.2f}% "
+                f"pre-ready={row['pregenerated_success_rate'] if row['pregenerated_success_rate'] is not None else 'n/a'} "
+                f"expiry={row['compiler_expiry_percentage'] if row['compiler_expiry_percentage'] is not None else 'n/a'}% "
                 f"fidelity@use={row['average_compiler_fidelity_at_utilization']}"
             )
 
@@ -448,6 +467,7 @@ def main() -> None:
                 "generation_capacity": args.generation_capacity,
                 "memory_allocation": args.memory_allocation,
                 "on_demand_memories": args.on_demand_memories,
+                "strict_compiler_only": strict_compiler_only,
                 "delta_layers": args.delta_layers,
                 "dynamic_lookahead_layers": args.dynamic_lookahead_layers,
                 "dynamic_min_lead_layers": args.dynamic_min_lead_layers,

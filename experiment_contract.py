@@ -76,9 +76,22 @@ def load_contract(path: str | Path) -> dict:
                for value in values):
             raise ValueError(f"profile {identifier} memory counts must be nonnegative integers")
         total, compiler, demand = values
-        if total < 1 or compiler + demand != total or demand < 1:
+        execution_mode = profile.get("execution_mode", "fallback-enabled")
+        if execution_mode not in {"fallback-enabled", "strict-compiler-only"}:
+            raise ValueError(f"profile {identifier} has unsupported execution_mode")
+        allocation = profile.get("memory_allocation", "static")
+        if allocation not in {"static", "shared"}:
+            raise ValueError(f"profile {identifier} has unsupported memory_allocation")
+        if total < 1:
+            raise ValueError(f"profile {identifier} must have at least one memory")
+        if allocation == "static" and compiler + demand != total:
             raise ValueError(
                 f"profile {identifier} must partition total memory into compiler + demand"
+            )
+        if allocation == "shared" and not (0 < compiler <= total and demand == total):
+            raise ValueError(
+                f"shared profile {identifier} must use a positive compiler cap no larger "
+                "than total memory, with all total memories demand-eligible"
             )
         policies = profile.get("policies")
         if not isinstance(policies, list) or not policies or set(policies) - POLICIES:
@@ -87,6 +100,15 @@ def load_contract(path: str | Path) -> dict:
             raise ValueError(f"profile {identifier} with no compiler bank must be full-odg only")
         if compiler > 0 and "full-odg" in policies:
             raise ValueError(f"profile {identifier} cannot mix full-odg with a static partition")
+        if allocation == "shared" and execution_mode != "fallback-enabled":
+            raise ValueError(f"shared profile {identifier} must be fallback-enabled")
+        if demand == 0:
+            if execution_mode != "strict-compiler-only":
+                raise ValueError(f"profile {identifier} with no demand bank must be strict")
+            if set(policies) - {"fixed", "dynamic"}:
+                raise ValueError(f"strict profile {identifier} supports fixed and dynamic only")
+        elif execution_mode != "fallback-enabled":
+            raise ValueError(f"profile {identifier} with a demand bank must use fallback-enabled mode")
     return payload
 
 

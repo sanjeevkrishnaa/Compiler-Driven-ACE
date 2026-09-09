@@ -7,6 +7,7 @@ from statistics import fmean
 
 from compiler_trace import CompilerRequest, ScheduledPreparation
 from sequence.constants import MILLISECOND
+from sequence.resource_management.memory_manager import MemoryInfo
 
 
 def _pair_key(pair: tuple) -> tuple:
@@ -29,6 +30,7 @@ class CompilerPreGenerationController:
         planner_peak_memory: int,
         fidelity: float,
         reservation_duration_ms: float,
+        strict_compiler_only: bool = False,
     ):
         self.timeline = timeline
         self.routers = routers
@@ -39,6 +41,7 @@ class CompilerPreGenerationController:
         self.planner_peak_memory = planner_peak_memory
         self.fidelity = fidelity
         self.reservation_duration_ms = reservation_duration_ms
+        self.strict_compiler_only = strict_compiler_only
         self.schedule = {item.request_id: item.generation_layer for item in schedule}
         self.by_generation_layer = defaultdict(list)
         for item in schedule:
@@ -54,6 +57,7 @@ class CompilerPreGenerationController:
         self.records = []
         self.active_record_by_pair = {}
         self.utilization_by_request = {}
+        self.strict_misses = set()
 
     def attach(self) -> None:
         for router in self.routers.values():
@@ -82,6 +86,45 @@ class CompilerPreGenerationController:
 
     def mark_request_start(self, request_id: int, start_time: int) -> None:
         self.deadlines.setdefault(request_id, start_time)
+
+    def consume_strict_pair(self, request_id: int) -> float | None:
+        """Consume only a ready, request-specific compiler EPR for strict 4+0.
+
+        This deliberately bypasses RSVP application generation.  A strict-mode
+        transfer is a miss when its own pair is absent at release; it must not
+        start or adopt demand generation.  A hit destructively consumes the
+        existing physical pair, releases its compiler reservation immediately,
+        and returns fidelity at the point of use.
+        """
+        if not self.strict_compiler_only:
+            raise RuntimeError("direct compiler consumption requires strict mode")
+        request = self.requests[request_id]
+        source = self._router_name(request.source_core)
+        destination = self._router_name(request.destination_core)
+        source_protocol = self.routers[source].adaptive_continuous
+        pair = source_protocol.match_generated_entanglement_pair(
+            source, destination, request_id=request_id
+        )
+        if pair is None:
+            self.strict_misses.add(request_id)
+            return None
+        metadata = source_protocol.generated_pair_metadata.get(pair, {})
+        fidelity = source_protocol.get_fidelity(pair)
+        if fidelity < 0:
+            self.strict_misses.add(request_id)
+            return None
+        reservation = metadata.get("_reservation")
+        for router in (self.routers[source], self.routers[destination]):
+            protocol = router.adaptive_continuous
+            protocol.remove_entanglement_pair(pair)
+            if reservation is not None:
+                protocol.resource_reservation.release_compiler_reservation(reservation)
+            protocol.release_compiler_quota_after_direct_use()
+        for node_name, memory_name in pair:
+            router = self.routers[node_name]
+            memory = self.timeline.get_entity_by_name(memory_name)
+            router.resource_manager.update(None, memory, MemoryInfo.RAW)
+        return fidelity
 
     def _router_name(self, core: int) -> str:
         return f"router_{core // self.columns}_{core % self.columns}"
@@ -168,6 +211,21 @@ class CompilerPreGenerationController:
         self.utilization_by_request[request_id] = active_index
         self.active_record_by_pair.pop(_pair_key(pair), None)
 
+        # A compiler pair is one-shot.  Once an application has claimed it,
+        # retaining its nominal (long) compiler reservation leaks timecards
+        # and compiler quota until expiry, even though the pair is no longer a
+        # pre-generation resource.  That would turn a shared pool into an
+        # artificial long-lived lock.  Release bookkeeping at utilization;
+        # the application protocol still owns the physical memory until its
+        # normal consumption path completes.
+        reservation = (metadata or {}).get("_reservation")
+        if reservation is not None:
+            endpoints = {node_name for node_name, _ in pair}
+            for node_name in endpoints:
+                protocol = self.routers[node_name].adaptive_continuous
+                protocol.resource_reservation.release_compiler_reservation(reservation)
+                protocol.release_compiler_quota_after_direct_use()
+
     def on_pair_expired(self, pair: tuple, expired_at: int, reason: str) -> None:
         active_index = self.active_record_by_pair.pop(_pair_key(pair), None)
         if active_index is None:
@@ -230,9 +288,14 @@ class CompilerPreGenerationController:
             ),
             "compiler_not_ready_requests": total_requests - len(hits),
             "late_compiler_pair_uses": len(late_compiler_uses),
-            "on_demand_fallbacks": total_requests - len(compiler_served),
+            "strict_compiler_only": self.strict_compiler_only,
+            "strict_compiler_misses": len(self.strict_misses),
+            "on_demand_fallbacks": (
+                0 if self.strict_compiler_only else total_requests - len(compiler_served)
+            ),
             "on_demand_fallback_rate": (
-                (total_requests - len(compiler_served)) / total_requests if total_requests else None
+                (0 if self.strict_compiler_only else total_requests - len(compiler_served))
+                / total_requests if total_requests else None
             ),
             "generated_compiler_pairs": generated,
             "utilized_compiler_pairs": len(utilized),

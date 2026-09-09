@@ -163,7 +163,8 @@ class ParallelLayerRequestManager:
     
     def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
                  pregeneration_time_ms: float, request_duration_ms: float,
-                 compiler_controller=None, minimum_layer_duration_ps: int | None = None):
+                 compiler_controller=None, minimum_layer_duration_ps: int | None = None,
+                 strict_compiler_only: bool = False):
         """
         Args:
             timeline: The simulation timeline
@@ -182,6 +183,10 @@ class ParallelLayerRequestManager:
             self.layered_requests, self.working_layer_origins = \
                 serialize_core_conflicts(layered_requests)
         self.compiler_controller = compiler_controller
+        self.strict_compiler_only = strict_compiler_only
+        if strict_compiler_only and compiler_controller is None:
+            raise ValueError("strict compiler-only execution requires a compiler controller")
+        self.strict_missed_requests = set()
         if minimum_layer_duration_ps is not None and minimum_layer_duration_ps < 1:
             raise ValueError("minimum layer duration must be positive")
         self.minimum_layer_duration = minimum_layer_duration_ps
@@ -271,15 +276,21 @@ class ParallelLayerRequestManager:
             if self.compiler_controller is not None:
                 self.compiler_controller.mark_request_start(request_id, start_time)
             
-            # Get app and start request
-            app = self.name_to_apps[src_name]
-            app.start(dst_name, start_time, end_time, memo_size, fidelity, entanglement_number, request_id)
-            
-            # Register callbacks
-            app.set_reservation_approval_callback(self._on_reservation_approved, request_id)
-            app.set_completion_callback(self._on_request_completed, request_id)
-            
-            print(f"  Sent request {request_id}: {src_name} -> {dst_name}")
+            if self.strict_compiler_only:
+                process = Process(self, "_consume_strict_compiler_pair", [request_id])
+                self.timeline.schedule(Event(start_time, process))
+                print(f"  Scheduled strict compiler-only consumption for request {request_id}: "
+                      f"{src_name} -> {dst_name}")
+            else:
+                # Get app and start request
+                app = self.name_to_apps[src_name]
+                app.start(dst_name, start_time, end_time, memo_size, fidelity, entanglement_number, request_id)
+
+                # Register callbacks
+                app.set_reservation_approval_callback(self._on_reservation_approved, request_id)
+                app.set_completion_callback(self._on_request_completed, request_id)
+
+                print(f"  Sent request {request_id}: {src_name} -> {dst_name}")
         
         print(f"Layer {self.current_layer_index}: Submitted {len(current_layer)} requests")
         
@@ -401,6 +412,19 @@ class ParallelLayerRequestManager:
             submission_time = self.request_submission_times[request_id]
             setup_time_ms = (approval_time - submission_time) / MILLISECOND
             print(f"  Request {request_id} reservation APPROVED at {approval_time / MILLISECOND:.2f} ms (setup time: {setup_time_ms:.2f} ms)")
+
+    def _consume_strict_compiler_pair(self, request_id: int):
+        """Resolve a strict 4+0 transfer at release, without fallback generation."""
+        fidelity = self.compiler_controller.consume_strict_pair(request_id)
+        if fidelity is None:
+            self.strict_missed_requests.add(request_id)
+            print(f"  Request {request_id} strict compiler-only MISS at "
+                  f"{self.timeline.now() / MILLISECOND:.2f} ms")
+        else:
+            print(f"  Request {request_id} strict compiler-only HIT at "
+                  f"{self.timeline.now() / MILLISECOND:.2f} ms; fidelity={fidelity:.6f}")
+        # Misses are terminal in strict mode but still close the layer barrier.
+        self._on_request_completed(request_id, self.timeline.now())
     
     def _on_request_completed(self, request_id: int, completion_time: int):
         """
@@ -510,7 +534,7 @@ class ParallelLayerRequestManager:
         """
         latencies = {}
         for req_id in self.request_submission_times:
-            if req_id in self.request_end_times:
+            if req_id in self.request_end_times and req_id not in self.strict_missed_requests:
                 submission_time = self.request_submission_times[req_id]
                 completion_time = self.request_end_times[req_id]
                 # Subtract pre-generation time to get only setup + generation time
@@ -531,7 +555,10 @@ class ParallelLayerRequestManager:
         """
         breakdown = {}
         for req_id in self.request_submission_times:
-            if req_id in self.request_approval_times and req_id in self.request_generation_start_times and req_id in self.request_end_times:
+            if (req_id not in self.strict_missed_requests
+                    and req_id in self.request_approval_times
+                    and req_id in self.request_generation_start_times
+                    and req_id in self.request_end_times):
                 submission_time = self.request_submission_times[req_id]
                 approval_time = self.request_approval_times[req_id]
                 generation_start = self.request_generation_start_times[req_id]
@@ -558,7 +585,8 @@ class ParallelLayerRequestManager:
             'retry_layers': self.retry_layer_count,
             'total_layers_with_retries': len(self.layered_requests),
             'total_requests': sum(len(layer) for layer in self.original_layered_requests),
-            'completed_requests': len(self.request_end_times),
+            'completed_requests': len(self.request_end_times) - len(self.strict_missed_requests),
+            'strict_compiler_misses': len(self.strict_missed_requests),
             'end_to_end_latency_ms': self.get_end_to_end_latency(),
             'layer_latencies': self.get_layer_latencies(),
             'individual_latencies': self.get_individual_latencies(),
@@ -598,7 +626,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             seed: int = 0, compiler_spec: dict | None = None,
                             total_memories_per_core: int | None = None,
                             simulation_stop_time_s: float | None = None,
-                            minimum_layer_duration_ps: int | None = None):
+                            minimum_layer_duration_ps: int | None = None,
+                            strict_compiler_only: bool = False):
     """
     Run an experiment with parallel layered requests.
     
@@ -683,6 +712,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             planner_peak_memory=compiler_spec["planner_peak_memory"],
             fidelity=compiler_spec["fidelity"],
             reservation_duration_ms=compiler_spec["reservation_duration_ms"],
+            strict_compiler_only=strict_compiler_only,
         )
         compiler_controller.attach()
     
@@ -690,7 +720,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     request_manager = ParallelLayerRequestManager(
         tl, name_to_apps, layered_requests,
         pregeneration_time_ms, request_duration_ms, compiler_controller,
-        minimum_layer_duration_ps,
+        minimum_layer_duration_ps, strict_compiler_only,
     )
     
     # Schedule start
@@ -714,7 +744,9 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     stats = request_manager.get_statistics()
     compiler_metrics = None
     if compiler_controller is not None:
-        compiler_metrics = compiler_controller.finalize(request_manager.request_end_times)
+        compiler_metrics = compiler_controller.finalize(
+            set(request_manager.request_end_times) - request_manager.strict_missed_requests
+        )
         stats['compiler'] = {
             key: value for key, value in compiler_metrics.items()
             if key not in {'epr_utilization_trace', 'rejection_reasons'}
