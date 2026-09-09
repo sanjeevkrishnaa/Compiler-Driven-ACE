@@ -627,7 +627,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             total_memories_per_core: int | None = None,
                             simulation_stop_time_s: float | None = None,
                             minimum_layer_duration_ps: int | None = None,
-                            strict_compiler_only: bool = False):
+                            strict_compiler_only: bool = False,
+                            adaptive_memory_cap: int | None = None):
     """
     Run an experiment with parallel layered requests.
     
@@ -681,6 +682,17 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         router.adaptive_continuous.has_empty_neighbor = True
         router.adaptive_continuous.update_prob = update_prob_setting
         router.resource_manager.purify = purify_setting
+        if adaptive_memory_cap is not None:
+            total_memories = len(router.resource_manager.memory_manager)
+            if not 0 <= adaptive_memory_cap <= total_memories:
+                raise ValueError(
+                    f"adaptive memory cap {adaptive_memory_cap} must be between zero "
+                    f"and the {total_memories} physical memories on {router.name}"
+                )
+            # This is an occupancy cap only.  Unlike the compiler's legacy
+            # static partition, application requests remain eligible to use
+            # every physical memory in the shared pool.
+            router.adaptive_continuous.set_adaptive_max_memory(adaptive_memory_cap)
 
     compiler_controller = None
     if compiler_spec is not None:
