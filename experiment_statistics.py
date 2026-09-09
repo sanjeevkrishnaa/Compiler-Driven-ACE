@@ -34,3 +34,15 @@ def summarize(values: list[float]) -> dict[str, float | int | None]:
     return {"n": len(clean), "mean": mean, "sample_sd": sd,
             "standard_error": se, "ci95_low": mean - margin,
             "ci95_high": mean + margin}
+
+
+def interval_from_summary(mean: float, sample_sd: float, n: int) -> tuple[float, float]:
+    """Calculate a 95% t interval from reported mean, sample SD, and n."""
+    if n < 2:
+        raise ValueError("a confidence interval requires at least two samples")
+    if sample_sd < 0:
+        raise ValueError("sample SD cannot be negative")
+    df = n - 1
+    critical = _T95[df] if df < len(_T95) else 1.96
+    margin = critical * sample_sd / sqrt(n)
+    return mean - margin, mean + margin

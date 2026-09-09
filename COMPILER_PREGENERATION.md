@@ -193,14 +193,14 @@ calibrated from simulator observations rather than guessed:
 
 The quantiles and safety factor are mandatory inputs because they are
 research-method choices. `run_research_matrix.py` automates the paired matrix:
-ODG, fixed-delta-six/cap-three, latest-dynamic cap two and three, calibration,
-and calibrated-dynamic cap two and three. It first verifies the exact QFT trace
-hash.
+ODG, fixed-delta-two and delta-six at cap three, latest-dynamic cap two and
+three, calibration, and calibrated-dynamic cap two and three. It first verifies
+the exact QFT trace hash.
 
 ```bash
 python run_research_matrix.py \
   --trace /absolute/path/qft_requests.txt \
-  --sequence-root /absolute/path/qnoc-stress-testing/SeQUeNCe \
+  --sequence-root /absolute/path/SeQUeNCe-0.8.1 \
   --service-quantile 0.95 \
   --layer-quantile 0.50 \
   --safety-factor 1.0 \
@@ -209,6 +209,20 @@ python run_research_matrix.py \
 
 The output contains raw run artifacts, a provenance manifest, physical lead
 calibration, aggregate sample statistics with Student-t 95% intervals, and
-seed-paired latency comparisons against ODG. The compatible modified SeQUeNCe
-dependency remains external. Do not substitute upstream/PyPI SeQUeNCe and call
-the resulting numbers an ACE reproduction.
+seed-paired latency comparisons against ODG. The validated runtime is official
+SeQUeNCe v0.8.1 at commit
+`cf5283cdfd6692a82a090d15fb09fbc01bd322fc`; record the exact dependency commit
+with every reproduction.
+
+## Final ten-seed result
+
+The audited 4x4 QFT matrix uses the exact 4,954-request trace (SHA-256
+`61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1`).
+Dynamic cap 3 achieved 0.9223 ms mean request latency, 21.43% pre-readiness,
+0.8195 fidelity at use, and 2.00% expiry. Matched fixed delta 2 achieved
+0.9262 ms, 20.75%, 0.8141, and 2.11%, respectively. The paired dynamic latency
+advantage is only 0.41%, and its 95% interval (-0.03%, 0.86%) includes zero.
+Dynamic cap 2 achieved zero expiry and 0.8905 fidelity, but readiness fell to
+11.68% and latency rose to 1.0038 ms. See
+`results/ACE_VS_NATIVE_SEQUENCE.md` for the controlled cross-repository table,
+confidence intervals, audit scope, and interpretation.

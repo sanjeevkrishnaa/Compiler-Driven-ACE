@@ -84,6 +84,26 @@ class QuantumRouterAdaptive(QuantumRouter):
             self.adaptive_continuous.init()
             self.adaptive_continuous.start_delay(delay=0)
 
+    def send_message(self, dst: str, msg: "Message", priority=inf) -> None:
+        """Route a classical message across the sparse ACE mesh.
+
+        Upstream SeQUeNCe 0.8.1 assumes a direct classical channel to ``dst``.
+        ACE topologies only contain neighbor channels, so retain the final
+        destination on the message and forward one XY hop at a time.  Message
+        subclasses have an instance dictionary even though the base fields use
+        slots, which keeps this compatibility behavior local to ACE.
+        """
+        msg.src = self.name
+        msg.dst = dst
+        if priority == inf:
+            priority = self.timeline.schedule_counter
+        next_hop = dst if dst in self.cchannels else xyrouting(self.name, dst)
+        if next_hop not in self.cchannels:
+            raise ValueError(
+                f"No classical channel to {dst} or next hop {next_hop} from {self.name}"
+            )
+        self.cchannels[next_hop].transmit(msg, self, priority)
+
     def receive_message(self, src: str, msg: "Message") -> None:
         """Determine what to do when a message is received, based on the msg.receiver
         Args:
@@ -95,17 +115,20 @@ class QuantumRouterAdaptive(QuantumRouter):
         log.logger.info("{} receive message {} from {}".format(self.name, msg, src))
         # signal to protocol that we've received a message
 
-        # check if self.name is msg.dst
-        if self.name != msg.dst:
+        destination = getattr(msg, "dst", self.name)
+        if self.name != destination:
             # need to forward message
-            if msg.dst in self.cchannels: # handle directly connected nodes (needed for bsm nodes)
-                self.cchannels[msg.dst].transmit(msg, msg.src,inf)
+            if destination in self.cchannels: # handle directly connected nodes (needed for bsm nodes)
+                self.cchannels[destination].transmit(msg, self, inf)
             else:
-                next_node_on_path = xyrouting(self.name, msg.dst)
+                next_node_on_path = xyrouting(self.name, destination)
                 if next_node_on_path in self.cchannels:
-                    self.cchannels[next_node_on_path].transmit(msg,msg.src,inf) 
+                    self.cchannels[next_node_on_path].transmit(msg, self, inf)
                 else:
-                    raise ValueError(f"No classical channel to {msg.dst} or next hop {next_node_on_path} from {self.name}")
+                    raise ValueError(
+                        f"No classical channel to {destination} or next hop "
+                        f"{next_node_on_path} from {self.name}"
+                    )
         else:
             if msg.receiver == "network_manager":
                 self.network_manager.received_message(src, msg)

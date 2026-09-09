@@ -110,6 +110,11 @@ def main() -> None:
     invalid = set(strategies) - {"on-demand", "fixed", "dynamic"}
     if invalid:
         parser.error(f"unknown strategies: {', '.join(sorted(invalid))}")
+    if args.configuration_name and len(strategies) != 1:
+        parser.error(
+            "--configuration-name requires exactly one strategy so aggregate "
+            "configuration labels remain unique"
+        )
     try:
         seeds = [int(seed) for seed in _csv_values(args.seeds)]
     except ValueError:
@@ -215,6 +220,7 @@ def main() -> None:
                 "rejection_reasons": metrics["rejection_reasons"],
                 "simulator_timing_breakdown": stats.get("timing_breakdown", {}),
                 "simulator_layer_latencies_ms": stats.get("layer_latencies", {}),
+                "node_seeds": result["node_seeds"],
             })
             print(
                 f"{strategy:9} seed={seed} complete={row['completion_rate']:.2%} "
@@ -249,6 +255,8 @@ def main() -> None:
                 "compiler_reservation_ms": args.compiler_reservation_ms,
                 "request_duration_ms": args.request_duration_ms,
                 "stop_time_s": args.stop_time_s,
+                "node_seed_scheme": "configured_seed + experiment_seed * 1000003",
+                "conflict_serialization": "stable-greedy-selective-bipartite-optimal-v1",
             },
             "runs": run_outputs,
         }, indent=2, default=_json_default),

@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "artifacts": [
+    {
+      "created_at": "2026-09-09T01:51:17.657579+00:00",
+      "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+      "runs": 30,
+      "configuration_strategy_seed_cells": 30,
+      "request_instances": 148620,
+      "compiler_pair_records": 20903,
+      "passed": true,
+      "errors": [],
+      "artifact": "output/final_hybrid_qft_cap3/runs.json"
+    },
+    {
+      "created_at": "2026-09-09T01:51:17.801775+00:00",
+      "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+      "runs": 10,
+      "configuration_strategy_seed_cells": 10,
+      "request_instances": 49540,
+      "compiler_pair_records": 5785,
+      "passed": true,
+      "errors": [],
+      "artifact": "output/final_hybrid_qft_dynamic_cap2/runs.json"
+    },
+    {
+      "created_at": "2026-09-09T01:51:17.966447+00:00",
+      "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+      "runs": 10,
+      "configuration_strategy_seed_cells": 10,
+      "request_instances": 49540,
+      "compiler_pair_records": 10501,
+      "passed": true,
+      "errors": [],
+      "artifact": "output/final_hybrid_qft_fixed_delta2/runs.json"
+    }
+  ]
+}

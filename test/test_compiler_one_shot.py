@@ -3,7 +3,7 @@
 import unittest
 
 from adaptive_continuous import AdaptiveContinuousProtocol
-from parallel_core import serialize_core_conflicts
+from parallel_core import reseed_topology_nodes, serialize_core_conflicts
 from reservation import ReservationAdaptive, eg_rule_condition_one_shot
 
 
@@ -13,6 +13,33 @@ class _MemoryInfo:
 
 
 class CompilerOneShotTests(unittest.TestCase):
+    def test_experiment_seed_reseeds_every_node_but_preserves_seed_zero(self):
+        class Node:
+            def __init__(self, name, seed):
+                self.name, self.seed = name, seed
+
+            def get_seed(self):
+                return self.seed
+
+            def set_seed(self, seed):
+                self.seed = seed
+
+        class Topology:
+            nodes = {"router": [Node("r0", 0), Node("r1", 1)],
+                     "bsm": [Node("b0", 0)]}
+
+            def get_nodes(self):
+                return self.nodes
+
+        topology = Topology()
+        self.assertEqual(
+            reseed_topology_nodes(topology, 0),
+            {"b0": 0, "r0": 0, "r1": 1},
+        )
+        self.assertEqual(
+            reseed_topology_nodes(topology, 2),
+            {"b0": 2_000_006, "r0": 2_000_006, "r1": 2_000_007},
+        )
     def test_core_conflicts_are_split_but_disjoint_requests_stay_parallel(self):
         requests = [[
             (0, "a", "b", 1, 0.01, 1),
@@ -23,6 +50,22 @@ class CompilerOneShotTests(unittest.TestCase):
 
         self.assertEqual([[request[0] for request in batch] for batch in batches], [[0, 2], [1]])
         self.assertEqual(origins, [0, 0])
+
+    def test_bipartite_edge_coloring_uses_the_minimum_number_of_batches(self):
+        edges = [
+            (0, "c", "d", 1, 0.01, 1), (1, "a", "b", 1, 0.01, 1),
+            (2, "b", "f", 1, 0.01, 1), (3, "f", "g", 1, 0.01, 1),
+            (4, "g", "h", 1, 0.01, 1), (5, "h", "i", 1, 0.01, 1),
+            (6, "i", "j", 1, 0.01, 1), (7, "j", "k", 1, 0.01, 1),
+            (8, "k", "l", 1, 0.01, 1), (9, "l", "d", 1, 0.01, 1),
+        ]
+        batches, origins = serialize_core_conflicts([edges])
+        self.assertEqual(len(batches), 2)  # maximum endpoint degree is two
+        self.assertEqual(origins, [0, 0])
+        self.assertEqual(sum(map(len, batches)), len(edges))
+        for batch in batches:
+            endpoints = [endpoint for request in batch for endpoint in request[1:3]]
+            self.assertEqual(len(endpoints), len(set(endpoints)))
 
     def test_generation_rule_stops_after_first_compiler_pair(self):
         reservation = ReservationAdaptive(

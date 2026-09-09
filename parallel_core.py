@@ -1,5 +1,6 @@
-from collections import defaultdict
+from collections import Counter, defaultdict
 import numpy as np
+import networkx as nx
 from sequence.topology.router_net_topo import RouterNetTopo
 from sequence.constants import MILLISECOND
 from sequence.kernel.process import Process
@@ -17,12 +18,40 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 SECOND = int(1e12)
+NODE_SEED_STRIDE = 1_000_003
 
 # write the new functions here
 
 
+def reseed_topology_nodes(network_topo, experiment_seed: int) -> dict[str, int]:
+    """Deterministically vary node-local RNGs while preserving seed-zero runs.
+
+    ACE topology files assign a fixed seed to every router and BSM.  Seeding the
+    timeline alone does not change those generators.  Offset each configured
+    node seed by a documented stride so repeated experiment seeds are genuine
+    stochastic replications and seed zero remains backward compatible.
+    """
+    if experiment_seed < 0:
+        raise ValueError("experiment seed must be nonnegative")
+    assigned = {}
+    for nodes in network_topo.get_nodes().values():
+        for node in nodes:
+            base_seed = node.get_seed()
+            derived_seed = int(base_seed or 0) + experiment_seed * NODE_SEED_STRIDE
+            node.set_seed(derived_seed)
+            assigned[node.name] = derived_seed
+    return dict(sorted(assigned.items()))
+
+
 def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
-    """Split layers into batches containing at most one request per core."""
+    """Split mesh layers into conflict-free batches with minimal reordering.
+
+    First use the stable trace-order greedy batching.  For a bipartite mesh the
+    theoretical minimum is the layer's maximum endpoint degree ``D``.  Keep the
+    greedy result when it already has ``D`` batches; only edge-color a layer
+    when doing so actually removes a sublayer.  This avoids changing physical
+    scheduling order merely to find a different-but-equivalent coloring.
+    """
     batches = []
     origins = []
     for layer_index, layer in enumerate(layered_requests):
@@ -30,7 +59,9 @@ def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
             batches.append([])
             origins.append(layer_index)
             continue
+
         pending = list(layer)
+        greedy_batches = []
         while pending:
             used_cores = set()
             batch = []
@@ -42,9 +73,82 @@ def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
                     used_cores.update(endpoints)
                 else:
                     deferred.append(request)
-            batches.append(batch)
-            origins.append(layer_index)
+            greedy_batches.append(batch)
             pending = deferred
+
+        endpoint_degree = Counter(
+            endpoint for request in layer for endpoint in request[1:3]
+        )
+        maximum_degree = max(endpoint_degree.values())
+        if len(greedy_batches) == maximum_degree:
+            batches.extend(greedy_batches)
+            origins.extend([layer_index] * len(greedy_batches))
+            continue
+
+        support = nx.Graph()
+        support.add_edges_from((request[1], request[2]) for request in layer)
+        coloring = nx.algorithms.bipartite.color(support)
+        left = sorted(node for node, color in coloring.items() if color == 0)
+        right = sorted(node for node, color in coloring.items() if color == 1)
+        size = max(len(left), len(right))
+        left.extend(("__dummy_left__", layer_index, index)
+                    for index in range(size - len(left)))
+        right.extend(("__dummy_right__", layer_index, index)
+                     for index in range(size - len(right)))
+        left_set = set(left)
+        edge_buckets = defaultdict(list)
+        for request in layer:
+            source, destination = request[1], request[2]
+            edge = (source, destination) if source in left_set else (destination, source)
+            edge_buckets[edge].append(request)
+        degree = Counter()
+        for (source, destination), records in edge_buckets.items():
+            degree[source] += len(records)
+            degree[destination] += len(records)
+        if max(degree.values()) != maximum_degree:
+            raise RuntimeError("inconsistent endpoint degree while coloring layer")
+        left_slots = [node for node in left for _ in range(maximum_degree - degree[node])]
+        right_slots = [node for node in right for _ in range(maximum_degree - degree[node])]
+        if len(left_slots) != len(right_slots):
+            raise RuntimeError("bipartite layer regularization produced unequal deficits")
+        for source, destination in zip(left_slots, right_slots):
+            edge_buckets[(source, destination)].append(None)
+
+        for _ in range(maximum_degree):
+            graph = nx.Graph()
+            graph.add_nodes_from(left, bipartite=0)
+            graph.add_nodes_from(right, bipartite=1)
+            real_edge_bonus = len(layer) + 1
+            for edge, records in edge_buckets.items():
+                real_records = [record for record in records if record is not None]
+                weight = (
+                    real_edge_bonus * len(layer) - min(record[0] for record in real_records)
+                    if real_records else 0
+                )
+                if records:
+                    graph.add_edge(*edge, weight=weight)
+            pairs = nx.algorithms.matching.max_weight_matching(
+                graph, maxcardinality=True, weight="weight"
+            )
+            matching = {source: destination for pair in pairs
+                        for source, destination in (tuple(pair), tuple(reversed(tuple(pair))))}
+            if any(node not in matching for node in left):
+                raise RuntimeError("regularized bipartite layer has no perfect matching")
+            batch = []
+            for source in left:
+                destination = matching[source]
+                records = edge_buckets[(source, destination)]
+                real_index = min(
+                    (index for index, record in enumerate(records) if record is not None),
+                    key=lambda index: records[index][0], default=len(records) - 1,
+                )
+                record = records.pop(real_index)
+                if record is not None:
+                    batch.append(record)
+            batch.sort(key=lambda request: request[0])
+            if batch:
+                batches.append(batch)
+                origins.append(layer_index)
     return batches, origins
 
 
@@ -516,6 +620,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             Path(temporary_config.name).unlink(missing_ok=True)
     tl = network_topo.get_timeline()
     tl.seed(seed)
+    node_seeds = reseed_topology_nodes(network_topo, seed)
     
     # Set up logging
     # log.set_logger(__name__, tl, log_filename)
@@ -634,4 +739,5 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         'fidelity_dict': fidelity_dict,
         'request_manager': request_manager,
         'compiler_metrics': compiler_metrics,
+        'node_seeds': node_seeds,
     }

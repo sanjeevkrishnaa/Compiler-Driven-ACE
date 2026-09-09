@@ -38,7 +38,8 @@ def read_summary(path: Path) -> list[dict[str, str]]:
 
 def runner_command(args, output: Path, name: str, strategy: str,
                    compiler_memories: int, generation_capacity: int,
-                   dynamic_min_lead: int = 1) -> list[str]:
+                   dynamic_min_lead: int = 1,
+                   delta_layers: int = 6) -> list[str]:
     return [
         sys.executable, "run_compiler_pregeneration.py",
         "--trace", str(args.trace), "--config", str(args.config),
@@ -46,7 +47,7 @@ def runner_command(args, output: Path, name: str, strategy: str,
         "--seeds", args.seeds, "--total-memories", "4",
         "--compiler-memories", str(compiler_memories),
         "--generation-capacity", str(generation_capacity),
-        "--delta-layers", "6", "--dynamic-lookahead-layers", "8",
+        "--delta-layers", str(delta_layers), "--dynamic-lookahead-layers", "8",
         "--dynamic-min-lead-layers", str(dynamic_min_lead),
         "--coherence-time-layers", "10",
         "--compiler-reservation-ms", "1000", "--stop-time-s", "300",
@@ -79,16 +80,19 @@ def main() -> None:
     environment["PYTHONPATH"] = str(args.sequence_root.resolve())
 
     profiles = (
-        ("on-demand", "on-demand", 1, 3, 1),
-        ("fixed-delta6-cap3", "fixed", 3, 3, 1),
-        ("dynamic-latest-cap3", "dynamic", 3, 3, 1),
-        ("dynamic-latest-cap2", "dynamic", 2, 2, 1),
+        ("on-demand", "on-demand", 1, 3, 1, 6),
+        ("fixed-delta2-cap3", "fixed", 3, 3, 1, 2),
+        ("fixed-delta6-cap3", "fixed", 3, 3, 1, 6),
+        ("dynamic-latest-cap3", "dynamic", 3, 3, 1, 6),
+        ("dynamic-latest-cap2", "dynamic", 2, 2, 1, 6),
     )
     summary_rows = []
-    for name, strategy, memories, capacity, lead in profiles:
+    for name, strategy, memories, capacity, lead, delta in profiles:
         output = args.output / name
-        run(runner_command(args, output, name, strategy, memories, capacity, lead),
-            environment)
+        command = runner_command(
+            args, output, name, strategy, memories, capacity, lead, delta
+        )
+        run(command, environment)
         summary_rows.extend(read_summary(output / "summary.csv"))
 
     baseline_payload = json.loads(

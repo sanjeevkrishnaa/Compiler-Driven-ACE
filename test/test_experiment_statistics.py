@@ -1,8 +1,11 @@
 import unittest
+from argparse import Namespace
+from pathlib import Path
 
 from aggregate_compiler_results import aggregate, paired_latency
 from calibrate_physical_lead import derive_profile, quantile
-from experiment_statistics import summarize
+from experiment_statistics import interval_from_summary, summarize
+from run_research_matrix import runner_command
 
 
 class ExperimentStatisticsTests(unittest.TestCase):
@@ -13,6 +16,9 @@ class ExperimentStatisticsTests(unittest.TestCase):
         self.assertAlmostEqual(result["sample_sd"], 3.0276503541)
         self.assertAlmostEqual(result["ci95_low"], 3.3341494, places=5)
         self.assertAlmostEqual(result["ci95_high"], 7.6658506, places=5)
+        low, high = interval_from_summary(result["mean"], result["sample_sd"], 10)
+        self.assertAlmostEqual(low, result["ci95_low"])
+        self.assertAlmostEqual(high, result["ci95_high"])
 
     def test_aggregate_and_paired_comparison_match_by_seed(self):
         rows = [
@@ -44,6 +50,16 @@ class ExperimentStatisticsTests(unittest.TestCase):
         self.assertEqual(profile["service_bound_ms"], 6)
         self.assertEqual(profile["reference_layer_duration_ms"], 2)
         self.assertEqual(profile["dynamic_min_lead_layers"], 3)
+
+    def test_matrix_runner_passes_policy_specific_fixed_delta(self):
+        args = Namespace(
+            trace=Path("trace.txt"), config=Path("config.json"), seeds="0,1"
+        )
+        command = runner_command(
+            args, Path("out"), "fixed-delta2-cap3", "fixed", 3, 3,
+            delta_layers=2,
+        )
+        self.assertEqual(command[command.index("--delta-layers") + 1], "2")
 
 
 if __name__ == "__main__":

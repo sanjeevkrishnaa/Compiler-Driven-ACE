@@ -417,15 +417,17 @@ python -m unittest discover -s test -p "test_compiler*.py" -v
 python -m py_compile adaptive_continuous.py reservation.py compiler_scheduler.py compiler_trace.py parallel_core.py run_compiler_pregeneration.py
 ```
 
-At handoff time, all seven compiler tests pass.
+At the latest validation point, all 17 focused tests pass.
 
 ## 11. Known limitations and research cautions
 
-1. Results above use only seed 0. Run multiple seeds and report mean, standard
-   deviation, and confidence intervals before comparing formally with a paper.
+1. Section 7 is the historical seed-zero checkpoint. Use the ten-seed results
+   in Section 14 for conclusions and formal comparisons.
 2. The supplied QFT trace is highly oversubscribed relative to four memories.
    Future knowledge cannot bypass the physical concurrency bound.
-3. The planner is greedy in trace order, not a global optimizer.
+3. Preparation admission remains greedy in trace order, not a global
+   deadline-aware optimizer. Communication conflict batching is separately
+   minimized using stable greedy batches plus selective bipartite edge coloring.
 4. Fixed delta is expressed in circuit layers, while generation, decoherence,
    retry, and reservation events occur in physical simulation time. Congestion
    makes layer-to-time conversion nonuniform.
@@ -448,18 +450,16 @@ At handoff time, all seven compiler tests pass.
 
 Priority order:
 
-1. Run the balanced and zero-waste dynamic profiles over at least ten seeds;
-   compute mean, standard deviation, and confidence intervals.
-2. Add a physical-time-aware launch estimator using observed RSVP and EPR
+1. Add a physical-time-aware launch estimator using observed RSVP and EPR
    generation distributions instead of a fixed layer offset/reservation window.
-3. Replace the greedy planner with deadline-aware admission and edge-coloring or
-   matching-based communication sublayers.
-4. Implement direct compiler-to-application reservation ownership transfer so
+2. Replace greedy preparation admission with a deadline-aware global optimizer;
+   conflict sublayers are already minimized for the bipartite 4x4 mesh.
+3. Implement direct compiler-to-application reservation ownership transfer so
    a cached pair can be consumed without a second memory at each endpoint.
-5. Optimize explicitly for a multi-objective cost: latency, pre-ready rate,
+4. Optimize explicitly for a multi-objective cost: latency, pre-ready rate,
    fidelity at use, and expiry/waste.
-6. Add more traces in the same format and evaluate topology/workload sensitivity.
-7. Reproduce the source paper's exact topology, workload, arrival process, and
+5. Add more traces in the same format and evaluate topology/workload sensitivity.
+6. Reproduce the source paper's exact topology, workload, arrival process, and
    parameter matrix before making quantitative paper-vs-reproduction claims.
 
 The most important conceptual conclusion so far is that compiler knowledge
@@ -477,19 +477,48 @@ single-seed results in Section 7:
 - an explicit dynamic minimum lead, separate from total lookahead;
 - physical setup/generation and layer-duration samples in `runs.json`;
 - lead calibration from declared empirical quantiles and safety factor;
-- a QFT matrix runner covering ODG, fixed, cap-two/cap-three dynamic, and
-  calibrated dynamic over common seeds;
+- a QFT matrix runner covering ODG, fixed delta two/six, cap-two/cap-three
+  dynamic, and calibrated dynamic over common seeds;
 - sample SD and two-sided Student-t 95% intervals;
 - seed-paired latency differences and reductions versus ODG;
 - trace/config hashes and complete experiment parameters in artifacts.
 
-The handoff URL `https://github.com/anub-dota/qnoc-stress-testing` returned a
-GitHub 404 and could not be cloned on the continuation machine. The adjacent
-`SeQUeNCe-compiler-native` checkout is a different native-integration project
-and was not substituted. Consequently, no new physical result is claimed until
-the exact compatible runtime is supplied or access is restored.
+The private handoff runtime URL was unavailable, so the dependency was resolved
+from the ACE authors' public compatibility statement: official SeQUeNCe v0.8.1.
+The verified Git identity and destination fork are `DhruvPansuriya` and
+`https://github.com/DhruvPansuriya/Compiler-Driven-ACE`.
 
-The verified GitHub identity requested for future commits and pushes is
-`DhruvPansuriya`; the local Git author matches that identity. No public
-`Compiler-Driven-ACE` repository was visible under that account, so no
-destination remote was invented.
+## 14. Verified continuation results (2026-09-09)
+
+The ACE authors' public repository identifies SeQUeNCe 0.8.1 as its supported
+runtime. Official tag v0.8.1 (commit
+`cf5283cdfd6692a82a090d15fb09fbc01bd322fc`) was installed in an isolated
+Python 3.13 environment. A compatibility defect in ACE's sparse classical
+routing was fixed at the custom-router boundary; official SeQUeNCe was not
+modified. The resulting seed-zero ODG run exactly reproduced the previous
+1.107035-ms checkpoint.
+
+A second defect was then identified: the topology JSON fixes every router and
+BSM seed, so changing only `Timeline.seed` yielded identical trials. ACE now
+derives every node seed as `configured_seed + experiment_seed * 1000003` and
+records the mapping. Seed zero is unchanged, while seeds 1--9 are genuine
+stochastic repetitions.
+
+Corrected full-trace ten-seed means are:
+
+| Configuration | Latency | Pre-ready | Fidelity at use | Expiry |
+|---|---:|---:|---:|---:|
+| ODG | 1.1054 ms | 0% | 0.9498 overall | 0% |
+| Fixed delta 2, cap 3 | 0.9262 ms | 20.75% | 0.8141 | 2.11% |
+| Fixed delta 6, cap 3 | 0.9354 ms | 19.31% | 0.4024 | 5.01% |
+| Dynamic lead 1, cap 3 | 0.9223 ms | 21.43% | 0.8195 | 2.00% |
+| Dynamic lead 1, cap 2 | 1.0038 ms | 11.68% | 0.8905 | 0% |
+
+Paired reductions versus ODG are 16.21% for fixed delta 2, 15.38% for fixed
+delta 6, 16.56% for dynamic cap 3, and 9.19% for dynamic cap 2. Dynamic is
+0.41% faster than matched fixed delta 2 on average, but the paired 95% interval
+(-0.03%, 0.86%) crosses zero. Conflict serialization now reaches the bipartite
+minimum of 2,831 sublayers while reordering only the three source layers where
+the old greedy method used one unnecessary batch. See
+`results/ACE_VS_NATIVE_SEQUENCE.md` for confidence intervals, raw aggregate
+references, validation, and the native-repository comparison.
