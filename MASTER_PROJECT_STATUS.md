@@ -21,6 +21,14 @@ timing differ. See [`COMPILER_PREGENERATION.md`](COMPILER_PREGENERATION.md) and
 [`results/ACE_VS_NATIVE_SEQUENCE.md`](results/ACE_VS_NATIVE_SEQUENCE.md) as
 historical context only.
 
+The next controlled design is documented in
+[`SHARED_POOL_4X4_DESIGN.md`](SHARED_POOL_4X4_DESIGN.md). It must be reported
+separately from the static-bank matrix.
+
+The required physical CGP/ACGP comparison is specified in
+[`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md); existing PIR/random
+traffic scripts are explicitly not that baseline.
+
 ## 1. Research question
 
 When a quantum compiler knows that a logical qubit will move from one core to
@@ -129,6 +137,14 @@ retry timing, memory noise/expiry, teleportation, and correction stages.
   the detailed technical report, and this master status document.
 
 ## 5. Current controlled result
+
+> **Status update (September 2026):** the ACE compiler-pair utilization path
+> was found to retain a consumed pair's nominal compiler reservation until its
+> long reservation expiry. The lifecycle fix now releases that bookkeeping at
+> utilization. Consequently, the ACE numbers in this historical static-bank
+> matrix must be rerun with the corrected lifecycle before being used for a
+> final ACE/native conclusion. The native results remain an audited native
+> baseline; they are not invalidated by this ACE-specific defect.
 
 All results below use the exact shared contract. “Pre-ready” means a
 compiler-generated pair was available before the associated transfer; fidelity

@@ -4,6 +4,11 @@ Related: [Adaptive, Continuous Entanglement Generation for Quantum Networks](htt
 
 ## Compiler-driven pre-generation
 
+> **Read first:** [`MASTER_README.md`](MASTER_README.md) is the comprehensive
+> project narrative and the current source of truth. It records which results
+> are audited historical artifacts, which ACE results require rerunning after
+> the reservation-lifecycle correction, and what is currently in progress.
+
 The ACE physical pre-generation/cache path now also supports offline compiler
 traces.  Both fixed-delta and resource-aware dynamic scheduling are available,
 with on-demand fallback plus pair creation/utilization fidelity, pre-ready
@@ -14,11 +19,12 @@ The research runner also supports measured physical-time lead calibration and
 paired multi-seed 95% confidence intervals. The original single-seed table is a
 validation checkpoint, not a statistical conclusion.
 
-The corrected ten-seed ACE results and the controlled comparison with the
-native SeQUeNCe repository are reported in
-[`results/ACE_VS_NATIVE_SEQUENCE.md`](results/ACE_VS_NATIVE_SEQUENCE.md).
+The earlier ten-seed ACE/native comparison is retained as historical context
+in [`results/ACE_VS_NATIVE_SEQUENCE.md`](results/ACE_VS_NATIVE_SEQUENCE.md).
+It must not be used for final ACE conclusions until the corrected ACE matrix
+is rerun and audited.
 
-Current audited 4x4 QFT result (4,954 requests, seeds 0--9): dynamic cap 3
+Historical 4x4 QFT result (4,954 requests, seeds 0--9): dynamic cap 3
 reduces mean latency by 16.56% versus ACE ODG, while matched fixed delta 2
 reduces it by 16.21%. Dynamic is only 0.41% faster than fixed on paired seeds,
 and the 95% interval crosses zero, so the experiment does not establish a
@@ -39,8 +45,9 @@ memory `1+1` banks, a partition-matched ODG baseline, 30 paired seeds, and
 identical serialized request deadlines. See
 [SHARED_EXPERIMENT_CONTRACT.md](SHARED_EXPERIMENT_CONTRACT.md).
 
-That matrix is now complete and audited. See the 30-seed aggregate and paired
-effects in
+That matrix is retained as a historical audited artifact. The ACE portion is
+being rerun after the lifecycle correction; see the 30-seed aggregate and
+paired effects in
 [`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md).
 
 For the full technical narrative—architecture, code-level changes, exact
