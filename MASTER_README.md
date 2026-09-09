@@ -3,7 +3,7 @@
 > **Project status:** active research implementation. This document is the
 > single narrative for the BTP work from the original ACE handoff through the
 > current corrected physical-simulation work. It distinguishes audited results
-> from historical development results and from work currently being rerun.
+> from superseded historical development results and pending experiments.
 
 ## Repositories and code history
 
@@ -203,7 +203,10 @@ The earlier 30-seed study audited 1,486,200 request instances per backend.
 Native SeQUeNCe completed every request and passed its pair/memory/timing/
 fidelity audit. Its within-backend trends are useful historical evidence.
 
-The historical ACE results reported:
+The earlier ACE table has now been replaced by the corrected rerun. The
+complete audited table and confidence intervals are in
+[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
+Its central results are:
 
 | Static profile | Fixed latency / ready / fidelity | Dynamic latency / ready / fidelity |
 |---|---|---|
@@ -211,11 +214,11 @@ The historical ACE results reported:
 | 2+2 | 0.983236 ms / 14.06% / 0.8567 | 0.978956 ms / 14.43% / 0.8798 |
 | 1+1 | 1.000413 ms / 12.28% / 0.8551 | 1.009635 ms / 10.97% / 0.8039 |
 
-**Important correction:** ACE was found to retain a consumed compiler pair's
-long reservation timecard until nominal expiry. That could artificially
-constrain later compiler work. The ACE lifecycle is now fixed, so the above
-ACE cells must be rerun before making final ACE/native claims. This does not
-invalidate the audited native-only records.
+**Important correction:** ACE previously retained a consumed compiler pair's
+long reservation timecard until nominal expiry. The corrected matrix above was
+run after immediate release at utilization was implemented and audited. It is
+therefore the valid ACE static-bank evidence. It still must not be interpreted
+as a raw-millisecond comparison with native SeQUeNCe.
 
 See [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md) and
 [`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md)
@@ -233,14 +236,14 @@ not merely parameter sweeps: they expose the trade-off between preparing more
 pairs early and retaining capacity to recover from a compiler miss or physical
 generation failure.
 
-The historical ACE data suggested that dynamic scheduling was only marginally
-faster than fixed at 3+1 (0.437%) and 2+2 (0.433%), while preserving slightly
-higher readiness and fidelity. At 1+1, dynamic was 0.923% slower. The useful
-lesson is not that dynamic universally wins: under tight memory it can launch
-preparation at an awkward time, contend with demand work, and leave less room
-for recovery. However, the ACE reservation-lifecycle defect described below
-could have distorted all three ACE profiles, so these values are retained as
-historical observations and are **not final ACE conclusions**.
+The corrected ACE data show a stronger capacity-dependent result. Dynamic is
+12.52% faster than fixed at 3+1 and 9.75% faster at 2+2 on paired mean
+latency; both confidence intervals exclude zero. It is 0.21% slower at 1+1,
+but that interval includes zero, so no fixed/dynamic winner is established at
+the tightest capacity. The useful lesson is not that dynamic universally wins:
+under tight memory it can contend with demand work and lose its advantage.
+These corrected static-bank results are valid ACE evidence; the pre-fix values
+remain historical only.
 
 The audited native SeQUeNCe study provides a clean within-backend contrast.
 For its 3+1 and 2+2 static profiles, fixed achieved 0.005028 ms average
@@ -324,9 +327,8 @@ compiler EPR generated → compiler slot reserved → EPR consumed
 12/12 transfers, improved compiler readiness from 50% before the correction
 to 100% afterward, and retained only three genuine finite-capacity retry
 layers. A regression test verifies one release at both endpoints on every
-compiler-pair utilization. The prior ACE static-bank matrices are preserved as
-historical artifacts but must be rerun before final ACE claims; the corrected
-30-seed rerun is the current active measurement.
+compiler-pair utilization. The full corrected 30-seed static-bank rerun has
+now passed its audit; its results supersede the old ACE static-bank table.
 
 | Problem | Root cause | Resolution |
 |---|---|---|
@@ -342,18 +344,18 @@ historical artifacts but must be rerun before final ACE claims; the corrected
 
 ### In progress
 
-The corrected ACE 30-seed static-bank matrix is being rerun locally in
-`output/qft_static_corrected_30seed/`. It must complete before its data are
-audited or interpreted.
+The corrected ACE 30-seed static-bank matrix has completed and passed its
+artifact audit. Its local source artifacts are in
+`output/qft_static_corrected_30seed/`; its tracked interpretation is
+[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
 
 ### Required sequence
 
-1. Audit corrected ACE static 3+1, 2+2 and 1+1 matrix.
-2. Run and audit ACE shared-pool cap-3 matrix.
-3. Run and audit native shared-pool cap-3 matrix.
-4. Implement trace-driven physical CGP/ACGP under the exact same contract.
-5. Compare ODG, CGP, ACGP, fixed and dynamic **within each backend**.
-6. Publish only audited, complete paired-seed results.
+1. Run and audit ACE shared-pool cap-3 matrix.
+2. Run and audit native shared-pool cap-3 matrix.
+3. Run the implemented trace-driven physical ACE ODG/CGP/ACGP baseline.
+4. Compare ODG, CGP, ACGP, fixed and dynamic **within each backend**.
+5. Publish only audited, complete paired-seed results.
 
 The controlled CGP/ACGP requirements are in
 [`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md). Existing random/PIR

@@ -128,7 +128,7 @@ retry timing, memory noise/expiry, teleportation, and correction stages.
 
 - ACE: 22/22 tests pass against the exact QFT trace.
 - Native: 20 relevant contract/compiler tests pass.
-- ACE audit: 1,486,200 completed request instances and 181,228 compiler-pair
+- ACE audit: 1,486,200 completed request instances and 407,712 compiler-pair
   records passed accounting, uniqueness, target, expiry, and fidelity checks.
 - Native audit: 1,486,200 completed request instances and zero failures;
   compressed per-request traces passed pair accounting, memory-bound, timing,
@@ -140,11 +140,10 @@ retry timing, memory noise/expiry, teleportation, and correction stages.
 
 > **Status update (September 2026):** the ACE compiler-pair utilization path
 > was found to retain a consumed pair's nominal compiler reservation until its
-> long reservation expiry. The lifecycle fix now releases that bookkeeping at
-> utilization. Consequently, the ACE numbers in this historical static-bank
-> matrix must be rerun with the corrected lifecycle before being used for a
-> final ACE/native conclusion. The native results remain an audited native
-> baseline; they are not invalidated by this ACE-specific defect.
+> long reservation expiry. The lifecycle fix releases that bookkeeping at
+> utilization. The corrected 30-seed ACE static-bank rerun is now complete and
+> audited; it supersedes the pre-fix ACE values below. Native remains an
+> independently audited within-backend baseline.
 
 All results below use the exact shared contract. “Pre-ready” means a
 compiler-generated pair was available before the associated transfer; fidelity
@@ -154,16 +153,17 @@ is measured when that pair is used.
 
 | Profile | Fixed: latency / ready / fidelity | Dynamic: latency / ready / fidelity | Dynamic vs fixed |
 |---|---|---|---|
-| 3+1 | 0.805875 ms / 34.65% / 0.7834 | 0.802312 ms / 35.39% / 0.8212 | 0.437% faster, 95% CI [0.121, 0.754]% |
-| 2+2 | 0.983236 ms / 14.06% / 0.8567 | 0.978956 ms / 14.43% / 0.8798 | 0.433% faster, [0.202, 0.665]% |
-| 1+1 | 1.000413 ms / 12.28% / 0.8551 | 1.009635 ms / 10.97% / 0.8039 | 0.923% slower, [−1.117, −0.728]% |
+| 3+1 | 0.658419 ms / 51.87% / 0.7682 | 0.575869 ms / 61.59% / 0.8039 | 12.52% faster, 95% CI [11.80, 13.24]% |
+| 2+2 | 0.821357 ms / 32.97% / 0.8496 | 0.741142 ms / 42.13% / 0.8738 | 9.75% faster, [9.11, 10.40]% |
+| 1+1 | 0.908687 ms / 22.85% / 0.8267 | 0.910578 ms / 22.57% / 0.7861 | 0.21% slower, [−0.49, 0.07]% |
 
 Against the matched on-demand baseline (1.104216 ms), every ACE compiler mode
-reduces mean latency. At 3+1 and 2+2, dynamic is modestly but consistently
-better than fixed and uses fresher pairs. At 1+1, dynamic is worse: it proposes
-many more requests than the physical ACE reservation path can admit, so its
-accepted pairs wait longer (about 90.5 ms versus 62.8 ms for fixed) and decay.
-This is a measured planner/runtime mismatch under severe memory pressure.
+reduces mean latency. At 3+1 and 2+2, dynamic is reliably better than fixed,
+with higher readiness, fresher pairs and lower expiry. At 1+1, the dynamic
+mean is slightly worse and its paired interval includes zero: finite capacity
+removes its scheduling advantage. See
+[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md)
+for the full corrected table and audit scope.
 
 ### Native SeQUeNCe
 
@@ -189,7 +189,7 @@ workload never makes a third compiler memory useful in this configuration.
 | Native physical comparison matrix | Complete | Same contract, profiles and seeds; audited. No rerun is currently justified. |
 | Cross-repository statistical report | Complete | `results/shared_contract_30seed/`. |
 | Native code/results version-control packaging | Pending | Native worktree has the implementation, tests, docs, and ignored 113 MB raw matrix output, but its new files/modifications still need a reviewed commit and push. |
-| Physical CGP/ACGP baseline on this same contract | Pending, separate experiment | Do not compare old analytical/speculative values with this physical matrix. A new versioned 30-seed static-bank run is required if the research question includes CGP/ACGP. |
+| Physical trace-driven ACE CGP/ACGP baseline | Implemented; full matrix pending | `run_trace_adaptive_baseline.py` replays the QFT trace with the same serialization and shared four-memory policy. Do not compare old analytical/speculative values; run its paired 30-seed matrix after freezing the shared-pool contract. |
 | Reservation-aware ACE dynamic policy | Pending research improvement | The current 1+1 result identifies the target; do not tune it into this baseline. |
 | Sensitivity analysis | Pending research extension | Vary lookahead, minimum lead, coherence, generation parameters, and workload/topology in a new contract. |
 

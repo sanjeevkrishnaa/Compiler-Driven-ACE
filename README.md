@@ -45,10 +45,9 @@ memory `1+1` banks, a partition-matched ODG baseline, 30 paired seeds, and
 identical serialized request deadlines. See
 [SHARED_EXPERIMENT_CONTRACT.md](SHARED_EXPERIMENT_CONTRACT.md).
 
-That matrix is retained as a historical audited artifact. The ACE portion is
-being rerun after the lifecycle correction; see the 30-seed aggregate and
-paired effects in
-[`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md).
+The earlier matrix is retained as a historical artifact. The corrected ACE
+static-bank rerun has passed audit; see
+[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
 
 For the full technical narrative—architecture, code-level changes, exact
 contract, audited 30-seed results, ACE/native interpretation, limitations, and
