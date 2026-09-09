@@ -57,3 +57,7 @@ reproduction commands—read
 For the complete project history, current verified status, distinction between
 historical and controlled experiments, pending work, and recommended research
 sequence, see [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md).
+
+For trace-driven physical ODG/CGP/ACGP, including the ACE 0.8.1 runtime
+requirement and shared-pool validation command, see
+[`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md).

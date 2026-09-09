@@ -100,6 +100,7 @@ class AdaptiveContinuousProtocol(Protocol):
         self.generated_entanglement_pairs = set()
         self.generated_pair_metadata = {}
         self.compiler_observer = None
+        self.adaptive_observer = None
         self.cache = []  # each item is (timestamp: int, path: list)
         self.update_prob = True
         self.has_empty_neighbor = True
@@ -397,6 +398,10 @@ class AdaptiveContinuousProtocol(Protocol):
                 self.compiler_observer.on_pair_expired(
                     ep_to_delete, self.owner.timeline.now(), "reservation_expired"
                 )
+            if getattr(self, "adaptive_observer", None):
+                self.adaptive_observer.on_pair_expired(
+                    ep_to_delete, self.owner.timeline.now(), "reservation_expired"
+                )
             log.logger.info(f'{self.owner.name} removed EP {ep_to_delete}')
 
     def release_compiler_quota_after_direct_use(self) -> None:
@@ -477,6 +482,10 @@ class AdaptiveContinuousProtocol(Protocol):
         self.num_generated_entanglement_pairs += 1
         if entanglement_pair not in self.generated_entanglement_pairs:
             self.generated_entanglement_pairs.add(entanglement_pair)
+            if getattr(self, "adaptive_observer", None):
+                self.adaptive_observer.on_pair_generated(
+                    entanglement_pair, self.owner.timeline.now()
+                )
             if getattr(reservation, "compiler_directed", False):
                 reservation.compiler_pair_generated = True
                 metadata = {
@@ -550,6 +559,11 @@ class AdaptiveContinuousProtocol(Protocol):
                     freshest_ep, request_id, self.owner.timeline.now(), best_fidelity,
                     self.generated_pair_metadata.get(freshest_ep),
                 )
+            if (freshest_ep is not None and request_id is not None
+                    and getattr(self, "adaptive_observer", None)):
+                self.adaptive_observer.on_pair_utilized(
+                    freshest_ep, request_id, self.owner.timeline.now(), best_fidelity
+                )
             return freshest_ep
         else:
             raise Exception(f'{self.strategy} not supported')
@@ -610,6 +624,10 @@ class AdaptiveContinuousProtocol(Protocol):
         self.generated_entanglement_pairs.remove(pair)
         if metadata and self.compiler_observer:
             self.compiler_observer.on_pair_expired(
+                pair, self.owner.timeline.now(), "memory_coherence"
+            )
+        if getattr(self, "adaptive_observer", None):
+            self.adaptive_observer.on_pair_expired(
                 pair, self.owner.timeline.now(), "memory_coherence"
             )
             

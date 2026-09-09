@@ -34,6 +34,7 @@ from experiment_contract import (
     serialization_sha256, validate_workload,
 )
 from parallel_core import run_parallel_experiment
+from adaptive_baseline_metrics import AdaptiveBaselineObserver
 
 
 def _sha256(path: Path) -> str:
@@ -164,6 +165,8 @@ def main() -> None:
                           simulation_stop_time_s=args.stop_time_s,
                           minimum_layer_duration_ps=minimum_layer_duration_ps,
                           adaptive_memory_cap=(0 if is_odg else args.adaptive_memory_cap))
+            observer = AdaptiveBaselineObserver()
+            kwargs["adaptive_observer"] = observer
             if args.verbose:
                 result = run_parallel_experiment(str(config), update_prob, False, layers,
                     args.pregeneration_buffer_ms, args.request_duration_ms, label, **kwargs)
@@ -172,6 +175,7 @@ def main() -> None:
                     result = run_parallel_experiment(str(config), update_prob, False, layers,
                         args.pregeneration_buffer_ms, args.request_duration_ms, label, **kwargs)
             stats = result["stats"]
+            pair_metrics = observer.snapshot()
             row = {
                 "strategy": strategy, "seed": seed,
                 "completion_rate": (
@@ -189,11 +193,20 @@ def main() -> None:
                 "adaptive_occupancy_cap_per_core": 0 if is_odg else args.adaptive_memory_cap,
                 "memory_allocation": "shared",
                 "adaptive_probability_updates": update_prob,
+                "adaptive_generated_pairs": pair_metrics["generated_pairs"],
+                "adaptive_utilized_pairs": pair_metrics["utilized_pairs"],
+                "adaptive_expired_pairs": pair_metrics["expired_pairs"],
+                "adaptive_remaining_pairs": pair_metrics["remaining_pairs"],
+                "adaptive_expiry_percentage": pair_metrics["expiry_percentage"],
+                "adaptive_waste_percentage": pair_metrics["waste_percentage"],
+                "adaptive_fidelity_at_use": pair_metrics["average_fidelity_at_use"],
+                "adaptive_storage_time_ms": pair_metrics["average_storage_time_ms"],
             }
             summaries.append(row)
             runs.append({"summary": row, "node_seeds": result["node_seeds"],
                          "simulator_timing_breakdown": stats.get("timing_breakdown", {}),
-                         "simulator_layer_latencies_ms": stats.get("layer_latencies", {})})
+                         "simulator_layer_latencies_ms": stats.get("layer_latencies", {}),
+                         "adaptive_pair_trace": pair_metrics["records"]})
             print(f"{strategy:4} seed={seed} complete={row['completion_rate']:.2%} "
                   f"latency={row['average_request_latency_ms']} ms retries={row['total_retries']} "
                   f"fidelity={row['average_delivered_epr_fidelity']}")

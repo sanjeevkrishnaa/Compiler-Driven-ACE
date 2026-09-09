@@ -28,6 +28,21 @@ The physical CGP and ACGP baseline must use all of the following:
 | Measurements | Completion, request latency, pending/retry delay, EPR fidelity at use, expiry, generated/used/wasted pairs |
 | Audit | Per-request accounting, trace hash, memory bounds, no duplicate pair consumption, paired-seed completeness |
 
+## Required ACE runtime
+
+This ACE repository targets the SeQUeNCe **0.8.1** reservation API, pinned at
+commit `cf5283cdfd6692a82a090d15fb09fbc01bd322fc`. The newer BTP
+`SeQUeNCe/` checkout is the separate native-comparison backend and has an
+incompatible reservation API; do not install it into ACE's environment.
+
+The compatible checkout is therefore kept separately as
+`../SeQUeNCe-0.8.1/`. Create the ACE-local environment from the ACE directory:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -e ../SeQUeNCe-0.8.1
+```
+
 ## Comparison logic
 
 Within a backend and one memory policy, compare:
@@ -74,11 +89,12 @@ Validate the full, hash-locked QFT workload before running a matrix:
 ```bash
 MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python run_trace_adaptive_baseline.py \
   --trace '/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/qft_requests.txt' \
-  --contract experiments/qft_4x4_comparison_v1.json --validate-only
+  --contract experiments/qft_4x4_shared_pool_v1.json --validate-only
 ```
 
 The runner has completed a non-empty six-transfer physical ODG smoke replay
-(6/6 completed). That confirms integration only; it is not a performance
-result. The full 30 paired-seed ODG/CGP/ACGP matrix must wait until the
-corrected compiler matrix has completed and been audited, so the comparison
-uses one frozen runtime policy.
+(6/6 completed) and a six-transfer physical CGP lifecycle smoke replay
+(6/6 completed). The latter exported generated, used, expired, remaining,
+expiry, waste, fidelity-at-use and storage-time fields. These smoke checks
+confirm integration only; they are not performance results. The full 30
+paired-seed ODG/CGP/ACGP matrix must use the frozen shared-pool contract.

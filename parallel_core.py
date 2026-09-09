@@ -628,7 +628,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             simulation_stop_time_s: float | None = None,
                             minimum_layer_duration_ps: int | None = None,
                             strict_compiler_only: bool = False,
-                            adaptive_memory_cap: int | None = None):
+                            adaptive_memory_cap: int | None = None,
+                            adaptive_observer=None):
     """
     Run an experiment with parallel layered requests.
     
@@ -682,6 +683,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         router.adaptive_continuous.has_empty_neighbor = True
         router.adaptive_continuous.update_prob = update_prob_setting
         router.resource_manager.purify = purify_setting
+        router.adaptive_continuous.adaptive_observer = adaptive_observer
         if adaptive_memory_cap is not None:
             total_memories = len(router.resource_manager.memory_manager)
             if not 0 <= adaptive_memory_cap <= total_memories:
