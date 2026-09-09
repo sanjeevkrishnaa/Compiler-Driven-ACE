@@ -221,6 +221,51 @@ See [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md) and
 [`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md)
 for the preserved historical artifacts.
 
+### Interpretation of the 3+1, 2+2 and 1+1 comparison
+
+The memory labels describe a **per-core static partition**, not a network-wide
+pool: 3+1 means three compiler-preparation memories plus one on-demand memory
+at every participating core; 2+2 means two and two; and 1+1 means two total
+communication memories, one in each role.  In every case, a transfer that has
+no usable prepared pair must go through the finite on-demand bank and can be
+delayed or retried when its endpoint slots are occupied. Thus the profiles are
+not merely parameter sweeps: they expose the trade-off between preparing more
+pairs early and retaining capacity to recover from a compiler miss or physical
+generation failure.
+
+The historical ACE data suggested that dynamic scheduling was only marginally
+faster than fixed at 3+1 (0.437%) and 2+2 (0.433%), while preserving slightly
+higher readiness and fidelity. At 1+1, dynamic was 0.923% slower. The useful
+lesson is not that dynamic universally wins: under tight memory it can launch
+preparation at an awkward time, contend with demand work, and leave less room
+for recovery. However, the ACE reservation-lifecycle defect described below
+could have distorted all three ACE profiles, so these values are retained as
+historical observations and are **not final ACE conclusions**.
+
+The audited native SeQUeNCe study provides a clean within-backend contrast.
+For its 3+1 and 2+2 static profiles, fixed achieved 0.005028 ms average
+request latency, 92.29% prepared-pair readiness and 0.7393 delivered
+fidelity; dynamic achieved 0.018990 ms, 69.66% readiness and 0.8660 fidelity.
+Here fixed is faster because its earlier launches allow more time for the
+physical generation/retry process before each request, whereas dynamic tends
+to use fresher, higher-fidelity pairs but has less recovery time. At 1+1,
+fixed fell to 51.46% readiness and 0.037042 ms, while dynamic reached 69.66%
+and 0.018990 ms; with only one demand memory, avoiding the fixed schedule's
+contention becomes more valuable. The identical native 3+1 and 2+2 values are
+also informative: for this serialized trace, the third compiler slot was not
+the limiting resource in that implementation.
+
+The cross-repository conclusion is therefore methodological rather than a
+raw-speed ranking. Both physical implementations demonstrate that the memory
+split changes readiness, retry opportunity, latency and fidelity together,
+and that fixed versus dynamic is workload- and capacity-dependent. ACE and
+native milliseconds must not be compared directly because their generation,
+reservation, timing and accounting implementations differ. The valid final
+comparison will be made within each backend, under the corrected lifecycle and
+one hash-verified memory contract, across ODG, CGP, ACGP, fixed and dynamic.
+The corrected ACE 30-seed static rerun and the shared-pool matrices are still
+required before claiming an ACE-versus-native performance conclusion.
+
 ### Corrected implementation checks
 
 | Check | Outcome |

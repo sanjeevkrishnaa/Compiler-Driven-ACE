@@ -50,8 +50,35 @@ physical generation, and request trace?
   until both follow the same memory/admission contract.
 - Do not publish a latency reduction when any trial is incomplete.
 
-## Status
+## Implemented trace runner
 
-Specification only. Implementation waits for the corrected ACE compiler matrix
-to finish, because that rerun freezes the corrected lifecycle and baseline
-memory policy.
+`run_trace_adaptive_baseline.py` implements the physical ACE replay without
+attaching `CompilerPreGenerationController`. It reuses the same
+`ParallelLayerRequestManager`, trace parser, conflict serialization, request
+duration and barrier progression as the compiler-driven runner.
+
+For the shared-pool comparison, all policies have four physical communication
+memories per core. CGP and ACGP have an autonomous speculative-occupancy cap
+of three; ODG has cap zero. This is an occupancy cap, not a static bank:
+on-demand work remains eligible to use any free one of the four physical
+memories through ACE's normal reservation/retry mechanism.
+
+| Policy | Autonomous cap | Neighbour selection |
+|---|---:|---|
+| ODG | 0 | no autonomous generation |
+| CGP | 3 | ACE fixed/uniform probability table |
+| ACGP | 3 | ACE usage-updated probability table |
+
+Validate the full, hash-locked QFT workload before running a matrix:
+
+```bash
+MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python run_trace_adaptive_baseline.py \
+  --trace '/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/qft_requests.txt' \
+  --contract experiments/qft_4x4_comparison_v1.json --validate-only
+```
+
+The runner has completed a non-empty six-transfer physical ODG smoke replay
+(6/6 completed). That confirms integration only; it is not a performance
+result. The full 30 paired-seed ODG/CGP/ACGP matrix must wait until the
+corrected compiler matrix has completed and been audited, so the comparison
+uses one frozen runtime policy.
