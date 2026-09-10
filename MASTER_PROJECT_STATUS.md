@@ -7,27 +7,27 @@ EPR pre-generation for inter-core quantum communication. It combines the
 original ACE handoff with the work completed afterward, including the controlled
 physical ACE/native-SeQUeNCe comparison.
 
-The current source of truth is the shared 30-seed experiment contract and its
-audited report:
+The current source of truth is the completed shared-pool 30-seed experiment,
+its audit artifacts and its generated report:
 
-- [`experiments/qft_4x4_comparison_v1.json`](experiments/qft_4x4_comparison_v1.json)
-- [`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md)
-- [`COMPILER_DRIVEN_ACE_4X4_REPORT.md`](COMPILER_DRIVEN_ACE_4X4_REPORT.md)
+- [`experiments/qft_4x4_shared_pool_v1.json`](experiments/qft_4x4_shared_pool_v1.json)
+- [`results/SHARED_POOL_FINAL_COMPARISON_30SEED.md`](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md)
+- [`MASTER_README.md`](MASTER_README.md)
 
-Older single-seed, ten-seed, shared-pool, and calibrated-dynamic results remain
-useful development history. They are not replacements for the current
-static-bank 30-seed comparison because their memory allocation and/or schedule
-timing differ. See [`COMPILER_PREGENERATION.md`](COMPILER_PREGENERATION.md) and
+Older single-seed, ten-seed and calibrated-dynamic results remain useful
+development history. They are not replacements for either audited 30-seed
+matrix because their memory allocation and/or schedule timing differ. See
+[`COMPILER_PREGENERATION.md`](COMPILER_PREGENERATION.md) and
 [`results/ACE_VS_NATIVE_SEQUENCE.md`](results/ACE_VS_NATIVE_SEQUENCE.md) as
 historical context only.
 
-The next controlled design is documented in
-[`SHARED_POOL_4X4_DESIGN.md`](SHARED_POOL_4X4_DESIGN.md). It must be reported
-separately from the static-bank matrix.
+The shared-pool design is documented in
+[`SHARED_POOL_4X4_DESIGN.md`](SHARED_POOL_4X4_DESIGN.md) and is reported
+separately from the earlier static-bank matrix.
 
-The required physical CGP/ACGP comparison is specified in
-[`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md); existing PIR/random
-traffic scripts are explicitly not that baseline.
+The required physical ACE CGP/ACGP comparison is specified in
+[`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md) and is now complete;
+existing PIR/random-traffic scripts remain explicitly outside this baseline.
 
 ## 1. Research question
 
@@ -188,8 +188,8 @@ workload never makes a third compiler memory useful in this configuration.
 | Fair static-bank ACE matrix | Complete | Four profiles × policies × 30 seeds; audited. |
 | Native physical comparison matrix | Complete | Same contract, profiles and seeds; audited. No rerun is currently justified. |
 | Cross-repository statistical report | Complete | `results/shared_contract_30seed/`. |
-| Native code/results version-control packaging | Pending | Native worktree has the implementation, tests, docs, and ignored 113 MB raw matrix output, but its new files/modifications still need a reviewed commit and push. |
-| Physical trace-driven ACE CGP/ACGP baseline | Implemented; full matrix pending | `run_trace_adaptive_baseline.py` replays the QFT trace with the same serialization and shared four-memory policy. Do not compare old analytical/speculative values; run its paired 30-seed matrix after freezing the shared-pool contract. |
+| Native shared-pool compiler implementation | Complete locally | Native source is committed as `0aad0d9f`; the ignored raw full-matrix output passed its independent audit. |
+| Physical trace-driven ACE CGP/ACGP baseline | Complete and audited | `run_trace_adaptive_baseline.py` replayed the QFT trace with the same serialization and shared four-memory policy for 30 seeds. The audit covered 445,860 completed requests and 21,226 adaptive-pair records. |
 | Reservation-aware ACE dynamic policy | Pending research improvement | The current 1+1 result identifies the target; do not tune it into this baseline. |
 | Sensitivity analysis | Pending research extension | Vary lookahead, minimum lead, coherence, generation parameters, and workload/topology in a new contract. |
 
@@ -201,28 +201,24 @@ invariant audits. A rerun would be necessary only if the native source changes,
 the contract changes, an audit fails, or the raw output is lost before the
 native commit/provenance has been preserved.
 
-The correct immediate task is to commit the native implementation, its tests
-and documentation, then push that branch. The raw output remains ignored due
-to size; its reproducibility comes from the committed contract, code, command,
-provenance embedded in `study.json`, and audit procedure.
+The native implementation is committed locally. The raw output remains ignored
+due to size; reproducibility comes from the committed contract and code, the
+command, provenance embedded in `study.json`, and the audit procedure.
 
 ## 8. Recommended next sequence of work
 
-1. Review, commit, and push the native SeQUeNCe contract implementation and
-   documentation without staging the pre-existing user config files or large
-   ignored raw output.
-2. Preserve the current shared 30-seed result as the baseline; do not overwrite
+1. Preserve the current shared 30-seed results as baselines; do not overwrite
    its output directory.
-3. Define a new versioned contract for an ACE reservation-aware dynamic policy.
+2. Define a new versioned contract for an ACE reservation-aware dynamic policy.
    It should use physical acceptance/admission information, not only offline
    layer capacity, and test whether it resolves the ACE 1+1 regression.
-4. If CGP/ACGP is part of the thesis comparison, define their physical behavior,
-   static-bank allocation, metrics, and seeds in that new contract; run the
-   same 30 paired seeds and audit them.
-5. Perform a pre-registered sensitivity study over the parameters above and at
+3. If CGP/ACGP is part of the next static-bank thesis comparison, define their
+   static-bank allocation and rerun under a new, versioned contract. The
+   completed CGP/ACGP evidence here applies to the shared pool only.
+4. Perform a pre-registered sensitivity study over the parameters above and at
    least one additional workload/topology before making a general claim beyond
    this QFT 4×4 trace.
-6. Turn the locked baseline and follow-up experiments into thesis/paper figures:
+5. Turn the locked baseline and follow-up experiments into thesis/paper figures:
    paired latency effect with confidence intervals, readiness-versus-fidelity
    scatter, and memory-profile comparison. Clearly label ACE/native values as
    within-backend results.
