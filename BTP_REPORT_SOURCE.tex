@@ -1,0 +1,158 @@
+% Source of truth for the technical report. Compile with pdflatex.
+\documentclass[11pt,a4paper]{report}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+\title{Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication}
+\author{BTP Research Project}
+\date{September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+This report records compiler-driven EPR pre-generation research from topology-
+correct classical control through physical ACE and native SeQUeNCe validation.
+It distinguishes audited results from analytical results and active experiments.
+\end{abstract}
+\tableofcontents
+\clearpage
+
+\chapter{Problem and System Model}
+
+\section{Research question}
+Distributed quantum programs move logical qubits across cores. Teleportation
+needs an EPR pair between participating cores. On-demand generation starts
+pair generation after a request arrives. Compiler-driven pre-generation uses
+known future requests to prepare exact request-specific pairs earlier. The
+research question is whether that knowledge reduces service latency under
+finite quantum memory, stochastic generation, retries, decoherence, expiry,
+and contention.
+
+The experiments replay communication requests rather than the complete
+evolving 96-qubit QFT state. They execute physical generation, storage noise,
+expiry, teleportation, and correction for every request. Raw ACE and native
+SeQUeNCe milliseconds are not comparable because their latency endpoints and
+physical paths differ. Policy comparisons are only valid within one backend.
+
+\section{Controlled workload}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Property & Value \\
+\midrule
+Topology & 4x4 mesh, 16 cores, 24 neighbour links \\
+Logical qubits & 96 \\
+Source layers & 766 \\
+Transfers & 4,954 \\
+Conflict-free sublayers & 2,831 \\
+Trace SHA-256 & \texttt{61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Transfers sharing a core are serialized into conflict-free sublayers. A barrier
+releases the next sublayer only after the prior sublayer terminates.
+
+\section{Policies and memory model}
+ODG generates after request arrival. Fixed compiler scheduling prepares the
+exact pair two layers before use. Dynamic compiler scheduling selects the
+latest planner-feasible preparation. CGP and ACGP speculatively generate
+background pairs without compiler knowledge; ACGP adapts neighbour choice from
+traffic history.
+
+Historical static memory allocations were 3+1, 2+2, and 1+1 compiler/demand
+partitions. The current shared pool has four physical slots per core with a
+background or compiler occupancy cap of three. Demand can use any free slot;
+endpoint allocation is atomic, and pending demand has priority over new
+background work. Strict 4+0 disables fallback and measures compiler coverage.
+
+\chapter{Engineering Contributions}
+
+\section{Classical topology alignment}
+The project replaced an all-to-all classical-router assumption with sparse
+classical links that mirror the quantum topology. It added hop-by-hop
+forwarding, XY mesh routing, serialized classical-channel timing, and request
+identity and priority handling for concurrent multi-hop teleportation.
+Linear, star, and 3x3 mesh scenarios passed 32 targeted regression tests.
+The primary implementation commit is
+\texttt{2cd7dd6bb5602b4caf052922b0285efda82087e8}.
+
+\section{Compiler scheduling and native integration}
+The trace parser validates topology, tracks logical-qubit placement, and builds
+fixed-delta and dynamic-lookahead schedules. The initial analytical model
+scheduled 2,358 fixed requests (47.60\%) and 2,408 dynamic requests (48.61\%).
+Those values are scheduling evidence only because a scheduled generation was
+treated as successful.
+
+Native integration executes Barrett--Kok generation, detector failure, retry,
+memory noise, expiry, teleportation, and receiver correction. An exact compiler
+pair cannot be consumed by another request. An in-flight exact attempt is
+adopted at request arrival; an absent exact pair uses demand fallback.
+
+\section{ACE lifecycle repair}
+ACE could consume a compiler pair while retaining its compiler reservation,
+timecard, and quota until nominal expiry. The stale state produced artificial
+congestion. The repair releases compiler bookkeeping when the pair is used.
+All final ACE static values below use the corrected lifecycle.
+
+\chapter{Audited Physical Results}
+
+\section{Native physical 3+1 study}
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency (ms) & Pre-ready & Fidelity & Expiry \\
+\midrule
+Full ODG, four demand memories & $0.2095 \pm 0.0045$ & -- & 0.9498 & -- \\
+Matched ODG, one demand memory & $0.5214 \pm 0.0093$ & -- & 0.9498 & -- \\
+Fixed compiler & $0.3135 \pm 0.0076$ & 42.18\% & 0.8630 & 0\% \\
+Dynamic compiler & $0.3524 \pm 0.0083$ & 30.46\% & 0.9193 & 0\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+Fixed gains more physical retry time. Dynamic launches later and uses fresher
+pairs. This establishes a retry-time versus fidelity trade-off.
+
+\section{Corrected ACE static matrix}
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Profile & Fixed latency / ready / fidelity & Dynamic latency / ready / fidelity & Dynamic vs fixed \\
+\midrule
+3+1 & 0.658419 / 51.87\% / 0.7682 & 0.575869 / 61.59\% / 0.8039 & 12.52\% faster \\
+2+2 & 0.821357 / 32.97\% / 0.8496 & 0.741142 / 42.13\% / 0.8738 & 9.75\% faster \\
+1+1 & 0.908687 / 22.85\% / 0.8267 & 0.910578 / 22.57\% / 0.7861 & no reliable winner \\
+\bottomrule
+\end{tabular}
+\end{center}
+The corrected static audit passed 300 cells, 1,486,200 request instances, and
+407,712 compiler-pair records with zero audit errors.
+
+\chapter{Validation and Current Work}
+
+Audits check completion, pair conservation, unique pair use, memory bounds,
+event ordering, timing-stage sums, and fidelity bounds. ACE focused verification
+reported 25 passed and one skipped. Native adaptive integration tests reported
+15 passed and one skipped.
+
+The native ODG/CGP/ACGP full-trace seed-0 smoke completed 14,862 requests with
+zero failures and passed its raw-pair audit. The 30-seed native adaptive matrix
+is running during this report's initial preparation. Its values must not enter
+a final comparison table until every seed completes and the pair audit passes.
+
+\section{Next research steps}
+\begin{enumerate}
+\item Complete and audit native ODG/CGP/ACGP shared-pool seeds 0--29.
+\item Compare native adaptive policies with native fixed and dynamic policies.
+\item Evaluate static-bank CGP/ACGP and a retry-aware dynamic scheduler.
+\item Vary capacity, lookahead, coherence, workload, and topology.
+\end{enumerate}
+
+\chapter{Evidence Index}
+\begin{itemize}
+\item ACE: \url{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE}
+\item Native: \url{https://github.com/sanjeevkrishnaa/SeQUeNCe}
+\item ACE evidence: \texttt{MASTER\_README.md} and \texttt{VERIFICATION\_LOG.md}
+\item Native evidence: \texttt{NATIVE\_ADAPTIVE\_COMPARISON\_PLAN.md}
+\end{itemize}
+\end{document}
