@@ -10,6 +10,7 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{placeins}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \pgfplotsset{compat=1.18}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
@@ -416,6 +417,7 @@ time than dynamic, while the table above records the associated fidelity
 trade-off.}
 \label{fig:historical-native-static-latency}
 \end{figure}
+\FloatBarrier
 
 \section{Completed ACE static fixed-lead sensitivity}\label{sec:ace-static-fixed-leads}
 The corrected static-bank study covers 3+1, 2+2, and 1+1
@@ -493,6 +495,7 @@ shared-pool path are separate resource configurations, so the figure compares
 lead trends within each line rather than claiming a cross-profile ranking.}
 \label{fig:ace-fixed-lead-latency}
 \end{figure}
+\FloatBarrier
 
 \section{Completed ACE shared-pool fixed-lead sensitivity}\label{sec:ace-shared-fixed-leads}
 The completed shared-pool ACE study uses four physical slots per core, compiler
