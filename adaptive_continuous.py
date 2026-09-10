@@ -481,6 +481,13 @@ class AdaptiveContinuousProtocol(Protocol):
         '''
         self.num_generated_entanglement_pairs += 1
         if entanglement_pair not in self.generated_entanglement_pairs:
+            # Endpoint memory names are reusable. Notify the compiler observer
+            # of every new occupant so a later ordinary pair cannot inherit a
+            # stale compiler record with the same slot names.
+            if getattr(self, "compiler_observer", None):
+                self.compiler_observer.on_pair_slot_reused(
+                    entanglement_pair, self.owner.timeline.now()
+                )
             self.generated_entanglement_pairs.add(entanglement_pair)
             if getattr(self, "adaptive_observer", None):
                 self.adaptive_observer.on_pair_generated(
@@ -525,16 +532,28 @@ class AdaptiveContinuousProtocol(Protocol):
             return None
 
         if request_id is not None:
+            def compiler_target(pair):
+                observer = getattr(self, "compiler_observer", None)
+                if observer is not None:
+                    canonical_target = observer.compiler_target_request_for_pair(
+                        pair
+                    )
+                    if canonical_target is not None:
+                        return canonical_target
+                return self.generated_pair_metadata.get(pair, {}).get(
+                    "target_request_id"
+                )
+
             targeted = [
                 pair for pair in entanglement_pairs
-                if self.generated_pair_metadata.get(pair, {}).get("target_request_id") == request_id
+                if compiler_target(pair) == request_id
             ]
             # Compiler-directed pairs are reserved for their traced request.
             # Ordinary CGP/ACGP pairs carry no compiler metadata and remain
             # available as a generic fallback for any request on the link.
             generic = [
                 pair for pair in entanglement_pairs
-                if pair not in self.generated_pair_metadata
+                if compiler_target(pair) is None
             ]
             entanglement_pairs = targeted or generic
             if not entanglement_pairs:

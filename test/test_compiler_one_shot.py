@@ -160,6 +160,57 @@ class CompilerOneShotTests(unittest.TestCase):
             generic_pair,
         )
 
+    def test_reused_memory_slots_close_the_stale_compiler_record(self):
+        controller = CompilerPreGenerationController.__new__(
+            CompilerPreGenerationController
+        )
+        pair = (("router_0_0", "m0"), ("router_0_1", "m0"))
+        controller.records = [{"status": "ready", "expired_at_ps": None,
+                               "expiry_reason": None}]
+        controller.active_record_by_pair = {tuple(sorted(pair)): 0}
+        controller.reservation_by_pair = {}
+
+        controller.on_pair_slot_reused(pair, 123)
+
+        self.assertEqual(controller.records[0]["status"], "expired")
+        self.assertEqual(controller.records[0]["expired_at_ps"], 123)
+        self.assertEqual(controller.records[0]["expiry_reason"],
+                         "physical_slot_reused")
+        self.assertEqual(controller.active_record_by_pair, {})
+
+    def test_controller_reservation_protects_remote_local_pair_view(self):
+        class Timeline:
+            def now(self):
+                return 0
+
+        class Owner:
+            timeline = Timeline()
+
+        class Observer:
+            def compiler_target_request_for_pair(self, pair):
+                return 7
+
+            def on_pair_utilized(self, *args):
+                pass
+
+        protocol = AdaptiveContinuousProtocol.__new__(AdaptiveContinuousProtocol)
+        pair = (("router_0_0", "m0"), ("router_0_1", "m0"))
+        protocol.generated_entanglement_pairs = {pair}
+        # This endpoint can retain stale local metadata. The controller's
+        # active physical-pair record is the canonical reservation identity.
+        protocol.generated_pair_metadata = {pair: {"target_request_id": 8}}
+        protocol.strategy = "freshest"
+        protocol.compiler_observer = Observer()
+        protocol.owner = Owner()
+        protocol.get_fidelity = lambda pair: 0.9
+
+        self.assertIsNone(protocol.match_generated_entanglement_pair(
+            "router_0_0", "router_0_1", request_id=8
+        ))
+        self.assertEqual(protocol.match_generated_entanglement_pair(
+            "router_0_0", "router_0_1", request_id=7
+        ), pair)
+
     def test_utilized_pair_releases_compiler_bookkeeping_at_both_endpoints(self):
         class ReservationProtocol:
             def __init__(self):

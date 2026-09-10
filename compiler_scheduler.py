@@ -56,6 +56,7 @@ class CompilerPreGenerationController:
         self.rejections = defaultdict(list)
         self.records = []
         self.active_record_by_pair = {}
+        self.reservation_by_pair = {}
         self.utilization_by_request = {}
         self.strict_misses = set()
 
@@ -183,6 +184,37 @@ class CompilerPreGenerationController:
         }
         self.records.append(record)
         self.active_record_by_pair[key] = record["pair_id"]
+        self.reservation_by_pair[key] = metadata.get("_reservation")
+
+    def compiler_target_request_for_pair(self, pair: tuple) -> int | None:
+        """Return the active compiler target for either local view of a pair."""
+        active_index = self.active_record_by_pair.get(_pair_key(pair))
+        if active_index is None:
+            return None
+        record = self.records[active_index]
+        return (record["target_request_id"]
+                if record["status"] == "ready" else None)
+
+    def on_pair_slot_reused(self, pair: tuple, observed_at: int) -> None:
+        """Close a stale compiler record before its physical slots are reused.
+
+        ACE identifies a pair by its two endpoint memory names. Those names are
+        reusable after consumption, decoherence, or reset. Without this
+        notification, a later ordinary pair in the same slots could be
+        incorrectly attributed to an earlier compiler preparation.
+        """
+        key = _pair_key(pair)
+        active_index = self.active_record_by_pair.pop(key, None)
+        self.reservation_by_pair.pop(key, None)
+        if active_index is None:
+            return
+        record = self.records[active_index]
+        if record["status"] == "ready":
+            record.update({
+                "status": "expired",
+                "expired_at_ps": observed_at,
+                "expiry_reason": "physical_slot_reused",
+            })
 
     def on_pair_utilized(
         self,
@@ -194,7 +226,8 @@ class CompilerPreGenerationController:
     ) -> None:
         if request_id in self.utilization_by_request:
             return
-        active_index = self.active_record_by_pair.get(_pair_key(pair))
+        key = _pair_key(pair)
+        active_index = self.active_record_by_pair.get(key)
         if active_index is None:
             return
         record = self.records[active_index]
@@ -209,7 +242,7 @@ class CompilerPreGenerationController:
             "status": "used",
         })
         self.utilization_by_request[request_id] = active_index
-        self.active_record_by_pair.pop(_pair_key(pair), None)
+        self.active_record_by_pair.pop(key, None)
 
         # A compiler pair is one-shot.  Once an application has claimed it,
         # retaining its nominal (long) compiler reservation leaks timecards
@@ -218,7 +251,8 @@ class CompilerPreGenerationController:
         # artificial long-lived lock.  Release bookkeeping at utilization;
         # the application protocol still owns the physical memory until its
         # normal consumption path completes.
-        reservation = (metadata or {}).get("_reservation")
+        reservation = ((metadata or {}).get("_reservation")
+                       or self.reservation_by_pair.pop(key, None))
         if reservation is not None:
             endpoints = {node_name for node_name, _ in pair}
             for node_name in endpoints:
@@ -227,7 +261,9 @@ class CompilerPreGenerationController:
                 protocol.release_compiler_quota_after_direct_use()
 
     def on_pair_expired(self, pair: tuple, expired_at: int, reason: str) -> None:
-        active_index = self.active_record_by_pair.pop(_pair_key(pair), None)
+        key = _pair_key(pair)
+        active_index = self.active_record_by_pair.pop(key, None)
+        self.reservation_by_pair.pop(key, None)
         if active_index is None:
             return
         record = self.records[active_index]
