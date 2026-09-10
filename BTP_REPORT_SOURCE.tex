@@ -11,6 +11,9 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+% Retain the report's original chapter layout but suppress the word "Chapter"
+% in displayed headings.
+\renewcommand{\chaptername}{}
 \title{Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication\\
 \large Physical Validation, Memory Trade-offs, and Reproducible Evidence}
 \author{BTP Research Project}
@@ -35,9 +38,9 @@ described as pending and will be inserted only after their audits pass.
 \tableofcontents
 \clearpage
 
-\section{Research Narrative and Contributions}
+\chapter{Research Narrative and Contributions}
 
-\subsection{Motivation}
+\section{Motivation}
 Modular quantum computers require communication whenever a logical qubit moves
 between cores. Teleportation replaces a direct quantum transfer with a shared
 Bell pair, local operations, classical messages, and receiver correction. This
@@ -52,7 +55,7 @@ without consuming the recovery capacity needed by demand traffic? The answer
 cannot come from an offline schedule alone. It must include physical generation
 failure, retries, memory lifetime, contention, pair identity, and fallback.
 
-\subsection{Progression of the work}
+\section{Progression of the work}
 \begin{longtable}{p{0.20\textwidth}p{0.69\textwidth}}
 \toprule
 Stage & Contribution and evidence boundary \\
@@ -103,7 +106,7 @@ and audits make within-backend policy comparisons reproducible.}
 \label{fig:research-stack}
 \end{figure}
 
-\subsection{Relation to prior work}
+\section{Relation to prior work}
 Adaptive continuous entanglement generation motivates the CGP/ACGP baselines
 \cite{Kolar2022}. AEPA motivates proactive allocation under limited quantum
 memory \cite{AEPA}. SeQUeNCe provides the discrete-event quantum-network
@@ -112,7 +115,7 @@ does not claim to reproduce another paper's absolute numbers: the supplied QFT
 trace, physical assumptions, control implementation, and latency endpoints are
 explicitly frozen and reported here.
 
-\subsection{Research paper study}
+\section{Research paper study}
 The literature review guided the experimental design rather than supplying
 parameters by assumption. Four papers were studied alongside the SeQUeNCe
 documentation and the project presentation prepared during the analytical
@@ -144,7 +147,7 @@ to reproduce analytically before physical compiler integration. \\
 \bottomrule
 \end{longtable}
 
-\subsection{What the analytical reproduction established}
+\section{What the analytical reproduction established}
 The policy-level reproduction implemented ODG, CGP, and ACGP on five mesh
 sizes and four circuit-derived workloads. It reproduced the qualitative result
 that pre-generation can lower exposed request latency while stored pairs reduce
@@ -156,7 +159,7 @@ rules, purification triggers, or the authors' circuit/mapping configuration.
 Accordingly, the analytical reproduction is evidence of policy behavior and
 implementation coverage, not a numerical replication claim.
 
-\subsection{How the paper study changed this project}
+\section{How the paper study changed this project}
 The review made three design decisions explicit. First, physical results must
 retain stochastic generation, retry, memory noise, expiry, and teleportation
 instead of translating a scheduler hit directly into lower latency. Second,
@@ -166,9 +169,9 @@ controls: the fixed-lead and cap-four studies do not tune a policy merely to
 outperform a baseline, but measure readiness, fidelity, expiry, and blocking
 under identical resources.
 
-\section{Problem and System Model}
+\chapter{Problem and System Model}
 
-\subsection{Research question}
+\section{Research question}
 Distributed quantum programs move logical qubits across cores. Teleportation
 needs an EPR pair between participating cores. On-demand generation starts
 pair generation after a request arrives. Compiler-driven pre-generation uses
@@ -183,7 +186,7 @@ expiry, teleportation, and correction for every request. Raw ACE and native
 SeQUeNCe milliseconds are not comparable because their latency endpoints and
 physical paths differ. Policy comparisons are only valid within one backend.
 
-\subsection{Controlled workload}
+\section{Controlled workload}
 \begin{center}
 \begin{tabular}{ll}
 \toprule
@@ -201,7 +204,7 @@ Trace SHA-256 & \texttt{61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954
 Transfers sharing a core are serialized into conflict-free sublayers. A barrier
 releases the next sublayer only after the prior sublayer terminates.
 
-\subsection{Policies and memory model}
+\section{Policies and memory model}
 ODG generates after request arrival. Fixed compiler scheduling prepares the
 exact pair two layers before use. Dynamic compiler scheduling selects the
 latest planner-feasible preparation. CGP and ACGP speculatively generate
@@ -216,7 +219,7 @@ cap-three RSVP implementation did not enforce the atomic part of that intended
 rule, so it remains a distinct legacy baseline. Strict 4+0 disables fallback
 and measures compiler coverage.
 
-\subsection{Definitions used throughout the report}
+\section{Definitions used throughout the report}
 For a request $r$ released at trace layer $L_r$, fixed scheduling launches its
 request-specific preparation at $L_r-\Delta$. A request is \emph{pre-ready}
 only when its exact physical pair has completed before demand generation or
@@ -255,9 +258,9 @@ completion; it is a resource cost, not merely a failed request.
 \label{fig:request-flow}
 \end{figure}
 
-\section{Experimental Method and Reproducibility}
+\chapter{Experimental Method and Reproducibility}
 
-\subsection{Immutable experiment contract}
+\section{Immutable experiment contract}
 Each publishable cell freezes the trace hash, mesh, serialized layer map,
 memory profile, scheduling parameters, physical runtime overrides, policy,
 seeds, and metric definitions in JSON. The locked workload is a 4x4 mesh with
@@ -265,14 +268,14 @@ seeds, and metric definitions in JSON. The locked workload is a 4x4 mesh with
 conflict-free serialized sublayers. The same integer seeds 0--29 are paired
 within a backend/profile comparison.
 
-\subsection{Audit gates}
+\section{Audit gates}
 Before a numerical table is promoted, raw \texttt{runs.json} must pass exact
 trace validation, the complete seed set, request completion, generated/used/
 expired pair accounting, unique compiler-pair use, target-identity checks, and
 fidelity bounds. Summary CSV files and raw-artifact SHA-256 values are retained
 as provenance. A seed-zero run is only a smoke test.
 
-\subsection{Interpretation boundaries}
+\section{Interpretation boundaries}
 ACE and native SeQUeNCe answer complementary questions. ACE uses its adaptive
 reservation/cache lifecycle and reports its application-service endpoint.
 Native SeQUeNCe executes Barrett--Kok generation, retries, swapping,
@@ -281,9 +284,9 @@ millisecond values are therefore never ranked across backends. The valid unit
 of comparison is a paired policy direction and trade-off within the same
 backend and memory profile.
 
-\section{Engineering Contributions}
+\chapter{Engineering Contributions}
 
-\subsection{Classical topology alignment}
+\section{Classical topology alignment}
 The project replaced an all-to-all classical-router assumption with sparse
 classical links that mirror the quantum topology. It added hop-by-hop
 forwarding, XY mesh routing, serialized classical-channel timing, and request
@@ -292,7 +295,7 @@ Linear, star, and 3x3 mesh scenarios passed 32 targeted regression tests.
 The primary implementation commit is
 \texttt{2cd7dd6bb5602b4caf052922b0285efda82087e8}.
 
-\subsection{Compiler scheduling and native integration}
+\section{Compiler scheduling and native integration}
 The trace parser validates topology, tracks logical-qubit placement, and builds
 fixed-delta and dynamic-lookahead schedules. The initial analytical model
 scheduled 2,358 fixed requests (47.60\%) and 2,408 dynamic requests (48.61\%).
@@ -304,7 +307,7 @@ memory noise, expiry, teleportation, and receiver correction. An exact compiler
 pair cannot be consumed by another request. An in-flight exact attempt is
 adopted at request arrival; an absent exact pair uses demand fallback.
 
-\subsection{Analytical policy framework}
+\section{Analytical policy framework}
 The analytical stage introduced the policy vocabulary used in all later
 experiments. ODG creates pairs only after demand. CGP periodically chooses a
 neighbour uniformly when capacity is available. ACGP updates a local neighbour
@@ -321,7 +324,7 @@ successful and uses an analytical storage-fidelity model. Its role in this
 report is to motivate the physical experiments and define falsifiable policy
 expectations.
 
-\subsection{Native physical request lifecycle}
+\section{Native physical request lifecycle}
 For each compiler preparation, the native simulator reserves endpoint memory,
 starts Barrett--Kok generation, and retries physical failures while the target
 request remains unreleased. At request release it first consumes an exact ready
@@ -332,7 +335,7 @@ and density-matrix fidelity. This lifecycle shows why an offline scheduled pair
 is not automatically a physical latency reduction: failures, retries, and
 queueing remain on the critical path.
 
-\subsection{ACE lifecycle repair}
+\section{ACE lifecycle repair}
 ACE could consume a compiler pair while retaining its compiler reservation,
 timecard, and quota until nominal expiry. The stale state produced artificial
 congestion. The repair releases compiler bookkeeping when the pair is used.
@@ -344,9 +347,9 @@ map is now authoritative at both endpoints, and a stale record is closed when
 its slot is reused. Any final comparison requiring identity accounting is
 rerun after this correction; older values remain historical context only.
 
-\section{Audited Results and Interpretation}
+\chapter{Audited Results and Interpretation}
 
-\subsection{Evidence status}
+\section{Evidence status}
 Results are separated by their evidence status. The shared-pool ACE fixed-lead
 matrix is a completed corrected 30-seed study. The static and native
 fixed-lead matrices are executing under newly locked contracts and will replace
@@ -354,7 +357,7 @@ the historical fixed-$\Delta=2$ rows below only after audit. Historical rows
 remain useful for explaining the evolution of the system, but are not combined
 with new values.
 
-\subsection{Historical native physical 3+1 study}
+\section{Historical native physical 3+1 study}
 \begin{center}
 \begin{tabular}{lrrrr}
 \toprule
@@ -370,7 +373,7 @@ Dynamic compiler & $0.3524 \pm 0.0083$ & 30.46\% & 0.9193 & 0\% \\
 Fixed gains more physical retry time. Dynamic launches later and uses fresher
 pairs. This establishes a retry-time versus fidelity trade-off.
 
-\subsection{Historical corrected ACE static matrix}
+\section{Historical corrected ACE static matrix}
 \begin{center}
 \begin{tabular}{lrrr}
 \toprule
@@ -387,7 +390,7 @@ The corrected static audit passed 300 cells, 1,486,200 request instances, and
 single historical lead and are superseded, for fixed-policy conclusions, by the
 six-lead study described next.
 
-\subsection{Completed ACE shared-pool fixed-lead sensitivity}
+\section{Completed ACE shared-pool fixed-lead sensitivity}
 The completed shared-pool ACE study uses four physical slots per core, compiler
 occupancy cap three, demand fallback, and the six fixed leads
 $\Delta\in\{1,2,3,4,5,6\}$. It contains 30 paired seeds per lead and 148,620
@@ -417,13 +420,13 @@ the trace, physical parameters, scheduler, and legacy demand admission. A
 new atomic-admission cap-three control is required before attributing a future
 cap-three versus cap-four difference solely to compiler capacity.
 
-\subsection{Six-lead matrices in progress}
+\section{Six-lead matrices in progress}
 The report will add six-lead tables for ACE static 3+1, 2+2, and 1+1; native
 static 3+1, 2+2, and 1+1; and native shared pool. The ACE shared-pool table
 above also becomes the fixed-compiler evidence for the ACE adaptive-baseline
 comparison. ODG, dynamic, CGP, and ACGP are controls, not lead sweeps.
 
-\subsection{Strict compiler-only coverage diagnostic}
+\section{Strict compiler-only coverage diagnostic}
 The strict 4+0 experiment assigns all four communication slots to compiler
 preparation and prohibits on-demand recovery. It asks a coverage question, not
 a latency question, and uses seed zero only. Fixed completed 2,793 of 4,954
@@ -433,7 +436,7 @@ establishes that perfect compiler knowledge does not eliminate finite capacity,
 physical failure, or deadline misses. A practical system therefore needs demand
 fallback; these single-seed values must not be generalized as 30-seed effects.
 
-\subsection{Historical shared-pool compiler comparison}
+\section{Historical shared-pool compiler comparison}
 The Week 4 shared-pool compiler matrix compared matched ODG, fixed compiler,
 and dynamic compiler over 30 paired seeds. Every cell completed 148,620
 requests. The fixed row below is retained to document the historical complete
@@ -462,7 +465,7 @@ RSVP path can reserve endpoints sequentially, so these values cannot isolate a
 future cap-three/cap-four capacity effect until a matched atomic cap-three
 control is run.
 
-\subsection{Historical native shared-pool compiler comparison}
+\section{Historical native shared-pool compiler comparison}
 Native SeQUeNCe used the same trace, seeds, four-slot shared pool, and cap-three
 compiler setting, while retaining its own physical protocol stack and latency
 endpoint. All 90 policy/seed cells completed 445,860 requests with zero
@@ -487,7 +490,7 @@ pre-ready pairs; dynamic launches later and consumes fresher pairs. This is a
 retry-time versus fidelity trade-off within native SeQUeNCe, not a comparison
 against ACE milliseconds.
 
-\subsection{ACE adaptive-generation baseline}
+\section{ACE adaptive-generation baseline}
 The Week 4 ACE comparison replayed the locked trace under ODG, CGP, ACGP,
 fixed compiler, and dynamic compiler with the same four-memory shared pool and
 autonomous/compiler occupancy cap of three. CGP and ACGP lack request identity,
@@ -517,7 +520,7 @@ has not beaten ACGP on latency, while dynamic improves the waste/fidelity side
 of the comparison. The report does not claim an ACGP improvement; such work is
 deferred until the fixed-lead and cap-four controls are complete.
 
-\subsection{Audit and provenance summary}
+\section{Audit and provenance summary}
 \begin{center}
 \begin{tabular}{lrrl}
 \toprule
@@ -537,7 +540,7 @@ timestamp ordering, memory bounds, and fidelity in $[0,1]$. They establish
 artifact integrity; they do not establish generality beyond the locked trace
 and physical assumptions.
 
-\section{Validation and Current Work}
+\chapter{Validation and Current Work}
 
 Audits check completion, pair conservation, unique pair use, memory bounds,
 event ordering, timing-stage sums, and fidelity bounds. ACE focused verification
@@ -549,7 +552,7 @@ zero failures and passed its raw-pair audit. The 30-seed native adaptive matrix
 is running during this report's initial preparation. Its values must not enter
 a final comparison table until every seed completes and the pair audit passes.
 
-\subsection{Next research steps}
+\section{Next research steps}
 \begin{enumerate}
 \item Complete the fixed-lead and cap-four control matrices, then update every
 fixed-policy conclusion from the audited $\Delta\in\{1,2,3,4,5,6\}$ evidence.
@@ -621,9 +624,9 @@ from live state, making it an adaptive version of the compiler-driven approach.}
 \label{fig:adaptive-routing}
 \end{figure}
 
-\section{Evidence Index and Reproduction Guide}\label{chap:evidence}
+\chapter{Evidence Index and Reproduction Guide}\label{chap:evidence}
 
-\subsection{Canonical repositories}
+\section{Canonical repositories}
 \begin{itemize}
 \item ACE source and contracts: \url{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE}
 \item Native SeQUeNCe source and contracts: \url{https://github.com/sanjeevkrishnaa/SeQUeNCe}
@@ -633,7 +636,7 @@ from live state, making it an adaptive version of the compiler-driven approach.}
 \url{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/FIXED_LEAD_STUDY_SCOPE.md}
 \end{itemize}
 
-\subsection{Local source-of-truth files}
+\section{Local source-of-truth files}
 \begin{longtable}{p{0.38\textwidth}p{0.51\textwidth}}
 \toprule
 Artifact & Role \\
@@ -657,7 +660,7 @@ contracts, including the fixed-lead matrix. \\
 \bottomrule
 \end{longtable}
 
-\subsection{Reproducing an audited ACE fixed-lead cell}
+\section{Reproducing an audited ACE fixed-lead cell}
 \begin{verbatim}
 .venv/bin/python run_compiler_pregeneration.py \
   --trace /absolute/path/qft_requests.txt \
