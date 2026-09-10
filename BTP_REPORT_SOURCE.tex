@@ -646,28 +646,26 @@ from live state, making it an adaptive version of the compiler-driven approach.}
 \end{itemize}
 
 \section{Local source-of-truth files}
-\begin{longtable}{p{0.38\textwidth}p{0.51\textwidth}}
-\toprule
-Artifact & Role \\
-\midrule
-\texttt{MASTER\_README.md} & User-maintained project narrative and audited
-Week 4 summary. \\
-\texttt{SESSION\_CONTEXT\_HANDOFF.md} & Canonical scope, historical results,
-and experiment constraints. \\
-Week 1--3 Notion exports and Week 2 presentation & Engineering narrative,
-literature-review notes, source-paper comparison, and historical validation.
-Claims from these sources are reconciled against the current contracts and
-audits before appearing as final results. \\
-\texttt{experiments/*.json} & Immutable ACE contracts. \\
-\texttt{results/ace\_fixed\_lead\_sensitivity\_30seed\_v1/} & Tracked
-shared-pool report, CSV, raw hashes, contract hashes, and provenance. \\
-\texttt{audit\_compiler\_results.py} & ACE completion and pair-identity audit. \\
-\texttt{SeQUeNCe/docs/native-compiler-4x4-update.md} & Native physical
-integration and historical 3+1 results. \\
-\texttt{SeQUeNCe/example/multicore\_entanglement/contracts/} & Native
-contracts, including the fixed-lead matrix. \\
-\bottomrule
-\end{longtable}
+\begin{itemize}
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/MASTER_README.md}{\texttt{MASTER\_README.md}}:
+user-maintained project narrative and audited Week 4 summary.
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/SESSION_CONTEXT_HANDOFF.md}{\texttt{SESSION\_CONTEXT\_HANDOFF.md}}:
+canonical scope, historical results, and experiment constraints.
+\item Week 1--3 Notion exports and the Week 2 presentation: engineering
+narrative, literature-review notes, source-paper comparison, and historical
+validation. The report reconciles their claims against current contracts and
+audits before treating them as final results.
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/experiments}{ACE experiment contracts}:
+immutable workload, policy, resource, and seed definitions.
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/results/ace_fixed_lead_sensitivity_30seed_v1}{ACE fixed-lead evidence}:
+tracked report, CSV, raw hashes, contract hashes, and provenance.
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/audit_compiler_results.py}{\texttt{audit\_compiler\_results.py}}:
+ACE completion and pair-identity audit.
+\item \href{https://github.com/sanjeevkrishnaa/SeQUeNCe/blob/codex/native-compiler-4x4-physical/docs/native-compiler-4x4-update.md}{Native integration report}:
+physical integration and historical native 3+1 results.
+\item \href{https://github.com/sanjeevkrishnaa/SeQUeNCe/tree/codex/native-compiler-4x4-physical/example/multicore_entanglement/contracts}{Native contracts}:
+hash-locked native profiles, including the fixed-lead matrix.
+\end{itemize}
 
 \section{Reproducing an audited ACE fixed-lead cell}
 \begin{verbatim}
