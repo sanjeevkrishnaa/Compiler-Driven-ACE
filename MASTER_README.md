@@ -1,9 +1,28 @@
-# Week 4 — Physical Validation and Audited Comparison
+# Week 4 — Engineering Update: Physical Validation and Audited Comparison
 
-> **Week 4 source of truth.** Weeks 1–3 established the research idea, QFT
-> trace and initial compiler work. This document records only Week 4: physical
-> scheduler correction, realistic memory semantics, audited 30-seed results,
-> and the valid ACE/native comparison.
+## TL;DR
+
+Week 4 converted the compiler-driven pre-generation work into a controlled,
+audited physical-simulation study. It corrected the ACE reservation lifecycle,
+re-ran the static 3+1, 2+2, and 1+1 matrix, tested strict compiler-only 4+0
+coverage, implemented and audited a safe shared-memory pool, and completed the
+within-backend ACE comparison with ODG, CGP, and ACGP. The report also records
+the matched native SeQUeNCe shared-pool comparison. All final result tables are
+supported by 30 paired seeds, raw provenance, CSV summaries, and audits.
+
+> 📌 **Project:** Compiler-Driven ACE and native SeQUeNCe<br>
+> **Reporting period:** September 5–9, 2026<br>
+> **Primary implementation commits:** [`8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940), [`bab1a14`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/bab1a14), and [`94f3b49`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/94f3b49)<br>
+> **Primary documentation commits:** [`102635a`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/102635a) and [`ae1d7f0`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/ae1d7f0)<br>
+> **Status:** Implemented, audited, and documented; the controlled native CGP/ACGP comparison remains pending.
+
+## Scope of this Week 4 report
+
+Weeks 1–3 established the research idea, QFT trace, and initial compiler work.
+This document is the Week 4 source of truth: it records only the physical
+scheduler correction, realistic memory semantics, audited 30-seed results, and
+the valid ACE/native comparison. Earlier reports remain the detailed records of
+their respective implementation periods.
 
 ## 1. Week 4 deliverables
 
