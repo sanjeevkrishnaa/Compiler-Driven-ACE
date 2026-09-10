@@ -524,6 +524,44 @@ the trace, physical parameters, scheduler, and legacy demand admission. A
 new atomic-admission cap-three control is required before attributing a future
 cap-three versus cap-four difference solely to compiler capacity.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[name=sharedrates,
+  width=0.56\textwidth, height=5.8cm,
+  xlabel={Fixed lead $\Delta$}, ylabel={Requests or pairs (\%)},
+  xmin=1, xmax=6, xtick={1,2,3,4,5,6}, ymin=0, ymax=100,
+  grid=major, grid style={gray!20},
+  legend style={at={(0.5,-0.28)}, anchor=north, legend columns=1,
+                draw=none, font=\scriptsize},
+  tick label style={font=\scriptsize}, label style={font=\small}]
+\addplot+[mark=*, thick, blue!70!black] coordinates {
+  (1,59.17) (2,54.72) (3,44.15) (4,41.91) (5,37.25) (6,33.56)};
+\addlegendentry{Pre-ready}
+\addplot+[mark=square*, thick, red!70!black] coordinates {
+  (1,40.80) (2,45.26) (3,55.82) (4,58.09) (5,62.75) (6,66.44)};
+\addlegendentry{Fallback}
+\addplot+[mark=triangle*, thick, orange!85!black] coordinates {
+  (1,55.32) (2,57.18) (3,58.68) (4,59.64) (5,61.44) (6,62.66)};
+\addlegendentry{Expiry}
+\end{axis}
+\begin{axis}[at={(sharedrates.east)}, anchor=west, xshift=1.0cm,
+  width=0.31\textwidth, height=5.8cm,
+  xlabel={Fixed lead $\Delta$}, ylabel={Fidelity at use},
+  xmin=1, xmax=6, xtick={1,2,3,4,5,6}, ymin=0.60, ymax=0.90,
+  grid=major, grid style={gray!20},
+  tick label style={font=\scriptsize}, label style={font=\small}]
+\addplot+[mark=diamond*, thick, green!55!black] coordinates {
+  (1,0.8584) (2,0.7856) (3,0.7732) (4,0.7344) (5,0.7035) (6,0.6530)};
+\end{axis}
+\end{tikzpicture}
+\caption{Audited ACE shared-pool fixed-lead trade-offs. The left panel shows
+request-specific readiness, demand fallback, and compiler-pair expiry; the
+right panel shows the fidelity of compiler pairs at use. All values are means
+over the same 30 paired seeds used in the adjacent table.}
+\label{fig:ace-shared-fixed-lead-tradeoffs}
+\end{figure}
+
 \section{Six-lead matrices in progress}
 Native static 3+1, 2+2, and 1+1, together with native shared-pool fixed
 leads, are executing under locked contracts. The ACE shared-pool and static
