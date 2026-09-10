@@ -395,7 +395,7 @@ Dynamic compiler & $0.3524 \pm 0.0083$ & 30.46\% & 0.9193 & 0\% \\
 Fixed gains more physical retry time. Dynamic launches later and uses fresher
 pairs. This establishes a retry-time versus fidelity trade-off.
 
-\section{Completed ACE static fixed-lead sensitivity}
+\section{Completed ACE static fixed-lead sensitivity}\label{sec:ace-static-fixed-leads}
 The corrected static-bank study covers 3+1, 2+2, and 1+1
 compiler/demand partitions at every $\Delta\in\{1,2,3,4,5,6\}$. Each of its
 18 cells has 30 paired seeds and 148,620 request instances. The aggregate
@@ -435,7 +435,7 @@ The constrained 1+1 profile has its lowest mean latency at $\Delta=2$;
 its one-layer difference is 0.002186 ms and must be interpreted with the
 paired raw data, not as a universal preference.
 
-\section{Completed ACE shared-pool fixed-lead sensitivity}
+\section{Completed ACE shared-pool fixed-lead sensitivity}\label{sec:ace-shared-fixed-leads}
 The completed shared-pool ACE study uses four physical slots per core, compiler
 occupancy cap three, demand fallback, and the six fixed leads
 $\Delta\in\{1,2,3,4,5,6\}$. It contains 30 paired seeds per lead and 148,620
@@ -481,12 +481,12 @@ establishes that perfect compiler knowledge does not eliminate finite capacity,
 physical failure, or deadline misses. A practical system therefore needs demand
 fallback; these single-seed values must not be generalized as 30-seed effects.
 
-\section{Historical shared-pool compiler comparison}
+\section{Historical shared-pool compiler comparison ($\Delta=2$ snapshot)}
 The Week 4 shared-pool compiler matrix compared matched ODG, fixed compiler,
 and dynamic compiler over 30 paired seeds. Every cell completed 148,620
-requests. The fixed row below is retained to document the historical complete
-policy matrix; the audited six-lead table above is the current fixed-policy
-sensitivity evidence.
+requests. It predates the required $\Delta=1$ through $6$ sweep. The fixed
+row below is retained only as a historical snapshot. Section
+\ref{sec:ace-shared-fixed-leads} supplies the current six-lead ACE evidence.
 
 \begin{center}
 \begin{tabular}{lrrrrr}
@@ -510,11 +510,13 @@ RSVP path can reserve endpoints sequentially, so these values cannot isolate a
 future cap-three/cap-four capacity effect until a matched atomic cap-three
 control is run.
 
-\section{Historical native shared-pool compiler comparison}
+\section{Historical native shared-pool compiler comparison ($\Delta=2$ snapshot)}
 Native SeQUeNCe used the same trace, seeds, four-slot shared pool, and cap-three
 compiler setting, while retaining its own physical protocol stack and latency
 endpoint. All 90 policy/seed cells completed 445,860 requests with zero
-failures.
+failures. This original comparison predates the six-lead requirement. The
+native $\Delta=1$ through $6$ matrix remains pending audit, so this table does
+not support a native fixed-lead selection claim.
 
 \begin{center}
 \begin{tabular}{lrrrrr}
@@ -535,12 +537,15 @@ pre-ready pairs; dynamic launches later and consumes fresher pairs. This is a
 retry-time versus fidelity trade-off within native SeQUeNCe, not a comparison
 against ACE milliseconds.
 
-\section{ACE adaptive-generation baseline}
+\section{ACE adaptive-generation baseline ($\Delta=2$ snapshot)}
 The Week 4 ACE comparison replayed the locked trace under ODG, CGP, ACGP,
 fixed compiler, and dynamic compiler with the same four-memory shared pool and
 autonomous/compiler occupancy cap of three. CGP and ACGP lack request identity,
 so their prepared-pair fidelity and expiry are audited but their hits are not
-called compiler readiness.
+called compiler readiness. This comparison used the original fixed
+$\Delta=2$ row. The full fixed-policy sensitivity belongs in Section
+\ref{sec:ace-shared-fixed-leads}; it is not valid to infer that the historical
+adaptive comparison selects $\Delta=2$ as the best fixed lead.
 
 \begin{center}
 \begin{tabular}{lrrrr}
