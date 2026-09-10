@@ -493,10 +493,39 @@ a final comparison table until every seed completes and the pair audit passes.
 
 \section{Next research steps}
 \begin{enumerate}
-\item Complete and audit native ODG/CGP/ACGP shared-pool seeds 0--29.
-\item Compare native adaptive policies with native fixed and dynamic policies.
-\item Evaluate static-bank CGP/ACGP and a retry-aware dynamic scheduler.
-\item Vary capacity, lookahead, coherence, workload, and topology.
+\item Complete the fixed-lead and cap-four control matrices, then update every
+fixed-policy conclusion from the audited $\Delta\in\{1,2,3,4,5,6\}$ evidence.
+\item Fine-tune compiler-driven fixed and dynamic policies using physical
+evidence rather than an analytical schedule alone. Candidate inputs are
+generation retry probability, predicted preparation completion time, pair age,
+endpoint occupancy, pending demand, in-flight work, and expected expiry. The
+fixed policy may select a lead per request class instead of one global
+$\Delta$; dynamic may optimize a documented utility that balances latency,
+fidelity, expiry, and demand-blocking risk.
+\item Study \emph{offline route planning}. The compiler knows a migration's
+source core $A$ and destination core $B$, but a multi-hop implementation can
+choose the physical path used to create, swap, or control the EPR resource.
+The present QFT trace supplies adjacent-core transfers, so it does not itself
+offer alternate quantum paths for those individual transfers. Route experiments
+must therefore use a separately hash-locked derived workload or a topology with
+non-neighbour endpoint pairs. The compiler may use full trace knowledge to
+select paths that spread predicted link/core occupancy and reduce congestion.
+The endpoint pair, logical request order, physical assumptions, and baseline
+XY result must remain recorded so that a route change is the only intervention.
+\item Study \emph{online route adaptation}. At runtime, route choice may use
+only information available then: free memories, pending demand, active
+generation attempts, recent failures, queue length, and link availability. It
+must not use future trace information beyond the explicit compiler policy under
+test. The runtime experiment should compare deterministic XY, offline selected
+paths, and online selected paths under identical seeds, capacity, demand
+admission, and latency scope.
+\item For both routing studies, report path length, per-core and per-link peak
+occupancy, queueing delay, generation attempts, swaps, readiness, fallback,
+expiry, delivered fidelity, and request latency. Require immutable routing
+contracts, paired seeds 0--29, raw route decisions, trace hashes, completion,
+and request/pair identity audits before making congestion or latency claims.
+\item Complete and audit native ODG/CGP/ACGP shared-pool seeds 0--29, then
+compare adaptive policies with fixed and dynamic within native SeQUeNCe.
 \end{enumerate}
 
 \chapter{Evidence Index and Reproduction Guide}\label{chap:evidence}
