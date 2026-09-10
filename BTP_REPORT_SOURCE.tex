@@ -14,6 +14,15 @@
 % Retain the report's original chapter layout but suppress the word "Chapter"
 % in displayed headings.
 \renewcommand{\chaptername}{}
+% The report is a continuous narrative: major headings do not force a new page.
+\makeatletter
+\renewcommand{\chapter}{%
+  \par\addvspace{3.5ex plus 1ex minus .2ex}%
+  \thispagestyle{plain}%
+  \global\@topnum\z@
+  \@afterindentfalse
+  \secdef\@chapter\@schapter}
+\makeatother
 \title{Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication\\
 \large Physical Validation, Memory Trade-offs, and Reproducible Evidence}
 \author{BTP Research Project}
