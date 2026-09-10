@@ -1,455 +1,230 @@
-# Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication
+# Week 4 — Physical Validation and Audited Comparison
 
-> **Project status:** active research implementation. This document is the
-> single narrative for the BTP work from the original ACE handoff through the
-> current corrected physical-simulation work. It distinguishes audited results
-> from superseded historical development results and pending experiments.
+> **Week 4 source of truth.** Weeks 1–3 established the research idea, QFT
+> trace and initial compiler work. This document records only Week 4: physical
+> scheduler correction, realistic memory semantics, audited 30-seed results,
+> and the valid ACE/native comparison.
 
-## Repositories and code history
+## 1. Week 4 deliverables
 
-| Repository | Purpose | Link |
+| Deliverable | Status | Evidence |
 |---|---|---|
-| Compiler-Driven ACE | ACE/SeQUeNCe 0.8.1 physical compiler scheduler, contracts, audits, documentation | [GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE) |
-| Native SeQUeNCe | Independent physical backend with Barrett--Kok generation, swapping and teleportation | [GitHub](https://github.com/sanjeevkrishnaa/SeQUeNCe) |
+| ACE lifecycle repair | Complete | [scheduler](compiler_scheduler.py), [commit `8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) |
+| Corrected ACE static matrix | Complete, audited | [report](results/CORRECTED_STATIC_ACE_30SEED.md), [commit `0c70b95`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0c70b95) |
+| Strict 4+0 coverage test | Complete | [report](COMPILER_DRIVEN_ACE_4X4_REPORT.md), [commit `8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) |
+| ACE shared-pool compiler study | Complete, audited | [report](results/SHARED_POOL_COMPILER_30SEED.md), [commit `2659387`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/2659387) |
+| ACE ODG/CGP/ACGP baseline | Complete, audited | [runner](run_trace_adaptive_baseline.py), [audit](audit_adaptive_baseline_results.py), [commits `e173c25`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/e173c25), [`f654fef`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f654fef) |
+| Native shared-pool compiler study | Complete, audited | [runner](../SeQUeNCe/example/multicore_entanglement/run_native_compiler_trace.py), [commit `0aad0d9f`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/0aad0d9f) |
+| Final result aggregation | Complete | [report](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md), [aggregator](summarize_shared_pool_study.py), [commit `eb9fed2`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/eb9fed2) |
 
-Important ACE commits:
-
-| Commit | Contribution |
-|---|---|
-| [`a7b8bed`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/a7b8bed) | Initial compiler-directed pre-generation implementation |
-| [`bab1a14`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/bab1a14) | Physical static-bank scheduler |
-| [`1f540e2`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/1f540e2) | Audited 4x4 compiler-scheduler study |
-| [`51faf67`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/51faf67) | Consolidated project status and next steps |
-
-Important native SeQUeNCe commits:
-
-| Commit | Contribution |
-|---|---|
-| [`d3cc4b7`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/d3cc4b7) | Early compiler-driven/native entanglement studies |
-| [`94f3b49`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/94f3b49) | Native physical compiler pre-generation integration |
-
-The current ACE development branch is
-[`codex/strict-compiler-4plus0`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0).
-It is deliberately separate from the earlier audited branch because it adds
-strict 4+0 and shared-pool work:
-
-| Commit | Contribution |
-|---|---|
-| [`8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) | Strict compiler-only 4+0, shared-pool contract support, lifecycle repair and regression tests |
-| [`102635a`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/102635a) | Master BTP narrative, shared-pool design and adaptive-baseline specification |
-
-## Research idea
-
-Distributed quantum programs move logical qubits between quantum cores. A
-teleportation transfer needs a high-fidelity EPR pair between the two involved
-cores. On-demand generation creates that EPR pair only after the transfer is
-requested, adding physical generation and control delay.
-
-The compiler already knows many upcoming transfers. The research question is:
-
-> Can compiler knowledge prepare request-specific EPR pairs early enough to
-> reduce communication delay, while respecting finite memories, physical
-> generation failures, decoherence, expiry, and competing transfers?
-
-The project studies three broad strategies:
-
-| Strategy | Decision rule |
-|---|---|
-| ODG | Generate the required EPR pair only when the request arrives. |
-| Fixed compiler | Generate the request-specific pair a fixed number of logical sublayers before use. |
-| Dynamic compiler | Search a bounded future window and choose the latest planner-feasible preparation. |
-| CGP / ACGP | Generate speculative pairs without compiler foreknowledge; ACGP adapts neighbour selection from observed traffic. |
-
-## Workload and fairness contract
-
-The controlled workload is the supplied 4x4 QFT communication trace:
+## 2. Locked workload and interpretation boundary
 
 | Property | Value |
 |---|---:|
-| Mesh / cores | 4x4 / 16 |
+| Topology | 4×4 mesh, 16 cores |
 | Logical qubits | 96 |
-| Source layers | 766 |
-| Adjacent-core transfers | 4,954 |
-| Conflict-free serialized sublayers | 2,831 |
-| Trace SHA-256 | `61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1` |
-| Serialization-map SHA-256 | `6b9520823830c50caaefb57baa737c2a8af834ef9474fe628df35def103a235d` |
+| Trace layers / transfers | 766 / 4,954 |
+| Serialized sublayers | 2,831 |
 | Replications | 30 paired seeds, 0–29 |
+| Trace SHA-256 | `61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1` |
+| Serialization SHA-256 | `6b9520823830c50caaefb57baa737c2a8af834ef9474fe628df35def103a235d` |
 
-The source layer may contain many transfers. Transfers sharing an endpoint core
-cannot use that core's communication memory simultaneously, so the trace is
-deterministically split into conflict-free sublayers. A later sublayer is
-released only after the preceding sublayer terminates.
+The workload is frozen by [the static contract](experiments/qft_4x4_comparison_v1.json)
+and [the final shared-pool contract](experiments/qft_4x4_shared_pool_v1.json).
+Requests sharing a core are serialized; the next sublayer releases only after
+the current one terminates.
 
-The original static-bank contract is
-[`experiments/qft_4x4_comparison_v1.json`](experiments/qft_4x4_comparison_v1.json).
-It has an identical native counterpart. The newer shared-pool contract is
-[`experiments/qft_4x4_shared_pool_v1.json`](experiments/qft_4x4_shared_pool_v1.json).
+ACE and native SeQUeNCe use different physical models and latency boundaries.
+Therefore their raw milliseconds are **not** a speed comparison. The valid
+comparison is the policy trade-off within each backend.
 
-## Architecture
+## 3. Policies and memory semantics
 
-```text
-QFT compiler trace
-      │ parse, validate topology, serialize conflicts
-      ▼
-Offline fixed/dynamic preparation planner
-      │ request ID + preparation layer
-      ▼
-Physical backend (ACE or native SeQUeNCe)
-      │ physical generation failures, memory occupancy, noise, expiry
-      ▼
-request-specific EPR ready? ── yes → consume for transfer
-      │ no
-      ▼
-on-demand fallback or strict miss, depending on experiment contract
-      ▼
-per-request latency, readiness, fidelity-at-use, expiry and accounting audit
-```
+| Policy | Meaning |
+|---|---|
+| ODG | Generate after a request arrives. |
+| CGP / ACGP | Speculative neighbour generation; ACGP adapts probabilities from traffic. |
+| Fixed compiler | Prepare the exact requested pair two sublayers before use. |
+| Dynamic compiler | Choose the latest feasible preparation in an eight-sublayer window with at least one-sublayer lead. |
 
-### ACE implementation
-
-The ACE path extends the existing adaptive-continuous SeQUeNCe implementation.
-Key code:
-
-- [`compiler_trace.py`](compiler_trace.py): trace parsing, mesh validation and
-  fixed/latest-feasible dynamic planning.
-- [`compiler_scheduler.py`](compiler_scheduler.py): compiler-to-physical
-  reservation bridge, request-specific EPR records and utilization metrics.
-- [`adaptive_continuous.py`](adaptive_continuous.py): one-shot compiler
-  reservations, exact-pair ownership and physical pair lifecycle hooks.
-- [`reservation.py`](reservation.py): static compiler/demand timecard banks
-  and reservation release.
-- [`parallel_core.py`](parallel_core.py): deterministic layered replay,
-  endpoint conflict serialization, retry layers and request metrics.
-- [`run_compiler_pregeneration.py`](run_compiler_pregeneration.py):
-  contract-controlled physical runner.
-
-### Native SeQUeNCe implementation
-
-The native backend is a distinct physical event-driven model. It includes
-Barrett--Kok attempts/failures, memory decoherence/expiry, swapping,
-teleportation and receiver correction. Its compiler implementation resides in
-the SeQUeNCe repository under:
-
-- `sequence/entanglement_management/generation/sequence_model.py`
-- `sequence/entanglement_management/generation/compiler_sequence.py`
-- `example/multicore_entanglement/run_native_compiler_trace.py`
-
-Do **not** compare ACE and native absolute milliseconds: their physical
-protocol paths and latency endpoints differ. Compare policy direction and
-trade-offs within each backend under an identical workload/memory contract.
-
-## Memory models
-
-### Historical static partitions
-
-Each core has four physical communication memories (except the two-total-slot
-1+1 profile):
+Static allocations are per core:
 
 ```text
-3+1: [ compiler ][ compiler ][ compiler ][ demand ]
-2+2: [ compiler ][ compiler ][ demand ][ demand ]
-1+1: [ compiler ][ demand ]
+3+1  [ compiler ][ compiler ][ compiler ][ demand ]
+2+2  [ compiler ][ compiler ][ demand ][ demand ]
+1+1  [ compiler ][ demand ]
+4+0  [ compiler ][ compiler ][ compiler ][ compiler ]  strict coverage only
 ```
 
-If the exact compiler pair is absent, on-demand generation can use only its
-demand bank. If either endpoint has no eligible free slot, the request waits
-and is retried. The completed earlier static study observed no terminal
-failures, but not every request was compiler-ready.
+The realistic Week 4 design is a [shared four-memory pool](SHARED_POOL_4X4_DESIGN.md):
+compiler/speculative occupancy is capped at three; demand can use any free
+slot. On a miss, demand atomically acquires every endpoint slot or waits with
+no partial lock. Pending demand has priority over new speculative work.
 
-### Strict compiler-only 4+0
+## 4. Code changes and commits
+
+| Area | Code | Week 4 contribution |
+|---|---|---|
+| ACE compiler path | [trace/planner](compiler_trace.py), [scheduler](compiler_scheduler.py), [runner](run_compiler_pregeneration.py) | Request-specific preparation, fixed/dynamic scheduling, shared pool and fallback. [Commits `bab1a14`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/bab1a14), [`8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940). |
+| ACE lifecycle repair | [scheduler](compiler_scheduler.py), [test](test/test_compiler_one_shot.py) | Release compiler reservation/timecard/quota when its pair is consumed. |
+| ACE adaptive path | [runner](run_trace_adaptive_baseline.py), [layer replay](parallel_core.py), [protocol](adaptive_continuous.py) | Hash-locked physical ODG/CGP/ACGP replay using the same shared pool. |
+| ACE adaptive audit | [observer](adaptive_baseline_metrics.py), [auditor](audit_adaptive_baseline_results.py) | Pair conservation, unique use, timestamp and fidelity validation. |
+| Native physical path | [compiler simulation](../SeQUeNCe/sequence/entanglement_management/generation/compiler_sequence.py), [model](../SeQUeNCe/sequence/entanglement_management/generation/sequence_model.py), [runner](../SeQUeNCe/example/multicore_entanglement/run_native_compiler_trace.py) | Barrett–Kok generation, noise, teleportation, shared fallback and traces. |
+| Native audit | [auditor](../SeQUeNCe/example/multicore_entanglement/audit_sequence_study.py) | Pair accounting, no double use, capacity, timing and fidelity invariants. |
+| Final aggregation | [script](summarize_shared_pool_study.py) | Generates the final table and seed-paired 95% intervals only within one backend. |
+
+## 5. Critical ACE issue corrected
+
+An application could consume a compiler pair while ACE still retained its
+compiler reservation/timecard/quota until nominal 1,000 ms expiry:
 
 ```text
-4+0: [ compiler ][ compiler ][ compiler ][ compiler ]
+Before: generated → reserved → consumed → stale bookkeeping until expiry
+After:  generated → reserved → consumed → bookkeeping released immediately
 ```
 
-There is no on-demand fallback. At release, an absent exact pair is counted as
-a terminal compiler miss. This measures **compiler coverage**, not realistic
-end-to-end execution latency.
+The defect caused artificial congestion and could lower readiness or inflate
+retries. The repair is documented in [COMPILER_PREGENERATION.md](COMPILER_PREGENERATION.md).
+Only the corrected ACE static matrix below is valid final evidence; it
+supersedes prior ACE static values.
 
-ACE seed-0 full-trace coverage result:
+## 6. Result A — corrected static 3+1 / 2+2 / 1+1 comparison
 
-| Policy | Completed / 4,954 | Strict misses | Coverage |
+### 6.1 ACE corrected 30-seed matrix
+
+Sources: [corrected report](results/CORRECTED_STATIC_ACE_30SEED.md), local
+[3+1 CSV](output/qft_static_corrected_30seed/static-3plus1/summary.csv),
+[2+2 CSV](output/qft_static_corrected_30seed/static-2plus2/summary.csv),
+[1+1 CSV](output/qft_static_corrected_30seed/static-1plus1/summary.csv),
+and [audit JSON](output/qft_static_corrected_30seed/audit.json).
+
+| Profile | Fixed: latency / ready / fidelity@use | Dynamic: latency / ready / fidelity@use | Dynamic vs fixed |
+|---|---|---|---|
+| 3+1 | 0.658419 ms / 51.87% / 0.7682 | 0.575869 ms / 61.59% / 0.8039 | **12.52% faster**, CI [11.80, 13.24] |
+| 2+2 | 0.821357 ms / 32.97% / 0.8496 | 0.741142 ms / 42.13% / 0.8738 | **9.75% faster**, CI [9.11, 10.40] |
+| 1+1 | 0.908687 ms / 22.85% / 0.8267 | 0.910578 ms / 22.57% / 0.7861 | 0.21% slower, CI [-0.49, 0.07] |
+
+Dynamic wins at ACE 3+1 and 2+2. At 1+1 its confidence interval includes
+zero; this does not establish a fixed/dynamic winner.
+
+### 6.2 Native SeQUeNCe static 30-seed matrix
+
+Sources: [aggregate report](results/shared_contract_30seed/RESULTS.md),
+[aggregate CSV](results/shared_contract_30seed/aggregates.csv), and
+[paired-effects CSV](results/shared_contract_30seed/paired_effects.csv).
+The native rows remain valid. The ACE rows in that older aggregate predate the
+Week 4 lifecycle correction and must not be used.
+
+| Profile | Fixed: latency / ready / fidelity@use | Dynamic: latency / ready / fidelity@use | Dynamic vs fixed |
+|---|---|---|---|
+| 3+1 | 0.005028 ms / 92.29% / 0.7393 | 0.018990 ms / 69.66% / 0.8660 | 279.64% slower |
+| 2+2 | 0.005028 ms / 92.29% / 0.7393 | 0.018990 ms / 69.66% / 0.8660 | 279.64% slower |
+| 1+1 | 0.037042 ms / 51.46% / 0.6671 | 0.018990 ms / 69.66% / 0.8660 | **48.75% faster** |
+
+The static study shows that memory allocation changes readiness, retry
+opportunity, latency and fidelity. Different ACE/native policy orderings are
+valid backend-specific outcomes, not a contradiction.
+
+## 7. Result B — strict compiler-only 4+0 coverage
+
+Source: [technical report](COMPILER_DRIVEN_ACE_4X4_REPORT.md).
+
+| ACE policy, seed 0 | Completed / 4,954 | Strict misses | Coverage |
 |---|---:|---:|---:|
 | Fixed | 2,793 | 2,161 | 56.38% |
 | Dynamic | 3,602 | 1,352 | 72.71% |
 
-This proves that compiler pre-generation alone cannot serve the entire trace;
-physical failures, limited capacity and scheduling deadlines still require a
-fallback policy for complete execution.
+Compiler knowledge cannot eliminate finite capacity, physical failure or missed
+deadlines. A complete system needs demand fallback.
 
-### Shared four-memory pool with compiler cap
+## 8. Result C — final shared-pool compiler comparison
 
-The current realistic design has four shared physical slots per core with a
-compiler occupancy cap of three:
+### ACE shared pool
 
-```text
-shared pool: [ slot ][ slot ][ slot ][ slot ]
-             compiler may occupy at most three;
-             demand may use any free slot.
-```
+Sources: [compiler report](results/SHARED_POOL_COMPILER_30SEED.md), local
+[summary CSV](output/qft_shared_pool_compiler_30seed_v2/shared-pool-4-cap3/summary.csv),
+and [audit JSON](output/qft_shared_pool_compiler_30seed_v2/audit.json).
 
-At release, the exact ready compiler pair has priority. Otherwise, on-demand
-generation atomically obtains a free slot at both endpoints. If that cannot
-happen, the request obtains neither partial allocation and waits. Pending
-demand work is admitted before new speculative compiler preparation at the
-same simulator instant. See
-[`SHARED_POOL_4X4_DESIGN.md`](SHARED_POOL_4X4_DESIGN.md).
+| Policy | Latency | Ready | Fidelity@use | Expiry | Fallback |
+|---|---:|---:|---:|---:|---:|
+| Matched ODG | 1.104216 ms | 0.00% | — | 0.00% | 100.00% |
+| Fixed | 0.658471 ms | 51.92% | 0.7871 | 18.66% | 48.06% |
+| Dynamic | 0.615906 ms | 56.83% | 0.8575 | 14.32% | 43.14% |
 
-## Results and evidence
+Dynamic is 6.45% faster than fixed (95% CI [5.79, 7.10]) and also has higher
+readiness/fidelity and lower expiry.
 
-### Earlier audited static-bank study — historical, not final ACE evidence
+### Native SeQUeNCe shared pool
 
-The earlier 30-seed study audited 1,486,200 request instances per backend.
-Native SeQUeNCe completed every request and passed its pair/memory/timing/
-fidelity audit. Its within-backend trends are useful historical evidence.
+Sources: local [summary CSV](../SeQUeNCe/output/qft_shared_pool_native_30seed/shared-pool-4-cap3/summary.csv),
+[study JSON](../SeQUeNCe/output/qft_shared_pool_native_30seed/shared-pool-4-cap3/study.json),
+and [audit JSON](../SeQUeNCe/output/qft_shared_pool_native_30seed/audit.json).
 
-The earlier ACE table has now been replaced by the corrected rerun. The
-complete audited table and confidence intervals are in
-[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
-Its central results are:
+| Policy | Latency | Ready | Fidelity@use | Expiry | Fallback |
+|---|---:|---:|---:|---:|---:|
+| Matched ODG | 0.076451 ms | 0.00% | — | 0.00% | 100.00% |
+| Fixed | 0.005092 ms | 92.23% | 0.7486 | 0.00% | 4.26% |
+| Dynamic | 0.019885 ms | 68.95% | 0.8838 | 0.00% | 17.44% |
 
-| Static profile | Fixed latency / ready / fidelity | Dynamic latency / ready / fidelity |
-|---|---|---|
-| 3+1 | 0.658419 ms / 51.87% / 0.7682 | 0.575869 ms / 61.59% / 0.8039 |
-| 2+2 | 0.821357 ms / 32.97% / 0.8496 | 0.741142 ms / 42.13% / 0.8738 |
-| 1+1 | 0.908687 ms / 22.85% / 0.8267 | 0.910578 ms / 22.57% / 0.7861 |
+The ACE/native comparison matches trace, serialization, seeds, memory count,
+cap-three rule and demand-first atomic fallback. ACE dynamic wins over fixed;
+native fixed wins latency/readiness while dynamic uses higher-fidelity prepared
+pairs. Raw cross-backend latency comparison remains invalid.
 
-**Important correction:** ACE previously retained a consumed compiler pair's
-long reservation timecard until nominal expiry. The corrected matrix above was
-run after immediate release at utilization was implemented and audited. It is
-therefore the valid ACE static-bank evidence. It still must not be interpreted
-as a raw-millisecond comparison with native SeQUeNCe.
+## 9. Result D — normal ACE adaptive generation versus compiler scheduling
 
-See [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md) and
-[`results/shared_contract_30seed/RESULTS.md`](results/shared_contract_30seed/RESULTS.md)
-for the preserved historical artifacts.
+This is the completed comparison of ACE ODG, CGP, ACGP, fixed compiler and
+dynamic compiler under one final shared-pool physical model.
 
-### Interpretation of the 3+1, 2+2 and 1+1 comparison
+Sources: [final generated report](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md),
+local [adaptive CSV](output/qft_shared_pool_adaptive_30seed/summary.csv),
+[adaptive audit](output/qft_shared_pool_adaptive_30seed/audit.json), and
+[aggregation script](summarize_shared_pool_study.py).
 
-The memory labels describe a **per-core static partition**, not a network-wide
-pool: 3+1 means three compiler-preparation memories plus one on-demand memory
-at every participating core; 2+2 means two and two; and 1+1 means two total
-communication memories, one in each role.  In every case, a transfer that has
-no usable prepared pair must go through the finite on-demand bank and can be
-delayed or retried when its endpoint slots are occupied. Thus the profiles are
-not merely parameter sweeps: they expose the trade-off between preparing more
-pairs early and retaining capacity to recover from a compiler miss or physical
-generation failure.
+| ACE policy | Latency | Delivered fidelity | Prepared fidelity@use | Expiry |
+|---|---:|---:|---:|---:|
+| ODG | 1.104216 ms | 0.9498 | — | 0.00% |
+| CGP | 0.547729 ms | 0.8623 | 0.8375 | 74.27% |
+| ACGP | 0.476298 ms | 0.8507 | 0.8360 | 74.01% |
+| Fixed compiler | 0.658471 ms | 0.8653 | 0.7871 | 18.66% |
+| Dynamic compiler | 0.615906 ms | 0.8972 | 0.8575 | 14.32% |
 
-The corrected ACE data show a stronger capacity-dependent result. Dynamic is
-12.52% faster than fixed at 3+1 and 9.75% faster at 2+2 on paired mean
-latency; both confidence intervals exclude zero. It is 0.21% slower at 1+1,
-but that interval includes zero, so no fixed/dynamic winner is established at
-the tightest capacity. The useful lesson is not that dynamic universally wins:
-under tight memory it can contend with demand work and lose its advantage.
-These corrected static-bank results are valid ACE evidence; the pre-fix values
-remain historical only.
+| Seed-paired effect | Mean latency reduction | 95% CI |
+|---|---:|---:|
+| CGP vs ODG | 50.40% | [50.07, 50.72] |
+| ACGP vs ODG | 56.86% | [56.57, 57.15] |
+| Fixed compiler vs ODG | 40.37% | [40.01, 40.72] |
+| Dynamic compiler vs ODG | 44.22% | [43.94, 44.50] |
+| Dynamic compiler vs fixed compiler | 6.45% | [5.79, 7.10] |
 
-The audited native SeQUeNCe study provides a clean within-backend contrast.
-For its 3+1 and 2+2 static profiles, fixed achieved 0.005028 ms average
-request latency, 92.29% prepared-pair readiness and 0.7393 delivered
-fidelity; dynamic achieved 0.018990 ms, 69.66% readiness and 0.8660 fidelity.
-Here fixed is faster because its earlier launches allow more time for the
-physical generation/retry process before each request, whereas dynamic tends
-to use fresher, higher-fidelity pairs but has less recovery time. At 1+1,
-fixed fell to 51.46% readiness and 0.037042 ms, while dynamic reached 69.66%
-and 0.018990 ms; with only one demand memory, avoiding the fixed schedule's
-contention becomes more valuable. The identical native 3+1 and 2+2 values are
-also informative: for this serialized trace, the third compiler slot was not
-the limiting resource in that implementation.
+ACGP has the lowest ACE latency in this matrix, but around 74% speculative
+expiry. Dynamic compiler scheduling has much lower expiry (14.32%),
+request-specific preparation and higher delivered fidelity than CGP/ACGP. This
+is a measured latency–waste–fidelity trade-off, not a universal ranking.
 
-The cross-repository conclusion is therefore methodological rather than a
-raw-speed ranking. Both physical implementations demonstrate that the memory
-split changes readiness, retry opportunity, latency and fidelity together,
-and that fixed versus dynamic is workload- and capacity-dependent. ACE and
-native milliseconds must not be compared directly because their generation,
-reservation, timing and accounting implementations differ. The valid final
-comparison will be made within each backend, under the corrected lifecycle and
-one hash-verified memory contract, across ODG, CGP, ACGP, fixed and dynamic.
-The corrected ACE 30-seed static rerun and the shared-pool matrices are now
-complete. The shared-pool result is recorded below; an ACE-versus-native
-*raw-speed* conclusion remains invalid by design.
+## 10. Audit, conclusion and remaining work
 
-### Final shared-pool study — completed, audited 30-seed evidence
-
-This is the main controlled 4x4 result. Every core has four physical
-communication memories. Speculative/compiler work can occupy at most three;
-there is no permanently reserved on-demand slot. When a required exact pair is
-not ready, demand atomically takes free endpoint slots or waits without holding
-a partial allocation. Pending demand wins over a new speculative admission at
-the same simulator time.
-
-The completed study uses the same hash-locked QFT trace, 30 seeds, 4,954
-requests per seed, conflict serialization and shared-pool rule in all rows.
-The ACE side includes the physical online baselines (ODG, CGP and ACGP) and
-the two compiler policies. The native side independently reproduces ODG,
-fixed and dynamic compiler execution. The full generated table, confidence
-intervals, audit scope and reproduction provenance are in
-[`results/SHARED_POOL_FINAL_COMPARISON_30SEED.md`](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md).
-
-| Backend | Policy | Mean latency (ms) | Ready | Prepared fidelity@use | Expiry | Fallback |
-|---|---|---:|---:|---:|---:|---:|
-| ACE | ODG | 1.104216 | — | — | 0.00% | — |
-| ACE | CGP | 0.547729 | — | 0.8375 | 74.27% | — |
-| ACE | ACGP | 0.476298 | — | 0.8360 | 74.01% | — |
-| ACE | Fixed compiler | 0.658471 | 51.92% | 0.7871 | 18.66% | 48.06% |
-| ACE | Dynamic compiler | 0.615906 | 56.83% | 0.8575 | 14.32% | 43.14% |
-| Native SeQUeNCe | Matched ODG | 0.076451 | 0.00% | — | 0.00% | 100.00% |
-| Native SeQUeNCe | Fixed compiler | 0.005092 | 92.23% | 0.7486 | 0.00% | 4.26% |
-| Native SeQUeNCe | Dynamic compiler | 0.019885 | 68.95% | 0.8838 | 0.00% | 17.44% |
-
-All 90 ACE compiler trials, 90 ACE adaptive-baseline trials and 90 native
-trials completed. The ACE compiler audit checked 193,741 compiler-pair
-records; the ACE adaptive audit checked 21,226 adaptive-pair records. The
-native audit verified 445,860 successful requests with zero failures, as well
-as pair accounting, no double use, memory bounds, timing stages and fidelity
-bounds.
-
-**What the result says.** Within ACE's compiler policies, dynamic is better
-than fixed: it is 6.45% faster on paired mean latency (95% CI [5.79, 7.10]),
-has higher readiness, higher prepared-pair fidelity and lower expiry. Both
-compiler policies beat ACE ODG, but the physical CGP/ACGP baselines are faster
-than either compiler policy in this particular ACE implementation. That is not
-a reason to discard compiler information: it exposes the relevant trade-off.
-CGP/ACGP attain their latency result with about 74% speculative-pair expiry,
-whereas dynamic compiler scheduling has 14.32% expiry and supplies
-request-specific pairs. ACGP is the fastest ACE policy in this matrix but has
-lower delivered and prepared-pair fidelity than dynamic compiler scheduling.
-
-Within native SeQUeNCe, fixed is the latency/readiness winner (93.35% faster
-than matched ODG, 92.23% ready); dynamic is slower than fixed but uses higher
-fidelity prepared pairs (0.8838 versus 0.7486) and needs more fallback. This
-opposite fixed/dynamic ordering is a backend-specific policy result, not a
-contradiction: it demonstrates that scheduling lead time, retry opportunity,
-memory contention and decoherence must all be measured rather than assumed.
-
-Do not rank ACE against native by the milliseconds in the table. Their
-generation, reservation, event timing and latency accounting differ. The valid
-cross-repository conclusion is that both independently complete the same
-finite-memory trace under the shared-pool contract, while their *within-backend*
-policy trade-offs can be compared rigorously.
-
-### Corrected implementation checks
-
-| Check | Outcome |
+| Verification | Outcome |
 |---|---|
-| Strict 4+0 ACE seed 0 | Fixed 56.38% coverage; dynamic 72.71% coverage |
-| Native strict 4+0 first 50 transfers | 47 completed, 3 strict misses |
-| Corrected ACE shared-pool 12-transfer prefix | 12/12 completed; 100% ready; 3 genuine retry layers |
-| Native shared-pool 12-transfer prefix | 12/12 completed; 11 ready transfers and 1 not-ready transfer with fallback enabled |
-| ACE focused tests after lifecycle fix | 11 passed, 1 skipped |
-| Native focused tests for shared-pool work | 13 passed, 1 skipped |
+| ACE corrected static audit | 300 cells; 1,486,200 requests; passed |
+| ACE shared compiler audit | 90 cells; 445,860 requests; 193,741 compiler-pair records; passed |
+| ACE adaptive audit | 90 cells; 445,860 requests; 21,226 adaptive-pair records; passed |
+| Native shared compiler audit | 90 cells; 445,860 successful requests; zero failures; passed |
+| Focused ACE tests | 13 passed, 1 skipped |
 
-These are validation/smoke checks, **not** publication matrices.
+Week 4 establishes physical compiler-driven preparation with realistic fallback.
+It shows that memory allocation and preparation lead determine the
+latency/readiness/fidelity/expiry trade-off. It does not establish that either
+repository is globally faster.
 
-## Problems encountered and fixes
+| Remaining research | Reason |
+|---|---|
+| Native physical CGP/ACGP shared-pool matrix | Completes the symmetric adaptive-versus-compiler comparison in native SeQUeNCe. |
+| Static-bank CGP/ACGP | Tests adaptive generation with permanent demand reservations. |
+| Reservation-aware dynamic scheduling | React to physical admission/failure, not offline layer feasibility only. |
+| Sensitivity and extra workloads | Vary cap/lead/lookahead/coherence/generation, then test another trace/topology. |
 
-### ACE compiler-reservation lifecycle defect (discovered during shared-pool validation)
+## 11. Repository links
 
-**What happened.** A compiler-directed EPR pair was generated, held for its
-target transfer, and correctly consumed by the application. However, its
-compiler reservation timecards and compiler-memory quota remained active until
-the reservation's nominal 1,000 ms expiry. The EPR pair was already gone, but
-the scheduler continued to treat its compiler capacity as occupied.
-
-```text
-Before the fix:
-compiler EPR generated → compiler slot reserved → EPR consumed
-                                             └→ reservation stayed for 1,000 ms
-                                                and blocked later compiler work
-```
-
-**Why it matters.** This was not real quantum-memory contention. It could
-reject later preparations, reduce readiness, add retry layers and inflate
-latency. It therefore risked measuring stale scheduler bookkeeping rather than
-finite memory, generation failure, endpoint contention or decoherence. Since
-native SeQUeNCe does not use ACE timecards, it also made any final ACE/native
-interpretation unsafe.
-
-**How it was found.** The new shared-pool full-trace smoke accumulated an
-unexpectedly large number of retry layers. Reviewing the compiler-pair
-lifecycle showed that strict 4+0 released its reservation at direct use, while
-the ordinary fallback-enabled application utilization path did not.
-
-**Fix.** At compiler-pair utilization, ACE now releases the compiler
-reservation/timecard and compiler occupancy quota at both endpoint routers.
-The application retains its physical EPR memory through its normal consumption
-path; only stale compiler bookkeeping is removed.
-
-```text
-After the fix:
-compiler EPR generated → compiler slot reserved → EPR consumed
-                                             └→ compiler reservation and quota
-                                                released immediately
-```
-
-**Evidence.** The corrected 12-transfer shared-pool ACE prefix completed
-12/12 transfers, improved compiler readiness from 50% before the correction
-to 100% afterward, and retained only three genuine finite-capacity retry
-layers. A regression test verifies one release at both endpoints on every
-compiler-pair utilization. The full corrected 30-seed static-bank rerun has
-now passed its audit; its results supersede the old ACE static-bank table.
-
-| Problem | Root cause | Resolution |
-|---|---|---|
-| Earlier analytical results were not physical results | No physical generation failure/noise lifecycle | Implemented physical ACE and native execution paths |
-| ACE/native resources were initially not equivalent | ACE shared pool vs native static 3+1 | Added versioned, hash-verified static and shared-pool contracts |
-| Same-layer requests contended at a core | A core cannot use multiple communication memories arbitrarily for overlapping transfers | Deterministic conflict serialization into 2,831 sublayers |
-| Dynamic can be worse than fixed in native | Later launches leave less retry time after physical failure | Record readiness/fidelity/attempt trade-off rather than assume dynamic wins |
-| Strict 4+0 cannot complete trace | No capacity for fallback when exact pair is absent | Treat as coverage experiment only |
-| Potential partial endpoint lock | One EPR needs memory at both endpoints | Atomic endpoint admission; queue without holding a partial slot |
-| ACE artificial reservation lock | Consumed compiler pairs retained long compiler timecards | Release compiler timecard and quota at utilization; regression tested |
-
-## Current work and next steps
-
-### In progress
-
-The corrected ACE 30-seed static-bank matrix has completed and passed its
-artifact audit. Its local source artifacts are in
-`output/qft_static_corrected_30seed/`; its tracked interpretation is
-[`results/CORRECTED_STATIC_ACE_30SEED.md`](results/CORRECTED_STATIC_ACE_30SEED.md).
-
-The shared-pool compiler matrix has also completed and passed audit. Dynamic
-reduces paired mean latency by 44.22% versus ODG and 6.45% versus fixed under
-the four-memory, cap-three policy. See
-[`results/SHARED_POOL_COMPILER_30SEED.md`](results/SHARED_POOL_COMPILER_30SEED.md).
-
-### Required sequence
-
-1. Run and audit the implemented trace-driven physical ACE ODG/CGP/ACGP baseline.
-2. Run and audit native shared-pool cap-3 matrix.
-3. Compare ODG, CGP, ACGP, fixed and dynamic **within each backend**.
-4. Publish only audited, complete paired-seed results.
-
-The controlled CGP/ACGP requirements are in
-[`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md). Existing random/PIR
-CGP/ACGP scripts are not a substitute.
-
-## How to reproduce the corrected ACE static matrix
-
-Run from the ACE repository and use a fresh output directory:
-
-```bash
-MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python run_contract_matrix.py \
-  --trace '/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/qft_requests.txt' \
-  --contract experiments/qft_4x4_comparison_v1.json \
-  --output output/qft_static_corrected_30seed
-```
-
-The runner executes full ODG, static 3+1, static 2+2 and static 1+1 profiles
-over seeds 0–29. Never reuse a non-empty output directory. Once complete, run
-the corresponding auditor before creating a table or latency claim.
-
-## Reading order
-
-1. This document.
-2. [`PROJECT_HANDOFF.md`](PROJECT_HANDOFF.md): original ACE handoff and code
-   history.
-3. [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md): detailed current
-   status and historical results.
-4. [`SHARED_POOL_4X4_DESIGN.md`](SHARED_POOL_4X4_DESIGN.md): current realistic
-   memory model.
-5. [`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md): controlled CGP /
-   ACGP plan.
-6. [`COMPILER_DRIVEN_ACE_4X4_REPORT.md`](COMPILER_DRIVEN_ACE_4X4_REPORT.md):
-   audited static study details, read with the ACE rerun notice above.
+- [Compiler-Driven ACE](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE), branch [`codex/strict-compiler-4plus0`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0).
+- [Native SeQUeNCe](https://github.com/sanjeevkrishnaa/SeQUeNCe), branch [`codex/native-compiler-4x4-physical`](https://github.com/sanjeevkrishnaa/SeQUeNCe/tree/codex/native-compiler-4x4-physical).
