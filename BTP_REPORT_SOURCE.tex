@@ -8,6 +8,8 @@
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
 \title{Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication\\
 \large Physical Validation, Memory Trade-offs, and Reproducible Evidence}
@@ -74,6 +76,32 @@ readiness, service latency, fidelity at use, expiry, fallback, and rejection
 pressure. \\
 \bottomrule
 \end{longtable}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  stage/.style={draw, rounded corners, align=center, minimum width=0.20\textwidth,
+                minimum height=1.15cm, fill=blue!8},
+  physical/.style={draw, rounded corners, align=center, minimum width=0.20\textwidth,
+                   minimum height=1.15cm, fill=green!8},
+  arrow/.style={-{Stealth[length=2mm]}, thick}
+]
+\node[stage] (topology) {Topology-correct\\classical control};
+\node[stage, right=7mm of topology] (analytical) {Analytical ODG, CGP, ACGP\\and compiler schedules};
+\node[physical, right=7mm of analytical] (native) {Native SeQUeNCe\\physical execution};
+\node[physical, below=12mm of analytical] (ace) {ACE physical execution\\and lifecycle repair};
+\node[stage, right=7mm of ace] (audit) {Contracts, paired seeds,\\raw traces, identity audits};
+\draw[arrow] (topology) -- (analytical);
+\draw[arrow] (analytical) -- (native);
+\draw[arrow] (analytical) -- (ace);
+\draw[arrow] (native) -- (audit);
+\draw[arrow] (ace) -- (audit);
+\end{tikzpicture}
+\caption{Research stack. The analytical stage selects policies and schedules;
+two physical backends execute them under separate latency endpoints; contracts
+and audits make within-backend policy comparisons reproducible.}
+\label{fig:research-stack}
+\end{figure}
 
 \section{Relation to prior work}
 Adaptive continuous entanglement generation motivates the CGP/ACGP baselines
@@ -196,6 +224,39 @@ release begins. If no such pair exists, demand fallback is used. A compiler pair
 used by another request is an identity failure, not a cache hit. Expiry/waste is
 the fraction of compiler-created pairs that expire or remain unused at study
 completion; it is a resource cost, not merely a failed request.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  block/.style={draw, rounded corners, align=center, minimum width=3.0cm,
+                minimum height=0.9cm, fill=blue!7},
+  decision/.style={draw, diamond, aspect=2.1, align=center, inner sep=1.5pt,
+                   fill=orange!12},
+  outcome/.style={draw, rounded corners, align=center, minimum width=2.7cm,
+                  minimum height=0.85cm, fill=green!8},
+  arrow/.style={-{Stealth[length=2mm]}, thick}
+]
+\node[block] (trace) {Compiler trace and\\request identity};
+\node[block, right=9mm of trace] (prepare) {Fixed, dynamic, or adaptive\\preparation decision};
+\node[decision, right=10mm of prepare] (ready) {Exact target pair\\ready at release?};
+\node[outcome, above right=8mm and 10mm of ready] (hit) {Consume exact pair\\pre-ready transfer};
+\node[decision, below right=10mm and 10mm of ready] (slots) {All endpoint slots\\available together?};
+\node[outcome, right=12mm of slots] (demand) {Demand generation\\and completion};
+\node[outcome, below=8mm of slots] (wait) {Wait without partial\\endpoint allocation};
+\draw[arrow] (trace) -- (prepare);
+\draw[arrow] (prepare) -- (ready);
+\draw[arrow] (ready) -- node[above, font=\small] {yes} (hit);
+\draw[arrow] (ready) -- node[right, font=\small] {no} (slots);
+\draw[arrow] (slots) -- node[above, font=\small] {yes} (demand);
+\draw[arrow] (slots) -- node[left, font=\small] {no} (wait);
+\draw[arrow] (wait.west) -| (ready.south);
+\end{tikzpicture}
+\caption{Request-specific compiler preparation and demand recovery. The cap-four
+wait-on-demand control enforces the atomic endpoint check shown in the lower
+branch; historical ACE cap-three values retain their documented legacy RSVP
+admission behavior.}
+\label{fig:request-flow}
+\end{figure}
 
 \chapter{Experimental Method and Reproducibility}
 
@@ -531,6 +592,37 @@ and request/pair identity audits before making congestion or latency claims.
 \item Complete and audit native ODG/CGP/ACGP shared-pool seeds 0--29, then
 compare adaptive policies with fixed and dynamic within native SeQUeNCe.
 \end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  input/.style={draw, rounded corners, align=center, minimum width=3.0cm,
+                minimum height=0.9cm, fill=blue!7},
+  policy/.style={draw, rounded corners, align=center, minimum width=3.1cm,
+                 minimum height=1.0cm, fill=orange!12},
+  runtime/.style={draw, rounded corners, align=center, minimum width=3.2cm,
+                  minimum height=1.0cm, fill=green!8},
+  metric/.style={draw, rounded corners, align=center, minimum width=3.1cm,
+                 minimum height=0.9cm, fill=gray!12},
+  arrow/.style={-{Stealth[length=2mm]}, thick}
+]
+\node[input] (intent) {Compiler request intent\\endpoint $A \rightarrow B$};
+\node[policy, right=9mm of intent] (offline) {Offline compiler route\\predict occupancy and select path};
+\node[runtime, right=9mm of offline] (adaptive) {Adaptive compiler-driven route\\adapt to live congestion};
+\node[metric, below=12mm of offline] (compare) {Compare XY, offline route,\\and adaptive route};
+\node[input, below=12mm of intent] (state) {Runtime state\\memory, queues, failures, links};
+\draw[arrow] (intent) -- (offline);
+\draw[arrow] (offline) -- (adaptive);
+\draw[arrow] (state) -- (adaptive);
+\draw[arrow] (offline) -- (compare);
+\draw[arrow] (adaptive) -- (compare);
+\end{tikzpicture}
+\caption{Future routing study. The compiler fixes the logical migration intent
+$A \rightarrow B$. Offline planning uses the known trace to choose a preferred
+physical path. Adaptive compiler-driven routing changes that preference only
+from live state, making it an adaptive version of the compiler-driven approach.}
+\label{fig:adaptive-routing}
+\end{figure}
 
 \chapter{Evidence Index and Reproduction Guide}\label{chap:evidence}
 
