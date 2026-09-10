@@ -1,0 +1,154 @@
+{
+  "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+  "paired_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "profile": "2plus2",
+  "execution": {
+    "ace_source_commit_before_report_layout": "879249922be95222b3b91c156ce8664e8e3519b1",
+    "source_archive": "output/fixed_delta_static_30seed/source_snapshot/source.tar",
+    "source_archive_sha256": "11f29ce9b04d541d28d3ba6cf5956dbba69c1cc152dfb444e99373123fe14988",
+    "runner": "run_static_fixed_lead_matrix.py",
+    "workers": 2,
+    "note": "The source archive excludes the user-maintained, uncommitted MASTER_README.md."
+  },
+  "studies": [
+    {
+      "delta": 1,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta1/runs.json",
+      "raw_runs_sha256": "a2dbc3aac3622f1b5ca544339ce8fa785b8293784ce7e56ca372576b0d2eadc3",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta1_v1.json",
+      "contract_sha256": "a8a9cb3e283b2874cea4bf16c02487ef582f9bbda0c45d530e35cd40421d2cb5",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:41.406761+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 144757,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    },
+    {
+      "delta": 2,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta2/runs.json",
+      "raw_runs_sha256": "316bd6e8fe969a4b6816c7f063bd44b5d64bcc69a252a13e5d6e74779be28a3b",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta2_v1.json",
+      "contract_sha256": "df135088ec1c57610b582b0f9e3d647e772350f5517a2cec381c8f749cb2af39",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:42.126154+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 115338,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    },
+    {
+      "delta": 3,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta3/runs.json",
+      "raw_runs_sha256": "0e65f4b863009a5a7802e6b9630886abfe3443f4924c2e14a2e8f989e8f83f7a",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta3_v1.json",
+      "contract_sha256": "5dcde91e7e64bf2dc6a0ff94047d3f3dfe31c5d2c0421a8893c69ca72b389fae",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:42.718077+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 99248,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    },
+    {
+      "delta": 4,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta4/runs.json",
+      "raw_runs_sha256": "0b683d1abab4d478de16873ed7428d72bf83d048a3474c968eea55c37180fab1",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta4_v1.json",
+      "contract_sha256": "7e7504326484eb9725cab63520279b8f9bc3de787c65d4d8f96d663ce6dbcc93",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:43.249924+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 92902,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    },
+    {
+      "delta": 5,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta5/runs.json",
+      "raw_runs_sha256": "45521f6d9a7a29b8301c8a4ec209299ec0be73c31a33b5e9c3c3da0899eaeb3c",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta5_v1.json",
+      "contract_sha256": "c23b86ee2f5ae0e452645dba27bae9bae482c726a9749a5d9c7c42bbcb449785",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:43.790052+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 87291,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    },
+    {
+      "delta": 6,
+      "raw_runs": "output/fixed_delta_static_30seed/runs/static-2plus2-fixed-delta6/runs.json",
+      "raw_runs_sha256": "f7d4d24eb25b26f9e1697975dafcc83e970b31750099eef3207ab19c7965b916",
+      "contract": "experiments/fixed_lead_static/qft_4x4_static-2plus2_fixed_delta6_v1.json",
+      "contract_sha256": "5946d0ea7e9e6e1c9446df035a2200cde5f6ed77041b4d88236ecefc74218492",
+      "identity_audit": {
+        "created_at": "2026-09-10T13:01:44.299029+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 77767,
+        "passed": true,
+        "errors": []
+      },
+      "request_instances": 148620
+    }
+  ]
+}
