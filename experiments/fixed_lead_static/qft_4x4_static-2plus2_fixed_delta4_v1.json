@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "study_id": "qft-4x4-static-2plus2-fixed-delta4-v1",
+  "workload": {
+    "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+    "mesh": "4x4",
+    "cores": 16,
+    "logical_qubits": 96,
+    "layers": 766,
+    "requests": 4954,
+    "serialized_sublayers": 2831,
+    "serialization_map_sha256": "6b9520823830c50caaefb57baa737c2a8af834ef9474fe628df35def103a235d"
+  },
+  "replications": {
+    "seed_start": 0,
+    "seed_count": 30,
+    "pairing": "same integer seed across every policy within a repository"
+  },
+  "scheduler": {
+    "fixed_delta_layers": 4,
+    "dynamic_lookahead_layers": 8,
+    "dynamic_minimum_lead_layers": 1,
+    "coherence_time_layers": 10.0,
+    "generation_capacity_rule": "equal_to_compiler_memories"
+  },
+  "timing": {
+    "logical_layer_duration_ps": 100000000,
+    "conflict_serialization": "stable greedy batching; selective optimal bipartite edge coloring only when greedy exceeds maximum endpoint degree",
+    "layer_progression": "barrier: release the next conflict-free communication sublayer after the current sublayer completes",
+    "latency_scope": "within-repository request service latency; never compare absolute ACE and native latency",
+    "readiness_definition": "request-specific physical EPR completed before the request's first physical generation start or release",
+    "expiry_definition": "compiler-generated EPR reaches its physical lifetime limit before consumption"
+  },
+  "profiles": [
+    {
+      "id": "static-2plus2-fixed-delta4",
+      "total_entanglement_memories_per_core": 4,
+      "compiler_memories_per_core": 2,
+      "on_demand_memories_per_core": 2,
+      "policies": [
+        "fixed"
+      ]
+    }
+  ],
+  "metrics": [
+    "completion_rate",
+    "request_service_latency_ms",
+    "pregenerated_transfer_success_rate",
+    "on_demand_fallback_rate",
+    "epr_fidelity_at_utilization",
+    "compiler_expiry_percentage",
+    "compiler_preparation_attempts",
+    "compiler_failed_preparation_attempts",
+    "memory_partition"
+  ],
+  "comparison_rules": {
+    "primary": "compare fixed leads one through six only within this repository, static profile, locked trace, and paired seeds",
+    "cross_repository": "compare policy direction and trade-offs, not absolute latency",
+    "suppress_latency_claim_if_incomplete": true,
+    "known_non_equivalences": [
+      "ACE uses its single-heralded adaptive reservation/cache lifecycle; native uses Barrett-Kok, swapping, teleportation, and receiver correction",
+      "ACE latency ends when application entanglement is delivered; native latency ends after teleportation correction",
+      "physical channel and control-event implementations differ between repositories"
+    ]
+  },
+  "runtime_overrides": {
+    "ace": {
+      "sequence_version": "0.8.1",
+      "sequence_commit": "cf5283cdfd6692a82a090d15fb09fbc01bd322fc",
+      "topology_config_sha256": "6c14672f1fb8d88e4b82c3e01ca7682c21bee17f18295bce29dadde11ad79089",
+      "fidelity_threshold": 0.01,
+      "pregeneration_buffer_ms": 5.3,
+      "compiler_reservation_ms": 1000.0,
+      "request_duration_ms": 50.0,
+      "stop_time_s": 300.0
+    },
+    "native": {
+      "computation_memories": 8,
+      "swapping_probability": 0.95,
+      "coherence_time_ps": 1000000000,
+      "memory_efficiency": 0.85,
+      "detector_efficiency": 0.95,
+      "initial_fidelity": 0.95,
+      "memory_frequency_hz": 50000.0,
+      "quantum_channel_frequency_hz": 80000000.0,
+      "link_distance_m": 1.0,
+      "attenuation_db_per_m": 0.0002,
+      "classical_delay_ps": 10000,
+      "detector_count_rate_hz": 25000000.0,
+      "pregeneration_interval_ps": 20000000,
+      "retry_delay_ps": 20000000,
+      "swap_duration_ps": 100000,
+      "bell_measurement_duration_ps": 100000,
+      "correction_duration_ps": 100000,
+      "warmup_ps": 0,
+      "max_simulation_time_ps": 60000000000000,
+      "request_timeout_ps": 200000000000,
+      "adaptive_step": 0.05,
+      "adaptive_history_ps": 10000000000,
+      "memory_decoherence": true,
+      "layer_barriers": true,
+      "suppress_background_on_pending_paths": false,
+      "adopt_inflight_background": true,
+      "success_generation_cooldown": false,
+      "update_only_when_memory_available": true,
+      "background_protocol": "independent",
+      "routing": "xy"
+    }
+  }
+}
