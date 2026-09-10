@@ -57,8 +57,8 @@ pair-identity audit.
 
 This is a living technical report. Tables labelled ``audited'' may be cited;
 tables labelled ``historical'' retain context but are not combined with newer
-corrected studies. The six-lead fixed-policy matrices currently running are
-described as pending and will be inserted only after their audits pass.
+corrected studies. The native six-lead matrices remain pending; completed ACE
+matrices are reported with their audits and provenance.
 \end{abstract}
 \tableofcontents
 \clearpage
@@ -231,7 +231,8 @@ releases the next sublayer only after the prior sublayer terminates.
 
 \section{Policies and memory model}
 ODG generates after request arrival. Fixed compiler scheduling prepares the
-exact pair two layers before use. Dynamic compiler scheduling selects the
+exact pair at a constant lead, evaluated here from one through six layers.
+Dynamic compiler scheduling selects the
 latest planner-feasible preparation. CGP and ACGP speculatively generate
 background pairs without compiler knowledge; ACGP adapts neighbour choice from
 traffic history.
@@ -397,6 +398,25 @@ Dynamic compiler & $0.3524 \pm 0.0083$ & 30.46\% & 0.9193 & 0\% \\
 Fixed gains more physical retry time. Dynamic launches later and uses fresher
 pairs. This establishes a retry-time versus fidelity trade-off.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[ybar, width=0.72\textwidth, height=5.2cm,
+  ylabel={Mean request latency (ms)}, ymin=0, ymax=0.60,
+  symbolic x coords={Full ODG,Matched ODG,Fixed,Dynamic}, xtick=data,
+  x tick label style={rotate=20, anchor=east, font=\small},
+  nodes near coords, every node near coord/.append style={font=\scriptsize},
+  grid=major, grid style={gray!20}, bar width=15pt]
+\addplot[fill=blue!60] coordinates {(Full ODG,0.2095) (Matched ODG,0.5214)
+  (Fixed,0.3135) (Dynamic,0.3524)};
+\end{axis}
+\end{tikzpicture}
+\caption{Historical native physical 3+1 latency. Fixed obtains more retry
+time than dynamic, while the table above records the associated fidelity
+trade-off.}
+\label{fig:historical-native-static-latency}
+\end{figure}
+
 \section{Completed ACE static fixed-lead sensitivity}\label{sec:ace-static-fixed-leads}
 The corrected static-bank study covers 3+1, 2+2, and 1+1
 compiler/demand partitions at every $\Delta\in\{1,2,3,4,5,6\}$. Each of its
@@ -520,6 +540,25 @@ establishes that perfect compiler knowledge does not eliminate finite capacity,
 physical failure, or deadline misses. A practical system therefore needs demand
 fallback; these single-seed values must not be generalized as 30-seed effects.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[ybar, width=0.60\textwidth, height=5.0cm,
+  ylabel={Completed requests}, ymin=0, ymax=4954,
+  symbolic x coords={Fixed,Dynamic}, xtick=data,
+  nodes near coords, every node near coord/.append style={font=\small},
+  grid=major, grid style={gray!20}, bar width=24pt]
+\addplot[fill=orange!75] coordinates {(Fixed,2793) (Dynamic,3602)};
+\addplot[fill=gray!35] coordinates {(Fixed,2161) (Dynamic,1352)};
+\legend{Completed,Terminal misses}
+\end{axis}
+\end{tikzpicture}
+\caption{Strict 4+0 compiler-only coverage diagnostic, seed zero. Demand
+fallback is disabled, so terminal misses expose finite compiler capacity and
+deadline coverage directly.}
+\label{fig:strict-coverage}
+\end{figure}
+
 \section{Historical shared-pool compiler comparison ($\Delta=2$ snapshot)}
 The Week 4 shared-pool compiler matrix compared matched ODG, fixed compiler,
 and dynamic compiler over 30 paired seeds. Every cell completed 148,620
@@ -549,6 +588,25 @@ RSVP path can reserve endpoints sequentially, so these values cannot isolate a
 future cap-three/cap-four capacity effect until a matched atomic cap-three
 control is run.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[ybar, width=0.66\textwidth, height=5.0cm,
+  ylabel={Mean request latency (ms)}, ymin=0, ymax=1.2,
+  symbolic x coords={ODG,Fixed $\Delta=2$,Dynamic}, xtick=data,
+  x tick label style={font=\small}, nodes near coords,
+  every node near coord/.append style={font=\scriptsize},
+  grid=major, grid style={gray!20}, bar width=21pt]
+\addplot[fill=blue!65] coordinates {(ODG,1.104216) (Fixed $\Delta=2$,0.658471)
+  (Dynamic,0.615906)};
+\end{axis}
+\end{tikzpicture}
+\caption{Historical ACE shared-pool latency comparison. The fixed bar is the
+original $\Delta=2$ snapshot; the audited six-lead trend appears in
+Figure~\ref{fig:ace-fixed-lead-latency}.}
+\label{fig:historical-ace-shared-latency}
+\end{figure}
+
 \section{Historical native shared-pool compiler comparison ($\Delta=2$ snapshot)}
 Native SeQUeNCe used the same trace, seeds, four-slot shared pool, and cap-three
 compiler setting, while retaining its own physical protocol stack and latency
@@ -575,6 +633,24 @@ Native fixed reduced paired latency by 93.35\% versus native ODG (95\% CI
 pre-ready pairs; dynamic launches later and consumes fresher pairs. This is a
 retry-time versus fidelity trade-off within native SeQUeNCe, not a comparison
 against ACE milliseconds.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[ybar, width=0.66\textwidth, height=5.0cm,
+  ylabel={Mean request latency (ms)}, ymin=0, ymax=0.085,
+  symbolic x coords={ODG,Fixed $\Delta=2$,Dynamic}, xtick=data,
+  x tick label style={font=\small}, nodes near coords,
+  every node near coord/.append style={font=\scriptsize},
+  grid=major, grid style={gray!20}, bar width=21pt]
+\addplot[fill=green!55!black] coordinates {(ODG,0.076451)
+  (Fixed $\Delta=2$,0.005092) (Dynamic,0.019885)};
+\end{axis}
+\end{tikzpicture}
+\caption{Historical native shared-pool latency comparison. These milliseconds
+use the native endpoint and must not be compared to ACE values.}
+\label{fig:historical-native-shared-latency}
+\end{figure}
 
 \section{ACE adaptive-generation baseline ($\Delta=2$ snapshot)}
 The Week 4 ACE comparison replayed the locked trace under ODG, CGP, ACGP,
@@ -608,6 +684,25 @@ higher latency but lower expiry (14.32\%) and higher delivered fidelity
 has not beaten ACGP on latency, while dynamic improves the waste/fidelity side
 of the comparison. The report does not claim an ACGP improvement; such work is
 deferred until the fixed-lead and cap-four controls are complete.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[ybar, width=0.84\textwidth, height=5.2cm,
+  ylabel={Mean request latency (ms)}, ymin=0, ymax=1.2,
+  symbolic x coords={ODG,CGP,ACGP,Fixed $\Delta=2$,Dynamic}, xtick=data,
+  x tick label style={rotate=16, anchor=east, font=\small},
+  nodes near coords, every node near coord/.append style={font=\scriptsize},
+  grid=major, grid style={gray!20}, bar width=18pt]
+\addplot[fill=purple!60] coordinates {(ODG,1.104216) (CGP,0.547729)
+  (ACGP,0.476298) (Fixed $\Delta=2$,0.658471) (Dynamic,0.615906)};
+\end{axis}
+\end{tikzpicture}
+\caption{Historical ACE adaptive-generation latency comparison. The table
+above supplies the essential fidelity and expiry trade-offs; the fixed bar is
+the historical $\Delta=2$ snapshot rather than a fixed-lead selection.}
+\label{fig:ace-adaptive-latency}
+\end{figure}
 
 \section{Audit and provenance summary}
 \begin{center}
