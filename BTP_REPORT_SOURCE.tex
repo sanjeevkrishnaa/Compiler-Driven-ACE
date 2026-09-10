@@ -9,7 +9,9 @@
 \usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{pgfplots}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\pgfplotsset{compat=1.18}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
 % Retain the report's original chapter layout but suppress the word "Chapter"
 % in displayed headings.
@@ -434,6 +436,43 @@ In 3+1 and 2+2, $\Delta=1$ gives the lowest latency and highest readiness.
 The constrained 1+1 profile has its lowest mean latency at $\Delta=2$;
 its one-layer difference is 0.002186 ms and must be interpreted with the
 paired raw data, not as a universal preference.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.88\textwidth,
+  height=6.2cm,
+  xlabel={Fixed lead $\Delta$ (serialized sublayers)},
+  ylabel={Mean request latency (ms)},
+  xmin=1, xmax=6, xtick={1,2,3,4,5,6},
+  ymin=0.45, ymax=1.05,
+  grid=major,
+  grid style={gray!20},
+  legend style={at={(0.5,-0.23)}, anchor=north, legend columns=2,
+                draw=none, font=\small},
+  tick label style={font=\small}, label style={font=\small}
+]
+\addplot+[mark=*, thick, blue!70!black] coordinates {
+  (1,0.553104) (2,0.633231) (3,0.697352) (4,0.732664) (5,0.772076) (6,0.807971)};
+\addlegendentry{Static 3+1}
+\addplot+[mark=square*, thick, orange!85!black] coordinates {
+  (1,0.720845) (2,0.805677) (3,0.846865) (4,0.865266) (5,0.890028) (6,0.919232)};
+\addlegendentry{Static 2+2}
+\addplot+[mark=triangle*, thick, purple!75!black] coordinates {
+  (1,0.910873) (2,0.908687) (3,0.943862) (4,0.959724) (5,0.979470) (6,0.994275)};
+\addlegendentry{Static 1+1}
+\addplot+[mark=diamond*, thick, green!55!black] coordinates {
+  (1,0.598283) (2,0.635186) (3,0.726038) (4,0.746164) (5,0.784498) (6,0.818597)};
+\addlegendentry{Shared pool, cap three}
+\end{axis}
+\end{tikzpicture}
+\caption{Audited ACE fixed-lead sensitivity. Each point is the mean of 30
+paired seeds on the locked QFT trace. The static profiles and legacy
+shared-pool path are separate resource configurations, so the figure compares
+lead trends within each line rather than claiming a cross-profile ranking.}
+\label{fig:ace-fixed-lead-latency}
+\end{figure}
 
 \section{Completed ACE shared-pool fixed-lead sensitivity}\label{sec:ace-shared-fixed-leads}
 The completed shared-pool ACE study uses four physical slots per core, compiler
