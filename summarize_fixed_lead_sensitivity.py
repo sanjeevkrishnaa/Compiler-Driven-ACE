@@ -32,6 +32,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--raw-root", required=True, type=Path)
     parser.add_argument("--contracts", required=True, type=Path)
+    parser.add_argument("--execution-provenance", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     args = parser.parse_args()
 
@@ -86,9 +87,11 @@ def main() -> None:
     with (args.output / "summary.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader(); writer.writerows(studies)
+    execution = json.loads(args.execution_provenance.read_text(encoding="utf-8"))
     (args.output / "provenance.json").write_text(json.dumps({
         "trace_sha256": TRACE_SHA256, "paired_seeds": list(range(30)),
-        "source": "ACE shared pool cap3 legacy admission", "studies": provenance,
+        "source": "ACE shared pool cap3 legacy admission", "execution": execution,
+        "studies": provenance,
     }, indent=2) + "\n", encoding="utf-8")
     lines = ["# ACE fixed-lead sensitivity, corrected 30-seed sweep", "",
              "All cells use the locked trace, paired seeds 0–29, the listed immutable contracts, and a passing completion and request/pair identity audit.", "",
