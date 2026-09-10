@@ -113,3 +113,26 @@ The auditor verifies complete request delivery, trace identity, unique
 policy/seed cells, pair-lifecycle conservation, one adaptive pair per
 application request, timestamp ordering, fidelity range, and agreement between
 the pair trace and all reported lifecycle counters.
+
+## Completed shared-pool ACE baseline matrix
+
+The full physical matrix completed on 2026-09-10 and passed the command above:
+
+- 90 strategy/seed cells (ODG, CGP and ACGP × seeds 0–29);
+- 445,860 completed request instances; and
+- 21,226 audited adaptive-pair lifecycle records with no audit errors.
+
+The corresponding ACE compiler and native SeQUeNCe shared-pool studies also
+completed and passed their independent audits. The consolidated result table,
+paired confidence intervals and interpretation are in
+[`results/SHARED_POOL_FINAL_COMPARISON_30SEED.md`](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md).
+
+The final report is generated—not hand assembled—by:
+
+```bash
+MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python summarize_shared_pool_study.py \
+  --ace-adaptive output/qft_shared_pool_adaptive_30seed/runs.json \
+  --ace-compiler output/qft_shared_pool_compiler_30seed_v2/shared-pool-4-cap3/runs.json \
+  --native-study '../SeQUeNCe/output/qft_shared_pool_native_30seed/shared-pool-4-cap3/study.json' \
+  --output results/SHARED_POOL_FINAL_COMPARISON_30SEED.md
+```

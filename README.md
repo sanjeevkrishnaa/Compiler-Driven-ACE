@@ -5,9 +5,8 @@ Related: [Adaptive, Continuous Entanglement Generation for Quantum Networks](htt
 ## Compiler-driven pre-generation
 
 > **Read first:** [`MASTER_README.md`](MASTER_README.md) is the comprehensive
-> project narrative and the current source of truth. It records which results
-> are audited historical artifacts, which ACE results require rerunning after
-> the reservation-lifecycle correction, and what is currently in progress.
+> project narrative and current source of truth. It separates historical
+> development results from the completed, audited physical 30-seed studies.
 
 The ACE physical pre-generation/cache path now also supports offline compiler
 traces.  Both fixed-delta and resource-aware dynamic scheduling are available,
@@ -39,11 +38,13 @@ bound. Trace order is preserved whenever greedy batching is already optimal;
 exact edge colouring is applied only to the three layers where it removes one
 unnecessary sublayer.
 
-The next controlled study uses an identical, hash-verified experiment contract
-in ACE and native SeQUeNCe. It adds real static `3+1`, `2+2`, and two-total
-memory `1+1` banks, a partition-matched ODG baseline, 30 paired seeds, and
-identical serialized request deadlines. See
-[SHARED_EXPERIMENT_CONTRACT.md](SHARED_EXPERIMENT_CONTRACT.md).
+The completed shared-pool controlled study uses an identical, hash-verified
+4x4 QFT trace and 30 paired seeds in ACE and native SeQUeNCe. Each core has
+four shared physical memories; speculative/compiler work is capped at three,
+and demand has atomic fallback access to any free endpoint slots. It reports
+physical ACE ODG/CGP/ACGP/fixed/dynamic and native matched-ODG/fixed/dynamic.
+Read the final audited table and interpretation in
+[`results/SHARED_POOL_FINAL_COMPARISON_30SEED.md`](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md).
 
 The earlier matrix is retained as a historical artifact. The corrected ACE
 static-bank rerun has passed audit; see
@@ -61,3 +62,8 @@ sequence, see [`MASTER_PROJECT_STATUS.md`](MASTER_PROJECT_STATUS.md).
 For trace-driven physical ODG/CGP/ACGP, including the ACE 0.8.1 runtime
 requirement and shared-pool validation command, see
 [`ADAPTIVE_BASELINE_SPEC.md`](ADAPTIVE_BASELINE_SPEC.md).
+
+The reproducible aggregator for the final report is
+[`summarize_shared_pool_study.py`](summarize_shared_pool_study.py). It reads
+the audited run JSON files, computes only seed-paired effects within one
+backend, and intentionally does not produce cross-backend latency claims.

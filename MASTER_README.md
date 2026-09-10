@@ -58,7 +58,7 @@ The project studies three broad strategies:
 | ODG | Generate the required EPR pair only when the request arrives. |
 | Fixed compiler | Generate the request-specific pair a fixed number of logical sublayers before use. |
 | Dynamic compiler | Search a bounded future window and choose the latest planner-feasible preparation. |
-| CGP / ACGP (pending controlled baseline) | Generate speculative pairs without compiler foreknowledge; ACGP adapts neighbour selection from observed traffic. |
+| CGP / ACGP | Generate speculative pairs without compiler foreknowledge; ACGP adapts neighbour selection from observed traffic. |
 
 ## Workload and fairness contract
 
@@ -210,9 +210,9 @@ Its central results are:
 
 | Static profile | Fixed latency / ready / fidelity | Dynamic latency / ready / fidelity |
 |---|---|---|
-| 3+1 | 0.805875 ms / 34.65% / 0.7834 | 0.802312 ms / 35.39% / 0.8212 |
-| 2+2 | 0.983236 ms / 14.06% / 0.8567 | 0.978956 ms / 14.43% / 0.8798 |
-| 1+1 | 1.000413 ms / 12.28% / 0.8551 | 1.009635 ms / 10.97% / 0.8039 |
+| 3+1 | 0.658419 ms / 51.87% / 0.7682 | 0.575869 ms / 61.59% / 0.8039 |
+| 2+2 | 0.821357 ms / 32.97% / 0.8496 | 0.741142 ms / 42.13% / 0.8738 |
+| 1+1 | 0.908687 ms / 22.85% / 0.8267 | 0.910578 ms / 22.57% / 0.7861 |
 
 **Important correction:** ACE previously retained a consumed compiler pair's
 long reservation timecard until nominal expiry. The corrected matrix above was
@@ -266,8 +266,68 @@ native milliseconds must not be compared directly because their generation,
 reservation, timing and accounting implementations differ. The valid final
 comparison will be made within each backend, under the corrected lifecycle and
 one hash-verified memory contract, across ODG, CGP, ACGP, fixed and dynamic.
-The corrected ACE 30-seed static rerun and the shared-pool matrices are still
-required before claiming an ACE-versus-native performance conclusion.
+The corrected ACE 30-seed static rerun and the shared-pool matrices are now
+complete. The shared-pool result is recorded below; an ACE-versus-native
+*raw-speed* conclusion remains invalid by design.
+
+### Final shared-pool study — completed, audited 30-seed evidence
+
+This is the main controlled 4x4 result. Every core has four physical
+communication memories. Speculative/compiler work can occupy at most three;
+there is no permanently reserved on-demand slot. When a required exact pair is
+not ready, demand atomically takes free endpoint slots or waits without holding
+a partial allocation. Pending demand wins over a new speculative admission at
+the same simulator time.
+
+The completed study uses the same hash-locked QFT trace, 30 seeds, 4,954
+requests per seed, conflict serialization and shared-pool rule in all rows.
+The ACE side includes the physical online baselines (ODG, CGP and ACGP) and
+the two compiler policies. The native side independently reproduces ODG,
+fixed and dynamic compiler execution. The full generated table, confidence
+intervals, audit scope and reproduction provenance are in
+[`results/SHARED_POOL_FINAL_COMPARISON_30SEED.md`](results/SHARED_POOL_FINAL_COMPARISON_30SEED.md).
+
+| Backend | Policy | Mean latency (ms) | Ready | Prepared fidelity@use | Expiry | Fallback |
+|---|---|---:|---:|---:|---:|---:|
+| ACE | ODG | 1.104216 | — | — | 0.00% | — |
+| ACE | CGP | 0.547729 | — | 0.8375 | 74.27% | — |
+| ACE | ACGP | 0.476298 | — | 0.8360 | 74.01% | — |
+| ACE | Fixed compiler | 0.658471 | 51.92% | 0.7871 | 18.66% | 48.06% |
+| ACE | Dynamic compiler | 0.615906 | 56.83% | 0.8575 | 14.32% | 43.14% |
+| Native SeQUeNCe | Matched ODG | 0.076451 | 0.00% | — | 0.00% | 100.00% |
+| Native SeQUeNCe | Fixed compiler | 0.005092 | 92.23% | 0.7486 | 0.00% | 4.26% |
+| Native SeQUeNCe | Dynamic compiler | 0.019885 | 68.95% | 0.8838 | 0.00% | 17.44% |
+
+All 90 ACE compiler trials, 90 ACE adaptive-baseline trials and 90 native
+trials completed. The ACE compiler audit checked 193,741 compiler-pair
+records; the ACE adaptive audit checked 21,226 adaptive-pair records. The
+native audit verified 445,860 successful requests with zero failures, as well
+as pair accounting, no double use, memory bounds, timing stages and fidelity
+bounds.
+
+**What the result says.** Within ACE's compiler policies, dynamic is better
+than fixed: it is 6.45% faster on paired mean latency (95% CI [5.79, 7.10]),
+has higher readiness, higher prepared-pair fidelity and lower expiry. Both
+compiler policies beat ACE ODG, but the physical CGP/ACGP baselines are faster
+than either compiler policy in this particular ACE implementation. That is not
+a reason to discard compiler information: it exposes the relevant trade-off.
+CGP/ACGP attain their latency result with about 74% speculative-pair expiry,
+whereas dynamic compiler scheduling has 14.32% expiry and supplies
+request-specific pairs. ACGP is the fastest ACE policy in this matrix but has
+lower delivered and prepared-pair fidelity than dynamic compiler scheduling.
+
+Within native SeQUeNCe, fixed is the latency/readiness winner (93.35% faster
+than matched ODG, 92.23% ready); dynamic is slower than fixed but uses higher
+fidelity prepared pairs (0.8838 versus 0.7486) and needs more fallback. This
+opposite fixed/dynamic ordering is a backend-specific policy result, not a
+contradiction: it demonstrates that scheduling lead time, retry opportunity,
+memory contention and decoherence must all be measured rather than assumed.
+
+Do not rank ACE against native by the milliseconds in the table. Their
+generation, reservation, event timing and latency accounting differ. The valid
+cross-repository conclusion is that both independently complete the same
+finite-memory trace under the shared-pool contract, while their *within-backend*
+policy trade-offs can be compared rigorously.
 
 ### Corrected implementation checks
 
