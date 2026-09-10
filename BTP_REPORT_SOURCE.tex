@@ -84,6 +84,60 @@ does not claim to reproduce another paper's absolute numbers: the supplied QFT
 trace, physical assumptions, control implementation, and latency endpoints are
 explicitly frozen and reported here.
 
+\section{Research paper study}
+The literature review guided the experimental design rather than supplying
+parameters by assumption. Four papers were studied alongside the SeQUeNCe
+documentation and the project presentation prepared during the analytical
+policy phase.
+
+\begin{longtable}{p{0.23\textwidth}p{0.28\textwidth}p{0.38\textwidth}}
+\toprule
+Source & Main contribution & What this project adopted or tested \\
+\midrule
+Kolar et al. \cite{Kolar2022} & Continuous generation with an adaptive local
+neighbour choice driven by request history. & Defined CGP and ACGP as
+traffic-oblivious baselines. We retained finite cache capacity, expiry, and
+history-based neighbour updates, then distinguished their opportunistic hits
+from request-specific compiler readiness. \\
+Zhan et al. \cite{Zhan2025} & Adaptive continuous generation implemented in
+SeQUeNCe with protocol-level generation, decoherence, and purification. &
+Motivated preserving physical protocol effects rather than treating a planned
+generation as success. Purification remains outside the present compiler
+comparison and is reported as a limitation. \\
+Chen et al. \cite{AEPA} & Reinforcement-learning pre-allocation chooses
+link-level inventory under traffic, TTL, occupancy, and expiry. & Motivated the
+later question of how much capacity compiler work may occupy. The cap-four
+wait-on-demand control isolates this capacity question before any learned
+policy is attempted. \\
+Suance et al. \cite{Suance2026} & ODG, CGP, and ACGP for multi-core meshes and
+QFT, Cuccaro, Draper, and MCMT V-chain workloads. & Supplied the policy set,
+mesh-oriented workload structure, and qualitative latency/fidelity trade-off
+to reproduce analytically before physical compiler integration. \\
+\bottomrule
+\end{longtable}
+
+\subsection{What the analytical reproduction established}
+The policy-level reproduction implemented ODG, CGP, and ACGP on five mesh
+sizes and four circuit-derived workloads. It reproduced the qualitative result
+that pre-generation can lower exposed request latency while stored pairs reduce
+fidelity. It did \emph{not} reproduce every published magnitude. In particular,
+the reproduced fresh-pair ODG fidelity remained 1.0 while the paper's physical
+baseline includes nonideal generation and control. The source paper does not
+fully specify all gate timings, random-generation intervals, cache-discard
+rules, purification triggers, or the authors' circuit/mapping configuration.
+Accordingly, the analytical reproduction is evidence of policy behavior and
+implementation coverage, not a numerical replication claim.
+
+\subsection{How the paper study changed this project}
+The review made three design decisions explicit. First, physical results must
+retain stochastic generation, retry, memory noise, expiry, and teleportation
+instead of translating a scheduler hit directly into lower latency. Second,
+CGP/ACGP must be evaluated as speculative baselines with waste, rather than as
+compiler-aware policies. Third, capacity and demand recovery need their own
+controls: the fixed-lead and cap-four studies do not tune a policy merely to
+outperform a baseline, but measure readiness, fidelity, expiry, and blocking
+under identical resources.
+
 \chapter{Problem and System Model}
 
 \section{Research question}
@@ -344,6 +398,10 @@ Artifact & Role \\
 Week 4 summary. \\
 \texttt{SESSION\_CONTEXT\_HANDOFF.md} & Canonical scope, historical results,
 and experiment constraints. \\
+Week 1--3 Notion exports and Week 2 presentation & Engineering narrative,
+literature-review notes, source-paper comparison, and historical validation.
+Claims from these sources are reconciled against the current contracts and
+audits before appearing as final results. \\
 \texttt{experiments/*.json} & Immutable ACE contracts. \\
 \texttt{results/ace\_fixed\_lead\_sensitivity\_30seed\_v1/} & Tracked
 shared-pool report, CSV, raw hashes, contract hashes, and provenance. \\
@@ -373,9 +431,15 @@ contracts, including the fixed-lead matrix. \\
 \bibitem{Kolar2022}
 Kolar et al., ``Adaptive, Continuous Entanglement Generation for Quantum
 Networks,'' IEEE INFOCOM Workshop, 2022.
+\bibitem{Zhan2025}
+Zhan et al., ``Design and Simulation of the Adaptive Continuous Entanglement
+Generation Protocol,'' IEEE QCNC, 2025.
 \bibitem{AEPA}
-``Adaptive Entanglement Pre-Allocation for Low-Latency Quantum Repeater
-Networks,'' supplied project reference.
+Chen et al., ``Adaptive Entanglement Pre-Allocation for Low-Latency Quantum
+Repeater Networks,'' IEEE INFOCOM Workshop, 2026.
+\bibitem{Suance2026}
+Suance et al., ``Adaptive Entanglement Management in Quantum Multi-Core
+Architectures,'' ISLVSI manuscript, 2026.
 \bibitem{SeQUeNCe}
 X. Wu et al., ``SeQUeNCe: A Customizable Discrete-Event Simulator of Quantum
 Networks,'' \emph{Quantum Science and Technology}, 2021.
