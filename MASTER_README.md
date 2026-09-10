@@ -10,6 +10,12 @@ within-backend ACE comparison with ODG, CGP, and ACGP. The report also records
 the matched native SeQUeNCe shared-pool comparison. All final result tables are
 supported by 30 paired seeds, raw provenance, CSV summaries, and audits.
 
+**September 10 update.** The corrected ACE fixed-policy study now covers every
+lead $\Delta\in\{1,2,3,4,5,6\}$ for static 3+1, 2+2, and 1+1 partitions and
+the four-slot shared pool. The older $\Delta=2$ comparison rows below remain
+historical snapshots. Native six-lead studies remain pending their complete
+30-seed audits.
+
 > 📌 **Project:** Compiler-Driven ACE and native SeQUeNCe<br>
 > **Reporting period:** September 5–9, 2026<br>
 > **Primary implementation commits:** [`8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940), [`bab1a14`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/bab1a14), and [`94f3b49`](https://github.com/sanjeevkrishnaa/SeQUeNCe/commit/94f3b49)<br>
@@ -30,6 +36,7 @@ their respective implementation periods.
 |---|---|---|
 | ACE lifecycle repair | Complete | [scheduler on GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/compiler_scheduler.py), [commit `8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) |
 | Corrected ACE static matrix | Complete, audited | [report on GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/results/CORRECTED_STATIC_ACE_30SEED.md), [commit `0c70b95`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0c70b95) |
+| ACE fixed-lead sensitivity, static and shared pool | Complete, audited | [static Δ1–Δ6 evidence](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/results/ace_static_fixed_lead_sensitivity_30seed_v1), [shared-pool Δ1–Δ6 evidence](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/results/ace_fixed_lead_sensitivity_30seed_v1), [commit `689692a`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/689692a) |
 | Strict 4+0 coverage test | Complete | [report on GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/COMPILER_DRIVEN_ACE_4X4_REPORT.md), [commit `8ddd940`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8ddd940) |
 | ACE shared-pool compiler study | Complete, audited | [report on GitHub](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/results/SHARED_POOL_COMPILER_30SEED.md), [commit `2659387`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/2659387) |
 | ACE ODG/CGP/ACGP baseline | Complete, audited | [runner](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/run_trace_adaptive_baseline.py), [audit](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/audit_adaptive_baseline_results.py), [commits `e173c25`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/e173c25), [`f654fef`](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f654fef) |
@@ -63,7 +70,7 @@ comparison is the policy trade-off within each backend.
 |---|---|
 | ODG | Generate after a request arrives. |
 | CGP / ACGP | Speculative neighbour generation; ACGP adapts probabilities from traffic. |
-| Fixed compiler | Prepare the exact requested pair two sublayers before use. |
+| Fixed compiler | Prepare the exact requested pair at a constant lead. The audited ACE sensitivity study evaluates leads 1 through 6 sublayers. |
 | Dynamic compiler | Choose the latest feasible preparation in an eight-sublayer window with at least one-sublayer lead. |
 
 Static allocations are per core:
@@ -155,6 +162,33 @@ choice.
 the [-0.49, 0.07]% interval includes zero, so the result does not establish a
 latency winner.
 
+### 7.1A ACE fixed-lead sensitivity update, Δ1–Δ6
+
+The preceding fixed/dynamic table is an earlier Week 4 comparison. The
+corrected fixed-policy evidence now evaluates all six requested leads with 30
+paired seeds per cell, trace hash
+`61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1`,
+immutable contracts, raw SHA-256 provenance, and passing completion and
+request/pair-identity audits.
+
+| Profile | Best observed fixed lead | Latency | Pre-ready | Fidelity@use | Fallback |
+|---|---:|---:|---:|---:|---:|
+| Static 3+1 | Δ1 | 0.553104 ms | 64.38% | 0.8037 | 35.60% |
+| Static 2+2 | Δ1 | 0.720845 ms | 44.61% | 0.8741 | 55.37% |
+| Static 1+1 | Δ2 | 0.908687 ms | 22.85% | 0.8267 | 77.12% |
+| Shared pool, cap-three legacy admission | Δ1 | 0.598283 ms | 59.17% | 0.8584 | 40.80% |
+
+For static 3+1 and 2+2, Δ1 has the lowest latency and highest readiness. In
+the constrained 1+1 partition, Δ2 has the lowest mean latency; its 0.002186 ms
+difference from Δ1 requires the seed-paired raw data for interpretation. In
+the legacy shared-pool sweep, shorter lead improves all reported operational
+measures. These values do not establish a universal lead because they depend
+on the locked trace, physical parameters, and the legacy cap-three admission
+path.
+
+Full evidence: [static 3+1 / 2+2 / 1+1](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/results/ace_static_fixed_lead_sensitivity_30seed_v1)
+and [shared pool](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/strict-compiler-4plus0/results/ace_fixed_lead_sensitivity_30seed_v1).
+
 ### 7.2 Native SeQUeNCe static 30-seed matrix
 
 GitHub evidence: [aggregate report](https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/strict-compiler-4plus0/results/shared_contract_30seed/RESULTS.md),
@@ -222,7 +256,7 @@ GitHub evidence: [compiler report](https://github.com/sanjeevkrishnaa/Compiler-D
 | Policy | Latency | Ready | Fidelity@use | Expiry | Fallback |
 |---|---:|---:|---:|---:|---:|
 | Matched ODG | 1.104216 ms | 0.00% | — | 0.00% | 100.00% |
-| Fixed | 0.658471 ms | 51.92% | 0.7871 | 18.66% | 48.06% |
+| Fixed, historical Δ2 | 0.658471 ms | 51.92% | 0.7871 | 18.66% | 48.06% |
 | Dynamic | 0.615906 ms | 56.83% | 0.8575 | 14.32% | 43.14% |
 
 **Observation.** Both compiler policies complete all requests and reduce
@@ -232,9 +266,11 @@ prepared fidelity from 0.7871 to 0.8575, and lowers expiry by 4.34 points.
 The 43.14% dynamic fallback rate is not a failure rate: those requests enter
 demand generation and still complete.
 
-**Conclusion.** Dynamic is the clear compiler-policy winner inside the ACE
+**Historical conclusion.** Dynamic is the clear compiler-policy winner inside the ACE
 shared-pool experiment. The pool prevents a compiler preparation from
 permanently monopolising the only recovery path, but fallback remains essential.
+The completed six-lead fixed-policy rerun appears in Section 7.1A; it replaces
+this Δ2 row for fixed-lead selection.
 
 ### Native SeQUeNCe shared pool
 
@@ -246,10 +282,10 @@ GitHub evidence: [tracked aggregate CSV](https://github.com/sanjeevkrishnaa/Comp
 | Policy | Latency | Ready | Fidelity@use | Expiry | Fallback |
 |---|---:|---:|---:|---:|---:|
 | Matched ODG | 0.076451 ms | 0.00% | — | 0.00% | 100.00% |
-| Fixed | 0.005092 ms | 92.23% | 0.7486 | 0.00% | 4.26% |
+| Fixed, historical Δ2 | 0.005092 ms | 92.23% | 0.7486 | 0.00% | 4.26% |
 | Dynamic | 0.019885 ms | 68.95% | 0.8838 | 0.00% | 17.44% |
 
-**Observation.** Fixed supplies 92.23% of requests from prepared pairs and has
+**Historical observation.** Fixed supplies 92.23% of requests from prepared pairs and has
 only 4.26% demand fallback, while dynamic supplies 68.95% and falls back for
 17.44%. Dynamic's used pairs are substantially fresher: fidelity 0.8838 versus
 0.7486. Both have zero measured expiry in this native contract.
@@ -269,8 +305,9 @@ show that either simulator or architecture is globally faster.
 
 ## 10. Result D — normal ACE adaptive generation versus compiler scheduling
 
-This is the completed comparison of ACE ODG, CGP, ACGP, fixed compiler and
-dynamic compiler under one final shared-pool physical model.
+This is the completed historical comparison of ACE ODG, CGP, ACGP, fixed
+compiler and dynamic compiler under one shared-pool physical model. Its fixed
+compiler row used Δ2; Section 7.1A contains the corrected ACE Δ1–Δ6 evidence.
 
 **Question.** Under the same ACE shared pool, how does exact compiler
 foreknowledge compare with normal traffic-oblivious CGP and history-adaptive
@@ -287,7 +324,7 @@ GitHub evidence: [final generated report](https://github.com/sanjeevkrishnaa/Com
 | ODG | 1.104216 ms | 0.9498 | — | 0.00% |
 | CGP | 0.547729 ms | 0.8623 | 0.8375 | 74.27% |
 | ACGP | 0.476298 ms | 0.8507 | 0.8360 | 74.01% |
-| Fixed compiler | 0.658471 ms | 0.8653 | 0.7871 | 18.66% |
+| Fixed compiler, historical Δ2 | 0.658471 ms | 0.8653 | 0.7871 | 18.66% |
 | Dynamic compiler | 0.615906 ms | 0.8972 | 0.8575 | 14.32% |
 
 `Ready` is intentionally not placed in this adaptive-comparison table for
@@ -328,6 +365,8 @@ fidelity, memory efficiency or predictability—is being optimised.
 | Verification | Outcome |
 |---|---|
 | ACE corrected static audit | 300 cells; 1,486,200 requests; passed |
+| ACE static fixed-lead audit | 18 cells; 2,675,160 requests; passed with zero errors |
+| ACE shared-pool fixed-lead audit | 6 cells; 891,720 requests; passed with zero errors |
 | ACE shared compiler audit | 90 cells; 445,860 requests; 193,741 compiler-pair records; passed |
 | ACE adaptive audit | 90 cells; 445,860 requests; 21,226 adaptive-pair records; passed |
 | Native shared compiler audit | 90 cells; 445,860 successful requests; zero failures; passed |
@@ -350,8 +389,9 @@ reported experiment obeys its declared simulator contract.
    cannot replace demand fallback.
 2. Memory layout is part of the algorithm: it changes preparation capacity,
    demand recovery, retry time, freshness and expiry together.
-3. Dynamic is the supported ACE compiler winner in static 3+1/2+2 and in the
-   final shared pool; ACE 1+1 establishes no reliable fixed/dynamic winner.
+3. The corrected ACE fixed-lead study selects Δ1 for static 3+1, static 2+2,
+   and the legacy shared pool. It selects Δ2 by mean latency for constrained
+   static 1+1, with a small paired difference from Δ1.
 4. Native fixed wins shared-pool latency/readiness because it gains retry time;
    native dynamic trades latency for substantially higher pair fidelity.
 5. ACE ACGP minimises latency in the adaptive comparison but expires roughly
@@ -368,7 +408,9 @@ reported experiment obeys its declared simulator contract.
 | Native physical CGP/ACGP shared-pool matrix | Completes the symmetric adaptive-versus-compiler comparison in native SeQUeNCe. |
 | Static-bank CGP/ACGP | Tests adaptive generation with permanent demand reservations. |
 | Reservation-aware dynamic scheduling | React to physical admission/failure, not offline layer feasibility only. |
-| Sensitivity and extra workloads | Vary cap/lead/lookahead/coherence/generation, then test another trace/topology. |
+| Native fixed-lead matrix | Complete the static and shared-pool Δ1–Δ6 studies with the same audit standard. |
+| Cap-four atomic-admission control | Measure capacity after matched atomic endpoint admission removes legacy RSVP ambiguity. |
+| Extra workloads and routing | Vary topology, routing, coherence and generation after the cap control. |
 
 ## 14. Repository and evidence index
 
