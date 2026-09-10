@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -18,7 +19,11 @@ def run(contract: Path, trace: Path, config: Path, output: Path) -> tuple[str, i
                "--config", str(config), "--contract", str(contract), "--profile", profile,
                "--output", str(destination)]
     with (output / f"{profile}.log").open("w", encoding="utf-8") as log:
-        return profile, subprocess.run(command, stdout=log, stderr=subprocess.STDOUT).returncode
+        environment = dict(os.environ, MPLCONFIGDIR=str(output / ".matplotlib" / profile))
+        Path(environment["MPLCONFIGDIR"]).mkdir(parents=True, exist_ok=True)
+        return profile, subprocess.run(
+            command, stdout=log, stderr=subprocess.STDOUT, env=environment
+        ).returncode
 
 
 def main() -> None:
