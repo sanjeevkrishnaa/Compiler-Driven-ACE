@@ -1,0 +1,146 @@
+{
+  "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+  "paired_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "source": "ACE shared pool cap3 legacy admission",
+  "studies": [
+    {
+      "delta": 1,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-1-corrected/runs.json",
+      "raw_runs_sha256": "ae98d8e84b2863d4ca900a8b10a45de742ba593f12f1300b7a021d6c762325dc",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta1_v1.json",
+      "contract_sha256": "5febbbdf3e81fc53a4fde4a001a4d3a48ae09138043b74766163cc1622062259",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:49.219238+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 197033,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    },
+    {
+      "delta": 2,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-2-corrected/runs.json",
+      "raw_runs_sha256": "14df8d2577af34d7be82e8d30252bb3cc34eb19b176a64b3e2d5662f129fef05",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta2_v1.json",
+      "contract_sha256": "66f3a9fe6b01887934f8bdab460978115124518229e17b9bb8e0d91f30a8dcc6",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:50.216729+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 190160,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    },
+    {
+      "delta": 3,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-3-corrected/runs.json",
+      "raw_runs_sha256": "c232358946e462a4f14f6ac6e0ca4494b5420d095cb2dea0df9afbea382db69a",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta3_v1.json",
+      "contract_sha256": "f83b09ecbf498baaf3b2466c037c658d9ee3a2ae7676eb57249e7c1c291e401f",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:51.080117+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 159095,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    },
+    {
+      "delta": 4,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-4-corrected/shared-pool-4-cap3-fixed-delta4/runs.json",
+      "raw_runs_sha256": "f8f04ebc025426aae09943363c8f52a382f9634cafa20bc3de3f237e11b3c49d",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta4_v1.json",
+      "contract_sha256": "28b22a7303cb4b0a48c6405e6089b408068e0529eb4ca765394f3238f681fe06",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:51.877725+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 154504,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    },
+    {
+      "delta": 5,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-5-corrected/runs.json",
+      "raw_runs_sha256": "29a5626b73371bf3d1449a73c6c04abf01d8ef34f7043c26c7de32ba96f580e6",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta5_v1.json",
+      "contract_sha256": "32f66b3748e689d051c30448eaf683e66415499856bcff6f758fb1ff36792899",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:52.658005+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 143821,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    },
+    {
+      "delta": 6,
+      "raw_runs": "output/fixed_delta_sensitivity_30seed/delta-6-corrected/runs.json",
+      "raw_runs_sha256": "bf76d1b83ad8f9c5ac5ef145c7db4a9d9cc275c37def5e76e8a9716544509fe0",
+      "contract": "experiments/qft_4x4_shared_pool_fixed_delta6_v1.json",
+      "contract_sha256": "fcb6ba902a717cf1b264b184abca7da309365167dd0e27db26ed6137b29c4af8",
+      "identity_audit": {
+        "created_at": "2026-09-10T12:11:53.369008+00:00",
+        "trace_sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1",
+        "runs": 30,
+        "configuration_strategy_seed_cells": 30,
+        "request_instances": 148620,
+        "compiler_pair_records": 133771,
+        "passed": true,
+        "errors": []
+      },
+      "requests": 148620
+    }
+  ]
+}
