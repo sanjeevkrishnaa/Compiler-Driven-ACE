@@ -229,24 +229,24 @@ used by another request is an identity failure, not a cache hit. Expiry/waste is
 the fraction of compiler-created pairs that expire or remain unused at study
 completion; it is a resource cost, not merely a failed request.
 
-\begin{figure}[htbp]
+\begin{figure}[!htbp]
 \centering
-\begin{tikzpicture}[
-  block/.style={draw, rounded corners, align=center, minimum width=3.0cm,
-                minimum height=0.9cm, fill=blue!7},
-  decision/.style={draw, diamond, aspect=2.1, align=center, inner sep=1.5pt,
-                   fill=orange!12},
-  outcome/.style={draw, rounded corners, align=center, minimum width=2.7cm,
-                  minimum height=0.85cm, fill=green!8},
+\begin{tikzpicture}[scale=0.78, transform shape,
+  block/.style={draw, rounded corners, align=center, minimum width=2.55cm,
+                minimum height=0.72cm, fill=blue!7},
+  decision/.style={draw, diamond, aspect=1.8, align=center, inner sep=1.2pt,
+                   minimum width=2.15cm, fill=orange!12},
+  outcome/.style={draw, rounded corners, align=center, minimum width=2.25cm,
+                  minimum height=0.70cm, fill=green!8},
   arrow/.style={-{Stealth[length=2mm]}, thick}
 ]
 \node[block] (trace) {Compiler trace and\\request identity};
-\node[block, right=9mm of trace] (prepare) {Fixed, dynamic, or adaptive\\preparation decision};
-\node[decision, right=10mm of prepare] (ready) {Exact target pair\\ready at release?};
-\node[outcome, above right=8mm and 10mm of ready] (hit) {Consume exact pair\\pre-ready transfer};
-\node[decision, below right=10mm and 10mm of ready] (slots) {All endpoint slots\\available together?};
-\node[outcome, right=12mm of slots] (demand) {Demand generation\\and completion};
-\node[outcome, below=8mm of slots] (wait) {Wait without partial\\endpoint allocation};
+\node[block, right=5mm of trace] (prepare) {Fixed, dynamic, or adaptive\\preparation decision};
+\node[decision, right=6mm of prepare] (ready) {Exact target pair\\ready?};
+\node[outcome, above right=5mm and 6mm of ready] (hit) {Consume exact pair\\pre-ready};
+\node[decision, below right=6mm and 6mm of ready] (slots) {All endpoint slots\\available?};
+\node[outcome, right=7mm of slots] (demand) {Demand generation};
+\node[outcome, below=5mm of slots] (wait) {Wait with no partial\\endpoint allocation};
 \draw[arrow] (trace) -- (prepare);
 \draw[arrow] (prepare) -- (ready);
 \draw[arrow] (ready) -- node[above, font=\small] {yes} (hit);
@@ -255,10 +255,7 @@ completion; it is a resource cost, not merely a failed request.
 \draw[arrow] (slots) -- node[left, font=\small] {no} (wait);
 \draw[arrow] (wait.west) -| (ready.south);
 \end{tikzpicture}
-\caption{Request-specific compiler preparation and demand recovery. The cap-four
-wait-on-demand control enforces the atomic endpoint check shown in the lower
-branch; historical ACE cap-three values retain their documented legacy RSVP
-admission behavior.}
+\caption{Request-specific compiler preparation and demand recovery.}
 \label{fig:request-flow}
 \end{figure}
 
