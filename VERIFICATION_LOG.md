@@ -94,6 +94,37 @@ for each consumed compiler pair, unique pair use, compiler pair lifecycle
 conservation, and fidelity bounds. Its pass confirms that the stored fixed and
 dynamic shared-pool compiler evidence remains internally consistent.
 
+### Corrected static 3+1 / 2+2 / 1+1 matrix audit
+
+Command:
+
+```bash
+MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python \
+  audit_compiler_results.py \
+  output/qft_static_corrected_30seed/full-odg-4/runs.json \
+  output/qft_static_corrected_30seed/static-3plus1/runs.json \
+  output/qft_static_corrected_30seed/static-2plus2/runs.json \
+  output/qft_static_corrected_30seed/static-1plus1/runs.json \
+  --expected-trace-sha256 \
+  61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1 \
+  --output /private/tmp/ace-week4-static-audit.json
+```
+
+Outcome: **passed** for all four stored artifacts.
+
+| Static profile | Policy/seed cells | Request instances | Compiler-pair records | Audit errors |
+|---|---:|---:|---:|---:|
+| Full ODG, four demand memories | 30 | 148,620 | 0 | 0 |
+| Static 3+1 | 90 | 445,860 | 203,255 | 0 |
+| Static 2+2 | 90 | 445,860 | 128,339 | 0 |
+| Static 1+1 | 90 | 445,860 | 76,118 | 0 |
+| **Total** | **300** | **1,486,200** | **407,712** | **0** |
+
+This checks the corrected static matrix behind the Week 4 fixed/dynamic table.
+In particular, it confirms that the ACE lifecycle correction did not leave
+incomplete requests, duplicate compiler-pair use, ownership violations, or
+out-of-range fidelity records in any static profile.
+
 ## Interpretation boundary
 
 These verification results support reproducibility and integrity of the
