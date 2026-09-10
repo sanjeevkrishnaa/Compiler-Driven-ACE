@@ -11,6 +11,10 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+% Keep the report as one continuous technical narrative. The existing
+% chapter-level headings render as ordinary top-level sections without a
+% chapter page break or a displayed "Chapter" label.
+\renewcommand{\chapter}[1]{\section{#1}}
 \title{Compiler-Driven EPR Pre-Generation for Quantum Multi-Core Communication\\
 \large Physical Validation, Memory Trade-offs, and Reproducible Evidence}
 \author{BTP Research Project}
