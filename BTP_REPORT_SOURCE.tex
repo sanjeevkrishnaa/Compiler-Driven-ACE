@@ -642,25 +642,25 @@ compare adaptive policies with fixed and dynamic within native SeQUeNCe.
 \centering
 \begin{tikzpicture}[
   input/.style={draw, rounded corners, align=center, minimum width=3.0cm,
-                minimum height=0.9cm, fill=blue!7},
+                minimum height=0.82cm, fill=blue!7},
   policy/.style={draw, rounded corners, align=center, minimum width=3.1cm,
-                 minimum height=1.0cm, fill=orange!12},
+                 minimum height=0.82cm, fill=orange!12},
   runtime/.style={draw, rounded corners, align=center, minimum width=3.2cm,
-                  minimum height=1.0cm, fill=green!8},
+                  minimum height=0.82cm, fill=green!8},
   metric/.style={draw, rounded corners, align=center, minimum width=3.1cm,
-                 minimum height=0.9cm, fill=gray!12},
+                 minimum height=0.82cm, fill=gray!12},
   arrow/.style={-{Stealth[length=2mm]}, thick}
 ]
 \node[input] (intent) {Compiler request intent\\endpoint $A \rightarrow B$};
-\node[policy, right=9mm of intent] (offline) {Offline compiler route\\predict occupancy and select path};
-\node[runtime, right=9mm of offline] (adaptive) {Adaptive compiler-driven route\\adapt to live congestion};
-\node[metric, below=12mm of offline] (compare) {Compare XY, offline route,\\and adaptive route};
-\node[input, below=12mm of intent] (state) {Runtime state\\memory, queues, failures, links};
+\node[policy, right=8mm of intent] (offline) {Offline route plan\\predict load; select a path};
+\node[runtime, right=8mm of offline] (adaptive) {Adaptive route decision\\respond to live congestion};
+\node[input, below=9mm of adaptive] (state) {Runtime state\\memory, queues, failures, links};
+\node[metric, below=9mm of offline] (compare) {Evaluate against XY\\and offline routing};
 \draw[arrow] (intent) -- (offline);
 \draw[arrow] (offline) -- (adaptive);
 \draw[arrow] (state) -- (adaptive);
 \draw[arrow] (offline) -- (compare);
-\draw[arrow] (adaptive) -- (compare);
+\draw[arrow] (adaptive) to[out=-90,in=0] (compare.east);
 \end{tikzpicture}
 \caption{Future routing study. The compiler fixes the logical migration intent
 $A \rightarrow B$. Offline planning uses the known trace to choose a preferred
