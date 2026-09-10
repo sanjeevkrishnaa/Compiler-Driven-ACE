@@ -66,6 +66,34 @@ timestamps, fidelity bounds, per-run pair conservation, and agreement between
 the raw pair trace and the stored summary counters. Its pass confirms that the
 existing ACE ODG/CGP/ACGP shared-pool artifact remains internally consistent.
 
+### Stored compiler shared-pool artifact audit
+
+Command:
+
+```bash
+MPLCONFIGDIR=/private/tmp/ace-mpl .venv/bin/python \
+  audit_compiler_results.py \
+  output/qft_shared_pool_compiler_30seed_v2/shared-pool-4-cap3/runs.json \
+  --expected-trace-sha256 \
+  61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1 \
+  --output /private/tmp/ace-week4-compiler-audit.json
+```
+
+Outcome: **passed**.
+
+| Audit property | Verified value |
+|---|---:|
+| Policy/seed cells | 90 |
+| Request instances | 445,860 |
+| Compiler-pair records | 193,741 |
+| Trace SHA-256 | `61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1` |
+| Audit errors | 0 |
+
+The audit rechecks complete request accounting, exact target-request ownership
+for each consumed compiler pair, unique pair use, compiler pair lifecycle
+conservation, and fidelity bounds. Its pass confirms that the stored fixed and
+dynamic shared-pool compiler evidence remains internally consistent.
+
 ## Interpretation boundary
 
 These verification results support reproducibility and integrity of the
