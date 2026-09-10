@@ -512,13 +512,17 @@ non-neighbour endpoint pairs. The compiler may use full trace knowledge to
 select paths that spread predicted link/core occupancy and reduce congestion.
 The endpoint pair, logical request order, physical assumptions, and baseline
 XY result must remain recorded so that a route change is the only intervention.
-\item Study \emph{online route adaptation}. At runtime, route choice may use
-only information available then: free memories, pending demand, active
-generation attempts, recent failures, queue length, and link availability. It
-must not use future trace information beyond the explicit compiler policy under
-test. The runtime experiment should compare deterministic XY, offline selected
-paths, and online selected paths under identical seeds, capacity, demand
-admission, and latency scope.
+\item Study \emph{adaptive compiler-driven routing}. This is the adaptive
+version of the compiler-driven approach: the compiler still supplies the exact
+future request intent and offline route preference, while runtime state adapts
+the physical route, launch time, or both when the preferred path is congested
+or unavailable. The adaptive decision may use only information available then:
+free memories, pending demand, active generation attempts, recent failures,
+queue length, and link availability. It must not use future trace information
+beyond the explicit compiler policy under test. The experiment should compare
+deterministic XY, offline compiler-selected paths, and adaptive
+compiler-driven paths under identical seeds, capacity, demand admission, and
+latency scope.
 \item For both routing studies, report path length, per-core and per-link peak
 occupancy, queueing delay, generation attempts, swaps, readiness, fallback,
 expiry, delivered fidelity, and request latency. Require immutable routing
