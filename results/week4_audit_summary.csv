@@ -1,0 +1,5 @@
+artifact,policy_seed_cells,request_instances,successful_requests,failed_requests,pair_records,status
+ACE corrected static,300,1486200,1486200,0,,passed
+ACE shared-pool compiler,90,445860,445860,0,193741,passed
+ACE shared-pool adaptive,90,445860,445860,0,21226,passed
+native SeQUeNCe shared-pool compiler,90,445860,445860,0,,passed

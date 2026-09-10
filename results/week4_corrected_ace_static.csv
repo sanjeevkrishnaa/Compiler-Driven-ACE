@@ -1,0 +1,10 @@
+backend,profile,policy,seeds,requests_per_seed,latency_ms_mean,ready_rate_mean,prepared_fidelity_at_use_mean,expiry_percent_mean,paired_latency_reduction_vs_matched_odg_percent,paired_latency_reduction_ci95_low,paired_latency_reduction_ci95_high
+ACE,static-3plus1,matched-odg,30,4954,1.104216,0.0,,0.0,,,
+ACE,static-3plus1,fixed,30,4954,0.658419,0.5187,0.7682,18.29,40.37,40.00,40.74
+ACE,static-3plus1,dynamic,30,4954,0.575869,0.6159,0.8039,15.74,47.85,47.54,48.15
+ACE,static-2plus2,matched-odg,30,4954,1.104216,0.0,,0.0,,,
+ACE,static-2plus2,fixed,30,4954,0.821357,0.3297,0.8496,14.41,25.62,25.30,25.94
+ACE,static-2plus2,dynamic,30,4954,0.741142,0.4213,0.8738,11.77,32.88,32.52,33.25
+ACE,static-1plus1,matched-odg,30,4954,1.104216,0.0,,0.0,,,
+ACE,static-1plus1,fixed,30,4954,0.908687,0.2285,0.8267,9.17,17.71,17.55,17.86
+ACE,static-1plus1,dynamic,30,4954,0.910578,0.2257,0.7861,13.27,17.54,17.37,17.71

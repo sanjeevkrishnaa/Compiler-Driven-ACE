@@ -9,6 +9,7 @@ only within one backend.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from collections import defaultdict
 from pathlib import Path
@@ -50,6 +51,8 @@ def main() -> None:
     parser.add_argument("--ace-compiler", required=True, type=Path)
     parser.add_argument("--native-study", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--aggregate-csv", type=Path)
+    parser.add_argument("--paired-csv", type=Path)
     args = parser.parse_args()
 
     ace_adaptive = load(args.ace_adaptive)
@@ -127,6 +130,7 @@ def main() -> None:
     ]
     ordered = ("ACE:odg", "ACE:cgp", "ACE:acgp", "ACE:fixed", "ACE:dynamic",
                "native:odg", "native:fixed", "native:dynamic")
+    aggregate_records = []
     for name in ordered:
         rows = groups[name]
         latency = stat(rows, "latency_ms")
@@ -136,6 +140,20 @@ def main() -> None:
         expiry = stat(rows, "expiry_percent")
         fallback = stat(rows, "fallback_rate")
         backend, policy = name.split(":")
+        aggregate_records.append({
+            "backend": backend,
+            "policy": policy,
+            "seeds": len(rows),
+            "requests_per_seed": 4954,
+            "latency_ms_mean": latency["mean"],
+            "latency_ms_ci95_low": latency["ci95_low"],
+            "latency_ms_ci95_high": latency["ci95_high"],
+            "ready_rate_mean": ready["mean"],
+            "delivered_fidelity_mean": delivered["mean"],
+            "prepared_fidelity_at_use_mean": prepared["mean"],
+            "expiry_percent_mean": expiry["mean"],
+            "fallback_rate_mean": fallback["mean"],
+        })
         lines.append(
             f"| {backend} | {policy.upper()} | "
             f"{fmt(latency['mean'], 6)} [{fmt(latency['ci95_low'], 6)}, {fmt(latency['ci95_high'], 6)}] | "
@@ -158,8 +176,18 @@ def main() -> None:
               "Positive means the candidate is faster. Confidence intervals are two-sided "
               "Student-t 95% intervals over the same 30 seeds.", "",
               "| Backend | Candidate vs baseline | Mean reduction | 95% CI |", "|---|---|---:|---:|"]
+    paired_records = []
     for backend, candidate, baseline in effects:
         result = latency_effect(groups[f"{backend}:{candidate}"], groups[f"{backend}:{baseline}"])
+        paired_records.append({
+            "backend": backend,
+            "candidate": candidate,
+            "baseline": baseline,
+            "paired_seeds": result["n"],
+            "latency_reduction_percent_mean": result["mean"],
+            "latency_reduction_percent_ci95_low": result["ci95_low"],
+            "latency_reduction_percent_ci95_high": result["ci95_high"],
+        })
         lines.append(
             f"| {backend} | {candidate.upper()} vs {baseline.upper()} | "
             f"{fmt(result['mean'], 2, True)} | "
@@ -181,6 +209,17 @@ def main() -> None:
     ]
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text("\n".join(lines), encoding="utf-8")
+    for path, records in (
+        (args.aggregate_csv, aggregate_records),
+        (args.paired_csv, paired_records),
+    ):
+        if path is None:
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(records[0]))
+            writer.writeheader()
+            writer.writerows(records)
     print(f"Wrote {args.output}")
 
 
