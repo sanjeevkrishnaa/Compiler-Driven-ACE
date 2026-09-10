@@ -182,9 +182,11 @@ traffic history.
 
 Historical static memory allocations were 3+1, 2+2, and 1+1 compiler/demand
 partitions. The current shared pool has four physical slots per core with a
-background or compiler occupancy cap of three. Demand can use any free slot;
-endpoint allocation is atomic, and pending demand has priority over new
-background work. Strict 4+0 disables fallback and measures compiler coverage.
+background or compiler occupancy cap of three. The intended cap-four control
+uses atomic endpoint allocation and pending-demand priority. The historical ACE
+cap-three RSVP implementation did not enforce the atomic part of that intended
+rule, so it remains a distinct legacy baseline. Strict 4+0 disables fallback
+and measures compiler coverage.
 
 \section{Definitions used throughout the report}
 For a request $r$ released at trace layer $L_r$, fixed scheduling launches its
@@ -276,7 +278,13 @@ queueing remain on the critical path.
 ACE could consume a compiler pair while retaining its compiler reservation,
 timecard, and quota until nominal expiry. The stale state produced artificial
 congestion. The repair releases compiler bookkeeping when the pair is used.
-All final ACE static values below use the corrected lifecycle.
+All final ACE static values below use the corrected lifecycle. A later
+provenance repair also addressed physical memory-slot reuse: because ACE names
+a pair by reusable endpoint memory slots, an ordinary later pair could otherwise
+be attributed to an older compiler record. The controller's canonical target
+map is now authoritative at both endpoints, and a stale record is closed when
+its slot is reused. Any final comparison requiring identity accounting is
+rerun after this correction; older values remain historical context only.
 
 \chapter{Audited Results and Interpretation}
 
@@ -356,6 +364,120 @@ The report will add six-lead tables for ACE static 3+1, 2+2, and 1+1; native
 static 3+1, 2+2, and 1+1; and native shared pool. The ACE shared-pool table
 above also becomes the fixed-compiler evidence for the ACE adaptive-baseline
 comparison. ODG, dynamic, CGP, and ACGP are controls, not lead sweeps.
+
+\section{Strict compiler-only coverage diagnostic}
+The strict 4+0 experiment assigns all four communication slots to compiler
+preparation and prohibits on-demand recovery. It asks a coverage question, not
+a latency question, and uses seed zero only. Fixed completed 2,793 of 4,954
+requests (56.38\% coverage), leaving 2,161 terminal misses. Dynamic completed
+3,602 requests (72.71\% coverage), leaving 1,352 misses. The diagnostic
+establishes that perfect compiler knowledge does not eliminate finite capacity,
+physical failure, or deadline misses. A practical system therefore needs demand
+fallback; these single-seed values must not be generalized as 30-seed effects.
+
+\section{Historical shared-pool compiler comparison}
+The Week 4 shared-pool compiler matrix compared matched ODG, fixed compiler,
+and dynamic compiler over 30 paired seeds. Every cell completed 148,620
+requests. The fixed row below is retained to document the historical complete
+policy matrix; the audited six-lead table above is the current fixed-policy
+sensitivity evidence.
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+ACE policy & Latency (ms) & Ready & Prepared fidelity & Expiry & Fallback \\
+\midrule
+Matched ODG & 1.104216 & 0.00\% & -- & 0.00\% & 100.00\% \\
+Fixed, historical $\Delta=2$ & 0.658471 & 51.92\% & 0.7871 & 18.66\% & 48.06\% \\
+Dynamic & 0.615906 & 56.83\% & 0.8575 & 14.32\% & 43.14\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dynamic reduced paired latency by 44.22\% versus ODG (95\% CI
+[43.94, 44.50]\%) and by 6.45\% versus the historical fixed row (95\% CI
+[5.79, 7.10]\%). It also had higher readiness, higher prepared-pair fidelity,
+and lower expiry. Fallback remained a normal recovery path, not a failure: all
+requests completed. The historical implementation documents a demand-first
+shared-pool intention. A later implementation audit found that the ACE legacy
+RSVP path can reserve endpoints sequentially, so these values cannot isolate a
+future cap-three/cap-four capacity effect until a matched atomic cap-three
+control is run.
+
+\section{Historical native shared-pool compiler comparison}
+Native SeQUeNCe used the same trace, seeds, four-slot shared pool, and cap-three
+compiler setting, while retaining its own physical protocol stack and latency
+endpoint. All 90 policy/seed cells completed 445,860 requests with zero
+failures.
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+Native policy & Latency (ms) & Ready & Delivered fidelity & Expiry & Fallback \\
+\midrule
+Matched ODG & 0.076451 & 0.00\% & 0.9498 & 0.00\% & 100.00\% \\
+Fixed, historical $\Delta=2$ & 0.005092 & 92.23\% & 0.7486 & 0.00\% & 4.26\% \\
+Dynamic & 0.019885 & 68.95\% & 0.8838 & 0.00\% & 17.44\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Native fixed reduced paired latency by 93.35\% versus native ODG (95\% CI
+[93.14, 93.55]\%), while dynamic reduced it by 74.00\% (95\% CI
+[73.72, 74.28]\%). Fixed has more retry time before release, yielding more
+pre-ready pairs; dynamic launches later and consumes fresher pairs. This is a
+retry-time versus fidelity trade-off within native SeQUeNCe, not a comparison
+against ACE milliseconds.
+
+\section{ACE adaptive-generation baseline}
+The Week 4 ACE comparison replayed the locked trace under ODG, CGP, ACGP,
+fixed compiler, and dynamic compiler with the same four-memory shared pool and
+autonomous/compiler occupancy cap of three. CGP and ACGP lack request identity,
+so their prepared-pair fidelity and expiry are audited but their hits are not
+called compiler readiness.
+
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+ACE policy & Latency (ms) & Delivered fidelity & Prepared fidelity & Expiry \\
+\midrule
+ODG & 1.104216 & 0.9498 & -- & 0.00\% \\
+CGP & 0.547729 & 0.8623 & 0.8375 & 74.27\% \\
+ACGP & 0.476298 & 0.8507 & 0.8360 & 74.01\% \\
+Fixed, historical $\Delta=2$ & 0.658471 & 0.8653 & 0.7871 & 18.66\% \\
+Dynamic & 0.615906 & 0.8972 & 0.8575 & 14.32\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+ACGP has the lowest observed ACE service latency in this historical contract:
+56.86\% paired reduction versus ODG (95\% CI [56.57, 57.15]\%). That latency
+comes with about 74\% expiry and delivered fidelity 0.8507. Dynamic has a
+higher latency but lower expiry (14.32\%) and higher delivered fidelity
+(0.8972). The supported conclusion is a Pareto trade-off: the compiler method
+has not beaten ACGP on latency, while dynamic improves the waste/fidelity side
+of the comparison. The report does not claim an ACGP improvement; such work is
+deferred until the fixed-lead and cap-four controls are complete.
+
+\section{Audit and provenance summary}
+\begin{center}
+\begin{tabular}{lrrl}
+\toprule
+Artifact & Cells & Request instances & Audit status \\
+\midrule
+Corrected ACE static matrix & 300 & 1,486,200 & Passed \\
+ACE shared-pool compiler & 90 & 445,860 & Passed; 193,741 pair records \\
+ACE shared-pool ODG/CGP/ACGP & 90 & 445,860 & Passed; 21,226 pair records \\
+Native shared-pool compiler & 90 & 445,860 & Passed; zero failures \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These audits verify expected policy/seed cells, request completion, trace
+identity, pair conservation, unique use, target identity when applicable,
+timestamp ordering, memory bounds, and fidelity in $[0,1]$. They establish
+artifact integrity; they do not establish generality beyond the locked trace
+and physical assumptions.
 
 \chapter{Validation and Current Work}
 
