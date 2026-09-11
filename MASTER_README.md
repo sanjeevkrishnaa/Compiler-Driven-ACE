@@ -1,6 +1,6 @@
-# Week 4 — Engineering Update: Physical Validation and Audited Comparison
+# Week 4 — Engineering Update: Physical Validation and Audited Comparison 
 
-## TL;DR
+## TL;DR 
 
 Week 4 converted the compiler-driven pre-generation work into a controlled,
 audited physical-simulation study. It corrected the ACE reservation lifecycle,
