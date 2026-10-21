@@ -1,0 +1,79 @@
+{
+  "name": "draper:draper_fixed_4x4_q8_s1_traffic",
+  "definition": {
+    "endpoint_demand": "number of due requests in one source layer incident on a core",
+    "overload": "a core has endpoint demand strictly greater than memory capacity K",
+    "affected_request": "a request has at least one endpoint overloaded at K in its source layer",
+    "route": "horizontal-then-vertical XY, counted over undirected physical mesh links"
+  },
+  "configuration": {
+    "mesh_rows": 4,
+    "mesh_columns": 4,
+    "cores": 16
+  },
+  "workload": {
+    "source_layers": 699,
+    "active_layers": 641,
+    "requests": 7744,
+    "mean_requests_per_active_layer": 12.0811,
+    "max_requests_in_one_layer": 35,
+    "total_xy_route_hops": 22656,
+    "mean_xy_hops_per_request": 2.9256
+  },
+  "endpoint_pressure": {
+    "mean_nonzero_demand": 3.7465,
+    "p95_nonzero_demand": 8,
+    "peak_demand": 8,
+    "peak_layer": 633,
+    "peak_core_xy": [
+      3,
+      3
+    ]
+  },
+  "route_link_pressure": {
+    "mean_nonzero_link_demand": 4.8775,
+    "p95_nonzero_link_demand": 12,
+    "peak_link_demand": 32,
+    "peak_layer": 381,
+    "peak_link_xy": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ]
+    ]
+  },
+  "capacity_sweep": {
+    "1": {
+      "overloaded_layers": 587,
+      "overloaded_layer_percent_of_active": 91.576,
+      "affected_requests": 7630,
+      "affected_request_percent": 98.528,
+      "endpoint_demand_excess": 11354
+    },
+    "2": {
+      "overloaded_layers": 529,
+      "overloaded_layer_percent_of_active": 82.527,
+      "affected_requests": 7430,
+      "affected_request_percent": 95.945,
+      "endpoint_demand_excess": 9220
+    },
+    "3": {
+      "overloaded_layers": 467,
+      "overloaded_layer_percent_of_active": 72.855,
+      "affected_requests": 7172,
+      "affected_request_percent": 92.614,
+      "endpoint_demand_excess": 7282
+    },
+    "4": {
+      "overloaded_layers": 413,
+      "overloaded_layer_percent_of_active": 64.431,
+      "affected_requests": 6884,
+      "affected_request_percent": 88.895,
+      "endpoint_demand_excess": 5528
+    }
+  }
+}
