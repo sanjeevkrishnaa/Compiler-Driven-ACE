@@ -22,29 +22,27 @@ SECOND = int(1e12)
 
 
 def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
-    """Split layers into batches containing at most one request per core."""
-    batches = []
-    origins = []
+    """Preserve trace order at each core while keeping disjoint work parallel.
+
+    Every request follows all earlier requests touching either endpoint. This
+    preserves consecutive hops of a migrating qubit without needing qubit IDs
+    in the application tuples.
+    """
+    batches, origins = [], []
     for layer_index, layer in enumerate(layered_requests):
-        if not layer:
-            batches.append([])
-            origins.append(layer_index)
-            continue
-        pending = list(layer)
-        while pending:
-            used_cores = set()
-            batch = []
-            deferred = []
-            for request in pending:
-                endpoints = {request[1], request[2]}
-                if used_cores.isdisjoint(endpoints):
-                    batch.append(request)
-                    used_cores.update(endpoints)
-                else:
-                    deferred.append(request)
-            batches.append(batch)
-            origins.append(layer_index)
-            pending = deferred
+        layer_batches = []
+        last_batch = {}
+        for request in layer:
+            endpoints = {request[1], request[2]}
+            index = 1 + max((last_batch.get(core, -1) for core in endpoints))
+            while len(layer_batches) <= index:
+                layer_batches.append([])
+            layer_batches[index].append(request)
+            for core in endpoints:
+                last_batch[core] = index
+        layer_batches = layer_batches or [[]]
+        batches.extend(layer_batches)
+        origins.extend([layer_index] * len(layer_batches))
     return batches, origins
 
 
@@ -92,6 +90,7 @@ class ParallelLayerRequestManager:
         # Tracking metrics
         self.layer_start_times = {}    # Maps layer_index to when reservation requests are submitted
         self.layer_end_times = {}      # Maps layer_index to end time (when last request completes)
+        self.request_attempt_submission_times = {}
         self.request_submission_times = {}  # Maps request_id to when reservation request is submitted
         self.request_approval_times = {}  # Maps request_id to when reservation is approved
         self.request_generation_start_times = {}  # Maps request_id to when entanglement generation starts
@@ -140,40 +139,12 @@ class ParallelLayerRequestManager:
         print(f"Entanglement generation start: {start_time / MILLISECOND:.2f} ms")
         print(f"Entanglement generation end (window): {end_time / MILLISECOND:.2f} ms")
         print(f"Number of parallel requests: {len(current_layer)}")
-        print(f"NOTE: Measured latency = reservation_setup_time + entanglement_generation_time")
+        print(f"NOTE: Request latency includes retry waiting and excludes only the initial buffer")
         
         # Send all requests in this layer
         for request in current_layer:
-            request_id, src_name, dst_name, memo_size, fidelity, entanglement_number = request
-            
-            # Track this request as pending
-            self.pending_requests.add(request_id)
-            self.pending_request_data[request_id] = request
-            
-            # Track retries
-            if request_id not in self.request_retry_count:
-                self.request_retry_count[request_id] = 0
-            else:
-                self.request_retry_count[request_id] += 1
-                print(f"  Request {request_id} is being RETRIED (attempt {self.request_retry_count[request_id] + 1})")
-            
-            # Track when we submit the reservation request (for setup time calculation)
-            self.request_submission_times[request_id] = current_time
-            # Track when entanglement generation will start (after pre-generation time)
-            self.request_generation_start_times[request_id] = start_time
-            if self.compiler_controller is not None:
-                self.compiler_controller.mark_request_start(request_id, start_time)
-            
-            # Get app and start request
-            app = self.name_to_apps[src_name]
-            app.start(dst_name, start_time, end_time, memo_size, fidelity, entanglement_number, request_id)
-            
-            # Register callbacks
-            app.set_reservation_approval_callback(self._on_reservation_approved, request_id)
-            app.set_completion_callback(self._on_request_completed, request_id)
-            
-            print(f"  Sent request {request_id}: {src_name} -> {dst_name}")
-        
+            self._submit_request(request, current_time)
+
         print(f"Layer {self.current_layer_index}: Submitted {len(current_layer)} requests")
         
         # Handle empty layers - immediately proceed to next layer
@@ -211,6 +182,62 @@ class ParallelLayerRequestManager:
         
         self.current_layer_index += 1
     
+    def _submit_request(self, request, current_time):
+        start_time = current_time + self.pregeneration_time
+        end_time = start_time + self.request_duration
+        request_id, src_name, dst_name, memo_size, fidelity, entanglement_number = request
+
+        # Track this request as pending
+        self.pending_requests.add(request_id)
+        self.pending_request_data[request_id] = request
+
+        # Track retries
+        if request_id not in self.request_retry_count:
+            self.request_retry_count[request_id] = 0
+        else:
+            self.request_retry_count[request_id] += 1
+            print(f"  Request {request_id} is being RETRIED (attempt {self.request_retry_count[request_id] + 1})")
+
+        # Track when we submit the reservation request (for setup time calculation)
+        self.request_submission_times.setdefault(request_id, current_time)
+        self.request_attempt_submission_times[request_id] = current_time
+        # Track when entanglement generation will start (after pre-generation time)
+        self.request_generation_start_times[request_id] = start_time
+        if self.compiler_controller is not None:
+            self.compiler_controller.mark_request_start(request_id, current_time)
+
+        # Get app and start request
+        app = self.name_to_apps[src_name]
+        # Register callbacks before start: a local RSVP rejection is synchronous.
+        # Register callbacks
+        app.set_reservation_approval_callback(self._on_reservation_approved, request_id)
+        app.set_completion_callback(self._on_request_completed, request_id)
+        app.set_reservation_rejection_callback(self._on_reservation_rejected, request_id)
+        app.start(dst_name, start_time, end_time, memo_size, fidelity, entanglement_number, request_id)
+
+        print(f"  Sent request {request_id}: {src_name} -> {dst_name}")
+
+
+    def _on_reservation_rejected(self, request_id, rejected_at):
+        if request_id not in self.pending_requests:
+            return
+        attempt = self.request_attempt_submission_times[request_id]
+        # Retry a definitive rejection with bounded backoff, rather than using
+        # the physical-generation timeout as a reservation admission timer.
+        event = Event(rejected_at + MILLISECOND,
+                      Process(self, "_retry_rejected_request", [request_id, attempt]))
+        self.timeline.schedule(event)
+
+    def _retry_rejected_request(self, request_id, attempt):
+        if request_id not in self.pending_requests or request_id in self.request_end_times:
+            return
+        if self.request_attempt_submission_times[request_id] != attempt:
+            return
+        self._submit_request(self.pending_request_data[request_id], self.timeline.now())
+        end_time = self.request_generation_start_times[request_id] + self.request_duration
+        self.timeline.schedule(Event(end_time, Process(
+            self, "_check_layer_timeout", [self.current_layer_index - 1, end_time])))
+
     def _check_layer_timeout(self, layer_idx: int, timeout_time: int):
         """
         Check if a layer has timed out (i.e., some requests haven't completed).
@@ -221,6 +248,10 @@ class ParallelLayerRequestManager:
             return
         
         if len(self.pending_requests) > 0:
+            # A promptly retried rejection has its own later service deadline.
+            if any(self.request_generation_start_times[rid] + self.request_duration > timeout_time
+                   for rid in self.pending_requests):
+                return
             print(f"\n{'!'*80}")
             print(f"WARNING: Layer {layer_idx} TIMEOUT at {timeout_time / MILLISECOND:.2f} ms")
             print(f"Pending requests that did not complete: {self.pending_requests}")
@@ -235,16 +266,16 @@ class ParallelLayerRequestManager:
             if completed_request_ids:
                 # Get the maximum completion time of successful requests
                 last_completion_time = max(self.request_end_times[req_id] for req_id in completed_request_ids)
-                self.layer_end_times[layer_idx] = last_completion_time
+                self.layer_end_times[layer_idx] = timeout_time
                 print(f"Layer {layer_idx} end time set to: {last_completion_time / MILLISECOND:.2f} ms (last successful request)")
             else:
                 # No requests completed - use layer start time
-                self.layer_end_times[layer_idx] = self.layer_start_times[layer_idx]
+                self.layer_end_times[layer_idx] = timeout_time
                 print(f"Layer {layer_idx}: No requests completed, end time = start time")
             
             # Create one separate retry layer per pending request, all inserted
             # sequentially before the next original layer
-            pending_req_ids = list(self.pending_requests)
+            pending_req_ids = sorted(self.pending_requests)
             self.pending_requests.clear()
             
             for i, req_id in enumerate(pending_req_ids):
@@ -287,7 +318,7 @@ class ParallelLayerRequestManager:
         self.request_approval_times[request_id] = approval_time
         
         if request_id in self.request_submission_times:
-            submission_time = self.request_submission_times[request_id]
+            submission_time = self.request_attempt_submission_times[request_id]
             setup_time_ms = (approval_time - submission_time) / MILLISECOND
             print(f"  Request {request_id} reservation APPROVED at {approval_time / MILLISECOND:.2f} ms (setup time: {setup_time_ms:.2f} ms)")
     
@@ -342,54 +373,26 @@ class ParallelLayerRequestManager:
                 self.timeline.schedule(event)
     
     def get_end_to_end_latency(self) -> float:
-        """
-        Returns total end-to-end latency as the SUM of all layer latencies (in milliseconds).
-        This represents the cumulative time spent processing all layers sequentially.
-        """
-        layer_latencies = self.get_layer_latencies()
-        if not layer_latencies:
+        """Wall-clock makespan, including buffers, idle layers and retries."""
+        if self.series_start_time is None:
             return 0.0
-        
-        # Sum of all layer latencies (including retry layers)
-        total_latency = sum(layer_latencies.values())
-        return total_latency
-    
+        end = self.series_end_time
+        if end is None:
+            end = self.timeline.now()
+        return (end - self.series_start_time) / MILLISECOND
+
     def get_layer_latencies(self) -> dict:
-        """
-        Returns latency for each layer in milliseconds.
-        Layer latency = max(reservation_setup_time) + max(entanglement_generation_time)
-        This represents the critical path through the layer.
-        """
-        layer_latencies = {}
-        
-        # Get breakdown for all requests
-        breakdown = self.get_individual_latencies_breakdown()
-        
-        # Group requests by layer (including retry layers)
-        for layer_idx in range(len(self.layered_requests)):
-            layer_requests = self.layered_requests[layer_idx]
-            request_ids = [req[0] for req in layer_requests]
-            
-            # Get max reservation time and max generation time for this layer
-            max_reservation_time = 0
-            max_generation_time = 0
-            
-            for req_id in request_ids:
-                if req_id in breakdown:
-                    max_reservation_time = max(max_reservation_time, breakdown[req_id]['reservation_setup_time_ms'])
-                    max_generation_time = max(max_generation_time, breakdown[req_id]['entanglement_generation_time_ms'])
-            
-            # Layer latency is sum of max reservation time and max generation time
-            if max_reservation_time > 0 or max_generation_time > 0:
-                layer_latencies[layer_idx] = max_reservation_time + max_generation_time
-        
-        return layer_latencies
-    
+        """Actual elapsed time of each finished batch, including timeouts."""
+        return {
+            index: (end - self.layer_start_times[index]) / MILLISECOND
+            for index, end in self.layer_end_times.items()
+        }
+
     def get_individual_latencies(self) -> dict:
         """
         Returns latency for each request in milliseconds.
         Latency = (completion_time - submission_time) - pre_generation_time
-        This gives us: reservation_setup_time + entanglement_generation_time
+        Includes failed attempts and retry buffers; excludes the initial buffer once.
         """
         latencies = {}
         for req_id in self.request_submission_times:
@@ -403,37 +406,32 @@ class ParallelLayerRequestManager:
         return latencies
     
     def get_individual_latencies_breakdown(self) -> dict:
-        """
-        Returns detailed breakdown of timing for each request.
-        Returns dict mapping request_id to {
-            'reservation_setup_time_ms': time from submission to reservation approval,
-            'entanglement_generation_time_ms': time from generation start to completion,
-            'total_time_ms': setup + generation (excluding pre-generation buffer),
-            'retry_count': number of times this request was retried
-        }
+        """Disjoint stages summing to retry-inclusive request latency.
+
+        Only the initial configured buffer is excluded. Retry waiting includes
+        failed attempts and subsequent buffers. Setup overlapping the initial
+        buffer is not counted a second time.
         """
         breakdown = {}
-        for req_id in self.request_submission_times:
-            if req_id in self.request_approval_times and req_id in self.request_generation_start_times and req_id in self.request_end_times:
-                submission_time = self.request_submission_times[req_id]
-                approval_time = self.request_approval_times[req_id]
-                generation_start = self.request_generation_start_times[req_id]
-                completion_time = self.request_end_times[req_id]
-                
-                # Reservation setup time: from submission to approval (RSVP protocol time)
-                setup_time = (approval_time - submission_time) / MILLISECOND
-                
-                # Entanglement generation time: from generation start to completion
-                generation_time = (completion_time - generation_start) / MILLISECOND
-                
-                breakdown[req_id] = {
-                    'reservation_setup_time_ms': setup_time,
-                    'entanglement_generation_time_ms': generation_time,
-                    'total_time_ms': setup_time + generation_time,
-                    'retry_count': self.request_retry_count.get(req_id, 0)
-                }
+        for req_id, completion in self.request_end_times.items():
+            if req_id not in self.request_approval_times:
+                continue
+            first = self.request_submission_times[req_id]
+            attempt = self.request_attempt_submission_times[req_id]
+            generation = self.request_generation_start_times[req_id]
+            approval = self.request_approval_times[req_id]
+            retry_wait = (attempt - first) / MILLISECOND
+            setup = max(0, approval - generation) / MILLISECOND
+            service = (completion - max(generation, approval)) / MILLISECOND
+            breakdown[req_id] = {
+                'retry_wait_time_ms': retry_wait,
+                'reservation_setup_time_ms': setup,
+                'entanglement_generation_time_ms': service,
+                'total_time_ms': retry_wait + setup + service,
+                'retry_count': self.request_retry_count.get(req_id, 0),
+            }
         return breakdown
-    
+
     def get_statistics(self) -> dict:
         """Returns comprehensive statistics about the experiment"""
         stats = {
@@ -443,6 +441,9 @@ class ParallelLayerRequestManager:
             'total_requests': sum(len(layer) for layer in self.original_layered_requests),
             'completed_requests': len(self.request_end_times),
             'end_to_end_latency_ms': self.get_end_to_end_latency(),
+            'metric_version': 2,
+            'request_latency_definition': 'first submission to completion, excluding initial buffer only; includes retries',
+            'end_to_end_latency_definition': 'wall-clock makespan including buffers, idle layers and retries',
             'layer_latencies': self.get_layer_latencies(),
             'individual_latencies': self.get_individual_latencies(),
             'timing_breakdown': self.get_individual_latencies_breakdown(),
@@ -465,6 +466,7 @@ class ParallelLayerRequestManager:
             generation_times = [b['entanglement_generation_time_ms'] for b in breakdown.values()]
             retry_counts = [b['retry_count'] for b in breakdown.values()]
             
+            stats['avg_retry_wait_time_ms'] = np.mean([b['retry_wait_time_ms'] for b in breakdown.values()])
             stats['avg_reservation_setup_time_ms'] = np.mean(setup_times)
             stats['max_reservation_setup_time_ms'] = np.max(setup_times)
             stats['avg_entanglement_generation_time_ms'] = np.mean(generation_times)
@@ -480,7 +482,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             request_duration_ms: float, experiment_label: str,
                             seed: int = 0, compiler_spec: dict | None = None,
                             total_memories_per_core: int | None = None,
-                            simulation_stop_time_s: float | None = None):
+                            simulation_stop_time_s: float | None = None,
+                            serialize_conflicts: bool = False):
     """
     Run an experiment with parallel layered requests.
     
@@ -516,6 +519,15 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             Path(temporary_config.name).unlink(missing_ok=True)
     tl = network_topo.get_timeline()
     tl.seed(seed)
+    # Photon/detector sampling uses each node's own generator, not only the
+    # timeline/global RNG. Give every physical node a deterministic seed.
+    node_seed_manifest = {}
+    for index, name in enumerate(sorted(tl.entities)):
+        entity = tl.entities[name]
+        if hasattr(entity, "set_seed"):
+            node_seed = int(np.random.SeedSequence([seed, index]).generate_state(1)[0])
+            entity.set_seed(node_seed)
+            node_seed_manifest[name] = node_seed
     
     # Set up logging
     # log.set_logger(__name__, tl, log_filename)
@@ -569,6 +581,13 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         tl, name_to_apps, layered_requests,
         pregeneration_time_ms, request_duration_ms, compiler_controller
     )
+    # Compiler-driven runs have always used conflict-free batches because a
+    # core cannot serve two reservations at once.  Expose the same batching to
+    # non-compiler baselines so a comparison can use an identical workload
+    # submission schedule without changing the historical default behavior.
+    if serialize_conflicts and compiler_controller is None:
+        request_manager.layered_requests, request_manager.working_layer_origins = \
+            serialize_core_conflicts(layered_requests)
     
     # Schedule start
     
@@ -589,6 +608,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     
     # Get statistics
     stats = request_manager.get_statistics()
+    stats["node_seeds"] = node_seed_manifest
     compiler_metrics = None
     if compiler_controller is not None:
         compiler_metrics = compiler_controller.finalize(request_manager.request_end_times)
@@ -604,7 +624,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     print(f"Configuration: {config_file}")
     print(f"Update probability: {update_prob_setting}")
     print(f"Pre-generation buffer: {pregeneration_time_ms:.2f} ms (excluded from measurements)")
-    print(f"\nStatistics (excluding pre-generation buffer):")
+    print(f"\nStatistics (request latency excludes initial buffer; makespan includes all elapsed time):")
     print(f"  Original layers: {stats['total_layers']}")
     print(f"  Retry layers (due to congestion): {stats['retry_layers']}")
     print(f"  Total layers processed: {stats['total_layers_with_retries']}")
@@ -625,7 +645,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         print(f"  Max reservation setup time: {stats['max_reservation_setup_time_ms']:.2f} ms")
         print(f"  Average entanglement generation time: {stats['avg_entanglement_generation_time_ms']:.2f} ms")
         print(f"  Max entanglement generation time: {stats['max_entanglement_generation_time_ms']:.2f} ms")
-        print(f"  (Layer latency = max(reservation_setup) + max(generation))")
+        print(f"  Request latency = retry waiting + exposed setup + physical service")
     print(f"{'='*80}\n")
     
     return {

@@ -12,3 +12,6 @@ venv/
 .venv/
 .pytest_cache/
 output/
+
+.codex/
+.tmp/

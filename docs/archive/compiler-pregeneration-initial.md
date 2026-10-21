@@ -1,3 +1,5 @@
+> Historical implementation/context record. Current behavior and validated results are documented in [compiler-repair-validation.md](../reports/compiler-repair-validation.md).
+
 # Compiler-driven entanglement pre-generation on ACE
 
 This extension consumes the complete inter-core movement trace emitted by a

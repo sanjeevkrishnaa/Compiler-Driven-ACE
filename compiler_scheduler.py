@@ -7,6 +7,8 @@ from statistics import fmean
 
 from compiler_trace import CompilerRequest, ScheduledPreparation
 from sequence.constants import MILLISECOND
+from sequence.kernel.event import Event
+from sequence.kernel.process import Process
 
 
 def _pair_key(pair: tuple) -> tuple:
@@ -45,6 +47,9 @@ class CompilerPreGenerationController:
             self.by_generation_layer[item.generation_layer].append(item.request_id)
 
         self.deadlines = {}
+        self.pending_preparations = {}
+        self.admission_attempts = defaultdict(int)
+        self.preparation_retry_events = {}
         self.triggered_generation_layers = set()
         self.launched = set()
         self.accepted = set()
@@ -64,22 +69,36 @@ class CompilerPreGenerationController:
         self.triggered_generation_layers.add(layer)
         for request_id in self.by_generation_layer.get(layer, ()):
             request = self.requests[request_id]
-            source = self._router_name(request.source_core)
-            destination = self._router_name(request.destination_core)
-            self.routers[source].adaptive_continuous.request_compiler_pair(
-                destination,
-                {
-                    "request_id": request_id,
-                    "generation_layer": layer,
-                    "target_layer": request.layer,
-                    "strategy": self.strategy,
-                    "fidelity": self.fidelity,
-                    "reservation_duration_ms": self.reservation_duration_ms,
-                },
-            )
+            self.pending_preparations[request_id] = {
+                "request_id": request_id,
+                "generation_layer": layer,
+                "target_layer": request.layer,
+                "strategy": self.strategy,
+                "fidelity": self.fidelity,
+                "reservation_duration_ms": self.reservation_duration_ms,
+            }
+            self.retry_preparation(request_id)
+
+    def retry_preparation(self, request_id):
+        self.preparation_retry_events.pop(request_id, None)
+        if request_id in self.deadlines or request_id in self.accepted:
+            self.pending_preparations.pop(request_id, None)
+            return
+        metadata = self.pending_preparations.get(request_id)
+        if metadata is None:
+            return
+        request = self.requests[request_id]
+        self.admission_attempts[request_id] += 1
+        self.routers[self._router_name(request.source_core)].adaptive_continuous.request_compiler_pair(
+            self._router_name(request.destination_core), metadata)
 
     def mark_request_start(self, request_id: int, start_time: int) -> None:
+        """Record first application submission, before its generation buffer."""
         self.deadlines.setdefault(request_id, start_time)
+        self.pending_preparations.pop(request_id, None)
+        event = self.preparation_retry_events.pop(request_id, None)
+        if event is not None:
+            self.timeline.remove_event(event)
 
     def _router_name(self, core: int) -> str:
         return f"router_{core // self.columns}_{core % self.columns}"
@@ -89,9 +108,16 @@ class CompilerPreGenerationController:
 
     def on_preparation_accepted(self, request_id: int) -> None:
         self.accepted.add(request_id)
+        self.pending_preparations.pop(request_id, None)
 
     def on_preparation_rejected(self, request_id: int, reason: str) -> None:
         self.rejections[request_id].append(reason)
+        if (request_id not in self.deadlines and request_id not in self.accepted
+                and request_id not in self.preparation_retry_events):
+            event = Event(self.timeline.now() + MILLISECOND,
+                          Process(self, "retry_preparation", [request_id]))
+            self.preparation_retry_events[request_id] = event
+            self.timeline.schedule(event)
 
     def on_pair_generated(
         self, pair: tuple, generated_at: int, fidelity: float, metadata: dict
@@ -152,7 +178,7 @@ class CompilerPreGenerationController:
             "actual_request_id": request_id,
             "utilized_at_ps": utilized_at,
             "fidelity_at_utilization": fidelity,
-            "prepared_before_request": deadline is not None and record["generated_at_ps"] <= deadline,
+            "prepared_before_request": deadline is not None and record["generated_at_ps"] < deadline,
             "status": "used",
         })
         self.utilization_by_request[request_id] = active_index
@@ -208,6 +234,7 @@ class CompilerPreGenerationController:
             "scheduled_preparations": len(self.schedule),
             "planner_blocked_preparations": self.planner_blocked,
             "planner_peak_compiler_memory_per_core": self.planner_peak_memory,
+            "runtime_admission_attempts": sum(self.admission_attempts.values()),
             "runtime_launched_preparations": len(self.launched),
             "runtime_accepted_preparations": len(self.accepted),
             "runtime_rejected_preparations": len(self.rejections),

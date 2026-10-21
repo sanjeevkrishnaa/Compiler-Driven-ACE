@@ -258,6 +258,20 @@ class ReservationAdaptive(Reservation):
         # retain their original continuous-generation behavior.
         self.compiler_pair_generated = False
 
+    def __eq__(self, other):
+        # Simultaneous preparations on the same edge are different jobs.
+        # Base Reservation equality omits the target, which otherwise aliases
+        # their timecards, protocol pairing and one-shot completion flags.
+        return (isinstance(other, Reservation) and super().__eq__(other)
+                and self.compiler_target_request_id ==
+                    getattr(other, "compiler_target_request_id", None))
+
+    def __hash__(self):
+        base = super().__hash__()
+        if self.compiler_target_request_id is None:
+            return base  # preserve equality/hash compatibility with Reservation
+        return hash((base, self.compiler_target_request_id))
+
     @property
     def compiler_directed(self) -> bool:
         return self.compiler_target_request_id is not None
@@ -279,6 +293,69 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
 
     def __init__(self, owner: "QuantumRouterAdaptive", name: str, memory_array_name: str):
         super().__init__(owner, name, memory_array_name)
+        # Local ownership: the reservation object can be shared by endpoints.
+        self._reservation_leases = {}
+
+    def _track_reservation_event(self, reservation, event):
+        lease = self._reservation_leases.get(id(reservation))
+        if lease is not None:
+            lease["events"].append(event)
+        self.owner.timeline.schedule(event)
+
+    def _load_owned_rules(self, rules, reservation, compiler=False):
+        memories = [self.memo_arr[card.memory_index] for card in self.timecards
+                    if any(item is reservation for item in card.reservations)]
+        lease = {"reservation": reservation, "memories": memories,
+                 "events": [], "compiler": compiler, "released": False}
+        self._reservation_leases[id(reservation)] = lease
+        self.accepted_reservations.append(reservation)
+        for rule in rules:
+            event = Event(reservation.start_time,
+                          Process(self.owner.resource_manager, "load", [rule]))
+            self._track_reservation_event(reservation, event)
+        event = Event(reservation.end_time,
+                      Process(self, "release_reservation", [reservation, "reservation_expired"]))
+        self._track_reservation_event(reservation, event)
+
+    def load_rules(self, rules, reservation):
+        """Own timeout events so early completion cannot reset reused memory."""
+        self._load_owned_rules(rules, reservation)
+
+    def release_reservation(self, reservation, reason="completed"):
+        """Release a local lease once, including its future cleanup events."""
+        lease = self._reservation_leases.get(id(reservation))
+        if lease is None or lease["released"]:
+            return False
+        lease["released"] = True
+        timeline = self.owner.timeline
+        for event in lease["events"]:
+            timeline.remove_event(event)
+        # Disable generation before returning any of its memories to RAW.
+        manager = self.owner.resource_manager
+        for rule in list(manager.rule_manager.rules):
+            if rule.reservation is reservation:
+                manager.expire(rule)
+        for card in self.timecards:
+            card.reservations[:] = [item for item in card.reservations if item is not reservation]
+        adaptive = self.owner.adaptive_continuous
+        if lease["compiler"]:
+            assert adaptive.adaptive_memory_used > 0, "compiler quota released twice"
+            adaptive.adaptive_memory_used -= 1
+        app = getattr(self.owner, "app", None)
+        for memory in lease["memories"]:
+            index = manager.memory_manager.get_info_by_memory(memory).index
+            if app is not None and app.memo_to_reservation.get(index) is reservation:
+                app.memo_to_reservation.pop(index)
+            adaptive.note_memory_expiration(memory, reason=reason)
+            manager.update(None, memory, MemoryInfo.RAW)
+        return True
+
+    def release_consumed_compiler_memory(self, memory_name):
+        for lease in tuple(self._reservation_leases.values()):
+            if lease["compiler"] and not lease["released"] and any(
+                    memory.name == memory_name for memory in lease["memories"]):
+                return self.release_reservation(lease["reservation"], "consumed")
+        return False
 
 
     def create_rules_adaptive(self, path: list, reservation: ReservationAdaptive) -> List["Rule"]:
@@ -355,6 +432,10 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
             rules (List[Rules]): rules to add.
             reservation (Reservation): reservation that created the rules.
         """
+
+        if reservation.compiler_directed:
+            self._load_owned_rules(rules, reservation, compiler=True)
+            return
 
         self.accepted_reservations.append(reservation)
 

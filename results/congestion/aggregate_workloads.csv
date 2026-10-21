@@ -1,0 +1,11 @@
+workload,pattern,mapping_seeds,trials,logical_qubits,mean_active_layers,mean_hop_requests,mean_overloaded_layers,min_overloaded_layers,max_overloaded_layers,mean_overloaded_active_layer_percent,sd_overloaded_active_layer_percent,peak_core_layer_demand,mean_planned_preparation_percent,mean_excess_endpoint_demand
+bmw_quark_cardinality,BMW/QUARK cardinality: repeated nearest-neighbor RXX layers,42;43;44,3,48,90.0,144.0,0.0,0,0,0.0,0.0,2,100.0,0.0
+qft,Fourier transform: structured long-range interactions,42;43;44,3,48,112.0,2510.0,73.0,69,77,65.17857142857143,3.571428571428573,24,52.98804780876494,1451.3333333333333
+draper_qft_adder,Draper arithmetic: Fourier-based structured interactions,42;43;44,3,48,138.0,1310.0,57.0,54,63,41.30434782608696,3.765327842541037,11,74.09669211195929,273.3333333333333
+bv,Bernstein–Vazirani: shared flag/oracle interactions,42;43;44,3,48,16.0,25.0,0.0,0,0,0.0,0.0,2,100.0,0.0
+qaoa,QAOA Max-Cut: repeated dense graph interactions,42;43;44,3,48,163.0,3068.0,116.66666666666667,114,122,71.57464212678937,2.8336209530779177,18,58.463711429813124,1440.0
+ghz,GHZ: sequential nearest-neighbor state preparation,42;43;44,3,48,15.0,24.0,0.0,0,0,0.0,0.0,2,100.0,0.0
+cdkm_ripple_carry_adder,CDKM/Cuccaro: carry-dependent ripple arithmetic,42;43;44,3,48,157.0,456.0,1.0,1,1,0.6369426751592356,0.0,9,95.02923976608189,11.0
+vqe_real_amp,VQE Real-Amplitudes: repeated reverse-linear entangling ansatz,42;43;44,3,48,22.0,104.0,1.3333333333333333,1,2,6.060606060606061,2.62431940540739,5,94.87179487179488,2.3333333333333335
+graphstate,Graph state: sparse degree-2 random regular graph,42;43;44,3,48,6.0,76.0,2.0,2,2,33.333333333333336,0.0,13,70.6140350877193,27.666666666666668
+randomcircuit,Random: heterogeneous 1–4-qubit operations decomposed to the common basis,42;43;44,3,48,2296.0,11688.0,183.66666666666666,173,194,7.999419279907085,0.45748987388469037,12,89.90132329454711,570.0

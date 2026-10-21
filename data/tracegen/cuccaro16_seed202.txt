@@ -1,0 +1,251 @@
+// Number of cores
+16
+// Number of qubit slots per core
+8
+// Number of qubits
+16
+// Initial placement: (qubit, core)
+(0, 1)
+(1, 1)
+(2, 0)
+(3, 0)
+(4, 0)
+(5, 2)
+(6, 2)
+(7, 1)
+(8, 1)
+(9, 1)
+(10, 0)
+(11, 0)
+(12, 0)
+(13, 2)
+(14, 1)
+(15, 2)
+// Inter-core communication requests: (qubit, src, dst)
+// Layer 0
+(9, 1, 0)
+(12, 0, 1)
+(12, 1, 2)
+// Layer 1
+// Layer 2
+// Layer 3
+// Layer 4
+// Layer 5
+// Layer 6
+// Layer 7
+// Layer 8
+// Layer 9
+// Layer 10
+// Layer 11
+// Layer 12
+// Layer 13
+// Layer 14
+// Layer 15
+// Layer 16
+// Layer 17
+// Layer 18
+// Layer 19
+// Layer 20
+// Layer 21
+// Layer 22
+// Layer 23
+// Layer 24
+// Layer 25
+// Layer 26
+// Layer 27
+// Layer 28
+// Layer 29
+// Layer 30
+// Layer 31
+(1, 1, 0)
+// Layer 32
+// Layer 33
+// Layer 34
+// Layer 35
+// Layer 36
+// Layer 37
+// Layer 38
+// Layer 39
+// Layer 40
+// Layer 41
+// Layer 42
+// Layer 43
+// Layer 44
+// Layer 45
+// Layer 46
+// Layer 47
+// Layer 48
+// Layer 49
+// Layer 50
+// Layer 51
+// Layer 52
+// Layer 53
+// Layer 54
+// Layer 55
+// Layer 56
+// Layer 57
+// Layer 58
+// Layer 59
+// Layer 60
+// Layer 61
+// Layer 62
+// Layer 63
+// Layer 64
+// Layer 65
+// Layer 66
+// Layer 67
+// Layer 68
+// Layer 69
+// Layer 70
+// Layer 71
+// Layer 72
+// Layer 73
+// Layer 74
+// Layer 75
+// Layer 76
+(4, 0, 1)
+(4, 1, 2)
+// Layer 77
+// Layer 78
+// Layer 79
+// Layer 80
+// Layer 81
+// Layer 82
+// Layer 83
+// Layer 84
+// Layer 85
+// Layer 86
+// Layer 87
+// Layer 88
+// Layer 89
+// Layer 90
+// Layer 91
+// Layer 92
+// Layer 93
+// Layer 94
+// Layer 95
+// Layer 96
+// Layer 97
+// Layer 98
+// Layer 99
+// Layer 100
+// Layer 101
+// Layer 102
+// Layer 103
+// Layer 104
+// Layer 105
+// Layer 106
+// Layer 107
+// Layer 108
+// Layer 109
+// Layer 110
+// Layer 111
+// Layer 112
+// Layer 113
+// Layer 114
+// Layer 115
+// Layer 116
+// Layer 117
+// Layer 118
+// Layer 119
+// Layer 120
+// Layer 121
+// Layer 122
+// Layer 123
+// Layer 124
+// Layer 125
+// Layer 126
+// Layer 127
+// Layer 128
+// Layer 129
+// Layer 130
+// Layer 131
+// Layer 132
+// Layer 133
+// Layer 134
+// Layer 135
+// Layer 136
+// Layer 137
+// Layer 138
+// Layer 139
+// Layer 140
+// Layer 141
+(4, 2, 1)
+(4, 1, 0)
+// Layer 142
+// Layer 143
+// Layer 144
+// Layer 145
+// Layer 146
+// Layer 147
+// Layer 148
+// Layer 149
+// Layer 150
+// Layer 151
+// Layer 152
+// Layer 153
+// Layer 154
+// Layer 155
+// Layer 156
+// Layer 157
+// Layer 158
+// Layer 159
+// Layer 160
+// Layer 161
+// Layer 162
+// Layer 163
+// Layer 164
+// Layer 165
+// Layer 166
+// Layer 167
+// Layer 168
+// Layer 169
+// Layer 170
+// Layer 171
+// Layer 172
+// Layer 173
+// Layer 174
+// Layer 175
+// Layer 176
+// Layer 177
+// Layer 178
+// Layer 179
+// Layer 180
+// Layer 181
+// Layer 182
+// Layer 183
+// Layer 184
+// Layer 185
+// Layer 186
+// Layer 187
+// Layer 188
+// Layer 189
+(1, 0, 1)
+// Layer 190
+// Layer 191
+// Layer 192
+// Layer 193
+// Layer 194
+// Layer 195
+// Layer 196
+// Layer 197
+// Layer 198
+// Layer 199
+// Layer 200
+// Layer 201
+// Layer 202
+// Layer 203
+// Layer 204
+// Layer 205
+// Layer 206
+// Layer 207
+// Layer 208
+// Layer 209
+// Layer 210
+// Layer 211
+// Layer 212
+// Layer 213
+// Layer 214
+// Layer 215
+// Layer 216
+// Layer 217

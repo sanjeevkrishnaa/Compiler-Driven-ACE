@@ -9,6 +9,8 @@ from typing import TYPE_CHECKING, Callable
 import sequence.utils.log as log
 from sequence.resource_management.memory_manager import MemoryInfo
 from request_app import RequestAppLatency
+from sequence.kernel.event import Event
+from sequence.kernel.process import Process
 
 if TYPE_CHECKING:
     from node import QuantumRouterAdaptive
@@ -28,6 +30,7 @@ class RequestAppLatencyParallel(RequestAppLatency):
         self.latency = defaultdict(float)
         self.entanglement_fidelities = defaultdict(list)
         self.completion_callbacks = {}  # Maps request_id to callback function
+        self.reservation_rejection_callbacks = {}
         self.reservation_approval_callbacks = {}  # Maps request_id to callback for reservation approval
     
     def start(self, responder: str, start_t: int, end_t: int, memo_size: int, 
@@ -59,6 +62,9 @@ class RequestAppLatencyParallel(RequestAppLatency):
         self.node.reserve_net_resource(responder, start_t, end_t, memo_size, 
                                       fidelity, entanglement_number, id)
     
+    def set_reservation_rejection_callback(self, callback, request_id):
+        self.reservation_rejection_callbacks[request_id] = callback
+
     def set_completion_callback(self, callback_func: Callable, request_id: int):
         """
         Register a callback function to be invoked when this request completes.
@@ -157,26 +163,23 @@ class RequestAppLatencyParallel(RequestAppLatency):
                     log.logger.info(f'{self.node.name}: Memory fidelity {info.fidelity:.6f} '
                                   f'below threshold {reservation.fidelity}')
     
-    def remove_memo_reservation_map(self, index: int) -> None:
-        """
-        Override to safely remove memo from reservation map.
-        Defensive version that checks if key exists before removing.
-        
-        This handles the case where parallel requests might be trying to
-        remove the same memo indices simultaneously.
-        
-        Args:
-            index: The memory index to remove
-        """
-        # Safely remove only if the key exists
-        if index in self.memo_to_reservation:
-            self.memo_to_reservation.pop(index)
-            log.logger.debug(f"{self.node.name}: Removed memo index {index} from reservation map")
-        else:
-            # Already removed or never existed - this is OK in parallel scenarios
-            log.logger.debug(f"{self.node.name}: Memo index {index} not in reservation map "
-                           f"(may have been removed by another request)")
-    
+    def schedule_reservation(self, reservation):
+        """Bind app-map events to the same cancellable local memory lease."""
+        if reservation.initiator == self.node.name:
+            self.path = reservation.path
+        protocol = self.node.network_manager.protocol_stack[-1]
+        for card in protocol.timecards:
+            if any(item is reservation for item in card.reservations):
+                for time, method, args in [
+                    (reservation.start_time, "add_memo_reservation_map", [card.memory_index, reservation]),
+                    (reservation.end_time, "remove_memo_reservation_map", [card.memory_index, reservation]),
+                ]:
+                    protocol._track_reservation_event(reservation, Event(time, Process(self, method, args)))
+
+    def remove_memo_reservation_map(self, index, reservation=None):
+        if reservation is None or self.memo_to_reservation.get(index) is reservation:
+            self.memo_to_reservation.pop(index, None)
+
     def get_reservation_result(self, reservation: "ReservationAdaptive", result: bool) -> None:
         """
         Override to track reservation approval time.
@@ -189,6 +192,11 @@ class RequestAppLatencyParallel(RequestAppLatency):
         # Call parent implementation
         super().get_reservation_result(reservation, result)
         
+        if not result:
+            callback = self.reservation_rejection_callbacks.pop(reservation.identity, None)
+            if callback is not None:
+                callback(reservation.identity, self.node.timeline.now())
+            return
         # If approved, notify callback with approval time
         if result:
             approval_time = self.node.timeline.now()

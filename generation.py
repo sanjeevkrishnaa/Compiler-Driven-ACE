@@ -337,6 +337,11 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
         mem_info = memory_manager.get_info_by_memory(occupied_memory)
         mem_info.to_raw()
         self.update_resource_manager_swap_memory(None, occupied_memory)
+        # Both state transfer and local protocol cleanup have finished. The
+        # old compiler slot is RAW and can now release its lease and quota.
+        self.owner.adaptive_continuous.resource_reservation.release_consumed_compiler_memory(
+            entangled_memory_name)
+
 
 
     def check_entangled_memory(self, entangled_memory_name: str) -> bool:
@@ -846,6 +851,11 @@ class ShEntanglementGenerationAadaptive(EntanglementProtocol):
         mem_info = memory_manager.get_info_by_memory(occupied_memory)
         mem_info.to_raw()
         self.update_resource_manager_swap_memory(None, occupied_memory)
+        # Both state transfer and local protocol cleanup have finished. The
+        # old compiler slot is RAW and can now release its lease and quota.
+        self.owner.adaptive_continuous.resource_reservation.release_consumed_compiler_memory(
+            entangled_memory_name)
+
 
 
     def check_entangled_memory(self, entangled_memory_name: str) -> bool:

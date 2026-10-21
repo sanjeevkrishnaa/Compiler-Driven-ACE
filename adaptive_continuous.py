@@ -589,7 +589,7 @@ class AdaptiveContinuousProtocol(Protocol):
             raise Exception(f"{entanglement_pair} doesn't exist in {self.name}")
 
 
-    def note_memory_expiration(self, memory: Memory) -> None:
+    def note_memory_expiration(self, memory: Memory, reason="memory_coherence") -> None:
         """Remove an expired cached pair and report compiler wastage immediately."""
         pair = next((
             candidate for candidate in self.generated_entanglement_pairs
@@ -601,7 +601,7 @@ class AdaptiveContinuousProtocol(Protocol):
         self.generated_entanglement_pairs.remove(pair)
         if metadata and self.compiler_observer:
             self.compiler_observer.on_pair_expired(
-                pair, self.owner.timeline.now(), "memory_coherence"
+                pair, self.owner.timeline.now(), reason
             )
             
 

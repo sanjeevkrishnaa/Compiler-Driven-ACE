@@ -1,0 +1,196 @@
+// Number of cores
+16
+// Number of qubit slots per core
+8
+// Number of qubits
+16
+// Initial placement: (qubit, core)
+(0, 2)
+(1, 2)
+(2, 0)
+(3, 0)
+(4, 1)
+(5, 0)
+(6, 1)
+(7, 1)
+(8, 1)
+(9, 1)
+(10, 0)
+(11, 1)
+(12, 0)
+(13, 0)
+(14, 2)
+(15, 2)
+// Inter-core communication requests: (qubit, src, dst)
+// Layer 0
+// Layer 1
+// Layer 2
+// Layer 3
+// Layer 4
+// Layer 5
+// Layer 6
+// Layer 7
+// Layer 8
+(15, 2, 1)
+(15, 1, 0)
+// Layer 9
+// Layer 10
+// Layer 11
+// Layer 12
+(14, 2, 1)
+(14, 1, 0)
+// Layer 13
+// Layer 14
+// Layer 15
+// Layer 16
+(15, 0, 1)
+// Layer 17
+// Layer 18
+// Layer 19
+// Layer 20
+(10, 0, 1)
+(11, 1, 0)
+// Layer 21
+// Layer 22
+// Layer 23
+// Layer 24
+(10, 1, 0)
+// Layer 25
+// Layer 26
+// Layer 27
+// Layer 28
+(14, 0, 1)
+// Layer 29
+// Layer 30
+// Layer 31
+// Layer 32
+(9, 1, 0)
+// Layer 33
+// Layer 34
+// Layer 35
+// Layer 36
+(13, 0, 1)
+// Layer 37
+// Layer 38
+// Layer 39
+// Layer 40
+(5, 0, 1)
+(8, 1, 0)
+// Layer 41
+// Layer 42
+// Layer 43
+// Layer 44
+(7, 1, 0)
+// Layer 45
+// Layer 46
+// Layer 47
+// Layer 48
+(3, 0, 1)
+(3, 1, 2)
+(12, 0, 1)
+(15, 1, 2)
+// Layer 49
+// Layer 50
+// Layer 51
+// Layer 52
+(2, 0, 1)
+(2, 1, 2)
+(3, 2, 1)
+(6, 1, 0)
+// Layer 53
+// Layer 54
+// Layer 55
+// Layer 56
+(2, 2, 1)
+(5, 1, 0)
+// Layer 57
+// Layer 58
+// Layer 59
+// Layer 60
+(1, 2, 1)
+(4, 1, 0)
+// Layer 61
+// Layer 62
+// Layer 63
+// Layer 64
+(11, 0, 1)
+(14, 1, 2)
+// Layer 65
+// Layer 66
+// Layer 67
+// Layer 68
+(0, 2, 1)
+(3, 1, 0)
+// Layer 69
+// Layer 70
+// Layer 71
+// Layer 72
+(10, 0, 1)
+// Layer 73
+// Layer 74
+// Layer 75
+// Layer 76
+(2, 1, 0)
+// Layer 77
+// Layer 78
+// Layer 79
+// Layer 80
+(9, 0, 1)
+// Layer 81
+// Layer 82
+// Layer 83
+// Layer 84
+(1, 1, 0)
+// Layer 85
+// Layer 86
+// Layer 87
+// Layer 88
+(8, 0, 1)
+// Layer 89
+// Layer 90
+// Layer 91
+// Layer 92
+(7, 0, 1)
+// Layer 93
+// Layer 94
+// Layer 95
+// Layer 96
+(0, 1, 0)
+// Layer 97
+// Layer 98
+// Layer 99
+(9, 1, 0)
+// Layer 100
+// Layer 101
+// Layer 102
+// Layer 103
+(5, 0, 1)
+// Layer 104
+// Layer 105
+// Layer 106
+// Layer 107
+(11, 1, 0)
+// Layer 108
+// Layer 109
+// Layer 110
+// Layer 111
+(3, 0, 1)
+// Layer 112
+// Layer 113
+// Layer 114
+// Layer 115
+(13, 1, 0)
+// Layer 116
+// Layer 117
+// Layer 118
+// Layer 119
+(1, 0, 1)
+(1, 1, 2)
+// Layer 120
+// Layer 121
+// Layer 122
+// Layer 123
+(15, 2, 1)
+(15, 1, 0)
+// Layer 124
+// Layer 125

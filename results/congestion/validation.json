@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "audited_at": "2026-10-21T13:59:24.403330+00:00",
+  "workloads": 10,
+  "trials": 30,
+  "per_core_rows": 480,
+  "per_layer_rows": 20640,
+  "per_link_rows": 605,
+  "checks": [
+    "all trials complete",
+    "circuit/trace hashes",
+    "circuit fixed across mapping seeds",
+    "complete initial placement",
+    "adjacent hops and evolving qubit locations",
+    "per-layer mapping agrees with trace",
+    "data-only capacity respected",
+    "per-core/layer/link demand totals conserved",
+    "overload counts agree with underlying rows",
+    "preparation request IDs unique",
+    "mapper source snapshot matches study hashes"
+  ]
+}
