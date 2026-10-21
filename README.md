@@ -59,7 +59,7 @@ dependencies. The characterization unit tests use the Python standard library.
 ## Documentation
 
 See the [documentation index](docs/README.md) for current results, research
-notes, protocol reference and archived implementation handoffs. Generated
+notes and protocol reference. Generated
 simulation output, logs and caches are ignored; curated results live in `results/`.
 
 Research foundations:
