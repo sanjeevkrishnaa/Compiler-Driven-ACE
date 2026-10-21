@@ -171,3 +171,44 @@ python3 "$repo/congestion_diagnostic.py" \
 For a new workload, first lock its circuit specification, compiler/Qiskit
 version, qubit count, mapping, route rule, and trace hash. Generate its traffic
 once, then run this diagnostic before running stochastic physical simulations.
+
+## Mapping sensitivity: the available `s2` traces
+
+The repository also contains a second, interleaved fixed mapping (`s2`) for
+each of the four supported circuit benchmarks. This is **not** a fifth through
+eighth benchmark: it is a sensitivity check showing that compiler mapping is a
+first-class cause of congestion. The `s2` results are saved alongside the
+primary `s1` evidence files.
+
+| Benchmark | s1 requests / K=3 overloaded layers | s2 requests / K=3 overloaded layers | Interpretation |
+|---|---:|---:|---|
+| QFT | 15,552 / 467 | 15,552 / 483 | Still globally endpoint-congested; mapping changes link concentration more than total traffic. |
+| Cuccaro | 678 / 1 | 176 / 0 | Interleaving removes the single endpoint burst and reduces cross-core traffic sharply. |
+| Draper | 7,744 / 467 | 7,680 / 461 | Still severe, but s2 improves K=3 excess from 7,282 to 3,642. |
+| MCMTV | 399 / 0 | 415 / 0 | Remains endpoint-feasible; a stable control workload. |
+
+At K=3, s2 affects 98.88% of QFT requests and 89.69% of Draper requests, while
+Cuccaro and MCMTV have no affected requests. Therefore the congestion-aware
+policy should record the mapping ID in every experiment contract and should
+never claim a result is circuit-intrinsic when it may be mapping-specific.
+
+## Verification record
+
+- The locked QFT file hash was checked against its contract:
+  `61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1`.
+- Re-running the diagnostic on that trace returns 766 source layers, 4,954
+  requests, 158 K=3 overloaded active layers, and 4,307 K=3 affected requests.
+- Automated regression tests cover XY routing, endpoint excess and affected
+  request accounting, and preservation of trailing empty layers. Run:
+
+  ```bash
+  .venv/bin/python -m pytest -q test/test_congestion_diagnostic.py test/test_compiler_trace.py
+  ```
+
+  The verification run for this audit passed: **9 tests**.
+- ACE and native SeQUeNCe both advertise exactly the same four currently
+  implemented circuit benchmarks: QFT, Cuccaro, Draper, and MCMTV. There are no
+  implemented GHZ, GraphState, Deutsch--Jozsa, or Bernstein--Vazirani traces to
+  add honestly at this stage. The repository's random/hotspot generators are
+  synthetic traffic controls, not circuit benchmarks, and are intentionally not
+  merged into this benchmark table.
