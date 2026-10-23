@@ -1,0 +1,9 @@
+# QM2026 runtime and development dependencies. Tested on CPython 3.10-3.12.
+numpy>=1.24,<3.0
+scipy>=1.10,<2.0
+networkx>=3.0,<4.0
+pytest>=7.0
+ruff>=0.4
+pytket>=1.20,<3.0
+qiskit>=1.0,<3.0
+matplotlib>=3.7,<4.0

@@ -18,5 +18,6 @@
 
 ## Reference
 
+- [Qubit mapper (QM2026/HQA): provenance, verification and how a trace is produced](../mapper/PROVENANCE.md)
 - [Metrics glossary: every measured parameter](reference/metrics-glossary.md)
 - [Adaptive continuous protocol](reference/adaptive-protocol.md)
