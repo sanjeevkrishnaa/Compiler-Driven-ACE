@@ -10,6 +10,10 @@
 - [Workload pipeline usage and architecture knobs](../tools/congestion_study/README.md)
 - [Congestion memory-budget sweep: reproduction](../tools/congestion_memory_sweep/README.md)
 
+## Planned work
+
+- [ACE congestion budget study: plan](plans/ace-congestion-budget-study.md) — approved design, not yet run
+
 ## Additional workload analysis
 
 - [Small TraceGen hotspot study](reports/tracegen-small-hotspots.md)
