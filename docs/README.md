@@ -5,8 +5,10 @@
 - [Compiler repair validation and reproduction](reports/compiler-repair-validation.md)
 - [Ten-workload MQT congestion study](reports/mqt-congestion-study.md)
 - [Original QFT congestion and observed delay](reports/qft-congestion-characterization.md)
+- [Communication-memory budget sweep: what congestion costs](reports/congestion-memory-sweep.md)
 - [Reservation latency root-cause investigation](reports/ace-latency-root-cause.md)
 - [Workload pipeline usage and architecture knobs](../tools/congestion_study/README.md)
+- [Congestion memory-budget sweep: reproduction](../tools/congestion_memory_sweep/README.md)
 
 ## Additional workload analysis
 
