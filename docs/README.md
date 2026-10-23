@@ -6,13 +6,10 @@
 - [Ten-workload MQT congestion study](reports/mqt-congestion-study.md)
 - [Original QFT congestion and observed delay](reports/qft-congestion-characterization.md)
 - [Communication-memory budget sweep: what congestion costs](reports/congestion-memory-sweep.md)
+- [ACE congestion budget study: why ACE cannot measure contention](reports/ace-congestion-budget-study.md)
 - [Reservation latency root-cause investigation](reports/ace-latency-root-cause.md)
 - [Workload pipeline usage and architecture knobs](../tools/congestion_study/README.md)
 - [Congestion memory-budget sweep: reproduction](../tools/congestion_memory_sweep/README.md)
-
-## Planned work
-
-- [ACE congestion budget study: plan](plans/ace-congestion-budget-study.md) — approved design, not yet run
 
 ## Additional workload analysis
 
