@@ -21,4 +21,5 @@
 
 ## Reference
 
+- [Metrics glossary: every measured parameter](reference/metrics-glossary.md)
 - [Adaptive continuous protocol](reference/adaptive-protocol.md)

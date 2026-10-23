@@ -92,25 +92,46 @@ def _row(strategy: str, seed: int, result: dict, request_count: int) -> dict:
         "average_delivered_epr_fidelity": _mean_fidelity(result["fidelity_dict"]),
         "total_retries": stats.get("total_retries", 0),
         "requests_with_retries": stats.get("requests_with_retries", 0),
+        # latency decomposition: where a request's time actually goes
+        "avg_reservation_setup_time_ms": stats.get("avg_reservation_setup_time_ms"),
+        "max_reservation_setup_time_ms": stats.get("max_reservation_setup_time_ms"),
+        "avg_entanglement_generation_time_ms": stats.get("avg_entanglement_generation_time_ms"),
+        "max_entanglement_generation_time_ms": stats.get("max_entanglement_generation_time_ms"),
+        "avg_retry_wait_time_ms": stats.get("avg_retry_wait_time_ms"),
+        # layer-level view, and how much the schedule stretched under contention
+        "avg_layer_latency_ms": stats.get("avg_layer_latency_ms"),
+        "max_layer_latency_ms": stats.get("max_layer_latency_ms"),
+        "min_layer_latency_ms": stats.get("min_layer_latency_ms"),
+        "total_layers": stats.get("total_layers"),
+        "retry_layers": stats.get("retry_layers"),
+        "total_layers_with_retries": stats.get("total_layers_with_retries"),
+        # entanglement efficiency, defined identically for every strategy
+        "protocol_generated_pairs": stats.get("protocol_generated_pairs"),
+        "protocol_used_pairs": stats.get("protocol_used_pairs"),
+        "protocol_unused_pairs": stats.get("protocol_unused_pairs"),
+        "protocol_waste_percentage": stats.get("protocol_waste_percentage"),
     }
-    if compiler is None:
-        row.update({
-            "scheduled_preparations": 0,
-            "pregenerated_success_rate": None,
-            "on_demand_fallback_rate": None,
-            "compiler_waste_percentage": None,
-            "average_compiler_fidelity_at_utilization": None,
-        })
-    else:
-        row.update({
-            "scheduled_preparations": compiler["scheduled_preparations"],
-            "pregenerated_success_rate": compiler["pregenerated_success_rate"],
-            "on_demand_fallback_rate": compiler["on_demand_fallback_rate"],
-            "compiler_waste_percentage": compiler["compiler_waste_percentage"],
-            "average_compiler_fidelity_at_utilization": compiler[
-                "average_fidelity_at_utilization"
-            ],
-        })
+
+    # Compiler-only fields.  Every one of these is None for a strategy with no
+    # compiler controller, which is a meaningful absence rather than a zero.
+    compiler_fields = (
+        "scheduled_preparations", "planner_blocked_preparations",
+        "planner_peak_compiler_memory_per_core", "runtime_admission_attempts",
+        "runtime_launched_preparations", "runtime_accepted_preparations",
+        "runtime_rejected_preparations", "runtime_rejection_events",
+        "pregenerated_hits", "pregenerated_success_rate",
+        "intended_request_hits", "intended_request_hit_rate",
+        "compiler_not_ready_requests", "late_compiler_pair_uses",
+        "on_demand_fallbacks", "on_demand_fallback_rate",
+        "generated_compiler_pairs", "utilized_compiler_pairs",
+        "expired_compiler_pairs", "remaining_compiler_pairs",
+        "compiler_expiry_percentage", "compiler_waste_percentage",
+        "average_fidelity_at_creation", "average_fidelity_at_utilization",
+    )
+    row.update({
+        name: (None if compiler is None else compiler.get(name))
+        for name in compiler_fields
+    })
     return row
 
 

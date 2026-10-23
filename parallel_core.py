@@ -609,6 +609,23 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     # Get statistics
     stats = request_manager.get_statistics()
     stats["node_seeds"] = node_seed_manifest
+
+    # The adaptive-continuous protocol counts every pair it generates, uses and
+    # releases unused, on every router and under every strategy.  Aggregating
+    # them here gives one entanglement-efficiency metric defined the same way
+    # for the autonomous caches and for the compiler policies; the compiler's
+    # own bookkeeping exists only when a compiler controller is attached.
+    generated = used = unused = 0
+    for router in network_topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):
+        protocol = router.adaptive_continuous
+        generated += protocol.num_generated_entanglement_pairs
+        used += protocol.num_used_entanglement_pairs
+        unused += protocol.num_unused_entanglement_pairs
+    stats["protocol_generated_pairs"] = generated
+    stats["protocol_used_pairs"] = used
+    stats["protocol_unused_pairs"] = unused
+    stats["protocol_waste_percentage"] = 100 * unused / generated if generated else None
+
     compiler_metrics = None
     if compiler_controller is not None:
         compiler_metrics = compiler_controller.finalize(request_manager.request_end_times)
