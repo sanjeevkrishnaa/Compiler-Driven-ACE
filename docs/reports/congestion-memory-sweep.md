@@ -6,7 +6,8 @@ Congestion costs **latency, not fidelity**. Restricting communication memories f
 uncongested 32 per core down to 2 raises mean request latency by 27.9% to 58.4% on the four
 congested workloads. At the project's standard budget of four memories the penalty is 3.2% to
 11.9%. Delivered fidelity under on-demand generation is invariant at 0.949813356353841 across
-every budget and every workload.
+every budget and every workload in this simulator configuration. That is an observation about
+this model, not a general finding that congestion cannot affect fidelity.
 
 Under dynamic pre-generation the fidelity story inverts: fidelity *degrades* as the budget
 grows, because a larger compiler bank holds more pairs for longer.
@@ -142,6 +143,20 @@ a fidelity question at all.**
    seed count are not yet computed.
 6. The structural percentages quoted for context come from the ten-workload study, which
    simulates no EPR physics.
+7. **No conflict serialization and no same-qubit dependency ordering.** These runs used no
+   experiment contract (`conflict_serialization = None`, `experiment_contract = None` in all
+   126 run records; source layers equal serialized layers). Every hop is submitted at its
+   trace-layer time, so a relayed qubit's two sequential hops are demanded concurrently. The
+   table measures the cost of the supplied concurrent hop-level demand. It is a conditional
+   result, not a verified end-to-end execution schedule for the mapped circuits, and the net
+   direction of the bias is not determined by this data.
+8. **The 32-memory arm is a counterfactual resource increase.** The mapped study provides eight
+   physical slots per core, four of them communication. Thirty-two is not the smallest
+   uncongested budget; it was chosen to exceed the peak core-layer demand of 24. The
+   64-memory QFT arm confirms 32 saturates, not that anything smaller does not.
+9. **Provenance: the SeQUeNCe checkout was dirty when these runs were made** (`git.dirty` is
+   true in the run records), so commit `7b8cb2eb` alone does not pin the exact runner state.
+10. The repository keeps the 126 `study.json` summaries, not the per-request traces.
 
 ## Reproducing
 

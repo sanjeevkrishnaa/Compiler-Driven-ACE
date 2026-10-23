@@ -35,3 +35,12 @@ has only been measured on the native SeQUeNCe backend, in
 `docs/reports/congestion-memory-sweep.md`.
 
 Never compare these milliseconds with native SeQUeNCe milliseconds.
+
+## Erratum
+
+Line 4 of `verification.txt` reads `intended_request_hit_rate == 1.0: 72/378`. That
+quantity is a coverage rate, not an identity invariant, so the check was
+mislabelled, and the report originally quoted it as "72/72". The identity check
+that tests provenance is `intended_request_hits == utilized_compiler_pairs`, which
+holds in 189 of 189 dynamic rows. `verification.txt` is left as generated so the
+record of what ran is unchanged. See the Erratum in the report.

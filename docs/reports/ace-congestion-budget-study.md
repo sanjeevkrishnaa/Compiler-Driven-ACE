@@ -162,7 +162,7 @@ generates 0 pre-generated pairs by construction, in all 189 runs.
 | Runs completing | 378/378 |
 | Trace SHA-256 matches characterization archive | 378/378 |
 | `completion_rate == 1.0` | 378/378 |
-| `intended_request_hit_rate == 1.0` | 72/72 compiler runs |
+| Identity: `intended_request_hits == utilized_compiler_pairs` | 189/189 dynamic rows (see Erratum) |
 | Memory partition consistent with request | 378/378 |
 | On-demand speculative cap == 0 | 189/189 |
 | Physics seeds per point | 3 everywhere |
@@ -185,10 +185,19 @@ to `ParallelLayerRequestManager`, not a parameter, and it would alter the worklo
 submission schedule that every historical ACE result was produced under. It should
 be done as a separate, clearly-labelled arm rather than silently.
 
-Until then, **the native SeQUeNCe backend remains the only place congestion cost
-has actually been measured** (`docs/reports/congestion-memory-sweep.md`: 3.2–11.9%
-at a four-memory budget, up to 58.4% at two). That study's on-demand arm responds
-to the budget, which this one's does not — the difference is the serialization.
+Until then, the native SeQUeNCe backend is the only place the budget has been
+shown to change on-demand latency (`docs/reports/congestion-memory-sweep.md`:
+3.2–11.9% at a four-memory budget, up to 58.4% at two). That is a **conditional,
+hop-level** result, not yet a verified execution schedule: the native runs
+submitted every hop at its trace-layer time with no conflict serialization and no
+same-qubit dependency ordering (`conflict_serialization = None` in all 126 run
+records), so a relayed qubit's two sequential hops were demanded concurrently.
+
+The serialization is the leading explanation for why the two backends disagree,
+and it is sufficient to explain ACE's flat on-demand curve: with at most one
+request per core per batch, no core can need a second memory. It has **not** been
+isolated by an A/B in which ACE runs with the serialization lifted. That run is the
+direct test of whether ACE's physics is consistent with the native backend's.
 
 ## Caveats
 
@@ -204,3 +213,23 @@ to the budget, which this one's does not — the difference is the serialization
    unlimited case is not unlimited — QFT reaches only 97.8% planner coverage and
    QAOA 93.1%, limited by generation rather than memory. At c=4 the scaled value
    is 3, so the project's standard configuration is unchanged.
+
+## Erratum (added after an independent review)
+
+Two statements in the first version of this study were wrong.
+
+1. **`intended_request_hit_rate` is not an identity invariant.** The scheduler
+   computes it as `intended_request_hits / requests`, so it is a coverage rate and
+   is below 1.0 whenever a request falls back. It is 1.0 in only 72 of 189
+   dynamic rows and 0.0 in all 189 on-demand rows, as expected. The validity table
+   originally read "72/72 compiler runs"; that was a misreading of the generated
+   `verification.txt`, which printed `72/378`. The identity check that actually
+   tests provenance is `intended_request_hits == utilized_compiler_pairs`, which
+   holds in 189 of 189 dynamic rows. The glossary has been corrected.
+2. **"The difference is the serialization" was stated as established.** It is the
+   leading explanation and is sufficient for the ACE side, but it was not isolated
+   by an experiment. See "What to do about it".
+
+Neither error changes the headline: ACE's on-demand latency is identical at every
+budget, the zero-congestion control moves under `dynamic`, and the budget axis
+tracks planner coverage.

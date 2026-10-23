@@ -106,22 +106,28 @@ equally good if one burns an order of magnitude more entanglement to get there.
 | `pregenerated_success_rate` | `hits / requests` — **the useful latency-hiding rate** |
 | `compiler_not_ready_requests` | requests whose pair was not ready in time |
 | `late_compiler_pair_uses` | a compiler pair was used, but finished too late to hide any latency |
-| `intended_request_hits` | pairs consumed by exactly the request they were prepared for |
-| `intended_request_hit_rate` | **invariant: must be 1.0.** Below that means pairs crossed requests — a provenance bug, not a performance result |
+| `intended_request_hits` | compiler pairs consumed by exactly the request they were prepared for |
+| `intended_request_hit_rate` | `intended_request_hits / requests` — a **coverage** rate: the share of all requests served by their own prepared pair, ready or late. It is below 1.0 whenever a request falls back, so it is not an invariant |
 
-**These two rates are the ones most easily confused, and the confusion is the
+**Identity and coverage are different quantities, and the difference is the
 central claim of the project.**
 
-`intended_request_hit_rate` is *identity*: did the compiler prepare the right pair?
-It is 100% by construction, because the compiler reads the circuit. That is the
-"100% hit rate" premise.
+*Identity* asks: of the compiler pairs that were used, did each one serve the
+request it was prepared for? The check is
+`intended_request_hits == utilized_compiler_pairs`. It must hold in every run; a
+violation means pairs crossed between requests, which is a provenance bug and not
+a performance result. In the ACE congestion budget study it holds in 189 of 189
+dynamic rows.
 
-`pregenerated_success_rate` is *timeliness*: was it ready in time? This is well
-below 100% on congested workloads, because finite memory means the planner cannot
-schedule every preparation.
+*Coverage* asks: of all requests, how many were served by a prepared pair at all
+(`intended_request_hit_rate`), and how many of those were ready strictly before
+first submission (`pregenerated_success_rate`)? Both fall well below 1.0 on
+congested workloads, because finite memory means the planner cannot schedule every
+preparation. The gap between the two is `late_compiler_pair_uses`.
 
-Preparing the right pair and having it ready are different claims. Congestion
-breaks the second, never the first.
+So the compiler's premise holds in the sense that a pair it uses is always the
+right pair (identity, 100%). It does not hold in the sense that every request gets
+one (coverage). Congestion breaks the second, not the first.
 
 ## Fallback
 
@@ -177,8 +183,10 @@ comparing against the autonomous caches.
 Four different quantities are all loosely called "hit rate". They answer different
 questions and must never be merged:
 
-1. `intended_request_hit_rate` — **identity.** Right pair? Must be 100%.
-2. `pregenerated_success_rate` — **coverage.** Ready in time? The useful number.
+1. `intended_request_hits / utilized_compiler_pairs` — **identity.** Did each used
+   pair serve its own request? Must be 100%. Not a column; check the equality.
+2. `intended_request_hit_rate` and `pregenerated_success_rate` — **coverage.**
+   Served by a prepared pair, and ready in time? The second is the useful number.
 3. `compiler_waste_percentage` — **efficiency.** Was what we made used?
 4. `completion_rate` — **completion.** Already 100%, because fallback exists.
 
