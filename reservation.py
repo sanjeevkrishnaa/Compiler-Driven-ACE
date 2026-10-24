@@ -326,6 +326,17 @@ def describe_reservation(reservation) -> tuple[int, str]:
     return reservation.identity, APPLICATION
 
 
+def notify_release(owner) -> None:
+    """Tell the router's ``release_observer``, if it has one, that a booking was just released.
+
+    A request scheduler uses this to learn when a core can admit more work.  Without an
+    observer (every run that does not ask for event-driven admission) this does nothing.
+    """
+    observer = getattr(owner, "release_observer", None)
+    if observer is not None:
+        observer(owner.name)
+
+
 class ObservedTimeCard(MemoryTimeCard):
     """A ``MemoryTimeCard`` that reports bookings and releases to its router's recorder.
 
@@ -362,6 +373,8 @@ class ObservedTimeCard(MemoryTimeCard):
             else:
                 recorder.record(MisRemoved(now, node, self.memory_index, id(reservation), id(stored),
                                            describe_reservation(reservation)[0]))
+        if removed:
+            notify_release(self._owner)
         return removed
 
 
@@ -432,11 +445,14 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
             if rule.reservation is reservation:
                 manager.expire(rule)
         recorder = getattr(self.owner, "recorder", None)
+        held = False
         for card in self.timecards:
-            if recorder is not None and any(item is reservation for item in card.reservations):
-                request_id, kind = describe_reservation(reservation)
-                recorder.record(Unbooked(timeline.now(), self.owner.name, card.memory_index,
-                                         id(reservation), request_id, kind, reason))
+            if any(item is reservation for item in card.reservations):
+                held = True
+                if recorder is not None:
+                    request_id, kind = describe_reservation(reservation)
+                    recorder.record(Unbooked(timeline.now(), self.owner.name, card.memory_index,
+                                             id(reservation), request_id, kind, reason))
             card.reservations[:] = [item for item in card.reservations if item is not reservation]
         adaptive = self.owner.adaptive_continuous
         if lease["compiler"]:
@@ -449,6 +465,8 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
                 app.memo_to_reservation.pop(index)
             adaptive.note_memory_expiration(memory, reason=reason)
             manager.update(None, memory, MemoryInfo.RAW)
+        if held:
+            notify_release(self.owner)
         return True
 
     def release_consumed_compiler_memory(self, memory_name):
