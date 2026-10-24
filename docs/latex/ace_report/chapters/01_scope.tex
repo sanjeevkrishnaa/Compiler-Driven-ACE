@@ -21,8 +21,7 @@ The following rules were fixed at the start and held throughout.
   \item Results from the legacy and the corrected scheduler are never merged in one table.
   \item A fallback to on-demand generation is not a failure, but a dropped request is.
   \item Nothing is claimed as measured unless it was run; mechanisms that were inferred are labelled as such.
-  \item Congestion-aware routing is not claimed to exist: no routing policy is simulated, only bounded structurally
-        (Chapter~\ref{ch:routing}).
+  \item No congestion-aware routing \emph{algorithm} is proposed or claimed: Chapter~\ref{ch:routing} bounds structurally what an offline choice of routes could achieve and simulates that optimum, nothing more.
   \item Structural (trace-based) results are not called physical results.
   \item Physical parameters were not changed silently; the choice of parameters is an open decision
         (Appendix~\ref{app:params}).

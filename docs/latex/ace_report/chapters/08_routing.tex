@@ -19,7 +19,7 @@ Demand is counted two ways: by hops (the archive's counting) and by routes, the 
 
 \section{Structural result}
 \input{generated/routing_struct_mesh}
-Pooled over the ten benchmarks, the best routing removes most of the excess at the modelled capacity: with route counting at capacity four, shortest paths alone cut the excess from 2\,216 to 348 (a 84.3\% reduction)
+Pooled over the ten benchmarks, the best routing removes most of the excess at the modelled capacity: with route counting at capacity four, shortest paths alone cut the excess from 2\,216 to 348 (an 84.3\% reduction)
 and the layers with any overload from 482 to 102; allowing two extra hops cuts it to 237 (89.3\%) at a cost of 0.36\% more hops. The gain shrinks as the capacity shrinks (19.0\% at capacity one),
 because there the total relay volume, not the choice of path, is the limit, which the volume bound shows. With hop counting the reductions are smaller (65.6\% at capacity four).
 
@@ -28,12 +28,12 @@ The structural gain would be an artefact if it did not survive the simulator, so
 mapping, endpoints, physics seeds and parameters. Three mapping seeds and three physics seeds give nine paired runs per cell.
 \input{generated/routing_sim_mesh}
 Re-routing alone makes on-demand requests faster in nearly every pair. At two memories the latency falls by 21\% to 42\% on the four congested workloads (graph state, Draper, QAOA, QFT) and by 11\% on the random circuit; at the modelled four memories by 25\% for QFT, 11\% for QAOA and 6\% for graph state,
-and by 1\% or less where there was little congestion. The fraction of requests that had to wait falls accordingly. Two extra hops help at two memories (QFT 26\% to 36\%) but not at four, where the added hop count costs about as much as it saves.
+and by 1\% or less where there was little congestion. The fraction of requests that had to wait falls accordingly. Two extra hops help at two memories (QFT 26\% to 36\%) and change little at four (within about 1.5 percentage points, except graph state, where they cost 4 points): the added hops cost about as much as the avoided waiting saves.
 
 \section{The torus}
 On the torus, which has more paths between cores, the optimum is closer to the lower bound still: at capacity four the excess falls from 493 to 15 (97.0\%), against a lower bound of 6, and with two extra hops it reaches the bound.
 \input{generated/routing_struct_torus}
-Simulated on the torus, re-routing helps at two memories (QFT $-15\%$, QAOA $-32\%$, Draper $-36\%$ latency) but little at the modelled four (QFT $-6.8\%$, QAOA $-3.2\%$, others about 2\% or none), because the torus is already close to its latency floor there.
+Simulated on the torus, re-routing makes requests faster at two memories (latency falls by 15\% for QFT, 32\% for QAOA, 36\% for Draper) but little at the modelled four (by 6.8\% for QFT, 3.2\% for QAOA, about 2\% or nothing for the others), because the torus is already close to its latency floor there.
 \input{generated/routing_sim_torus}
 
 \section{What can and cannot be concluded}

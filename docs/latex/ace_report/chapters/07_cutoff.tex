@@ -9,7 +9,7 @@ A \emph{memory cut-off time} is a threshold after which a stored EPR pair is dis
   \item[Memory cut-off.] When a pair is stored, an expiry is scheduled \code{cutoff_ratio} $\times$ coherence time later. At expiry the memory is reset (unless it is in an application) and returned to the free state; ACE then drops the
         pair from its cache and tells the compiler controller it expired. ACE's configuration never sets the ratio, so it is $1$ and the cut-off equals the coherence time, $1$\,s. A ratio written in the topology template was verified to reach every memory.
   \item[Reservation window.] A pair's booking ends with its window; an unused pair is released then. The window is $1000$\,ms for compiler pairs and, for the autonomous caches, runs to the next $0.2$\,s period boundary.
-  \item[Planner lifetime.] The planner's \code{--coherence-time-layers} (10) says how far ahead a pair may be prepared; it is a planning assumption, tied to nothing physical.
+  \item[Planner lifetime.] The planner's \verb|--coherence-time-layers| (10) says how far ahead a pair may be prepared; it is a planning assumption, tied to nothing physical.
 \end{description}
 Separately the stored state decoheres continuously at the rate $1/$coherence time, lowering fidelity but discarding nothing.
 

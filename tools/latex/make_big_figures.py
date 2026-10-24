@@ -53,24 +53,46 @@ def main() -> int:
     landscape("fig_heatmap_torus.tex", "per_core_congestion_torus.png",
               "Per-core congestion on the torus (same definition, same capacity 4, mean over three mapping seeds).", "fig:heatmap-torus")
 
-    # Experiment 2: per capacity and counting, three workloads to a figure, one figure per page
-    titles = dict(S.ORDER)
-    blocks = []
+    # Experiment 2: one landscape page per capacity and counting, every workload side by side
+    figs = []
     for cap, variant in ((4, "hop"), (4, "route"), (2, "hop"), (1, "hop"), (3, "hop")):
-        data = S.compute(cap, variant)
-        shown = [k for k, _ in S.ORDER if max(S.mean_over_seeds(data, k, c, "overloaded_percent") for c in range(16)) > 0.5]
-        for i in range(0, len(shown), 3):
-            chunk = shown[i:i + 3]
-            name = f"exp2_big_c{cap}_{variant}_{i // 3}.png"
-            S.draw(data, cap, variant, FIG / name, workloads=chunk, figwidth=9.6, rowheight=4.2, text=10, title_size=11, dpi=150)
-            counting = "hop counting" if variant == "hop" else "route counting (qubits in flight)"
-            blocks.append("\n".join([
-                r"\begin{figure}[p]", r"\centering", rf"\includegraphics[width=\linewidth,height=0.86\textheight,keepaspectratio]{{{name}}}",
-                rf"\caption{{Own endpoint demand (left) against relay-only overload (right), capacity {cap}, {counting}: "
-                + ", ".join(titles[k] for k in chunk) + r". Percentage of active layers, mean of three mapping seeds.}",
-                rf"\label{{fig:exp2-c{cap}-{variant}-{i // 3}}}", r"\end{figure}"]))
-    (GEN / "exp2_figs.tex").write_text("\n".join(blocks) + "\n", encoding="utf-8")
-    print("rendered big figures;", len(blocks), "Experiment 2 figure pages")
+        name = f"exp2_overview_c{cap}_{variant}.png"
+        S.draw_overview(S.compute(cap, variant), cap, variant, FIG / name)
+        counting = "hop counting" if variant == "hop" else "route counting (qubits in flight)"
+        figs.append("\n".join([
+            r"\begin{landscape}", r"\begin{figure}[p]", r"\centering",
+            rf"\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{{{name}}}",
+            rf"\caption{{Capacity {cap}, {counting}. For each workload with overload, the left heatmap is the percentage of its active layers in which the core is overloaded by its own endpoint demand and the right heatmap the percentage in which it is overloaded only because of relay traffic. Mesh cores are numbered row by row (core 10 is row 2, column 2). Mean of three mapping seeds.}}",
+            rf"\label{{fig:exp2-overview-c{cap}-{variant}}}", r"\end{figure}", r"\end{landscape}"]))
+    (GEN / "exp2_figs.tex").write_text("\n".join(figs) + "\n", encoding="utf-8")
+
+    # mesh above torus, one page, every workload
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    mesh, torus = H.compute(4), H.compute(4, topology="torus", traces_dir=TORUS_TRACES)
+    figure = plt.figure(figsize=(16, 8.9))
+    grid = figure.add_gridspec(3, 12, width_ratios=[1, 1, 0.3] * 4, hspace=0.36, wspace=0.10)
+    image = None
+    for i, (key, title) in enumerate(H.ORDER):
+        r0, block = divmod(i, 4)
+        for offset, (data, label) in enumerate(((mesh, "mesh"), (torus, "torus"))):
+            axis = figure.add_subplot(grid[r0, block * 3 + offset])
+            values = [data[key]["mean"][r * 4:(r + 1) * 4] for r in range(4)]
+            image = axis.imshow(values, cmap="YlOrRd", vmin=0, vmax=100)
+            axis.set_xticks([]); axis.set_yticks([])
+            axis.set_title(f"{title}\n{label}" if offset == 0 else label, fontsize=11)
+            for r in range(4):
+                for col in range(4):
+                    v = values[r][col]
+                    axis.text(col, r, f"{v:.0f}" if v >= 10 else f"{v:.1f}", ha="center", va="center", fontsize=9.5, color="white" if v > 60 else "black")
+    figure.suptitle("Per-core congestion at capacity 4: mesh (left) beside torus (right) for every workload (% of active layers, mean of three mapping seeds)", fontsize=13)
+    figure.colorbar(image, cax=figure.add_axes([0.93, 0.15, 0.012, 0.7]), label="% of active layers")
+    figure.savefig(FIG / "mesh_vs_torus_heatmaps.png", dpi=170, bbox_inches="tight")
+    plt.close(figure)
+    landscape("fig_mesh_vs_torus.tex", "mesh_vs_torus_heatmaps.png",
+              "Per-core congestion at capacity 4 on the mesh (left of each pair) and on the torus (right), for every workload. The torus lowers the overload in five workloads, leaves four unchanged and raises it for graph state; the traces differ in placement as well as topology.", "fig:mesh-vs-torus")
+    print("rendered big figures;", len(figs), "Experiment 2 overview pages")
     return 0
 
 

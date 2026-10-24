@@ -60,6 +60,11 @@ def exp1_full() -> None:
               "tab:exp1-full", "llrrrrrrrr")
 
 
+def pct(v: float) -> str:
+    """Signed whole percentage without a negative zero."""
+    return "0\\%" if abs(v) < 0.5 else f"{v:+.0f}\\%"
+
+
 def exp1_derived() -> None:
     rows = A.load(MAIN / "results.csv")
     g = A.cells(rows)
@@ -69,7 +74,7 @@ def exp1_derived() -> None:
     body = []
     for w in ORDER:
         base = mean((w, "on-demand", 32), "latency_ms")
-        body.append([NAMES[w]] + [f"{100 * (mean((w, 'on-demand', b), 'latency_ms') / base - 1):+.0f}\\%" for b in (1, 2, 3, 4, 6, 8)])
+        body.append([NAMES[w]] + [pct(100 * (mean((w, 'on-demand', b), 'latency_ms') / base - 1)) for b in (1, 2, 3, 4, 6, 8)])
     table(GEN / "exp1_penalty.tex", ["Workload", "1", "2", "3", "4", "6$^*$", "8$^*$"], body,
           "On-demand latency relative to the same workload with 32 memories (saturated), by memories per core. $^*$ counterfactual.", "tab:exp1-penalty")
     # structural overload next to the physical penalty
@@ -96,7 +101,7 @@ def exp1_derived() -> None:
     for w in ORDER:
         body.append([NAMES[w]] + [f"{st.fmean(by[(w, b, s)]):.2f}" for b in (2, 4) for s in ("42", "43", "44")])
     table(GEN / "exp1_by_mapping_seed.tex", ["Workload", "2 mem. seed 42", "43", "44", "4 mem. seed 42", "43", "44"], body,
-          "On-demand latency (ms) by mapping seed (mean over the three physics seeds): the mapping, not the physics, is the larger source of spread.", "tab:exp1-mapseed")
+          "On-demand latency (ms) by mapping seed (mean over the three physics seeds): where there is congestion the mapping seed matters more than the physics seed; where nothing waits the physics noise dominates.", "tab:exp1-mapseed")
 
 
 def profiles() -> None:
@@ -191,7 +196,7 @@ def repo_map() -> None:
         return rf"\href{{{BASE}/{kind}/{BRANCH}/{path}}}{{\nolinkurl{{{text or path}}}}}"
     groups = [
         ("Reports and plans", [
-            ("docs/reports/ace-correctness-audit.md", "what was wrong in the legacy simulator (F1--F10)"),
+            ("docs/reports/ace-correctness-audit.md", "what was wrong in the legacy simulator (F1–F10)"),
             ("docs/reports/ace-scheduler-verification.md", "verification of the corrected scheduler; wall-clock times"),
             ("docs/reports/ace-physical-parameters.md", "every physical parameter, its source, the open decision and the question for the guide"),
             ("docs/reports/ace-budget-rerun.md", "the 378-run budget study rerun (Gate 6)"),
@@ -232,7 +237,7 @@ def repo_map() -> None:
             ("results/ace_scheduler_verification_2026-10-24", "verification matrices and wall times"),
             ("results/ace_budget_rerun_2026-10-24", "budget study rerun, both schedulers"),
             ("results/heatmap_regenerated_2026-10-24", "regenerated heatmap, its README and CSV"),
-            ("results/experiment2_own_vs_relay_2026-10-24", "Experiment 2 data and figures, capacities 1--4"),
+            ("results/experiment2_own_vs_relay_2026-10-24", "Experiment 2 data and figures, capacities 1–4"),
             ("results/experiment1_ten_benchmarks_2026-10-24", "Experiment 1 (mesh): results.csv, controls, figures, parameters, timings"),
             ("results/experiment1_sensitivity_acgp_table1_2026-10-24", "sensitivity arm"),
             ("results/experiment1_timing_serial_2026-10-24", "quiet serial timing pass"),
@@ -241,7 +246,7 @@ def repo_map() -> None:
             ("results/mesh_vs_torus_2026-10-24", "mesh-versus-torus table"),
             ("results/offline_routing_2026-10-24", "offline routing data and re-routed traces"),
             ("results/cutoff_study_2026-10-24", "cut-off study data"),
-            ("results/congestion/mqt_ten_workload_congestion_results.zip", "the archived mapped traces (ten workloads, seeds 42--44)"),
+            ("results/congestion/mqt_ten_workload_congestion_results.zip", "the archived mapped traces (ten workloads, seeds 42–44)"),
             ("mapper", "the vendored HQA mapper with provenance"),
         ]),
         ("This report", [("docs/latex/ace_report", "LaTeX source of this report"), ("docs/latex/ace_report/ace_report.pdf", "the compiled report")]),
@@ -250,7 +255,7 @@ def repo_map() -> None:
     for title, items in groups:
         lines += [rf"\subsection*{{{title}}}", r"\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}"]
         for path, what in items:
-            lines.append(link(path) + " & " + tex(what).replace("--", "--") + r" \\")
+            lines.append(link(path) + " & " + tex(what) + r" \\")
         lines.append(r"\end{longtable}")
     lines.append(r"}")
     (GEN / "repo_map.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")

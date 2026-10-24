@@ -16,8 +16,7 @@ and a torus trace is refused on a mesh topology file and the reverse.
 \section{Results}
 Torus traces need 11\% to 37\% fewer hops than the mesh traces (CDKM 11\%, QFT 23\%, QAOA 16\%, GHZ 25\%, VQE 37\%). Every control passed on all 1\,368 runs, as for the mesh (Chapter~\ref{ch:exp1}).
 \input{generated/torus_comparison}
-On-demand latency under congestion improves: at two memories QFT goes from $4.72$ to $2.79$\,ms, QAOA from $3.42$ to $2.47$\,ms and graph state from $2.72$ to $1.86$\,ms; at four memories QFT from $1.59$ to $1.21$\,ms. Dynamic pre-generation
-catches on-demand earlier (QFT at eight memories: $2.78$ to $1.16$\,ms). The structural overload at capacity four falls for most workloads (QFT 65.2\% to 58.0\%, QAOA 71.6\% to 57.9\%, Draper 41.3\% to 25.8\%) but not for graph state, where
+On-demand latency under congestion improves: at two memories QFT goes from $4.72$ to $2.79$\,ms, QAOA from $3.42$ to $2.47$\,ms and graph state from $2.72$ to $1.86$\,ms; at four memories QFT from $1.59$ to $1.21$\,ms. Dynamic pre-generation also gets faster under congestion (QFT at eight memories: $2.78$ to $1.16$\,ms). The structural overload at capacity four falls for most workloads (QFT 65.2\% to 58.0\%, QAOA 71.6\% to 57.9\%, Draper 41.3\% to 25.8\%) but not for graph state, where
 it rises from 33.3\% to 38.9\% (only six layers are active, so a single layer is 17 percentage points). Draper at two memories is slightly slower on the torus ($2.16$ to $2.25$\,ms).
 
-\input{generated/fig_heatmap_torus}
+\input{generated/fig_mesh_vs_torus}

@@ -2,7 +2,7 @@
 \label{ch:runtimes}
 
 Wall-clock times on the development machine (8 CPUs). An \emph{invocation} is one process running one benchmark at one budget and policy for three physics seeds.
-Times from parallel runs include contention from the other jobs; the serial pass was run one invocation at a time and is the clean per-benchmark measurement.
+Times from parallel runs include contention from the other jobs; the serial pass was run one invocation at a time and is the cleanest per-benchmark measurement. It was not isolated from light unrelated work on the machine (file edits, short tests), so expect a few percent of noise.
 \input{generated/runtimes_total}
 \input{generated/runtimes_serial}
 The heatmap regeneration takes 2.7\,s and the endpoint-versus-relay split 4.3\,s. The new scheduler costs a few percent more real time than the legacy one on the larger traces, because it reads the

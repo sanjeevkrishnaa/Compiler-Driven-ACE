@@ -189,6 +189,38 @@ def draw(data: dict, capacity: int, variant: str, path: Path, workloads=None, fi
     plt.close(figure)
 
 
+def draw_overview(data: dict, capacity: int, variant: str, path: Path, figsize=(16, 9.4), text=12, title_size=13, dpi=200) -> None:
+    """One page: every workload that has overload, its own-demand heatmap beside its relay-only heatmap (numbers are percentages)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    titles = dict(ORDER)
+    shown = [k for k, _ in ORDER if max(mean_over_seeds(data, k, c, "overloaded_percent") for c in range(CORES)) > 0.5]
+    per_row = 3
+    rows = -(-len(shown) // per_row)
+    figure = plt.figure(figsize=figsize)
+    grid = figure.add_gridspec(rows, per_row * 3, width_ratios=[1, 1, 0.28] * per_row, hspace=0.34, wspace=0.10)
+    image = None
+    for index, key in enumerate(shown):
+        r, block = divmod(index, per_row)
+        for c, field in enumerate(("own_percent", "relay_only_percent")):
+            axis = figure.add_subplot(grid[r, block * 3 + c])
+            values = [[mean_over_seeds(data, key, row * 4 + col, field) for col in range(4)] for row in range(4)]
+            image = axis.imshow(values, cmap="YlOrRd", vmin=0, vmax=100)
+            axis.set_xticks([]); axis.set_yticks([])
+            axis.set_title(f"{titles[key]}\n{'own demand' if c == 0 else 'relay only'}" if c == 0 else "relay only", fontsize=title_size)
+            for row in range(4):
+                for col in range(4):
+                    v = values[row][col]
+                    axis.text(col, row, f"{v:.0f}" if v >= 10 else f"{v:.1f}", ha="center", va="center", fontsize=text, color="white" if v > 60 else "black")
+    counting = "hop counting" if variant == "hop" else "route counting (qubits in flight)"
+    figure.suptitle(f"Per-core overload at capacity {capacity}, {counting}: % of communication-active layers (mean of three mapping seeds)", fontsize=title_size + 2)
+    colorbar_axis = figure.add_axes([0.93, 0.15, 0.012, 0.7])
+    figure.colorbar(image, cax=colorbar_axis, label="% of active layers")
+    figure.savefig(path, dpi=dpi, bbox_inches="tight")
+    plt.close(figure)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--capacity", type=int, default=4)

@@ -69,11 +69,16 @@ def paired(sim_path):
     return out
 
 
+def fmt(x):
+    """Signed percentage with one decimal (positive = faster), without a negative zero."""
+    return "0.0" if round(x, 1) == 0 else f"{x:+.1f}"
+
+
 def sim_rows(p):
     rows = []
     for (w, b), (base, basew, cells) in p.items():
         c0, c2 = cells[0], cells[2]
-        rows.append([NAMES[w], b, f"{base:.2f}", f"{c0[3]:.2f} ({c0[0]:+.1f}% ±{c0[1]:.1f}; {c0[2]}/9)", f"{c2[3]:.2f} ({c2[0]:+.1f}% ±{c2[1]:.1f}; {c2[2]}/9)",
+        rows.append([NAMES[w], b, f"{base:.2f}", f"{c0[3]:.2f} ({fmt(c0[0])}% ±{c0[1]:.1f}; {c0[2]}/9)", f"{c2[3]:.2f} ({fmt(c2[0])}% ±{c2[1]:.1f}; {c2[2]}/9)",
                      f"{basew:.3f} → {c0[4]:.3f}"])
     return rows
 
@@ -112,7 +117,7 @@ def main() -> int:
                   f"Offline re-routing, {topo}, route counting, pooled over ten benchmarks and three mapping seeds. Excess is demand above capacity.", f"tab:routing-{topo}", "rrrrrrr")
     for name, path in sims:
         tex_table(f"routing_sim_{name}.tex", ["Workload", "Mem.", "Original", "Re-routed", "+2 hops", "Waited"], sim_rows(paired(path)),
-                  f"Simulated on-demand latency (ms), {name}: original routes against offline re-routing. Brackets: paired reduction, sd, pairs faster of nine.",
+                  f"Simulated on-demand latency (ms), {name}: original routes against offline re-routing. Brackets: paired reduction in latency (positive = faster), sd, pairs faster of nine.",
                   f"tab:routing-sim-{name}", "lrrrrr")
     print("wrote docs/reports/offline-routing-research.md and LaTeX tables")
     return 0

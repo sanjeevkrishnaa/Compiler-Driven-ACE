@@ -32,7 +32,8 @@ BUDGETS = [1, 2, 3, 4, 6, 8, 16, 32]
 
 
 def tex(s) -> str:
-    return str(s).replace("_", r"\_").replace("%", r"\%").replace("&", r"\&")
+    return str(s).replace("_", r"\_").replace("%", r"\%").replace("&", r"\&").replace("--", "-{}-")
+
 
 
 def table(path: Path, header: list[str], rows: list[list[str]], caption: str, label: str, colspec: str | None = None,
@@ -126,7 +127,7 @@ def exp1_tables(skipped: list[str]) -> None:
                          ("waiting_vs_budget.png", "Fraction of requests that had to wait for a free memory.", "fig:exp1-waiting")):
         figure(f"fig_{fn.split('.')[0]}.tex", main / fn, cap + " Line: mean of nine runs; band: minimum to maximum; grey: counterfactual budgets.", lab)
     (GEN / "exp1_controls.tex").write_text(r"\begin{itemize}" + "\n" + "\n".join(
-        r"  \item " + tex(l).replace("--", "---") for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
+        r"  \item " + tex(l.replace(" -- ", ": ")) for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
 
 
 def cutoff_tables(skipped: list[str]) -> None:
@@ -193,9 +194,9 @@ def parameter_tables(skipped: list[str]) -> None:
         ["Empty-layer gap", f"{const['empty_layer_gap_ms']:g} ms"], ["Retry period after a physical rejection", "1 ms"],
         ["Admission grace after a release or timeout", f"{const['admission_grace_ps']:g} ps"],
         ["A ``wait'' means more than", f"{const['wait_threshold_ms']:g} ms"],
-        ["Compiler reservation window", f"{run['compiler_reservation_ms']} ms"],
-        ["Planner: delta / lookahead / coherence layers", f"{run['delta_layers']} / {run['dynamic_lookahead_layers']} / {run['coherence_time_layers']}"],
-        ["Fidelity threshold of a request", f"{run['fidelity_threshold']}"], ["Simulation stop time", f"{run['stop_time_s']} s"],
+        ["Compiler reservation window", f"{run['compiler_reservation_ms']:g} ms"],
+        ["Planner: delta / lookahead / coherence layers", f"{run['delta_layers']:g} / {run['dynamic_lookahead_layers']:g} / {run['coherence_time_layers']:g}"],
+        ["Fidelity threshold of a request", f"{run['fidelity_threshold']}"], ["Simulation stop time", f"{run['stop_time_s']:g} s"],
         ["Scheduler", f"{r['design']['scheduler']}, admission {run['admission']}, starvation guard on"],
         ["Seeds", f"mapping {r['design']['mapping_seeds']}, physics {r['design']['physics_seeds']}"],
     ]
