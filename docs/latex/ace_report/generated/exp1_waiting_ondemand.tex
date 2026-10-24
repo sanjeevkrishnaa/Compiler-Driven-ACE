@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrrrrrr@{}}
 \toprule
 Workload & 1 & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
@@ -15,7 +16,7 @@ QAOA & 0.671 & 0.376 & 0.172 & 0.058 & 0.004 & 0.000 & 0.000 & 0.000 \\
 QFT & 0.696 & 0.430 & 0.249 & 0.130 & 0.031 & 0.007 & 0.000 & 0.000 \\
 Random circuit & 0.254 & 0.042 & 0.006 & 0.001 & 0.000 & 0.000 & 0.000 & 0.000 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Fraction of requests that waited more than a microsecond for a free memory, on-demand. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
 \label{tab:exp1-waiting-ondemand}
 \end{table}

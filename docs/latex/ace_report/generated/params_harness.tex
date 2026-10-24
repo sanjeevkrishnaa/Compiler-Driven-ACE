@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lp{0.3\linewidth}@{}}
 \toprule
 Harness constant & Value \\
@@ -17,7 +18,7 @@ Simulation stop time & 300.0 s \\
 Scheduler & per-qubit, admission event, starvation guard on \\
 Seeds & mapping [42, 43, 44], physics [0, 1, 2] \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Harness and scheduler constants (not physical).}
 \label{tab:params-harness}
 \end{table}

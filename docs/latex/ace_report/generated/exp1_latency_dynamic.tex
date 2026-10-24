@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrrrrr@{}}
 \toprule
 Workload & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
@@ -15,7 +16,7 @@ QAOA & 6.89$\pm$0.28 & 5.33$\pm$0.19 & 3.88$\pm$0.17 & 2.70$\pm$0.13 & 1.86$\pm$
 QFT & 10.06$\pm$0.54 & 7.49$\pm$0.33 & 5.57$\pm$0.21 & 3.73$\pm$0.25 & 2.78$\pm$0.19 & 0.80$\pm$0.16 & 0.25$\pm$0.00 \\
 Random circuit & 1.91$\pm$0.08 & 1.37$\pm$0.04 & 0.94$\pm$0.02 & 0.56$\pm$0.02 & 0.38$\pm$0.02 & 0.25$\pm$0.00 & 0.25$\pm$0.00 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Request latency (ms), dynamic pre-generation. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
 \label{tab:exp1-latency-dynamic}
 \end{table}

@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}llrrrrrrr@{}}
+\toprule
+Workload & Case & Done & Viol. & Consumed & Window & Cut-off & Bookings & Makespan ms \\
+\midrule
+ghz & ACE default: cut-off = coherence time (1 s), window 1000 ms & 24/24 & 0 & 48 & 0 & 0 & 48 & 303.5 \\
+ghz & short reservation window only (20 ms) & 24/24 & 0 & 36 & 12 & 0 & 48 & 311.2 \\
+ghz & cut-off ratio 0.02 (20 ms), window 1000 ms & 24/24 & 0 & 34 & 12 & 12 & 55 & 311.4 \\
+ghz & cut-off ratio 0.005 (5 ms), window 1000 ms & 24/24 & 0 & 0 & 34 & 34 & 49 & 322.0 \\
+ghz & cut-off ratio 0.02 and window 20 ms & 24/24 & 0 & 36 & 12 & 0 & 48 & 311.2 \\
+graphstate & ACE default: cut-off = coherence time (1 s), window 1000 ms & 76/76 & 0 & 104 & 0 & 0 & 134 & 274.5 \\
+graphstate & short reservation window only (20 ms) & 76/76 & 0 & 48 & 56 & 0 & 134 & 241.3 \\
+graphstate & cut-off ratio 0.02 (20 ms), window 1000 ms & 76/76 & 0 & 24 & 32 & 32 & 179 & 351.8 \\
+graphstate & cut-off ratio 0.005 (5 ms), window 1000 ms & 76/76 & 0 & 0 & 34 & 34 & 339 & 347.4 \\
+graphstate & cut-off ratio 0.02 and window 20 ms & 76/76 & 0 & 48 & 56 & 0 & 134 & 242.5 \\
+\bottomrule
+\end{tabular}}
+\caption{Which timer discards a cached pair (compiler pre-generation, 4 memories). Consumed: pairs used; Window: releases at the end of the reservation window; Cut-off: memory resets by the cut-off.}
+\label{tab:cutoff-mechanism}
+\end{table}

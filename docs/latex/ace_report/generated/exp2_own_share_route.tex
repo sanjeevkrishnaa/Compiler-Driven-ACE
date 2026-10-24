@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
 Workload & C=1 & C=2 & C=3 & C=4 \\
@@ -15,7 +16,7 @@ QAOA & 59.7\% & 20.7\% & 4.5\% & 1.2\% \\
 QFT & 86.8\% & 11.5\% & 12.8\% & 0.0\% \\
 Random circuit & 39.6\% & 7.0\% & 0.0\% & 0.0\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Share of overloaded core-layers caused by a core's own endpoint demand (route counting); the rest is relay-only overload.}
 \label{tab:exp2-route}
 \end{table}

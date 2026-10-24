@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrrrrr@{}}
 \toprule
 Workload & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
@@ -15,7 +16,7 @@ QAOA & 0.9390 & 0.9298 & 0.9245 & 0.9167 & 0.9136 & 0.9137 & 0.9143 \\
 QFT & 0.9386 & 0.9306 & 0.9274 & 0.9215 & 0.9189 & 0.9185 & 0.9202 \\
 Random circuit & 0.9320 & 0.9186 & 0.9130 & 0.9075 & 0.9068 & 0.9070 & 0.9071 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Delivered EPR fidelity, dynamic pre-generation. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
 \label{tab:exp1-fidelity-dynamic}
 \end{table}

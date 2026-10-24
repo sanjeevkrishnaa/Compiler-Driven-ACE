@@ -78,3 +78,25 @@ Latency in ms, mean of nine runs. In brackets: paired reduction against the orig
 | Random circuit | 3 | 1.12 | 1.11 (+1.2% ±0.3; 9/9) | 1.11 (+1.3% ±0.3; 9/9) | 0.006 → 0.000 |
 | Random circuit | 4 | 1.11 | 1.11 (+0.2% ±0.1; 9/9) | 1.11 (+0.2% ±0.2; 8/9) | 0.001 → 0.000 |
 
+## Simulated effect on latency, torus (on-demand, same mapping, endpoints and seeds)
+
+Latency in ms, mean of nine runs. In brackets: paired reduction against the original routes (positive = faster), its standard deviation over the nine pairs, and the number of pairs in which re-routing was faster. Last column: fraction of requests that waited, original → re-routed (no extra hops).
+
+| Workload | Memories | Original routes | Re-routed, shortest paths only | Re-routed, up to +2 hops | Waited |
+|---|---|---|---|---|---|
+| Graph state | 2 | 1.86 | 1.27 (+31.2% ±7.2; 9/9) | 1.28 (+31.0% ±6.9; 9/9) | 0.157 → 0.033 |
+| Graph state | 3 | 1.25 | 1.10 (+11.0% ±7.4; 8/9) | 1.12 (+10.3% ±8.7; 8/9) | 0.033 → 0.000 |
+| Graph state | 4 | 1.11 | 1.12 (-0.4% ±1.7; 1/9) | 1.11 (+0.3% ±3.9; 2/9) | 0.000 → 0.000 |
+| Draper QFT adder | 2 | 2.25 | 1.45 (+35.6% ±1.9; 9/9) | 1.26 (+44.0% ±1.4; 9/9) | 0.226 → 0.075 |
+| Draper QFT adder | 3 | 1.28 | 1.15 (+10.5% ±1.8; 9/9) | 1.14 (+10.7% ±1.0; 9/9) | 0.053 → 0.007 |
+| Draper QFT adder | 4 | 1.13 | 1.11 (+1.8% ±0.6; 9/9) | 1.11 (+1.6% ±0.8; 9/9) | 0.008 → 0.000 |
+| QAOA | 2 | 2.47 | 1.66 (+32.3% ±4.7; 9/9) | 1.62 (+34.2% ±4.7; 9/9) | 0.265 → 0.111 |
+| QAOA | 3 | 1.40 | 1.15 (+17.6% ±4.6; 9/9) | 1.14 (+18.3% ±4.3; 9/9) | 0.083 → 0.004 |
+| QAOA | 4 | 1.17 | 1.13 (+3.2% ±2.8; 9/9) | 1.13 (+3.1% ±2.6; 9/9) | 0.016 → 0.000 |
+| QFT | 2 | 2.79 | 2.37 (+14.7% ±7.3; 9/9) | 2.42 (+12.7% ±7.8; 9/9) | 0.303 → 0.221 |
+| QFT | 3 | 1.51 | 1.21 (+19.3% ±6.0; 9/9) | 1.24 (+17.3% ±6.1; 9/9) | 0.102 → 0.023 |
+| QFT | 4 | 1.21 | 1.13 (+6.8% ±3.2; 9/9) | 1.12 (+7.3% ±3.0; 9/9) | 0.028 → 0.001 |
+| Random circuit | 2 | 1.19 | 1.11 (+6.1% ±0.9; 9/9) | 1.11 (+6.3% ±0.9; 9/9) | 0.022 → 0.002 |
+| Random circuit | 3 | 1.11 | 1.11 (+0.4% ±0.1; 9/9) | 1.11 (+0.3% ±0.1; 9/9) | 0.001 → 0.000 |
+| Random circuit | 4 | 1.11 | 1.11 (-0.0% ±0.1; 1/9) | 1.11 (+0.0% ±0.1; 3/9) | 0.000 → 0.000 |
+

@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Strategy & Cut-off ratio & Generated & Used & Reported waste & Real unused & Latency ms & Fidelity \\
+\midrule
+continuous & 1 (default) & 44936 & 90 & 99.7\% & 99.80\% & 5.147 & 0.9297 \\
+adaptive-continuous & 1 (default) & 5184 & 120 & 97.8\% & 97.69\% & 4.882 & 0.9258 \\
+continuous & 0.2 & 44936 & 90 & 99.7\% & 99.80\% & 5.147 & 0.9297 \\
+adaptive-continuous & 0.2 & 5184 & 120 & 97.8\% & 97.69\% & 4.882 & 0.9258 \\
+continuous & 0.02 & 447388 & 122 & 10.0\% & 99.97\% & 4.865 & 0.9354 \\
+adaptive-continuous & 0.02 & 41472 & 122 & 12.0\% & 99.71\% & 4.865 & 0.9354 \\
+\bottomrule
+\end{tabular}}
+\caption{Autonomous caches on Random-16 (4 memories, coherence 1 s): effect of the memory cut-off. Reported waste omits cut-off discards.}
+\label{tab:cutoff-cache}
+\end{table}

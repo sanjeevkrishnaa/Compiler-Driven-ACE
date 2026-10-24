@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}rrrrrrr@{}}
 \toprule
 Capacity & Extra hops & Excess now & Excess after re-routing & Lower bound & Overloaded layers & Added hops \\
@@ -13,7 +14,7 @@ Capacity & Extra hops & Excess now & Excess after re-routing & Lower bound & Ove
 4 & 0 & 2216 & 348 (84.3\%) & 78 & 482 $\to$ 102 & 0.00\% \\
 4 & 2 & 2216 & 237 (89.3\%) & 78 & 482 $\to$ 48 & 0.36\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Offline re-routing, mesh, route counting, pooled over ten benchmarks and three mapping seeds. Excess is demand above capacity.}
 \label{tab:routing-mesh}
 \end{table}

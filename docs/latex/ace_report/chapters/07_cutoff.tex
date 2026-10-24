@@ -1,0 +1,30 @@
+\chapter{The memory cut-off time}
+\label{ch:cutoff}
+
+A \emph{memory cut-off time} is a threshold after which a stored EPR pair is discarded and a new pair generated. Nothing new needs to be built to have one: ACE already has it, as the SeQUeNCe memory's
+\code{cutoff_ratio}, and two other timers also end a stored pair's life.
+
+\section{The timers}
+\begin{description}
+  \item[Memory cut-off.] When a pair is stored, an expiry is scheduled \code{cutoff_ratio} $\times$ coherence time later. At expiry the memory is reset (unless it is in an application) and returned to the free state; ACE then drops the
+        pair from its cache and tells the compiler controller it expired. ACE's configuration never sets the ratio, so it is $1$ and the cut-off equals the coherence time, $1$\,s. A ratio written in the topology template was verified to reach every memory.
+  \item[Reservation window.] A pair's booking ends with its window; an unused pair is released then. The window is $1000$\,ms for compiler pairs and, for the autonomous caches, runs to the next $0.2$\,s period boundary.
+  \item[Planner lifetime.] The planner's \code{--coherence-time-layers} (10) says how far ahead a pair may be prepared; it is a planning assumption, tied to nothing physical.
+\end{description}
+Separately the stored state decoheres continuously at the rate $1/$coherence time, lowering fidelity but discarding nothing.
+
+\section{What a discard does to compiler pairs}
+\input{generated/cutoff_mechanism}
+The earlier timer wins: with both at $20$\,ms the window fires first and no cut-off reset occurs. For compiler pairs a cut-off discards the pair and nothing replaces it: the controller only marks it expired, the request that wanted it
+generates its own pair on demand, and all requests still complete. The run gets longer (graph state: $274.5$\,ms makespan by default, $351.8$\,ms with a $20$\,ms cut-off, $347.4$\,ms with $5$\,ms). In every case the number of window releases equals the number of cut-off resets,
+consistent with a discarded pair's booking staying until its window ends (inferred from the counts).
+
+\section{What a discard does to the autonomous caches}
+\input{generated/cutoff_cache}
+A cut-off of $200$\,ms changes nothing, because the cache's window already ends at the next $0.2$\,s boundary. At $20$\,ms the cache discards and \emph{regenerates}: ten times more pairs are generated, the used pairs are fresher (fidelity $0.9297$ to $0.9354$) and latency
+falls slightly ($5.15$ to $4.87$\,ms). ACE's waste counter does not see cut-off discards (it is incremented only when a generation rule expires at the window end), so the reported waste drops from $99.7\%$ to $10.0\%$ although $99.97\%$ of the generated pairs went unused;
+waste measured with a cut-off must be computed as $1-\text{used}/\text{generated}$.
+
+\section{Decisions}
+Whether ``cut-off'' should mean discard-and-regenerate (the caches already do; compiler pre-generation falls back on demand and re-preparing would be a new feature); exposing the cut-off in milliseconds as a recorded study parameter; tying the planner's lifetime to it
+and fixing the waste counter first; and the coherence time, which comes before any cut-off: with $1$\,s coherence a cut-off never acts, and with the group's $1$\,ms a cut-off equal to the coherence time would discard every cached pair before use.

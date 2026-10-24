@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrrrrrr@{}}
 \toprule
 Workload & 1 & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
@@ -15,7 +16,7 @@ QAOA & 10.92$\pm$0.41 & 3.42$\pm$0.14 & 1.74$\pm$0.06 & 1.27$\pm$0.02 & 1.14$\pm
 QFT & 14.42$\pm$0.35 & 4.72$\pm$0.14 & 2.39$\pm$0.09 & 1.59$\pm$0.05 & 1.21$\pm$0.02 & 1.15$\pm$0.02 & 1.13$\pm$0.02 & 1.13$\pm$0.02 \\
 Random circuit & 2.99$\pm$0.10 & 1.27$\pm$0.02 & 1.12$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Request latency (ms), on-demand, mean $\pm$ sd over nine runs. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
 \label{tab:exp1-latency-ondemand}
 \end{table}

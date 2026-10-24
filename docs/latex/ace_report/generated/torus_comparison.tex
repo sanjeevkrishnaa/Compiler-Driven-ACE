@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrrr@{}}
 \toprule
 Workload & Hops & Overload\% at C=4 & On-demand ms, 2 mem. & On-demand ms, 4 mem. & Dynamic ms, 8 mem. \\
@@ -15,7 +16,7 @@ QAOA & 3068/2562 & 71.6/57.9 & 3.42/2.47 & 1.27/1.17 & 1.86/1.10 \\
 QFT & 2510/1938 & 65.2/58.0 & 4.72/2.79 & 1.59/1.21 & 2.78/1.16 \\
 Random circuit & 11688/9574 & 8.0/3.4 & 1.27/1.19 & 1.11/1.11 & 0.38/0.29 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Mesh/torus. Hops: mean requests per trace. Overload: \% of active layers with any core above capacity 4. Latencies are means over nine runs.}
 \label{tab:torus}
 \end{table}

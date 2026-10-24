@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
 Workload & C=1 & C=2 & C=3 & C=4 \\
@@ -15,7 +16,7 @@ QAOA & 51.9\% & 14.9\% & 2.3\% & 0.4\% \\
 QFT & 76.8\% & 10.1\% & 7.1\% & 0.0\% \\
 Random circuit & 15.7\% & 1.8\% & 0.0\% & 0.0\% \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Share of overloaded core-layers caused by a core's own endpoint demand (hop counting); the rest is relay-only overload.}
 \label{tab:exp2-hop}
 \end{table}

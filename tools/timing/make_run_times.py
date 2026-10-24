@@ -82,11 +82,11 @@ def main() -> int:
     # LaTeX table for the report
     gen = REPO / "docs" / "latex" / "ace_report" / "generated"
     gen.mkdir(parents=True, exist_ok=True)
-    body = [r"\begin{table}[H]", r"\centering\small", r"\begin{tabular}{@{}lrrrrrrrrr@{}}", r"\toprule",
+    body = [r"\begin{table}[H]", r"\centering\small", r"\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%", r"\begin{tabular}{@{}lrrrrrrrrr@{}}", r"\toprule",
             r"Benchmark & \multicolumn{5}{c}{on-demand, memories} & \multicolumn{4}{c}{dynamic, memories} \\",
             r" & 1 & 2 & 4 & 8 & 32 & 2 & 4 & 8 & 32 \\", r"\midrule"]
     body += [" & ".join(r) + r" \\" for r in tex]
-    body += [r"\bottomrule", r"\end{tabular}",
+    body += [r"\bottomrule", r"\end{tabular}}",
              r"\caption{Seconds of real time per simulation run, one run at a time (serial pass, mapping seed 42; mean over three physics seeds).}",
              r"\label{tab:runtimes-serial}", r"\end{table}"]
     (gen / "runtimes_serial.tex").write_text("\n".join(body) + "\n", encoding="utf-8")

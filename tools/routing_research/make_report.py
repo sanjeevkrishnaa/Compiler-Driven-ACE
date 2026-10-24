@@ -101,9 +101,10 @@ def main() -> int:
     (REPO / "docs" / "reports" / "offline-routing-research.md").write_text("\n".join(sections) + "\n", encoding="utf-8")
     # LaTeX
     def tex_table(name, header, rows, caption, label, colspec):
-        lines = [r"\begin{table}[H]", r"\centering\small", rf"\begin{{tabular}}{{@{{}}{colspec}@{{}}}}", r"\toprule", " & ".join(header) + r" \\", r"\midrule"]
+        lines = [r"\begin{table}[H]", r"\centering\small", r"\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%",
+                 rf"\begin{{tabular}}{{@{{}}{colspec}@{{}}}}", r"\toprule", " & ".join(header) + r" \\", r"\midrule"]
         lines += [" & ".join(c.replace("%", r"\%").replace("→", r"$\to$").replace("±", r"$\pm$").replace("&", r"\&") for c in r) + r" \\" for r in rows]
-        lines += [r"\bottomrule", r"\end{tabular}", rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{table}"]
+        lines += [r"\bottomrule", r"\end{tabular}}", rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{table}"]
         (GEN / name).write_text("\n".join(lines) + "\n", encoding="utf-8")
     GEN.mkdir(parents=True, exist_ok=True)
     for topo, rows in (("mesh", mesh), ("torus", torus)):

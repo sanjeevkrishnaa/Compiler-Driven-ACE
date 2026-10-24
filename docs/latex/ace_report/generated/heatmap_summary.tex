@@ -1,5 +1,6 @@
 \begin{table}[H]
 \centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Workload & Active layers (seeds 42/43/44) & Layers with any overload & Hottest core \\
@@ -15,7 +16,7 @@ QAOA & 163/163/163 & 71.6\% & C10 (56.0\%) \\
 QFT & 112/112/112 & 65.2\% & C10 (58.0\%) \\
 Random circuit & 2296/2296/2296 & 8.0\% & C9 (3.2\%) \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \caption{Structural overload at capacity 4, pooled over the three mapping seeds.}
 \label{tab:heatmap}
 \end{table}

@@ -38,10 +38,12 @@ def tex(s) -> str:
 def table(path: Path, header: list[str], rows: list[list[str]], caption: str, label: str, colspec: str | None = None,
           small: bool = True) -> None:
     colspec = colspec or "l" + "r" * (len(header) - 1)
-    lines = [r"\begin{table}[H]", r"\centering" + (r"\small" if small else ""), rf"\begin{{tabular}}{{@{{}}{colspec}@{{}}}}", r"\toprule",
+    # every table is scaled down to the text width if it is wider (never scaled up)
+    lines = [r"\begin{table}[H]", r"\centering" + (r"\small" if small else ""),
+             r"\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%", rf"\begin{{tabular}}{{@{{}}{colspec}@{{}}}}", r"\toprule",
              " & ".join(header) + r" \\", r"\midrule"]
     lines += [" & ".join(r) + r" \\" for r in rows]
-    lines += [r"\bottomrule", r"\end{tabular}", rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{table}"]
+    lines += [r"\bottomrule", r"\end{tabular}}", rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{table}"]
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -127,6 +129,24 @@ def exp1_tables(skipped: list[str]) -> None:
         r"  \item " + tex(l).replace("--", "---") for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
 
 
+def cutoff_tables(skipped: list[str]) -> None:
+    base = RESULTS / "cutoff_study_2026-10-24"
+    if not (base / "mechanism.csv").exists():
+        skipped.append("cutoff")
+        return
+    rows = load(base / "mechanism.csv")
+    body = [[tex(r["workload"]), tex(r["case"]), f"{r['completed']}/{r['requested']}", r["violations"], r["released_consumed"],
+             r["released_reservation_expired"], r["memory_expiry_resets"], r["adaptive_bookings"], f"{float(r['makespan_ms']):.1f}"] for r in rows]
+    table(GEN / "cutoff_mechanism.tex", ["Workload", "Case", "Done", "Viol.", "Consumed", "Window", "Cut-off", "Bookings", "Makespan ms"], body,
+          "Which timer discards a cached pair (compiler pre-generation, 4 memories). Consumed: pairs used; Window: releases at the end of the reservation window; Cut-off: memory resets by the cut-off.",
+          "tab:cutoff-mechanism", "llrrrrrrr")
+    cache = load(base / "cache_strategies_random16.csv")
+    body = [[tex(r["strategy"]), tex(r["cutoff_ratio"]), r["pairs_generated"], r["pairs_used"], r["reported_waste_percent"] + "\\%", r["true_unused_percent"] + "\\%",
+             r["latency_ms"], r["fidelity"]] for r in cache]
+    table(GEN / "cutoff_cache.tex", ["Strategy", "Cut-off ratio", "Generated", "Used", "Reported waste", "Real unused", "Latency ms", "Fidelity"], body,
+          "Autonomous caches on Random-16 (4 memories, coherence 1 s): effect of the memory cut-off. Reported waste omits cut-off discards.", "tab:cutoff-cache", "llrrrrrr")
+
+
 def torus_tables(skipped: list[str]) -> None:
     path = RESULTS / "mesh_vs_torus_2026-10-24" / "comparison.csv"
     if not path.exists():
@@ -189,6 +209,7 @@ def main() -> int:
     heatmap_tables(skipped)
     exp2_tables(skipped)
     exp1_tables(skipped)
+    cutoff_tables(skipped)
     torus_tables(skipped)
     parameter_tables(skipped)
     print("wrote", len(list(GEN.glob("*.tex"))), "generated files;", "skipped:", skipped or "none")

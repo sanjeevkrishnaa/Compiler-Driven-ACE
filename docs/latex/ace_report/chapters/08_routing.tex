@@ -31,8 +31,10 @@ Re-routing alone makes on-demand requests faster in nearly every pair. At two me
 and by 1\% or less where there was little congestion. The fraction of requests that had to wait falls accordingly. Two extra hops help at two memories (QFT 26\% to 36\%) but not at four, where the added hop count costs about as much as it saves.
 
 \section{The torus}
-On the torus, which has more paths between cores, the optimum is closer to the lower bound still.
+On the torus, which has more paths between cores, the optimum is closer to the lower bound still: at capacity four the excess falls from 493 to 15 (97.0\%), against a lower bound of 6, and with two extra hops it reaches the bound.
 \input{generated/routing_struct_torus}
+Simulated on the torus, re-routing helps at two memories (QFT $-15\%$, QAOA $-32\%$, Draper $-36\%$ latency) but little at the modelled four (QFT $-6.8\%$, QAOA $-3.2\%$, others about 2\% or none), because the torus is already close to its latency floor there.
+\input{generated/routing_sim_torus}
 
 \section{What can and cannot be concluded}
 Offline routing \emph{can} reduce congestion: with the mapping fixed, an exact offline choice of paths removes most of the excess demand at the modelled capacity and the simulated latencies fall with it. These
