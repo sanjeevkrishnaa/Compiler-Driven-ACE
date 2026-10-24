@@ -27,6 +27,7 @@ from compiler_trace import (
     to_ace_layers,
     validate_neighbor_requests,
 )
+from latency_metrics import eligible_latencies_ms
 from parallel_core import run_parallel_experiment
 
 
@@ -76,7 +77,14 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
     }
 
 
-def _row(strategy: str, seed: int, result: dict, request_count: int) -> dict:
+def _eligible(result: dict, requests, reduce):
+    if requests is None:
+        return None
+    values = list(eligible_latencies_ms(result["request_manager"], requests).values())
+    return reduce(values) if values else None
+
+
+def _row(strategy: str, seed: int, result: dict, request_count: int, requests=None) -> dict:
     stats = result["stats"]
     compiler = result["compiler_metrics"]
     completed = stats["completed_requests"]
@@ -88,6 +96,9 @@ def _row(strategy: str, seed: int, result: dict, request_count: int) -> dict:
         "completion_rate": completed / request_count if request_count else 0,
         "average_request_latency_ms": stats.get("avg_request_latency_ms"),
         "end_to_end_latency_ms": stats["end_to_end_latency_ms"],
+        # the same definition under every scheduler (latency_metrics.py)
+        "average_eligible_latency_ms": _eligible(result, requests, fmean),
+        "max_eligible_latency_ms": _eligible(result, requests, max),
                 "metric_version": stats["metric_version"],
         "average_delivered_epr_fidelity": _mean_fidelity(result["fidelity_dict"]),
         "total_retries": stats.get("total_retries", 0),
@@ -157,6 +168,12 @@ def main() -> None:
     parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
+    parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="legacy",
+                        help="legacy: per-core batches (the historical runs); per-qubit: hops of one qubit in order, "
+                             "different qubits concurrent (docs/plans/ace-request-scheduler-design.md)")
+    parser.add_argument("--admission", choices=("poll", "event"), default="event",
+                        help="per-qubit scheduler only")
+    parser.add_argument("--no-starvation-guard", action="store_true", help="per-qubit event admission only")
     parser.add_argument("--max-layers", type=int)
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
     parser.add_argument("--verbose", action="store_true")
@@ -183,6 +200,8 @@ def main() -> None:
     rows, columns = mesh_dimensions(trace, args.mesh)
     validate_neighbor_requests(trace, rows, columns)
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
+    scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard}
+                         if args.scheduler == "per-qubit" else None)
     args.output.mkdir(parents=True, exist_ok=True)
 
     summary: list[dict] = []
@@ -205,6 +224,8 @@ def main() -> None:
                     total_memories_per_core=args.total_memories,
                     simulation_stop_time_s=args.stop_time_s,
                     serialize_conflicts=True,
+                    scheduler=args.scheduler, request_plan=trace.requests,
+                    scheduler_options=scheduler_options,
                 )
             else:
                 with redirect_stdout(StringIO()):
@@ -214,8 +235,10 @@ def main() -> None:
                         total_memories_per_core=args.total_memories,
                         simulation_stop_time_s=args.stop_time_s,
                         serialize_conflicts=True,
+                        scheduler=args.scheduler, request_plan=trace.requests,
+                        scheduler_options=scheduler_options,
                     )
-            row = _row(strategy, seed, result, len(trace.requests))
+            row = _row(strategy, seed, result, len(trace.requests), trace.requests)
             summary.append(row)
             print(
                 f"{strategy:20} seed={seed} complete={row['completion_rate']:.2%} "
