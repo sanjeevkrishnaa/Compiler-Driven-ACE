@@ -76,6 +76,8 @@ def parser():
     p.add_argument('--qasm', type=Path, nargs='+', default=[], help='Additional OpenQASM 2/3 input files')
     p.add_argument('--workload-options', type=Path, help='JSON object: benchmark name -> create_circuit keyword arguments')
     p.add_argument('--mesh', default='4x4')
+    p.add_argument('--topology', choices=['mesh', 'torus'], default='mesh', help='core interconnect; routes are Dijkstra shortest-hop paths with reliability as tie-break')
+    p.add_argument('--mapping-only', action='store_true', help='map and export requests.txt/mapping files only; skip the mesh-specific hotspot analysis')
     p.add_argument('--total-qubits', type=int, default=128, help='Total physical slots INCLUDING communication memories')
     p.add_argument('--memory-slots', type=int, default=4, help='Communication memories PER CORE, deducted from physical capacity')
     p.add_argument('--on-demand-reserve', type=int, default=1, help='Slots within the memory bank reserved for fallback/adoption')
@@ -216,7 +218,7 @@ def map_and_export(ir, architecture, seed, args, folder):
     # only the DATA bank as mapper capacity, so it cannot occupy comm memories.
     setup = prepare_trial(grid=args.mesh, benchmark=ir.name, seed=SeedSequence.from_seed(seed),
         reliability_band=band, qubits_per_core=architecture['data_slots_per_core'],
-        reserved_ancilla=architecture['initial_spare_data_slots_per_core'], circuit=ir, topology='mesh')
+        reserved_ancilla=architecture['initial_spare_data_slots_per_core'], circuit=ir, topology=args.topology)
     result = run_trial(setup, args.placer, PlacerConfig(initial_placement=args.initial_placement,strict=True),
                        benchmark=ir.name, reliability_band=band.label, keep_partition=True)
     partition = result.partition
@@ -228,7 +230,7 @@ def map_and_export(ir, architecture, seed, args, folder):
     export_arch = SimpleNamespace(n_cores=architecture['cores'],
                                  qubits_per_core=architecture['physical_slots_per_core'])
     trace_file, hop_count = write_request_file(partition, export_arch, setup.oracle, folder/'requests.txt')
-    trace = read_trace(trace_file, architecture['rows'], architecture['columns'])
+    trace = read_trace(trace_file, architecture['rows'], architecture['columns'], args.topology)
     assert len(trace.hops)==hop_count
     location = dict(trace.initial)
     by_layer = {}
@@ -418,6 +420,15 @@ def main(argv=None):
                 (folder/'circuit.qasm').write_text(qasm2.dumps(circuit),encoding='utf-8')
                 print(f'  Mapping {name}, seed {seed}, {len(circuit.data):,} normalized gates...',flush=True)
                 trace=map_and_export(ir,architecture,seed,args,folder)
+                if args.mapping_only:
+                    dump_json(folder/'manifest.json',dict(status='complete',mapping_only=True,workload=name,seed=seed,source=source,
+                        topology=args.topology,architecture=architecture,seconds=time.perf_counter()-begin,hops=len(trace.hops),
+                        layers=trace.layers,trace_sha256=digest(folder/'requests.txt'),versions=provenance['versions'],
+                        normalized_circuit_sha256=digest(folder/'circuit.qasm')))
+                    successful.append(dict(workload=name,seed=seed,hop_requests=len(trace.hops),layers=trace.layers,
+                                           seconds=time.perf_counter()-begin))
+                    print(f'  {len(trace.hops):,} hops in {trace.layers} layers ({args.topology}); {time.perf_counter()-begin:.1f} s',flush=True)
+                    continue
                 data=characterize(trace,architecture['rows'],architecture['columns'],args.memory_slots,
                                   architecture['compiler_slots_per_core'],args.buffer_ms,args.hop_service_ms)
                 plan=preparation_plan(trace,args.policy,architecture['compiler_slots_per_core'],
@@ -458,6 +469,11 @@ def main(argv=None):
                 print(f'  FAILED: {error["error"]}',file=sys.stderr,flush=True)
             dump_json(args.output/'study.json',dict(**provenance,status='running',trials=successful,errors=errors))
     dump_csv(args.output/'summary.csv',successful,fields=list(successful[0]) if successful else ['workload','seed'])
+    if args.mapping_only:
+        dump_json(args.output/'study.json',dict(**provenance,status='complete' if not errors else 'partial_failure',
+                  finished_at=datetime.now(timezone.utc).isoformat(),trials=successful,errors=errors))
+        for error in errors:print(f'FAILED {error["workload"]}: {error["error"]}',file=sys.stderr)
+        return 1 if errors else 0
     overview(args.output,architecture,successful,errors)
     dump_json(args.output/'study.json',dict(**provenance,status='complete' if not errors else 'partial_failure',
               finished_at=datetime.now(timezone.utc).isoformat(),trials=successful,errors=errors))
