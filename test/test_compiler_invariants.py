@@ -2,7 +2,7 @@ import unittest
 
 from execution_events import (
     ADAPTIVE, APPLICATION, Booked, ListRecorder, MisRemoved, NullRecorder, PairCredited,
-    PairDelivered, RequestCompleted, RequestRejected, RequestSubmitted, Unbooked,
+    PairDelivered, RequestCompleted, RequestRejected, RequestSubmitted, Unbooked, canonical,
 )
 from invariants import (
     BOOKING_SURVIVES_COMPLETION, COMPLETION_COUNT, CREDIT_EXCEEDS_REQUEST, CREDIT_WITHOUT_BOOKING,
@@ -48,6 +48,33 @@ class CleanRunTests(unittest.TestCase):
         for event in events:
             recorder.record(event)
         self.assertEqual(recorder.events, events)
+
+
+class CanonicalTests(unittest.TestCase):
+    def test_object_ids_become_first_seen_ordinals_so_runs_compare_equal(self):
+        first = [book(1, "a", 0, 9001, 0), book(1, "a", 1, 9002, 1), unbook(2, "a", 0, 9001, 0)]
+        second = [book(1, "a", 0, 77, 0), book(1, "a", 1, 12, 1), unbook(2, "a", 0, 77, 0)]
+        self.assertNotEqual(first, second)
+        self.assertEqual(canonical(first), canonical(second))
+        self.assertEqual([e.reservation_id for e in canonical(first)], [0, 1, 0])
+
+    def test_distinct_objects_stay_distinct(self):
+        log = [book(1, "a", 0, 5, 0), book(1, "a", 1, 6, 0)]
+        ids = [e.reservation_id for e in canonical(log)]
+        self.assertEqual(len(set(ids)), 2)
+
+    def test_misremoval_ids_share_the_same_numbering(self):
+        log = [book(1, "a", 0, 5, 0), MisRemoved(2, "a", 0, requested_id=6, removed_id=5, request_id=1)]
+        done = canonical(log)
+        self.assertEqual(done[1].removed_id, done[0].reservation_id)
+        self.assertNotEqual(done[1].requested_id, done[1].removed_id)
+
+    def test_events_without_ids_and_the_input_log_are_untouched(self):
+        log = [RequestSubmitted(0, 1, 0), RequestCompleted(5, 1)]
+        self.assertEqual(canonical(log), log)
+        original = [book(1, "a", 0, 9001, 0)]
+        canonical(original)
+        self.assertEqual(original[0].reservation_id, 9001)
 
 
 class MemoryOwnershipTests(unittest.TestCase):

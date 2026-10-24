@@ -16,8 +16,8 @@ exactly what the checker needs to be able to do.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Protocol, Union
+from dataclasses import dataclass, replace
+from typing import Iterable, Protocol, Union
 
 APPLICATION = "application"     # a reservation made on behalf of a trace request
 ADAPTIVE = "adaptive"           # a CGP/ACGP or compiler-preparation reservation
@@ -108,6 +108,24 @@ class PairCredited:
 
 Event = Union[RequestSubmitted, RequestRejected, RequestCompleted, Booked, Unbooked,
               MisRemoved, PairDelivered, PairCredited]
+
+
+_ID_FIELDS = ("reservation_id", "requested_id", "removed_id")
+
+
+def canonical(events: Iterable[Event]) -> list[Event]:
+    """Replace object ids by first-seen ordinals so two runs can be compared.
+
+    ``id(reservation)`` differs between processes and runs; everything else in a log of a
+    deterministic simulation is reproducible.
+    """
+    ordinals: dict[int, int] = {}
+    result: list[Event] = []
+    for event in events:
+        changes = {name: ordinals.setdefault(getattr(event, name), len(ordinals))
+                   for name in _ID_FIELDS if hasattr(event, name)}
+        result.append(replace(event, **changes) if changes else event)
+    return result
 
 
 class Recorder(Protocol):

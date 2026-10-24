@@ -45,7 +45,10 @@ class QuantumRouterAdaptive(QuantumRouter):
     Newly added attributes:
         1) adaptive_continuous (AdaptiveContinuousProtocol)
         2) active (bool): if True, then this node will actively select neighbor; if False, then this node will only respond to neighbor nodes
+        3) recorder (execution_events.Recorder | None): receives execution events when set; None (the default) disables them
     '''
+    recorder = None
+
     def __init__(self, name: str, tl: Timeline, memo_size: int = 50, seed: int = None, component_templates: dict = None, gate_fidelity: float = 1, measurement_fidelity: float = 1):
         super().__init__(name, tl, memo_size, seed, component_templates, gate_fidelity, measurement_fidelity)
         adaptive_name = f'{self.name}.adaptive_continuous'

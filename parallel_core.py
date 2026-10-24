@@ -5,6 +5,7 @@ from sequence.constants import MILLISECOND
 from sequence.kernel.process import Process
 from sequence.kernel.event import Event
 import sequence.utils.log as log
+from execution_events import RequestCompleted, RequestRejected, RequestSubmitted
 from request_app_parallel import RequestAppLatencyParallel
 from router_net_topo_adaptive import RouterNetTopoAdaptive
 import random
@@ -57,16 +58,18 @@ class ParallelLayerRequestManager:
     
     def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
                  pregeneration_time_ms: float, request_duration_ms: float,
-                 compiler_controller=None):
+                 compiler_controller=None, recorder=None):
         """
         Args:
             timeline: The simulation timeline
             name_to_apps: Dictionary mapping node names to RequestApp instances
             layered_requests: List of layers, each layer is a list of requests
+            recorder: optional execution_events recorder; None disables event emission
             pregeneration_time_ms: Pre-generation buffer time in milliseconds
             request_duration_ms: Maximum duration for each request window in milliseconds
         """
         self.timeline = timeline
+        self.recorder = recorder
         self.name_to_apps = name_to_apps
         self.original_layered_requests = layered_requests  # Keep original for reporting
         if compiler_controller is None:
@@ -206,6 +209,10 @@ class ParallelLayerRequestManager:
         if self.compiler_controller is not None:
             self.compiler_controller.mark_request_start(request_id, current_time)
 
+        if self.recorder is not None:
+            self.recorder.record(RequestSubmitted(
+                self.timeline.now(), request_id, self.request_retry_count[request_id]))
+
         # Get app and start request
         app = self.name_to_apps[src_name]
         # Register callbacks before start: a local RSVP rejection is synchronous.
@@ -221,6 +228,8 @@ class ParallelLayerRequestManager:
     def _on_reservation_rejected(self, request_id, rejected_at):
         if request_id not in self.pending_requests:
             return
+        if self.recorder is not None:
+            self.recorder.record(RequestRejected(rejected_at, request_id))
         attempt = self.request_attempt_submission_times[request_id]
         # Retry a definitive rejection with bounded backoff, rather than using
         # the physical-generation timeout as a reservation admission timer.
@@ -327,8 +336,10 @@ class ParallelLayerRequestManager:
         Callback when a request completes.
         When all requests in current layer complete, start the next layer.
         """
+        if self.recorder is not None:
+            self.recorder.record(RequestCompleted(completion_time, request_id))
         self.request_end_times[request_id] = completion_time
-        
+
         # Remove from pending set
         if request_id in self.pending_requests:
             self.pending_requests.remove(request_id)
@@ -483,10 +494,15 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             seed: int = 0, compiler_spec: dict | None = None,
                             total_memories_per_core: int | None = None,
                             simulation_stop_time_s: float | None = None,
-                            serialize_conflicts: bool = False):
+                            serialize_conflicts: bool = False,
+                            recorder=None):
     """
     Run an experiment with parallel layered requests.
-    
+
+    ``recorder`` is an optional ``execution_events`` recorder.  When given, the request
+    manager, every router's reservation timecards and every application report what they
+    do to it, for ``invariants.check_events``.  Results are identical with or without it.
+
     Returns:
         Dictionary with comprehensive results and statistics
     """
@@ -541,6 +557,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     name_to_apps = {}
     for router in network_topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):
         app = RequestAppLatencyParallel(router)
+        router.recorder = recorder
         name_to_apps[router.name] = app
         router.adaptive_continuous.has_empty_neighbor = True
         router.adaptive_continuous.update_prob = update_prob_setting
@@ -579,7 +596,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     # Create parallel layer request manager
     request_manager = ParallelLayerRequestManager(
         tl, name_to_apps, layered_requests,
-        pregeneration_time_ms, request_duration_ms, compiler_controller
+        pregeneration_time_ms, request_duration_ms, compiler_controller, recorder
     )
     # Compiler-driven runs have always used conflict-free batches because a
     # core cannot serve two reservations at once.  Expose the same batching to

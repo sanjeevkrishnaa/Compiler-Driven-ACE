@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Callable
 import sequence.utils.log as log
 from sequence.resource_management.memory_manager import MemoryInfo
 from request_app import RequestAppLatency
+from execution_events import PairCredited, PairDelivered
 from sequence.kernel.event import Event
 from sequence.kernel.process import Process
 
@@ -99,15 +100,22 @@ class RequestAppLatencyParallel(RequestAppLatency):
         """
         if info.state != "ENTANGLED":
             return
-        
+
+        recorder = getattr(self.node, "recorder", None)
+        if recorder is not None:
+            recorder.record(PairDelivered(self.node.timeline.now(), self.node.name, info.index))
+
         if info.index in self.memo_to_reservation:
             reservation = self.memo_to_reservation[info.index]
-            
+
             # RESPONDER SIDE: receives entanglement from initiator
             if info.remote_node == reservation.initiator:
                 if info.fidelity >= reservation.fidelity:
                     self.entanglement_timestamps[reservation].append(self.node.timeline.now())
                     self.entanglement_fidelities[reservation].append(info.fidelity)
+                    if recorder is not None:
+                        recorder.record(PairCredited(self.node.timeline.now(), self.node.name, info.index,
+                                                     id(reservation), reservation.identity, "responder"))
                     self.node.resource_manager.update(None, info.memory, MemoryInfo.RAW)
                     self.cache_entangled_path(reservation.path)
                     
@@ -127,8 +135,11 @@ class RequestAppLatencyParallel(RequestAppLatency):
                 if info.fidelity >= reservation.fidelity:
                     self.entanglement_timestamps[reservation].append(self.node.timeline.now())
                     self.entanglement_fidelities[reservation].append(info.fidelity)
+                    if recorder is not None:
+                        recorder.record(PairCredited(self.node.timeline.now(), self.node.name, info.index,
+                                                     id(reservation), reservation.identity, "initiator"))
                     entanglement_number = len(self.entanglement_timestamps[reservation])
-                    
+
                     log.logger.info(f"{self.node.name} (initiator): Request {reservation.identity} "
                                   f"entanglement {entanglement_number}/{reservation.entanglement_number}, "
                                   f"fidelity={info.fidelity:.6f}")

@@ -3,6 +3,7 @@
 
 from typing import TYPE_CHECKING, List, Tuple, Dict, Any
 from sequence.network_management.reservation import ResourceReservationProtocol, Reservation, ResourceReservationMessage, QCap, RSVPMsgType
+from sequence.network_management.reservation import MemoryTimeCard
 from sequence.resource_management.rule_manager import Rule
 from sequence.network_management.reservation import eg_rule_condition, ep_rule_condition1, ep_rule_condition2, es_rule_conditionB1, es_rule_conditionA, es_rule_conditionB2
 from sequence.kernel.event import Event
@@ -11,6 +12,7 @@ from sequence.resource_management.memory_manager import MemoryInfo
 from sequence.resource_management.rule_manager import Arguments
 from sequence.entanglement_management.entanglement_protocol import EntanglementProtocol
 
+from execution_events import ADAPTIVE, APPLICATION, Booked, MisRemoved, Unbooked
 from generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
 from swapping import EntanglementSwappingA_bds, EntanglementSwappingB_bds
 from sequence.entanglement_management.swapping import EntanglementSwappingA, EntanglementSwappingB
@@ -287,12 +289,65 @@ class ReservationAdaptive(Reservation):
 
 
 
+def describe_reservation(reservation) -> tuple[int, str]:
+    """The (request id, kind) that labels a reservation in execution events.
+
+    Application reservations are plain ``Reservation`` objects whose ``identity`` is the
+    trace request id.  Adaptive ones (CGP/ACGP and compiler preparations) have no
+    request id of their own; a compiler preparation reports the request it targets.
+    """
+    if isinstance(reservation, ReservationAdaptive):
+        target = reservation.compiler_target_request_id
+        return (-1 if target is None else target), ADAPTIVE
+    return reservation.identity, APPLICATION
+
+
+class ObservedTimeCard(MemoryTimeCard):
+    """A ``MemoryTimeCard`` that reports bookings and releases to its router's recorder.
+
+    Behaviour is exactly that of ``MemoryTimeCard``.  The only addition is that, when the
+    router has a recorder, adding or removing a reservation emits an event, so unobserved
+    runs are unaffected.
+    """
+
+    def __init__(self, memory_index: int, owner: "QuantumRouterAdaptive") -> None:
+        super().__init__(memory_index)
+        self._owner = owner
+
+    def add(self, reservation) -> bool:
+        added = super().add(reservation)
+        recorder = getattr(self._owner, "recorder", None)
+        if added and recorder is not None:
+            request_id, kind = describe_reservation(reservation)
+            recorder.record(Booked(self._owner.timeline.now(), self._owner.name, self.memory_index,
+                                   id(reservation), request_id, kind))
+        return added
+
+    def remove(self, reservation) -> bool:
+        recorder = getattr(self._owner, "recorder", None)
+        # MemoryTimeCard.remove releases the first stored reservation that *compares equal*,
+        # which need not be the object that was passed in.
+        stored = (next((item for item in self.reservations if item == reservation), None)
+                  if recorder is not None else None)
+        removed = super().remove(reservation)
+        if removed and recorder is not None:
+            now, node = self._owner.timeline.now(), self._owner.name
+            if stored is reservation:
+                request_id, kind = describe_reservation(stored)
+                recorder.record(Unbooked(now, node, self.memory_index, id(stored), request_id, kind, "removed"))
+            else:
+                recorder.record(MisRemoved(now, node, self.memory_index, id(reservation), id(stored),
+                                           describe_reservation(reservation)[0]))
+        return removed
+
+
 class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
     '''ReservationProtocol for node resources customized for adaptive-continuous protocol
     '''
 
     def __init__(self, owner: "QuantumRouterAdaptive", name: str, memory_array_name: str):
         super().__init__(owner, name, memory_array_name)
+        self.timecards = [ObservedTimeCard(card.memory_index, owner) for card in self.timecards]
         # Local ownership: the reservation object can be shared by endpoints.
         self._reservation_leases = {}
 
@@ -335,7 +390,12 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         for rule in list(manager.rule_manager.rules):
             if rule.reservation is reservation:
                 manager.expire(rule)
+        recorder = getattr(self.owner, "recorder", None)
         for card in self.timecards:
+            if recorder is not None and any(item is reservation for item in card.reservations):
+                request_id, kind = describe_reservation(reservation)
+                recorder.record(Unbooked(timeline.now(), self.owner.name, card.memory_index,
+                                         id(reservation), request_id, kind, reason))
             card.reservations[:] = [item for item in card.reservations if item is not reservation]
         adaptive = self.owner.adaptive_continuous
         if lease["compiler"]:
