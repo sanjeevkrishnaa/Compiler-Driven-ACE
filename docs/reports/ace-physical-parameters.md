@@ -14,7 +14,7 @@ arXiv 2607.14592 (read from the PDF text). Units are SeQUeNCe's (read from its s
 | Swapping probability | not used: every trace hop joins adjacent cores, so no swap happens | 0.95 | not exercised |
 | Memory fidelity | 0.95 | not in Table I | unknown |
 | Gate / measurement fidelity | 0.99 / 0.99 | not in Table I | unknown |
-| Router to BSM fibre | `distance: 0.025`, `attenuation: 0.0002`; SeQUeNCe reads metres and dB per metre, so 2.5 cm | not in Table I | **possible unit slip**: 0.025 looks like kilometres |
+| Router to BSM fibre | `distance: 0.025`, `attenuation: 0.0002`; SeQUeNCe reads metres and dB per metre, so 2.5 cm | not in Table I | **open question**: 2.5 cm is plausible for a chip-scale interconnect, and implausible if kilometres were meant. SeQUeNCe's own examples use 2,000 to 66,000 m. Which was intended is not stated anywhere I found |
 | Router to router classical delay | overwritten to distance/c + 20 us per hop + 100 us | not stated | unverified origin |
 | Request window, pre-generation lead, retry period, empty-layer gap | 50 ms, 5.3 ms, 1 ms, 5 ms | not physical | harness constants |
 
@@ -24,9 +24,14 @@ What follows from this, stated with its limit:
   runs; with the paper's 1 ms, pairs held across layers would decohere within a layer or two. That would
   change every pre-generation result, and the fidelity numbers. Which value the study intends is a decision
   for you and your guide.
-* **Fibre length.** If 0.025 was meant as 25 m or 25 km, photon travel time and loss change. I did not test
+* **Fibre length.** If 0.025 was meant as something other than 2.5 cm, photon travel time and loss change. I did not test
   how much the 2.5 cm reading matters for latency; generation times of about 1 ms in the audits are
   dominated by what I have not separated.
 * The harness constants are arguments or module constants and are the same in the old and new schedulers.
 
 Nothing in the experiments should be described as using the paper's parameters until this is decided.
+
+Searches for a published source that fixes these numbers (SeQUeNCe documentation, multi-core and modular
+quantum architecture papers) found none. The only stated reference for the group's setting is Table I of the ACGP
+paper, so that is what ACE should be compared with; nothing external settles coherence time, memory efficiency or
+link length for this architecture.
