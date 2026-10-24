@@ -28,10 +28,12 @@ network). Where a number is not in a source, the cell says so.
   efficiency (0.6 there, 0.95 in ACE).
 * **The group's own multi-core paper states different values for the two that matter most:** coherence 1 ms and memory
   efficiency 0.85. ACE matches neither paper on those two.
-* **Why it matters.** At millisecond scale the pre-generation results depend on coherence: with 1 s, unused pairs
-  essentially never expire in these runs (none did, in any audited run); with 1 ms, a pair held across a few layers
-  would decohere. Fidelity of every pre-generation result changes with it. On-demand fidelity is set by generation, not
-  waiting (it did not vary with the budget in any of 45 cells), so on-demand results are the least exposed.
+* **Why it matters (measured, `experiment1-ten-benchmarks.md`, sensitivity arm).** With the ACGP paper's coherence time
+  (1 ms) and memory efficiency (0.85) in place of ACE's, every pre-generated pair expired unused, so dynamic pre-generation
+  gave no benefit at all, and on-demand fidelity fell from 0.9498 to 0.7861 in every workload (on-demand latency rose by a
+  roughly constant 0.2 to 0.3 ms). The congestion curves (latency against memory budget) kept their shape. So the choice of
+  coherence time decides every pre-generation and fidelity conclusion, and is the most important open decision.
+  An earlier version of this document said on-demand results were the least exposed; that was wrong for fidelity.
 * A web search for an independent source fixing these numbers for a multi-core architecture found none; published
   figures vary by platform (cold-atom memories with about 1 ms coherence and 87% efficiency in one experiment, erbium
   spins above 1 s in the SeQUeNCe paper's own motivation).
