@@ -1,0 +1,4 @@
+configurations: 210
+configurations where the schedule or the blocked count differs between lookahead 1, 2, 4 and 8: 0
+preparations placed by the lookahead-8 plan: 333335
+of which placed earlier than the layer just before the request: 0

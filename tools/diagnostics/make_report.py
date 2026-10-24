@@ -99,7 +99,7 @@ report (Chapter 12 and the corrections log): the booking hold times of autonomou
 ## What changes the result (QFT, four memories, mapping seed 42)
 {t4}
 
-No effect: request duration (booking window), compiler reservation window, generation capacity, planner lookahead. Strong effect: the number of memories the compiler may hold.
+No effect: request duration (booking window), compiler reservation window, generation capacity, planner lookahead (the planner's schedule is identical for lookahead 1, 2, 4 and 8 in all 210 configurations, and no preparation is placed earlier than the layer before its request: `lookahead_check.txt`). Strong effect: the number of memories the compiler may hold.
 Preparing pairs only for first hops is an experiment to isolate the cause, not a proposed policy.
 
 ## Other mapping seeds

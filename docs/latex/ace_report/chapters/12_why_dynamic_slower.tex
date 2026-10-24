@@ -54,7 +54,7 @@ but its request is eligible much later, so the pair holds a memory for $24$ and 
 Each row of Table~\ref{tab:diag-ablation} changes one setting of the QFT run at four memories.
 \begin{itemize}
   \item \textbf{No effect:} the request duration (the nominal booking window, $10$ to $100$\,ms), the compiler reservation window ($100$ to $1000$\,ms) and the generation capacity per core.
-    What matters is how long a booking \emph{exists}, not the length of the window it was made for. The planner's lookahead (one, two, four or eight layers) makes no difference either, because the planner takes the layer just before the request when it has room (Section~\ref{sec:code-reading}, item~1).
+    What matters is how long a booking \emph{exists}, not the length of the window it was made for. The planner's lookahead (one, two, four or eight layers) makes no difference either: not to the latency of the QFT run, and not to the planner's schedule in any of $210$ configurations (Section~\ref{sec:code-reading}, item~1).
   \item \textbf{Strong effect:} the number of memories the compiler may hold. One of four: $1.88$\,ms; two: $2.77$\,ms; three: $5.46$\,ms (ODG: $1.57$\,ms). Fewer prepared pairs, less waiting.
   \item \textbf{Preparing only first hops} (later hops fall back to on-demand): $1.89$\,ms with the compiler's three memories, and the ready pairs wait $11$ instead of $24$\,ms. This supports the chain explanation
     but does not make dynamic better than ODG at four memories; it is an experiment to isolate the cause, not a proposed policy.
