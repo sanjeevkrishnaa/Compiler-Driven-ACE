@@ -42,11 +42,13 @@ POLICIES = ["on-demand", "dynamic"]
 SCHEDULER = "per-qubit"
 
 
-def enumerate_jobs() -> list[tuple[str, int, int, str]]:
+def enumerate_jobs(budgets_wanted=None, mapping_seeds=None) -> list[tuple[str, int, int, str]]:
     jobs = []
     for workload in WORKLOADS:
         budgets = BUDGETS + ([SATURATION[workload]] if workload in SATURATION else [])
-        for mapping_seed in MAPPING_SEEDS:
+        if budgets_wanted is not None:
+            budgets = [b for b in budgets if b in budgets_wanted]
+        for mapping_seed in (MAPPING_SEEDS if mapping_seeds is None else mapping_seeds):
             for budget in budgets:
                 for policy in POLICIES:
                     if policy == "dynamic" and budget < 2:
@@ -75,9 +77,15 @@ def main(argv=None) -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jobs", type=int, default=4)
     parser.add_argument("--only-workloads", nargs="+", default=None, choices=WORKLOADS)
+    parser.add_argument("--budgets", nargs="+", type=int, default=None, help="restrict the memory budgets")
+    parser.add_argument("--mapping-seeds", nargs="+", type=int, default=None, choices=MAPPING_SEEDS)
+    parser.add_argument("--config", type=Path, default=None, help="topology/physics config (default: ACE's)")
+    parser.add_argument("--parameter-set", default="ace-default", help="label recorded in every row")
+    parser.add_argument("--resume", action="store_true", help="keep invocations already on disk")
     args = parser.parse_args(argv)
 
-    jobs = [j for j in enumerate_jobs() if args.only_workloads is None or j[0] in args.only_workloads]
+    jobs = [j for j in enumerate_jobs(args.budgets, args.mapping_seeds)
+            if args.only_workloads is None or j[0] in args.only_workloads]
     args.output.mkdir(parents=True, exist_ok=True)
     started = time.time()
     traces = extract_traces(args.output / "_traces")
@@ -85,7 +93,8 @@ def main(argv=None) -> int:
 
     def work(job):
         try:
-            return job, [label(r) for r in sweep.run_one(job, traces, args.output, SCHEDULER)]
+            return job, [label(dict(r, parameter_set=args.parameter_set))
+                         for r in sweep.run_one(job, traces, args.output, SCHEDULER, args.config, args.resume)]
         except subprocess.TimeoutExpired:
             return job, [label({"workload": job[0], "mapping_seed": job[1], "total_memories": job[2],
                                 "run_status": "TIMEOUT"})]

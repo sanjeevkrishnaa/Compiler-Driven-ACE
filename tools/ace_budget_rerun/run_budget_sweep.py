@@ -71,7 +71,10 @@ def extract_traces(directory: Path) -> Path:
     return directory / PREFIX
 
 
-def run_one(job, traces: Path, output: Path, scheduler: str) -> list[dict]:
+def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None = None,
+            reuse: bool = False) -> list[dict]:
+    """Run one invocation (three physics seeds).  ``reuse`` keeps an invocation already on disk; its metadata is
+    still checked against the request, so a stale folder cannot pass for a different configuration."""
     workload, mapping_seed, budget, strategy = job
     trace = traces / workload / f"seed_{mapping_seed}" / "requests.txt"
     comp, cap = compiler_memories(strategy, budget), runtime_compiler_cap(strategy, budget)
@@ -85,10 +88,13 @@ def run_one(job, traces: Path, output: Path, scheduler: str) -> list[dict]:
                "--delta-layers", "6", "--dynamic-lookahead-layers", "8", "--coherence-time-layers", "10",
                "--compiler-reservation-ms", "1000", "--stop-time-s", "300", "--scheduler", scheduler,
                "--output", str(outdir)]
-    process = subprocess.run(command, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=7200)
-    if process.returncode != 0:
-        tail = (process.stderr.strip().splitlines() or ["?"])[-1][:200]
-        return [dict(base, run_status="FAILED: " + tail)]
+    if config is not None:
+        command += ["--config", str(config)]
+    if not (reuse and (outdir / "summary.csv").exists() and (outdir / "metadata.json").exists()):
+        process = subprocess.run(command, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=7200)
+        if process.returncode != 0:
+            tail = (process.stderr.strip().splitlines() or ["?"])[-1][:200]
+            return [dict(base, run_status="FAILED: " + tail)]
     meta = json.loads((outdir / "metadata.json").read_text(encoding="utf-8"))
     got = (meta["parameters"]["total_memories"], meta["parameters"]["compiler_memories"], meta["parameters"]["scheduler"])
     if got != (budget, comp, scheduler):
