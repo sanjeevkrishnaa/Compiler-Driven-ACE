@@ -1,0 +1,14 @@
+\chapter{Limits and open decisions}
+
+\begin{itemize}
+  \item \textbf{Physical parameters are undecided.} ACE's coherence time (1\,s), memory efficiency (0.95) and $2.5$\,cm link differ from the group's multi-core paper (1\,ms, 0.85). Congestion conclusions
+        are largely structural; pre-generation and fidelity conclusions depend entirely on them (Chapter~\ref{ch:exp1}).
+  \item \textbf{The scheduler is modelled as a central controller} that reads each core's reservation table instantly. A distributed scheduler would see stale tables.
+  \item \textbf{Budgets above four are counterfactual.} They say what more memory would buy, not what the hardware has.
+  \item \textbf{One machine, one parameter set, nine runs per cell.} Standard deviations pool mapping and physics seeds.
+  \item \textbf{Only on-demand and dynamic} were run in Experiment~1; fixed pre-generation and the autonomous caches were audited for correctness but not swept.
+  \item \textbf{Harness constants} (5.3\,ms lead, 50\,ms window, 5\,ms empty-layer gap) dominate makespan on short traces and are identical for both schedulers.
+  \item \textbf{No routing policy is simulated.} Chapter~\ref{ch:routing} bounds what offline routing could achieve structurally and then simulates the optimised routes; it does not
+        claim a general congestion-aware routing algorithm.
+  \item Mechanisms marked ``likely'' or ``probably'' in the text were not isolated by an experiment.
+\end{itemize}

@@ -1,0 +1,45 @@
+\chapter{Where the congestion is: heatmap and endpoint-versus-relay split}
+\label{ch:heatmap}
+
+\section{Per-core congestion}
+For every trace and layer, the \emph{demand} of a core is the number of hops that touch it (every hop joins two adjacent cores, so a hop
+counts at both ends). A core is \emph{overloaded} in a layer when its demand exceeds the number of communication slots, here $4$. The
+percentage is over \emph{communication-active layers} (layers with at least one hop), averaged with equal weight over the three mapping seeds
+42, 43 and 44 of the same circuit. This is a structural count of the mapped traces: it simulates no physics.
+
+The figure was regenerated from the raw traces without reading the archive's precomputed congestion files, as an independent check. All 160
+cells (ten workloads, sixteen cores) match the project's earlier figure at its printed resolution, and a regression test pins every cell.
+
+\input{generated/fig_heatmap}
+\input{generated/heatmap_summary}
+
+Congestion concentrates on the central cores, which lie on the most shortest paths. QFT and QAOA are the heavy cases, graph state is
+overloaded in a third of its (few) active layers, and GHZ, Bernstein--Vazirani and BMW never exceed four.
+
+\section{Own demand against relay demand (Experiment 2)}
+A \emph{route} is a qubit's consecutive hops within one layer; its first source and final destination are its \emph{endpoints}, every core in
+between is a \emph{relay}. For a core and a layer, $D$ counts the hops touching the core, $D_{\mathrm{end}}$ those where the core is an endpoint of the
+route, and $D_{\mathrm{relay}}$ the rest, so that a relay (touched by an arriving and a leaving hop) contributes two: $D=D_{\mathrm{end}}+D_{\mathrm{relay}}$.
+With capacity $C$, a layer is overloaded for the core when $D>C$. It is \emph{own-overloaded} when $D_{\mathrm{end}}>C$, and \emph{relay-only-overloaded}
+when $D_{\mathrm{end}}\le C<D$. The two sets are disjoint and together are exactly the overloaded layers.
+
+\paragraph{Validation.} Own plus relay-only reproduces all 160 heatmap cells, and the per-core relay incidences, incident hops and peak layer demand reproduce
+all 480 per-trial rows of the archive's per-core file exactly.
+
+\paragraph{Counting qubits in flight.} A second variant counts routes instead of hops: under per-qubit ordering the hops of a route run one after
+another, so a relay needs one memory for the route at a time, not two.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{fig_exp2_capacity4}
+\caption{Per core, the share of layers overloaded by the core's own endpoint demand (left) and only because of relay traffic (right), at capacity 4, hop counting. Workloads without overload are omitted.}
+\end{figure}
+
+\input{generated/exp2_own_share_hop}
+\input{generated/exp2_own_share_route}
+
+\paragraph{Findings.} At the modelled capacity of four, almost all overload is relay overload. The peak endpoint demand is 4 for QFT and Draper, 5 for QAOA and at most 3
+for the others, against a total demand up to 24. The only own-overload at capacity 4 is in QAOA, at the corner cores C0 and C3 (0.61\% of active layers each), which is
+0.44\% of QAOA's overload. Smaller budgets bring own demand in: QFT is 77\% own-overload at capacity 1. A routing change can therefore remove at most the relay part;
+the own part is a floor set by the mapping. Route counting finds less overload than hop counting (core C10 of QFT is overloaded in 46.4\% of active layers against
+58.0\%) and relay traffic is still essentially all of what remains.

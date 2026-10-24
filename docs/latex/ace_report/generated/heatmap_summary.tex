@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Workload & Active layers (seeds 42/43/44) & Layers with any overload & Hottest core \\
+\midrule
+GHZ & 15/15/15 & 0.0\% & C0 (0.0\%) \\
+Bernstein--Vazirani & 16/16/16 & 0.0\% & C0 (0.0\%) \\
+BMW/QUARK cardinality & 90/90/90 & 0.0\% & C0 (0.0\%) \\
+VQE real amplitudes & 22/22/22 & 6.1\% & C9 (4.5\%) \\
+CDKM ripple-carry adder & 157/157/157 & 0.6\% & C6 (0.6\%) \\
+Graph state & 6/6/6 & 33.3\% & C5 (33.3\%) \\
+Draper QFT adder & 138/138/138 & 41.3\% & C10 (23.4\%) \\
+QAOA & 163/163/163 & 71.6\% & C10 (56.0\%) \\
+QFT & 112/112/112 & 65.2\% & C10 (58.0\%) \\
+Random circuit & 2296/2296/2296 & 8.0\% & C9 (3.2\%) \\
+\bottomrule
+\end{tabular}
+\caption{Structural overload at capacity 4, pooled over the three mapping seeds.}
+\label{tab:heatmap}
+\end{table}

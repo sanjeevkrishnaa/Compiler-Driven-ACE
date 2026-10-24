@@ -1,0 +1,15 @@
+\chapter{Parameters in force}
+\label{app:params}
+
+The tables below are generated from the parameter record written by the Experiment~1 driver, which reads the physics from the configuration file and the
+other constants from the source, so they cannot drift from what ran.
+
+\input{generated/params_physics}
+\input{generated/params_harness}
+
+\section{Where the physical values come from, and the open decision}
+The values were traced to the two neighbouring papers' Table~I. ACE's classical delays, detector efficiency, memory and gate fidelities and fibre attenuation match
+the metro-scale adaptive-continuous protocol paper (arXiv 2502.01964), which also gives a $10$\,km link, a $2$\,s coherence time and a memory efficiency of $0.6$.
+ACE's link is $0.025$ (read as metres), its coherence time $1$\,s and its memory efficiency $0.95$. The group's multi-core paper (arXiv 2607.14592) states coherence $1$\,ms
+and memory efficiency $0.85$. The sensitivity arm of Experiment~1 shows that this choice decides every pre-generation and fidelity conclusion; it is the most important open
+decision, and the question for the supervisor is written in \code{docs/reports/ace-physical-parameters.md}.

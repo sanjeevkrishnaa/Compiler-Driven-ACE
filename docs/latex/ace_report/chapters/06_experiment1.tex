@@ -1,0 +1,41 @@
+\chapter{Latency, fidelity and congestion across memory budgets (Experiment 1)}
+\label{ch:exp1}
+
+\section{Design}
+All ten benchmarks, on the corrected scheduler, with $1,2,3,4,6,8,16,32$ communication memories per core (QFT also $64$). Budgets $1$--$4$ are \emph{modelled}
+(the group's multi-core paper gives four communication qubits per core); $6$--$32$ are \emph{counterfactual} (what-if capacity), marked $^*$. Two policies:
+\emph{on-demand} and \emph{dynamic} compiler pre-generation with $\text{budget}-1$ memories as compiler bank and one held for demand (so dynamic starts at two).
+Three mapping seeds and three physics seeds give nine runs per cell, 1\,368 runs in total. Latency is the common latency defined in Chapter~\ref{ch:corrections}.
+
+\section{Controls}
+\input{generated/exp1_controls}
+The first full run failed two controls for reasons that were not physical: the saturation check compared to exact equality although a few requests ``waited''
+the one picosecond the scheduler leaves after a release, and one on-demand step rose by $0.0005$\,ms with more memory (a thirtieth of the seed-to-seed spread), which is sampling
+noise because a delayed request draws different random numbers. The controls were refined, tests pin them, and a request now ``waited'' only if it waited more than a microsecond.
+The rerun is numerically identical to the first run in every column except that redefined one, which also shows that the pipeline is deterministic.
+
+\section{What congestion costs on-demand requests}
+\input{generated/fig_latency_vs_budget}
+\input{generated/exp1_latency_ondemand}
+Three workloads with no overload (GHZ, Bernstein--Vazirani, BMW) do not respond to the budget at all. At one memory the congested workloads are severe: QFT is about 12.7 times
+its saturated latency, QAOA 9.6, graph state 7.8 and Draper 6.5. At the modelled four memories the penalty against 32 memories is $+40\%$ for QFT, $+12\%$ for QAOA, $+5\%$ for graph state and
+$+1\%$ for Draper; the other workloads are within a percent. The floor, reached once nothing waits, is $1.11$ to $1.22$\,ms in every workload: that is generation time, not contention.
+
+\section{Congestion as waiting}
+\input{generated/fig_waiting_vs_budget}
+\input{generated/exp1_waiting_ondemand}
+The structural overload of the traces at the same capacity (Chapter~\ref{ch:heatmap}) predicts which workloads pay: across the 60 (workload, budget 1 to 8) points the structural overload and the
+on-demand latency penalty are strongly rank-correlated (Spearman $\rho=0.85$).
+
+\section{Pre-generation against on-demand, and the fidelity price}
+\input{generated/exp1_latency_dynamic}
+\input{generated/fig_fidelity_vs_budget}
+\input{generated/exp1_fidelity_dynamic}
+For the congested workloads dynamic is slower than on-demand at small budgets, because its compiler bank takes $\text{budget}-1$ of the memories and leaves one for demand; the first budget at which
+dynamic is faster than on-demand is 8 for graph state and Draper and 16 for QAOA and QFT. At 32 memories dynamic reaches $0.24$ to $0.30$\,ms against $1.11$ to $1.22$\,ms on-demand. Delivered fidelity under
+dynamic is below the on-demand value ($0.9498$ in every cell) and falls as the compiler bank grows from two to about eight memories, by at most $0.043$ under ACE's one-second coherence time; the mechanism (pairs stored longer) is likely but was not measured.
+
+\section{Sensitivity to the physical parameters}
+This is exploratory, not a result of the study: the parameters are undecided. Five workloads, budgets $2,4,8,32$, mapping seed 42, were rerun with the group's multi-core paper's coherence time ($1$\,ms) and memory efficiency ($0.85$) in place of ACE's
+($1$\,s and $0.95$). With the paper's values \textbf{every cached pair expires unused} (6 of 15\,700 compiler pairs were used), so dynamic pre-generation gives no benefit at all; on-demand fidelity falls from $0.9498$ to $0.7861$ in every workload and
+budget, and on-demand latency rises by about $0.26$ to $0.42$\,ms. The congestion curves keep their shape. So the congestion results are structural and change little with these parameters, while the pre-generation and fidelity results depend entirely on them.

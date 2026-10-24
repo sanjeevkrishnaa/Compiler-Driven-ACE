@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Workload & 1 & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
+\midrule
+GHZ & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 & 1.17$\pm$0.11 \\
+Bernstein--Vazirani & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 & 1.22$\pm$0.12 \\
+BMW/QUARK cardinality & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 & 1.12$\pm$0.04 \\
+VQE real amplitudes & 2.32$\pm$0.14 & 1.11$\pm$0.05 & 1.11$\pm$0.05 & 1.11$\pm$0.05 & 1.11$\pm$0.05 & 1.11$\pm$0.05 & 1.11$\pm$0.05 & 1.11$\pm$0.05 \\
+CDKM ripple-carry adder & 1.66$\pm$0.22 & 1.24$\pm$0.05 & 1.17$\pm$0.03 & 1.14$\pm$0.03 & 1.14$\pm$0.03 & 1.14$\pm$0.03 & 1.14$\pm$0.03 & 1.14$\pm$0.03 \\
+Graph state & 9.14$\pm$1.14 & 2.72$\pm$0.54 & 1.53$\pm$0.30 & 1.24$\pm$0.13 & 1.18$\pm$0.08 & 1.18$\pm$0.08 & 1.18$\pm$0.08 & 1.18$\pm$0.08 \\
+Draper QFT adder & 7.36$\pm$0.84 & 2.16$\pm$0.20 & 1.30$\pm$0.05 & 1.15$\pm$0.02 & 1.13$\pm$0.02 & 1.13$\pm$0.02 & 1.13$\pm$0.02 & 1.13$\pm$0.02 \\
+QAOA & 10.92$\pm$0.41 & 3.42$\pm$0.14 & 1.74$\pm$0.06 & 1.27$\pm$0.02 & 1.14$\pm$0.01 & 1.13$\pm$0.01 & 1.13$\pm$0.01 & 1.13$\pm$0.01 \\
+QFT & 14.42$\pm$0.35 & 4.72$\pm$0.14 & 2.39$\pm$0.09 & 1.59$\pm$0.05 & 1.21$\pm$0.02 & 1.15$\pm$0.02 & 1.13$\pm$0.02 & 1.13$\pm$0.02 \\
+Random circuit & 2.99$\pm$0.10 & 1.27$\pm$0.02 & 1.12$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 & 1.11$\pm$0.01 \\
+\bottomrule
+\end{tabular}
+\caption{Request latency (ms), on-demand, mean $\pm$ sd over nine runs. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
+\label{tab:exp1-latency-ondemand}
+\end{table}

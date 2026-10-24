@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lp{0.3\linewidth}@{}}
+\toprule
+Harness constant & Value \\
+\midrule
+Pre-generation lead (request submitted this long before its window) & 5.3 ms \\
+Request reservation window & 50 ms \\
+Empty-layer gap & 5 ms \\
+Retry period after a physical rejection & 1 ms \\
+Admission grace after a release or timeout & 1 ps \\
+A ``wait'' means more than & 0.001 ms \\
+Compiler reservation window & 1000.0 ms \\
+Planner: delta / lookahead / coherence layers & 6 / 8 / 10.0 \\
+Fidelity threshold of a request & 0.01 \\
+Simulation stop time & 300.0 s \\
+Scheduler & per-qubit, admission event, starvation guard on \\
+Seeds & mapping [42, 43, 44], physics [0, 1, 2] \\
+\bottomrule
+\end{tabular}
+\caption{Harness and scheduler constants (not physical).}
+\label{tab:params-harness}
+\end{table}

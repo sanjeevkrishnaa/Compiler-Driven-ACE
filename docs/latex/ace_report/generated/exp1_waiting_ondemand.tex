@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lrrrrrrrr@{}}
+\toprule
+Workload & 1 & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
+\midrule
+GHZ & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Bernstein--Vazirani & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+BMW/QUARK cardinality & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+VQE real amplitudes & 0.205 & 0.002 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+CDKM ripple-carry adder & 0.033 & 0.020 & 0.011 & 0.002 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Graph state & 0.602 & 0.281 & 0.121 & 0.029 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Draper QFT adder & 0.536 & 0.211 & 0.055 & 0.008 & 0.000 & 0.000 & 0.000 & 0.000 \\
+QAOA & 0.671 & 0.376 & 0.172 & 0.058 & 0.004 & 0.000 & 0.000 & 0.000 \\
+QFT & 0.696 & 0.430 & 0.249 & 0.130 & 0.031 & 0.007 & 0.000 & 0.000 \\
+Random circuit & 0.254 & 0.042 & 0.006 & 0.001 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\caption{Fraction of requests that waited more than a microsecond for a free memory, on-demand. Budgets marked $^*$ are counterfactual (beyond the modelled four slots).}
+\label{tab:exp1-waiting-ondemand}
+\end{table}

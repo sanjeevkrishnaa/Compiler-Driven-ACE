@@ -1,0 +1,16 @@
+\chapter{Reproducing the results}
+\label{app:repro}
+
+All commands are run from the repository root with the project's Python environment. Result folders are dated 2026-10-24.
+\begin{itemize}
+  \item Legacy baseline: \code{python tools/ace_correctness/baseline.py check --golden results/ace_correctness_baseline_2026-10-24/legacy --strict}
+  \item Unit and microcase tests: \code{python -B -m unittest discover -s test -p 'test_*.py'}
+  \item Heatmap: \code{python tools/heatmap/regenerate_heatmap.py --output out}
+  \item Experiment~2: \code{python tools/experiment2/make_report.py}
+  \item Experiment~1: \code{python tools/experiment1/run_experiment1.py --output out --jobs 4}, then \code{python tools/experiment1/analyze.py --results out/results.csv --output out}
+  \item Offline routing: \code{python tools/routing_research/run_routing_study.py --output out}
+  \item Torus traces: \code{python tools/congestion_study/run_study.py --mapper-dir mapper --topology torus --mapping-only --seeds 42 43 44 ...}
+  \item Torus experiments: \code{sh tools/torus/run_torus_experiments.sh WORKDIR}
+  \item This report's tables: \code{python tools/latex/make_tables.py}, then \code{tectonic docs/latex/ace_report/main.tex}
+\end{itemize}
+Every experiment folder contains \code{run_parameters.json} (all parameters, trace hashes, code commit, machine) and, where timed, \code{timings.csv}.

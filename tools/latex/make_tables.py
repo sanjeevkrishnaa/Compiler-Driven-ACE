@@ -127,6 +127,40 @@ def exp1_tables(skipped: list[str]) -> None:
         r"  \item " + tex(l).replace("--", "---") for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
 
 
+def parameter_tables(skipped: list[str]) -> None:
+    path = RESULTS / "experiment1_ten_benchmarks_2026-10-24" / "run_parameters.json"
+    if not path.exists():
+        skipped.append("parameters")
+        return
+    r = json.loads(path.read_text(encoding="utf-8"))
+    phys, const, run = r["ace_physics"], r["source_constants"], r["runner_parameters"]
+    link = phys["router_to_bsm_links"][0]
+    rows = [
+        ["Memory fidelity", f"{phys['memory_fidelity']}"], ["Memory efficiency", f"{phys['memory_efficiency']}"],
+        ["Memory coherence time", f"{phys['memory_coherence_time_s']} s"],
+        ["Memory cut-off ratio (cut-off / coherence)", "1 (SeQUeNCe default; not set in the file)"],
+        ["BSM detector efficiencies", ", ".join(str(x) for x in phys["bsm_detector_efficiencies"])],
+        ["Gate / measurement fidelity", f"{phys['gate_fidelity']} / {phys['measurement_fidelity']}"],
+        ["Router-to-BSM fibre", f"{link['distance_m']} m, {link['attenuation_db_per_m']} dB/m"],
+        ["Classical delay", f"distance/c + {const['classical_delay_per_hop_us']} $\\mu$s per hop + {const['classical_delay_base_us']} $\\mu$s"],
+        ["Configuration file", tex(phys["config_file"])],
+    ]
+    table(GEN / "params_physics.tex", ["Physical parameter", "Value"], rows, "Physical parameters in force (read from the run's parameter record).", "tab:params-physics", "lp{0.5\\linewidth}")
+    harness = [
+        ["Pre-generation lead (request submitted this long before its window)", f"{run['pregeneration_buffer_ms']} ms"],
+        ["Request reservation window", f"{run['request_duration_ms']} ms"],
+        ["Empty-layer gap", f"{const['empty_layer_gap_ms']:g} ms"], ["Retry period after a physical rejection", "1 ms"],
+        ["Admission grace after a release or timeout", f"{const['admission_grace_ps']:g} ps"],
+        ["A ``wait'' means more than", f"{const['wait_threshold_ms']:g} ms"],
+        ["Compiler reservation window", f"{run['compiler_reservation_ms']} ms"],
+        ["Planner: delta / lookahead / coherence layers", f"{run['delta_layers']} / {run['dynamic_lookahead_layers']} / {run['coherence_time_layers']}"],
+        ["Fidelity threshold of a request", f"{run['fidelity_threshold']}"], ["Simulation stop time", f"{run['stop_time_s']} s"],
+        ["Scheduler", f"{r['design']['scheduler']}, admission {run['admission']}, starvation guard on"],
+        ["Seeds", f"mapping {r['design']['mapping_seeds']}, physics {r['design']['physics_seeds']}"],
+    ]
+    table(GEN / "params_harness.tex", ["Harness constant", "Value"], harness, "Harness and scheduler constants (not physical).", "tab:params-harness", "lp{0.3\\linewidth}")
+
+
 def main() -> int:
     GEN.mkdir(parents=True, exist_ok=True)
     FIG.mkdir(parents=True, exist_ok=True)
@@ -134,6 +168,7 @@ def main() -> int:
     heatmap_tables(skipped)
     exp2_tables(skipped)
     exp1_tables(skipped)
+    parameter_tables(skipped)
     print("wrote", len(list(GEN.glob("*.tex"))), "generated files;", "skipped:", skipped or "none")
     return 0
 
