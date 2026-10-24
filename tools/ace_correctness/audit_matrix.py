@@ -30,14 +30,14 @@ ARCHIVE = REPO_ROOT / "results" / "congestion" / "mqt_ten_workload_congestion_re
 PREFIX = "mqt_ten_workload_study"
 WORKLOADS = ("ghz", "bv", "graphstate", "vqe_real_amp", "cdkm_ripple_carry_adder",
              "bmw_quark_cardinality", "draper_qft_adder", "qft", "qaoa", "randomcircuit")
-COLUMNS = ["workload", "strategy", "memories", "seed", "scheduler", "admission", "requested", "completed",
+COLUMNS = ["workload", "mapping_seed", "strategy", "memories", "seed", "scheduler", "admission", "requested", "completed",
            "violations", "violation_kinds", "makespan_ms", "retries", "max_retries_one_request",
            "max_admission_wait_ms", "wall_seconds"]
 
 
-def extract(workload: str, directory: Path) -> Path:
+def extract(workload: str, directory: Path, mapping_seed: int = 42) -> Path:
     with zipfile.ZipFile(ARCHIVE) as archive:
-        return Path(archive.extract(f"{PREFIX}/{workload}/seed_42/requests.txt", directory))
+        return Path(archive.extract(f"{PREFIX}/{workload}/seed_{mapping_seed}/requests.txt", directory))
 
 
 def run_cell(cell: dict) -> dict:
@@ -48,7 +48,7 @@ def run_cell(cell: dict) -> dict:
                         scheduler=cell["scheduler"], scheduler_options=options or None,
                         record=not cell.get("time_only", False))
     kinds = sorted({v.invariant for v in audit.violations})
-    return {"workload": cell["workload"], "strategy": cell["strategy"], "memories": cell["memories"],
+    return {"workload": cell["workload"], "mapping_seed": cell["mapping_seed"], "strategy": cell["strategy"], "memories": cell["memories"],
             "seed": cell["seed"], "scheduler": cell["scheduler"], "admission": cell["admission"] or "-",
             "requested": audit.requested, "completed": audit.completed, "violations": len(audit.violations),
             "violation_kinds": "|".join(kinds), "makespan_ms": f"{audit.makespan_ms:.6f}",
@@ -57,11 +57,12 @@ def run_cell(cell: dict) -> dict:
             "wall_seconds": f"{audit.wall_seconds:.3f}"}
 
 
-def build_cells(workloads, strategies, memories, seeds, scheduler, admission, directory: Path) -> list[dict]:
-    traces = {w: extract(w, directory) for w in workloads}
-    return [{"workload": w, "trace": str(traces[w]), "strategy": st, "memories": m, "seed": seed,
-             "scheduler": scheduler, "admission": admission}
-            for w in workloads for st in strategies for m in memories for seed in seeds]
+def build_cells(workloads, strategies, memories, seeds, scheduler, admission, directory: Path,
+                mapping_seeds=(42,)) -> list[dict]:
+    traces = {(w, ms): extract(w, directory, ms) for w in workloads for ms in mapping_seeds}
+    return [{"workload": w, "mapping_seed": ms, "trace": str(traces[(w, ms)]), "strategy": st, "memories": m,
+             "seed": seed, "scheduler": scheduler, "admission": admission}
+            for w in workloads for ms in mapping_seeds for st in strategies for m in memories for seed in seeds]
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -69,7 +70,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--workloads", nargs="+", default=list(WORKLOADS), choices=WORKLOADS)
     parser.add_argument("--strategies", nargs="+", default=["on-demand"], choices=COMPILER_STRATEGIES)
     parser.add_argument("--memories", nargs="+", type=int, default=[4])
-    parser.add_argument("--seeds", nargs="+", type=int, default=[0])
+    parser.add_argument("--seeds", nargs="+", type=int, default=[0], help="physics seeds")
+    parser.add_argument("--mapping-seeds", nargs="+", type=int, default=[42], choices=(42, 43, 44),
+                        help="which mapping of each workload in the archive")
     parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="per-qubit")
     parser.add_argument("--admission", choices=("poll", "event"), default=None)
     parser.add_argument("--jobs", type=int, default=4)
@@ -80,7 +83,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     with tempfile.TemporaryDirectory(prefix="ace-matrix-") as tmp:
         cells = build_cells(args.workloads, args.strategies, args.memories, args.seeds,
-                            args.scheduler, args.admission, Path(tmp))
+                            args.scheduler, args.admission, Path(tmp), args.mapping_seeds)
         # Largest traces first so the pool does not end waiting on one long cell.
         for cell in cells:
             cell["time_only"] = args.time_only
@@ -89,7 +92,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         cells.sort(key=lambda c: -WORKLOADS.index(c["workload"]) if c["workload"] in ("randomcircuit", "qaoa", "qft") else 0)
         with ProcessPoolExecutor(max_workers=args.jobs) as pool:
             rows = list(pool.map(run_cell, cells))
-    rows.sort(key=lambda r: (WORKLOADS.index(r["workload"]), r["strategy"], r["memories"], r["seed"]))
+    rows.sort(key=lambda r: (WORKLOADS.index(r["workload"]), r["mapping_seed"], r["strategy"], r["memories"], r["seed"]))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, COLUMNS)
@@ -98,7 +101,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     bad = [r for r in rows if r["violations"] or r["completed"] != r["requested"]]
     print(f"{len(rows)} cells, {len(bad)} with a violation or an incomplete run -> {args.output}")
     for r in bad[:10]:
-        print("  ", {k: r[k] for k in ("workload", "strategy", "memories", "seed", "completed", "requested", "violation_kinds")})
+        print("  ", {k: r[k] for k in ("workload", "mapping_seed", "strategy", "memories", "seed", "completed", "requested", "violation_kinds")})
     return 1 if bad else 0
 
 
