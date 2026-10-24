@@ -77,13 +77,19 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
     }
 
 
+# A request "waited" for a memory if it was admitted more than a microsecond after it became eligible.  Generation takes
+# about a millisecond, so this is far below any real wait, and far above the one picosecond the scheduler leaves after a
+# release (request_scheduler.GRACE_PS), which is bookkeeping, not contention.
+WAIT_THRESHOLD_MS = 1e-3
+
+
 def _admission_waits(stats: dict) -> dict:
     waits = [part["admission_wait_time_ms"] for part in stats["timing_breakdown"].values()
              if "admission_wait_time_ms" in part]
     if not waits:
         return {"average_admission_wait_ms": None, "max_admission_wait_ms": None, "requests_that_waited_fraction": None}
     return {"average_admission_wait_ms": fmean(waits), "max_admission_wait_ms": max(waits),
-            "requests_that_waited_fraction": sum(w > 0 for w in waits) / len(waits)}
+            "requests_that_waited_fraction": sum(w > WAIT_THRESHOLD_MS for w in waits) / len(waits)}
 
 
 def _eligible(result: dict, requests, reduce):

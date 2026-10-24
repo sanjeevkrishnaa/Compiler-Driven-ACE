@@ -92,3 +92,11 @@ class AdmissionWaitColumnTests(unittest.TestCase):
         self.assertGreater(got["max_admission_wait_ms"], 0)
         self.assertEqual(got["requests_that_waited_fraction"], 2 / 3)       # two of three requests had to wait
         self.assertIsNone(runner._admission_waits(legacy["stats"])["average_admission_wait_ms"])
+
+    def test_a_one_picosecond_grace_is_not_a_wait(self):
+        import run_trace_comparison as runner
+        stats = {"timing_breakdown": {0: {"admission_wait_time_ms": 0.0}, 1: {"admission_wait_time_ms": 1e-9},
+                                      2: {"admission_wait_time_ms": 0.5}, 3: {"admission_wait_time_ms": 2.0}}}
+        got = runner._admission_waits(stats)
+        self.assertEqual(got["requests_that_waited_fraction"], 0.5)          # only the 0.5 ms and 2 ms waits count
+        self.assertEqual(got["max_admission_wait_ms"], 2.0)
