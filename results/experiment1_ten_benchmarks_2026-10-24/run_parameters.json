@@ -1,0 +1,167 @@
+{
+  "experiment": "experiment1",
+  "parameter_set": "ace-default",
+  "started_at": "2026-10-24 13:04:48",
+  "finished_at": "2026-10-24 13:29:16",
+  "design": {
+    "workloads": [
+      "ghz",
+      "bv",
+      "graphstate",
+      "vqe_real_amp",
+      "cdkm_ripple_carry_adder",
+      "bmw_quark_cardinality",
+      "draper_qft_adder",
+      "qft",
+      "qaoa",
+      "randomcircuit"
+    ],
+    "mapping_seeds": [
+      42,
+      43,
+      44
+    ],
+    "budgets": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      16,
+      32
+    ],
+    "saturation_arms": {
+      "qft": 64
+    },
+    "policies": [
+      "on-demand",
+      "dynamic"
+    ],
+    "physics_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scheduler": "per-qubit",
+    "modelled_capacity_max": 4,
+    "invocations": 456,
+    "runs": 1368,
+    "compiler_memories_rule": "budget - 1 (on-demand: forced to 0 at run time)",
+    "generation_capacity_rule": "equal to the compiler memories requested"
+  },
+  "runner_flags": {
+    "--delta-layers": "6",
+    "--dynamic-lookahead-layers": "8",
+    "--coherence-time-layers": "10",
+    "--compiler-reservation-ms": "1000",
+    "--stop-time-s": "300"
+  },
+  "runner_parameters": {
+    "config": "config/final_config/grid_4x4_ace_3.json",
+    "mesh": "4x4",
+    "delta_layers": 6,
+    "dynamic_lookahead_layers": 8,
+    "coherence_time_layers": 10.0,
+    "fidelity_threshold": 0.01,
+    "pregeneration_buffer_ms": 5.3,
+    "compiler_reservation_ms": 1000.0,
+    "request_duration_ms": 50,
+    "stop_time_s": 300.0,
+    "scheduler": "per-qubit",
+    "admission": "event",
+    "no_starvation_guard": false,
+    "max_layers": null,
+    "verbose": false
+  },
+  "ace_physics": {
+    "config_file": "config/final_config/grid_4x4_ace_3.json",
+    "memory_fidelity": 0.95,
+    "memory_efficiency": 0.95,
+    "memory_coherence_time_s": 1,
+    "bsm_detector_efficiencies": [
+      0.95,
+      0.95
+    ],
+    "encoding": "single_heralded",
+    "adaptive_max_memory_in_file": 3,
+    "gate_fidelity": 0.99,
+    "measurement_fidelity": 0.99,
+    "router_to_bsm_links": [
+      {
+        "distance_m": 0.025,
+        "attenuation_db_per_m": 0.0002
+      }
+    ],
+    "note": "memo_size and the compiler memory limit are set per run from the budget"
+  },
+  "source_constants": {
+    "classical_delay_per_hop_us": 20,
+    "classical_delay_base_us": 100,
+    "classical_delay_formula": "distance / c + hops * per_hop + base (router_net_topo_adaptive.py)",
+    "empty_layer_gap_ms": 5.0,
+    "admission_grace_ps": 1.0,
+    "wait_threshold_ms": 0.001,
+    "retry_period": "1 ms (request_scheduler.RETRY_PERIOD)"
+  },
+  "trace_sha256": {
+    "ghz/seed_42": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3",
+    "ghz/seed_43": "7c1bd05e38c272ee5cfd9aefe014280f7c4465aafa4ec4390e1dee0313f58ff4",
+    "ghz/seed_44": "119979b6bfe3e67727b020420348d81074f94814cbe1373c6df1d896fd6715e0",
+    "bv/seed_42": "563b40828a220bbdffe110dd1f77a52536e6f68c6d3e5607d5f2f833bc193059",
+    "bv/seed_43": "2cbb57555ba93797df46e8cdfc65eddc831fb7b481ff442d300388ba98392d3c",
+    "bv/seed_44": "dc1fd3f60815734904115a3b1d6e157640dc5d036987b0c608599f9c97492251",
+    "graphstate/seed_42": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed",
+    "graphstate/seed_43": "8acf185f0e859c83d7caf33ad47c407ac9d427072f50520cba5d90af3b0b283e",
+    "graphstate/seed_44": "e52cc95cbe9eee653f67a8f374217016f90d08537826506dcf3c7480dd6ef7f9",
+    "vqe_real_amp/seed_42": "441fc7b225d89722f1c6e2af873f14f060ce831b9278e3d7a722a8f3f8d20719",
+    "vqe_real_amp/seed_43": "0054bf844506158f802eb4f3c1318e46c526ca5e1716208f8abfb3f69dcbf482",
+    "vqe_real_amp/seed_44": "d337d7051f111efd0c60a0b47458eecce8fdfddc0fec2919a613d6e242f8b6cc",
+    "cdkm_ripple_carry_adder/seed_42": "16541ebfbdcae072656a46b45103ab4cf69c9f65125413ad5dee7a5119f500c1",
+    "cdkm_ripple_carry_adder/seed_43": "74c8be39059a594e9eef416168baa83f61d717707bf7bb422ce96df03dcdde66",
+    "cdkm_ripple_carry_adder/seed_44": "588bf4eadcd28ab7f5531d834ca625128b71f091864d70086511e21cd87dfb2b",
+    "bmw_quark_cardinality/seed_42": "d6990aad5961dae5fab0098d4012544d9ed36070a73b81ce2b4819fb5840fece",
+    "bmw_quark_cardinality/seed_43": "db9ac986979c644a4623f1d8d43530a384e68addf843950a1655c1fdb59760c2",
+    "bmw_quark_cardinality/seed_44": "527f449b20f903c37916182a3c7b864329a8b0cb8181e2637ca458af0e9768c0",
+    "draper_qft_adder/seed_42": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570",
+    "draper_qft_adder/seed_43": "aad8472f58227c11b67e7b42b59cabbc616d56273b7b6f5b36afb8dadfad2dc7",
+    "draper_qft_adder/seed_44": "debc4bc8a3e8a5599bffc1e3472d73a7e0ae088207ddb3502ba9b85b0f5a846e",
+    "qft/seed_42": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a",
+    "qft/seed_43": "8a2f2dcc9c4b8522a2c7a445af740710a7d6706e8897a482dd0c3642e24e000c",
+    "qft/seed_44": "393fab420955bd3997218fc3ca2efde711c82b67e85cab6fbdd74428e40589f5",
+    "qaoa/seed_42": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252",
+    "qaoa/seed_43": "7b0b4a49ac901a5cdbc70e226a3d8c415f175589e482ba3cf56a944f179a122b",
+    "qaoa/seed_44": "c7a51fac3b5054e10eb24d2e99e700ba1c0d2184e4ca2b6fa863c4ead6e0033a",
+    "randomcircuit/seed_42": "d5de1987f0d1404a0abd345382c3491429e0788a15f9a5f33ed8c1f1ab804470",
+    "randomcircuit/seed_43": "0c4ce2fcdfb4589be0ed2b890fb9fd54de34f8a9ebfd1463cfc96f5c5defdda7",
+    "randomcircuit/seed_44": "0a88db911cf6c74e93620adff159f6eb6d795d9a2a978ac4d2ab4142074c2f7b"
+  },
+  "code": {
+    "commit": "7c537960611c17599e44c2116ce2fce533e231ae",
+    "branch": "codex/ace-scheduler-correctness",
+    "uncommitted_changes": true
+  },
+  "machine": {
+    "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3",
+    "cpus": 8
+  },
+  "timing": {
+    "per_workload_sum_of_invocation_seconds": {
+      "ghz": 64.1,
+      "bv": 65.3,
+      "graphstate": 72.6,
+      "vqe_real_amp": 84.8,
+      "cdkm_ripple_carry_adder": 190.6,
+      "bmw_quark_cardinality": 159.7,
+      "draper_qft_adder": 342.9,
+      "qft": 684.4,
+      "qaoa": 720.0,
+      "randomcircuit": 3334.9
+    },
+    "invocations_timed": 456,
+    "parallel_jobs": 4,
+    "total_wall_clock_seconds": 1468.4,
+    "note": "an invocation is one process running three physics seeds; with parallel_jobs > 1 each includes contention from the other jobs, so the sum exceeds the total wall clock"
+  }
+}
