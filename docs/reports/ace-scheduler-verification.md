@@ -21,3 +21,26 @@ with a core whose memories were all held by other requests.
 
 Not covered: CGP and ACGP through the per-qubit scheduler (they need the request plan plumbed through the
 runner), several mapping seeds, and expiry of unused pre-generated pairs under load.
+
+## Wall-clock cost of the simulation (bare run, one at a time, no recorder)
+
+Seconds of real time on the development Mac, 4 memories per core, physics seed 0, 4x4 mesh. Data:
+`wall_time_legacy.csv`, `wall_time_per_qubit.csv`. These are timings of one run each on one machine, not a benchmark
+of the machine: expect a few percent of noise. All 40 runs completed every request.
+
+| Benchmark | Requests | On-demand legacy | On-demand per-qubit | Dynamic legacy | Dynamic per-qubit |
+|---|---:|---:|---:|---:|---:|
+| ghz | 24 | 0.1 | 0.0 | 0.0 | 0.0 |
+| bv | 25 | 0.0 | 0.0 | 0.0 | 0.0 |
+| graphstate | 76 | 0.0 | 0.0 | 0.1 | 0.1 |
+| vqe_real_amp | 104 | 0.1 | 0.1 | 0.1 | 0.2 |
+| bmw_quark_cardinality | 144 | 0.1 | 0.1 | 0.1 | 0.1 |
+| cdkm_ripple_carry_adder | 456 | 0.2 | 0.2 | 0.3 | 0.3 |
+| draper_qft_adder | 1,310 | 0.6 | 0.7 | 0.9 | 1.0 |
+| qft | 2,510 | 1.3 | 1.4 | 1.6 | 1.6 |
+| qaoa | 3,068 | 2.0 | 2.1 | 2.0 | 2.1 |
+| randomcircuit | 11,688 | 5.9 | 6.2 | 11.6 | 11.5 |
+
+The new scheduler costs about 5% more real time on the larger traces (it reads reservation tables at admission)
+and the simulations are short either way. Real time is unrelated to the simulated makespan, which is what the
+experiments report.
