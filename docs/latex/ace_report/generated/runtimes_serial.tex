@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lrrrrrrrrr@{}}
+\toprule
+Benchmark & \multicolumn{5}{c}{on-demand, memories} & \multicolumn{4}{c}{dynamic, memories} \\
+ & 1 & 2 & 4 & 8 & 32 & 2 & 4 & 8 & 32 \\
+\midrule
+GHZ & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 \\
+Bernstein-Vazirani & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 \\
+BMW/QUARK cardinality & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 & 0.5 \\
+VQE real amplitudes & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.5 & 0.5 & 0.5 \\
+CDKM ripple-carry adder & 0.6 & 0.6 & 0.6 & 0.6 & 0.6 & 0.7 & 0.7 & 0.7 & 0.8 \\
+Graph state & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 & 0.4 \\
+Draper QFT adder & 1.1 & 1.1 & 1.1 & 1.1 & 1.2 & 1.2 & 1.4 & 1.4 & 1.6 \\
+QAOA & 2.1 & 2.1 & 2.1 & 2.2 & 2.4 & 2.4 & 2.8 & 3.1 & 3.5 \\
+QFT & 1.8 & 1.8 & 1.7 & 1.8 & 2.0 & 1.9 & 2.2 & 2.5 & 2.9 \\
+Random circuit & 7.8 & 7.9 & 8.0 & 8.0 & 8.8 & 10.6 & 14.1 & 14.9 & 15.3 \\
+\bottomrule
+\end{tabular}
+\caption{Seconds of real time per simulation run, one run at a time (serial pass, mapping seed 42; mean over three physics seeds).}
+\label{tab:runtimes-serial}
+\end{table}
