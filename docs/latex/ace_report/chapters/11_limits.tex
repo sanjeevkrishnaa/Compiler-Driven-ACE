@@ -7,7 +7,10 @@
   \item \textbf{The scheduler is modelled as a central controller} that reads each core's reservation table instantly. A distributed scheduler would see stale tables.
   \item \textbf{Budgets above four are counterfactual.} They say what more memory would buy, not what the hardware has.
   \item \textbf{One machine, one parameter set, nine runs per cell.} Standard deviations pool mapping and physics seeds.
-  \item \textbf{Only on-demand and dynamic} were run in Experiment~1; fixed pre-generation and the autonomous caches were audited for correctness but not swept.
+  \item \textbf{Experiment~1 ran on-demand and dynamic;} CGP and ACGP were added in Chapter~\ref{ch:four-policies} for nine benchmarks (the random circuit was set aside for them: its runs at large memory counts take over an hour each). Fixed pre-generation was audited for correctness but not swept.
+  \item \textbf{The autonomous protocols' cache cap is my choice.} CGP and ACGP were allowed to hold at most memories$-1$ pairs per core, as dynamic is, instead of ACE's fixed cap of three; their runs end 1\,ms after the last request so that waste covers the workload only. Waste depends on the length of the workload and is comparable only within a benchmark.
+  \item \textbf{The diagnosis of Chapter~\ref{ch:why-dynamic} is deep on QFT} (three mapping and three physics seeds at four memories); on the other benchmarks it is one mapping seed.
+  \item \textbf{CGP and ACGP pair ages were not measured,} so the lower fidelity of their pairs is not attributed to a measured cause.
   \item \textbf{Harness constants} (5.3\,ms lead, 50\,ms window, 5\,ms empty-layer gap) dominate makespan on short traces and are identical for both schedulers.
   \item \textbf{No routing algorithm is proposed.} Chapter~\ref{ch:routing} bounds what offline routing could achieve structurally and then simulates the optimal offline choice of routes; it does not claim a practical congestion-aware routing algorithm.
   \item Mechanisms marked ``likely'' or ``probably'' in the text were not isolated by an experiment.

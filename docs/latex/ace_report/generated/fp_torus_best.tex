@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+Mem. & ODG & Dynamic & CGP & ACGP \\
+\midrule
+1 & 9 & 0 & 0 & 0 \\
+2 & 4 & 5 & 0 & 0 \\
+3 & 4 & 5 & 0 & 0 \\
+4 & 4 & 5 & 0 & 0 \\
+6 & 4 & 5 & 0 & 0 \\
+8 & 1 & 8 & 0 & 0 \\
+16 & 0 & 8 & 0 & 1 \\
+32 & 0 & 7 & 0 & 2 \\
+\bottomrule
+\end{tabular}}
+\caption{Torus: number of benchmarks (of ten) on which each policy has the lowest latency at each memory count (a policy is counted only where it was run; dynamic, CGP and ACGP start at two memories).}
+\label{tab:fp-torus-best}
+\end{table}

@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Workload & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
+\midrule
+GHZ & 68\% & 75\% & 75\% & 75\% & 75\% & 75\% & 75\% \\
+Bernstein--Vazirani & 67\% & 79\% & 79\% & 79\% & 79\% & 79\% & 79\% \\
+BMW/QUARK cardinality & 66\% & 77\% & 77\% & 77\% & 77\% & 77\% & 77\% \\
+VQE real amplitudes & 43\% & 55\% & 58\% & 66\% & 74\% & 76\% & 76\% \\
+CDKM ripple-carry adder & 40\% & 66\% & 72\% & 73\% & 73\% & 73\% & 73\% \\
+Graph state & -98\% & -131\% & -79\% & -21\% & 44\% & 77\% & 77\% \\
+Draper QFT adder & -119\% & -224\% & -141\% & -37\% & 33\% & 77\% & 77\% \\
+QAOA & -110\% & -193\% & -157\% & -65\% & 2\% & 77\% & 78\% \\
+QFT & -125\% & -219\% & -179\% & -85\% & -3\% & 77\% & 78\% \\
+\bottomrule
+\end{tabular}}
+\caption{Latency gain of dynamic over on-demand, $(\text{ODG}-\text{Dyn.})/\text{ODG}$, torus; negative means dynamic is slower. Budgets marked $^*$ are counterfactual.}
+\label{tab:fp-torus-gain}
+\end{table}

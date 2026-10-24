@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Workload & Dynamic & CGP & ACGP \\
+\midrule
+GHZ & 0.0 & 80.6 & 79.6 \\
+Bernstein--Vazirani & 0.0 & 91.3 & 91.2 \\
+BMW/QUARK cardinality & 0.0 & 90.9 & 90.6 \\
+VQE real amplitudes & 0.0 & 63.4 & 63.8 \\
+CDKM ripple-carry adder & 0.0 & 67.5 & 65.9 \\
+Graph state & 0.0 & 56.2 & 55.7 \\
+Draper QFT adder & 0.0 & 47.4 & 46.9 \\
+QAOA & 0.0 & 33.4 & 31.2 \\
+QFT & 0.0 & 33.9 & 32.8 \\
+\bottomrule
+\end{tabular}}
+\caption{Pairs generated and never used (\%), torus, 2 memories per core (modelled), mean of three mapping seeds of the mean of three physics seeds.}
+\label{tab:fp-torus-waste-2}
+\end{table}

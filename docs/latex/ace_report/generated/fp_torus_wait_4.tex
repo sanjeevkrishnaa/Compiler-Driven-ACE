@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Workload & ODG & Dynamic & CGP & ACGP \\
+\midrule
+GHZ & 0.00 & 0.00 & 0.00 & 0.00 \\
+Bernstein--Vazirani & 0.00 & 0.00 & 0.00 & 0.00 \\
+BMW/QUARK cardinality & 0.00 & 0.00 & 0.00 & 0.00 \\
+VQE real amplitudes & 0.00 & 0.19 & 0.35 & 0.35 \\
+CDKM ripple-carry adder & 0.00 & 0.01 & 0.15 & 0.15 \\
+Graph state & 0.00 & 1.53 & 3.38 & 3.39 \\
+Draper QFT adder & 0.02 & 2.29 & 5.20 & 5.44 \\
+QAOA & 0.04 & 2.49 & 5.87 & 5.77 \\
+QFT & 0.09 & 2.86 & 6.84 & 7.01 \\
+\bottomrule
+\end{tabular}}
+\caption{Wait for a free memory (ms), torus, 4 memories per core (modelled), mean of three mapping seeds of the mean of three physics seeds.}
+\label{tab:fp-torus-wait-4}
+\end{table}

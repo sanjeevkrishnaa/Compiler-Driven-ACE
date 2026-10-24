@@ -37,9 +37,9 @@ def landscape(name: str, png: Path, caption: str, label: str) -> None:
     if png.resolve() != (FIG / png.name).resolve():
         shutil.copy(png, FIG / png.name)
     (GEN / name).write_text("\n".join([
-        r"\begin{landscape}", r"\begin{figure}[p]", r"\centering",
-        rf"\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{{{png.name}}}",
-        rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{figure}", r"\end{landscape}"]) + "\n", encoding="utf-8")
+        r"\clearpage\newgeometry{margin=12mm}\begin{landscape}", r"\begin{figure}[p]", r"\centering",
+        rf"\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{{{png.name}}}",
+        rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{figure}", r"\end{landscape}\clearpage\restoregeometry"]) + "\n", encoding="utf-8")
 
 
 # ----------------------------------------------------------------------------------------------- legacy vs corrected
@@ -181,6 +181,7 @@ def four_policy_tables(skipped: list) -> None:
             skipped.append(f"four policies {topo}")
             continue
         t = pd.read_csv(path)
+        present = [w for w in MT.ORDER if w in set(t.workload)]
         def pivot(metric, b):
             return t[t.total_memories == b].pivot(index="workload", columns="policy", values=metric)
         for metric, title, digits, key in (("latency_ms", "Request latency (ms)", 2, "lat"), ("fidelity", "Delivered EPR fidelity", 4, "fid"),
@@ -189,22 +190,20 @@ def four_policy_tables(skipped: list) -> None:
             for b in (2, 4):
                 pv = pivot(metric, b)
                 polis = [p for p in ORDER if p in pv.columns and not pv[p].isna().all()]
-                rows = [[NAMES[w]] + [f(pv.loc[w, p], digits) if w in pv.index else "--" for p in polis] for w in MT.ORDER]
+                rows = [[NAMES[w]] + [f(pv.loc[w, p], digits) if w in pv.index else "--" for p in polis] for w in present]
                 MT.table(GEN / f"fp_{topo}_{key}_{b}.tex", ["Workload"] + polis, rows,
                          f"{title}, {label}, {b} memories per core (modelled), mean of three mapping seeds of the mean of three physics seeds.",
                          f"tab:fp-{topo}-{key}-{b}")
         # win table
         lat = t.pivot_table(index=["workload", "total_memories"], columns="policy", values="latency_ms")
         gain = ((lat["ODG"] - lat["Dynamic"]) / lat["ODG"] * 100).unstack("total_memories")
-        rows = [[NAMES[w]] + [f(gain.loc[w, b], 0, pct=True) if (w in gain.index and b in gain.columns and pd.notna(gain.loc[w, b])) else "--" for b in BUDGETS[1:]] for w in MT.ORDER]
+        rows = [[NAMES[w]] + [f(gain.loc[w, b], 0, pct=True) if (w in gain.index and b in gain.columns and pd.notna(gain.loc[w, b])) else "--" for b in BUDGETS[1:]] for w in present]
         MT.table(GEN / f"fp_{topo}_gain.tex", ["Workload"] + [str(b) + ("$^*$" if b > 4 else "") for b in BUDGETS[1:]], rows,
                  f"Latency gain of dynamic over on-demand, $(\\text{{ODG}}-\\text{{Dyn.}})/\\text{{ODG}}$, {label}; negative means dynamic is slower. "
                  "Budgets marked $^*$ are counterfactual.", f"tab:fp-{topo}-gain")
         # where dynamic lies: the memory count from which it beats on-demand, and how it stands against CGP and ACGP
         rows = []
-        for w in MT.ORDER:
-            if w not in lat.index.get_level_values(0):
-                continue
+        for w in present:
             sub = lat.loc[w]
             def first_win(a, b):
                 ok = [m for m in sub.index if m >= 2 and pd.notna(sub.loc[m, a]) and pd.notna(sub.loc[m, b]) and sub.loc[m, a] < sub.loc[m, b]]
@@ -234,7 +233,7 @@ def four_policy_tables(skipped: list) -> None:
                  "(a policy is counted only where it was run; dynamic, CGP and ACGP start at two memories).", f"tab:fp-{topo}-best", colspec="rrrrr")
         for png, cap, lab in (("latency.png", "Request latency against memories per core, all four policies (log scale).", "lat"),
                               ("fidelity.png", "Delivered EPR fidelity against memories per core.", "fid"),
-                              ("waste.png", "Pairs generated and never used, as a percentage of pairs generated (dynamic, CGP, ACGP).", "waste"),
+                              ("waste.png", "Pairs generated and not used by the end of the run, as a percentage of pairs generated (dynamic, CGP, ACGP).", "waste"),
                               ("wait.png", "Average wait for a free memory (log scale).", "wait"),
                               ("readiness.png", "Pre-generated pairs consumed per request (pairs are counted at both endpoints, so the unit is pairs used divided by twice the requests).", "ready")):
             if (folder / png).exists():

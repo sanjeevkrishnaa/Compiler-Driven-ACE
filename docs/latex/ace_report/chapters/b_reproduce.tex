@@ -28,6 +28,25 @@ python tools/congestion_study/run_study.py --mapper-dir mapper \
     --topology torus --mapping-only --seeds 42 43 44 --workloads <ten names>
 sh tools/torus/run_torus_experiments.sh WORKDIR
 
+# CGP and ACGP on the Experiment 1 grid (mesh; for the torus add
+# --topology torus --traces-dir <torus traces>)
+python tools/experiment1/run_experiment1.py \
+    --policies continuous adaptive-continuous \
+    --output out/cgp_acgp --jobs 4
+# only if the driver was stopped before it wrote results.csv:
+python tools/experiment1/assemble_results.py out/cgp_acgp \
+    out/cgp_acgp/results.csv
+python tools/experiment1/four_policies.py \
+    --base results/experiment1_ten_benchmarks_2026-10-24/results.csv \
+    --extra out/cgp_acgp/results.csv --output out/four \
+    --label mesh --exclude randomcircuit
+
+# diagnosis of dynamic against on-demand (70 diagnostic runs)
+python tools/diagnostics/run_diagnostics.py --output out/diag --jobs 4
+python tools/diagnostics/summarise.py out/diag
+python tools/latex/make_policy_comparison.py
+python tools/diagnostics/make_report.py
+
 # memory cut-off
 python tools/cutoff_study/mechanism.py --output out/mechanism.csv
 

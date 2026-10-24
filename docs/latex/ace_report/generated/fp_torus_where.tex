@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lcccrrrr@{}}
+\toprule
+Workload & Dynamic beats ODG from (memories) & vs CGP win/tie/loss & vs ACGP win/tie/loss & Fidelity Dyn. & CGP & ACGP & ODG \\
+\midrule
+GHZ & 2 & 5/2/0 & 5/2/0 & 0.931 & 0.878 & 0.879 & 0.950 \\
+Bernstein--Vazirani & 2 & 6/1/0 & 6/1/0 & 0.930 & 0.871 & 0.870 & 0.950 \\
+BMW/QUARK cardinality & 2 & 7/0/0 & 7/0/0 & 0.931 & 0.880 & 0.879 & 0.950 \\
+VQE real amplitudes & 2 & 7/0/0 & 7/0/0 & 0.929 & 0.902 & 0.906 & 0.950 \\
+CDKM ripple-carry adder & 2 & 7/0/0 & 7/0/0 & 0.925 & 0.919 & 0.916 & 0.950 \\
+Graph state & 8 & 7/0/0 & 7/0/0 & 0.919 & 0.894 & 0.894 & 0.950 \\
+Draper QFT adder & 8 & 7/0/0 & 7/0/0 & 0.925 & 0.910 & 0.908 & 0.950 \\
+QAOA & 8 & 7/0/0 & 7/0/0 & 0.925 & 0.906 & 0.906 & 0.950 \\
+QFT & 16 & 8/0/0 & 8/0/0 & 0.928 & 0.910 & 0.909 & 0.950 \\
+\bottomrule
+\end{tabular}}
+\caption{Where dynamic lies, torus. Column~2: the smallest memory count from which dynamic has lower latency than on-demand ($^\dagger$: with at least one later count where it does not). Columns~3--4: over the memory counts run for both policies (2 to 32; QFT also 64), the number at which dynamic has lower latency, equal latency (the floor reached when nothing waits) or higher latency than CGP and than ACGP. Columns~5--8: delivered fidelity at four memories.}
+\label{tab:fp-torus-where}
+\end{table}

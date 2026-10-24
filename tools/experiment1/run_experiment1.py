@@ -11,7 +11,8 @@ are never mixed in (its serialization made the budget unable to bind).
   communication qubits per core, so 1 to 4 are modelled values and 6 to 32 are counterfactual (what-if capacity).
   QFT also runs 64: if it reproduces 32, 32 is saturated.
 * Policies: on-demand (isolates contention: nothing is pre-generated) and dynamic compiler pre-generation, with
-  one memory held back for demand (compiler memories = budget - 1), as in the budget study.  Dynamic needs at least
+  the compiler allowed to hold at most budget - 1 memories per core at once (the memories are a shared pool; the cap limits
+  only the compiler), as in the budget study.  Dynamic needs at least
   two memories.
 * Physical parameters are ACE's current ones, undecided (docs/reports/ace-physical-parameters.md).
 
@@ -57,7 +58,7 @@ def enumerate_jobs(budgets_wanted=None, mapping_seeds=None, policies=None) -> li
             for budget in budgets:
                 for policy in (policies or POLICIES):
                     if policy != "on-demand" and budget < 2:
-                        continue                # a compiler bank needs a memory besides the one held for demand
+                        continue                # a cap of budget - 1 is zero below two memories: no pre-generation
                     jobs.append((workload, mapping_seed, budget, policy))
     return jobs
 

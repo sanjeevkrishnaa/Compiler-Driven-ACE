@@ -5,7 +5,7 @@ Every number is the mean over the physics seeds of the job (0, 1, 2).  Columns:
 latency and its split (wait before admission, wait after a protocol rejection, generation), delivered fidelity,
 hit rate (compiler pairs only), wait of requests served by a ready pair vs requests that fell back to on-demand,
 the time a ready pair sat in memory before use, the share of admission checks that found no free memory and which kind
-of booking held the blocked cards, pairs generated and never used (waste), and for compiler pairs the hold and the
+of booking held the blocked cards, pairs generated and not used by the end of the run (waste; for CGP/ACGP (generated - used) / generated from the protocol counters, for compiler pairs expired plus still unused over generated), and for compiler pairs the hold and the
 wait for the request by hop position within its chain.
 
 Hold times of autonomous (CGP/ACGP) bookings are not reported: the event log never releases an accepted autonomous
@@ -65,7 +65,10 @@ def row(path: Path) -> dict:
         "application_hold_ms": avg(lambda d: (d["bookings"].get("application") or {}).get("mean_hold_ms_of_closed_non_transient")),
         "rejection_events": avg(lambda d: d["protocol_rejections"]["events"]),
         "pairs_generated": avg(generated), "pairs_unused": avg(unused),
-        "waste_percent": avg(lambda d: (100 * unused(d) / generated(d)) if generated(d) else None),
+        "waste_percent": avg(lambda d: (100 * unused(d) / generated(d)) if d.get("compiler") and generated(d) else
+                             (100 * (d["stats"]["protocol_generated_pairs"] - d["stats"]["protocol_used_pairs"]) / d["stats"]["protocol_generated_pairs"]
+                              if d["stats"].get("protocol_generated_pairs") else None)),
+        "waste_expired_percent": avg(lambda d: d["stats"].get("protocol_waste_percentage")),
         "hop0_hold_ms": chain("hop0", "mean_ready_hold_ms"), "hop1_hold_ms": chain("hop1", "mean_ready_hold_ms"),
         "hop2plus_hold_ms": chain("hop2+", "mean_ready_hold_ms"),
         "hop0_request_wait_after_ready_ms": chain("hop0", "mean_request_eligible_minus_generated_ms"),

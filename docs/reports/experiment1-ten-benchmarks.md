@@ -14,7 +14,7 @@ with results from the legacy scheduler. Physical parameters are ACE's current, u
 * **Memory budget:** communication memories per core, 1, 2, 3, 4, 6, 8, 16, 32 (QFT also 64). **1 to 4 are modelled** (the ACGP
   paper's Table I gives four communication qubits per core). **6 to 32 are counterfactual** (what-if capacity), marked `*`.
 * **Policies:** *on-demand* (nothing pre-generated; isolates contention) and *dynamic* compiler pre-generation, with
-  `budget - 1` memories given to the compiler bank and one held for demand, so dynamic starts at 2.
+  the compiler allowed to hold at most `budget - 1` memories per core at once (the memories are a shared pool that any request can use), so dynamic starts at 2.
 * **Seeds:** three physics seeds per mapping, so **nine runs per cell**. Tables give mean ± standard deviation over the nine; the
   figures draw the min to max band. 1,368 runs.
 * **Latency** is the common definition: from the moment a request could first be asked for (its layer starting, or the previous
@@ -146,8 +146,8 @@ Delivered EPR fidelity, dynamic (on-demand delivers 0.9498 in every workload at 
 | QFT | 0.9386 ± 0.0006 | 0.9306 ± 0.0010 | 0.9274 ± 0.0007 | 0.9215 ± 0.0005 | 0.9189 ± 0.0003 | 0.9185 ± 0.0006 | 0.9202 ± 0.0000 |
 | Random circuit | 0.9320 ± 0.0001 | 0.9186 ± 0.0005 | 0.9130 ± 0.0004 | 0.9075 ± 0.0002 | 0.9068 ± 0.0001 | 0.9070 ± 0.0000 | 0.9071 ± 0.0000 |
 
-* **For the congested workloads dynamic is slower than on-demand at small budgets, because its compiler bank takes `budget - 1`
-  of the memories** and leaves one for demand (workloads with no congestion gain from pre-generation at once). The first budget at which dynamic is faster than on-demand in the same total budget is
+* **For the congested workloads dynamic is slower than on-demand at small budgets, because its prepared pairs may occupy up to `budget - 1`
+  of the memories** and requests then wait for a free one (workloads with no congestion gain from pre-generation at once). The first budget at which dynamic is faster than on-demand in the same total budget is
   GHZ 2, Bernstein–Vazirani 2, BMW / QUARK cardinality 2, VQE real amplitudes 4, CDKM ripple-carry adder 2, Graph state 8, Draper QFT adder 8, QAOA 16, QFT 16, Random circuit 4.
   So whether pre-generation helps depends on how much memory there is to spend on it, and at the modelled four memories it
   helps only the workloads with little congestion.

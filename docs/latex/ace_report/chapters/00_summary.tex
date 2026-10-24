@@ -25,6 +25,13 @@ The legacy simulator is untouched and still reproduces its 164-row baseline exac
   \item \textbf{Structure predicts cost.} The heatmap's overload share and the simulated on-demand penalty are strongly rank-correlated (Spearman $\rho=0.85$ over 60 points).
 \end{itemize}
 
+\paragraph{Is compiler-driven pre-generation good? (Chapters~\ref{ch:why-dynamic} and~\ref{ch:four-policies}.)} \textbf{Against the autonomous protocols CGP and ACGP, yes.} On nine benchmarks, on the mesh and on the torus, dynamic pre-generation has lower latency than both
+  at every modelled memory count (the better of CGP and ACGP takes $1.5$ to $2.5$ times as long at four memories), wastes no pair against $34$ to $89\%$ of pairs for CGP and ACGP on the mesh at four memories, and delivers higher fidelity ($0.916$ to $0.927$ against $0.865$ to $0.913$ at four memories).
+  \textbf{Against on-demand generation, only partly.} Dynamic is faster on five of the nine benchmarks at four memories and on all of them from sixteen memories on, but on QFT, QAOA, Draper and graph state it is slower at two to four memories (QFT at four: $5.57$ against $1.59$\,ms), and its fidelity is below on-demand's $0.950$ everywhere.
+  The earlier simulator showed dynamic ahead because of its serialization (QFT: $41\%$ faster in its own latency, $11\%$ counting the wait for earlier batches). The cause on the corrected simulator was read in the code and measured: on QFT at four memories prepared pairs hold memory cards for $24$\,ms on average
+  against $6$\,ms for an ordinary request, a request that has a ready pair still needs a card of its own, and the pair of a later hop of a qubit's chain is made at the start of the previous layer but used only after the hop before it completed. Whether a better plan could avoid this is not established.
+  The random circuit was not run for CGP and ACGP.
+
 \paragraph{Beyond Experiments 1 and 2 (shorter chapters).} The torus needs 11--37\% fewer hops, has lower structural overload for five workloads (unchanged for four, higher for graph state); offline re-routing with the mapping fixed removes most of the excess demand and makes on-demand requests up to 42\% faster; ACE already contains a memory cut-off
 (\code{cutoff_ratio}) that is unused by default.
 

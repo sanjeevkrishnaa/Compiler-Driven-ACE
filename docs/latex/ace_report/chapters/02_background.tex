@@ -20,8 +20,8 @@ with one generation job per link. The two backends are never compared in this re
 
 \section{Policies}
 \emph{On-demand} generates a pair only when a request asks for it, so it isolates contention. \emph{Dynamic} compiler
-pre-generation prepares pairs ahead of the layer that needs them, using at most \code{budget - 1} memories per core as a
-compiler bank and leaving one for demand. Autonomous caches (\emph{continuous}, \emph{adaptive-continuous}) guess which pairs
+pre-generation prepares pairs ahead of the layer that needs them, never holding more than \code{budget - 1} memories per core at once (the
+memories are a shared pool, and the cap limits only the compiler). Autonomous caches (\emph{continuous}, \emph{adaptive-continuous}) guess which pairs
 will be needed.
 
 \section{Parameters in force}

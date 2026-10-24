@@ -10,6 +10,8 @@
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/memory-cutoff-study.md}{\nolinkurl{docs/reports/memory-cutoff-study.md}} & memory cut-off study \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/offline-routing-research.md}{\nolinkurl{docs/reports/offline-routing-research.md}} & can offline routing reduce congestion? \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/run-times.md}{\nolinkurl{docs/reports/run-times.md}} & run times of every experiment \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/dynamic-vs-odg-diagnosis.md}{\nolinkurl{docs/reports/dynamic-vs-odg-diagnosis.md}} & why dynamic is slower than on-demand: code reading, measurements, ablations \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/four-policy-comparison.md}{\nolinkurl{docs/reports/four-policy-comparison.md}} & ODG, dynamic, CGP and ACGP on nine benchmarks, mesh and torus \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/ace-correctness-and-congestion-program.md}{\nolinkurl{docs/plans/ace-correctness-and-congestion-program.md}} & the day plan and gates \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/ace-request-scheduler-design.md}{\nolinkurl{docs/plans/ace-request-scheduler-design.md}} & scheduler design and reasoning \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/handoff-2026-10-24.md}{\nolinkurl{docs/plans/handoff-2026-10-24.md}} & state, open decisions, pitfalls \\
@@ -23,12 +25,13 @@
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/invariants.py}{\nolinkurl{invariants.py}} & the invariant checker (window-aware) \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/latency_metrics.py}{\nolinkurl{latency_metrics.py}} & the common latency definition \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/compiler_trace.py}{\nolinkurl{compiler_trace.py}} & topology-aware trace validation, torus guard \\
-\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/run_trace_comparison.py}{\nolinkurl{run_trace_comparison.py}} & the runner: -{}-scheduler, -{}-topology, new columns \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/run_trace_comparison.py}{\nolinkurl{run_trace_comparison.py}} & the runner: -{}-scheduler, -{}-topology, -{}-autonomous-cache-follows-compiler-memories, -{}-stop-after-workload \\
 \end{longtable}
 \subsection*{Tools}
 \begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/ace_correctness}{\nolinkurl{tools/ace_correctness}} & baseline, audit, harness and audit matrix \\
-\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/experiment1}{\nolinkurl{tools/experiment1}} & Experiment 1 driver, analysis, report and unattended finisher \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/experiment1}{\nolinkurl{tools/experiment1}} & Experiment 1 driver, analysis, report, four-policy comparison and result assembler \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/diagnostics}{\nolinkurl{tools/diagnostics}} & occupancy and admission diagnostics, parallel diagnostic batch, summariser \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/experiment2}{\nolinkurl{tools/experiment2}} & endpoint-versus-relay split \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/heatmap}{\nolinkurl{tools/heatmap}} & heatmap regeneration from raw traces \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/ace_budget_rerun}{\nolinkurl{tools/ace_budget_rerun}} & parameterised budget sweep driver \\
@@ -50,6 +53,11 @@
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_sensitivity_acgp_table1_2026-10-24}{\nolinkurl{results/experiment1_sensitivity_acgp_table1_2026-10-24}} & sensitivity arm \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_timing_serial_2026-10-24}{\nolinkurl{results/experiment1_timing_serial_2026-10-24}} & quiet serial timing pass \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_torus_2026-10-24}{\nolinkurl{results/experiment1_torus_2026-10-24}} & Experiment 1 on the torus \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_cgp_acgp_mesh_2026-10-24}{\nolinkurl{results/experiment1_cgp_acgp_mesh_2026-10-24}} & CGP and ACGP on the Experiment 1 grid (mesh): per-invocation runs and results.csv \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_cgp_acgp_torus_2026-10-24}{\nolinkurl{results/experiment1_cgp_acgp_torus_2026-10-24}} & CGP and ACGP on the torus \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_four_policies_mesh_2026-10-24}{\nolinkurl{results/experiment1_four_policies_mesh_2026-10-24}} & ODG, dynamic, CGP, ACGP on the mesh: cell means, figures, who wins \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_four_policies_torus_2026-10-24}{\nolinkurl{results/experiment1_four_policies_torus_2026-10-24}} & the same on the torus \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/diagnostics_dynamic_vs_odg_2026-10-24}{\nolinkurl{results/diagnostics_dynamic_vs_odg_2026-10-24}} & 70 diagnostic runs and diagnostics.csv \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/torus_traces_2026-10-24}{\nolinkurl{results/torus_traces_2026-10-24}} & mapped torus traces \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/mesh_vs_torus_2026-10-24}{\nolinkurl{results/mesh_vs_torus_2026-10-24}} & mesh-versus-torus table \\
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/offline_routing_2026-10-24}{\nolinkurl{results/offline_routing_2026-10-24}} & offline routing data and re-routed traces \\

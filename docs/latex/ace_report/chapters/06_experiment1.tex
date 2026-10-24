@@ -4,7 +4,7 @@
 \section{Design}
 All ten benchmarks, on the corrected scheduler, with $1,2,3,4,6,8,16,32$ communication memories per core (QFT also $64$). Budgets $1$--$4$ are \emph{modelled}
 (the group's multi-core paper gives four communication qubits per core); $6$--$32$ are \emph{counterfactual} (what-if capacity), marked $^*$. Two policies:
-\emph{on-demand} and \emph{dynamic} compiler pre-generation with $\text{budget}-1$ memories as compiler bank and one held for demand (so dynamic starts at two).
+\emph{on-demand} and \emph{dynamic} compiler pre-generation in which the compiler may hold at most $\text{budget}-1$ memories per core at once (the memories are one shared pool that any request can use; the cap limits only the compiler; dynamic starts at two memories because a cap of zero would be no pre-generation).
 Three mapping seeds and three physics seeds give nine runs per cell, 1\,368 runs in total. Latency is the common latency defined in Chapter~\ref{ch:corrections}.
 
 \section{Controls}
@@ -37,7 +37,7 @@ on-demand latency penalty are strongly rank-correlated (Spearman $\rho=0.85$).
 \input{generated/exp1_latency_dynamic}
 \input{generated/fig_fidelity_vs_budget}
 \input{generated/exp1_fidelity_dynamic}
-For the congested workloads dynamic is slower than on-demand at small budgets, because its compiler bank takes $\text{budget}-1$ of the memories and leaves one for demand; the first budget at which
+For the congested workloads dynamic is slower than on-demand at small budgets, because its prepared pairs may occupy up to $\text{budget}-1$ of the memories and requests then wait for a free one (Chapter~\ref{ch:why-dynamic}); the first budget at which
 dynamic is faster than on-demand is 8 for graph state and Draper and 16 for QAOA and QFT. At 32 memories dynamic reaches $0.24$ to $0.30$\,ms against $1.11$ to $1.22$\,ms on-demand. Delivered fidelity under
 dynamic is below the on-demand value ($0.9498$ in every cell) and falls as the compiler bank grows from two to about eight memories, by at most $0.043$ under ACE's one-second coherence time; the mechanism (pairs stored longer) is likely but was not measured.
 

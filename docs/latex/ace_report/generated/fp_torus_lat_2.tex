@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Workload & ODG & Dynamic & CGP & ACGP \\
+\midrule
+GHZ & 1.15 & 0.37 & 0.94 & 0.91 \\
+Bernstein--Vazirani & 1.11 & 0.37 & 0.92 & 0.92 \\
+BMW/QUARK cardinality & 1.10 & 0.37 & 0.86 & 0.89 \\
+VQE real amplitudes & 1.14 & 0.65 & 1.33 & 1.33 \\
+CDKM ripple-carry adder & 1.11 & 0.66 & 1.10 & 1.09 \\
+Graph state & 1.86 & 3.68 & 4.92 & 4.92 \\
+Draper QFT adder & 2.25 & 4.92 & 6.87 & 6.79 \\
+QAOA & 2.47 & 5.17 & 7.42 & 7.46 \\
+QFT & 2.79 & 6.27 & 8.69 & 8.72 \\
+\bottomrule
+\end{tabular}}
+\caption{Request latency (ms), torus, 2 memories per core (modelled), mean of three mapping seeds of the mean of three physics seeds.}
+\label{tab:fp-torus-lat-2}
+\end{table}

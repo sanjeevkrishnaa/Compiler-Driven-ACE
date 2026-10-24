@@ -4,11 +4,12 @@
 Inputs: the Experiment 1 results of on-demand and dynamic, and the results of the same grid for CGP (``continuous``)
 and ACGP (``adaptive-continuous``).  Every number is the mean over the three mapping seeds of the mean over the three
 physics seeds, so each workload and budget carries the same weight per mapping seed.  Corrected (per-qubit) scheduler
-only; one memory per core is held back from CGP/ACGP exactly as for dynamic (cache cap = budget - 1).
+only; CGP/ACGP may hold at most budget - 1 pairs per core at once, exactly as for dynamic (cache cap = budget - 1).
 
-Waste = pairs generated and never used, over the workload's own duration (CGP/ACGP runs end 1 ms after the last request
-completes).  Both columns are defined by the simulator's protocol counters, so they mean the same for every policy.
-The simulator counts a pair at both of its endpoints.
+Waste = (pairs generated - pairs used) / pairs generated, from the simulator's protocol counters, over the workload's own
+duration (CGP/ACGP runs end 1 ms after the last request completes).  A pair still cached when the run stops counts as not used,
+as in the compiler's own accounting; the simulator's own figure, ``waste_expired_percent`` = pairs that expired unused / pairs generated,
+leaves those out and so understates the waste of short workloads.  Both counters count a pair at each of its two endpoints.
 
     python tools/experiment1/four_policies.py --base RESULTS.csv --extra RESULTS.csv --output DIR [--label mesh]
 """
@@ -46,6 +47,9 @@ def load(path: Path) -> pd.DataFrame:
 def table(frame: pd.DataFrame) -> pd.DataFrame:
     numeric = {k: pd.to_numeric(frame[v], errors="coerce") for k, v in METRICS.items() if v in frame}
     work = frame[["workload", "policy", "total_memories", "mapping_seed", "seed"]].assign(**numeric)
+    work["waste_expired_percent"] = numeric["waste_percent"]
+    generated = work["generated_pairs"].where(work["generated_pairs"] > 0)
+    work["waste_percent"] = 100 * (generated - work["used_pairs"]) / generated
     per_mapping = work.groupby(["workload", "policy", "total_memories", "mapping_seed"], as_index=False).mean(numeric_only=True)
     out = per_mapping.groupby(["workload", "policy", "total_memories"], as_index=False).mean(numeric_only=True)
     out["used_per_request"] = out["used_pairs"] / (2 * out["requests"])
@@ -53,29 +57,35 @@ def table(frame: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot(t: pd.DataFrame, metric: str, ylabel: str, path: Path, title: str, log_y: bool = False, policies=ORDER):
-    fig, axes = plt.subplots(2, 5, figsize=(26, 9.5), sharex=True)
-    for ax, workload in zip(axes.ravel(), WORKLOADS):
+    shown = [w for w in WORKLOADS if w in set(t.workload)]
+    cols_n = 3
+    rows_n = (len(shown) + cols_n - 1) // cols_n
+    fig, axes = plt.subplots(rows_n, cols_n, figsize=(7.2 * cols_n, 4.1 * rows_n), sharex=True, squeeze=False)
+    for ax in axes.ravel()[len(shown):]:
+        ax.axis("off")
+    for ax, workload in zip(axes.ravel(), shown):
         for policy in policies:
             d = t[(t.workload == workload) & (t.policy == policy)].sort_values("total_memories")
             if d.empty or d[metric].isna().all():
                 continue
             color, marker, line = STYLE[policy]
-            ax.plot(d.total_memories, d[metric], color=color, marker=marker, ls=line, lw=2, ms=6, label=policy)
+            ax.plot(d.total_memories, d[metric], color=color, marker=marker, ls=line, lw=2.6, ms=8, label=policy)
         ax.set_xscale("log", base=2)
         ax.set_xticks([1, 2, 4, 8, 16, 32])
         ax.set_xticklabels(["1", "2", "4", "8", "16", "32"])
+        ax.tick_params(labelsize=13)
         if log_y:
             ax.set_yscale("log")
-        ax.set_title(workload.replace("_", " "), fontsize=13)
+        ax.set_title(workload.replace("_", " "), fontsize=17)
         ax.grid(alpha=0.25)
     for ax in axes[:, 0]:
-        ax.set_ylabel(ylabel, fontsize=12)
-    for ax in axes[1]:
-        ax.set_xlabel("memories per core", fontsize=12)
-    axes[0, 0].legend(fontsize=11)
-    fig.suptitle(title, fontsize=16)
-    fig.tight_layout(rect=(0, 0, 1, 0.96))
-    fig.savefig(path, dpi=130)
+        ax.set_ylabel(ylabel, fontsize=14)
+    for ax in axes[-1]:
+        ax.set_xlabel("memories per core", fontsize=14)
+    axes[0, 0].legend(fontsize=14)
+    fig.suptitle(title, fontsize=20)
+    fig.tight_layout(rect=(0, 0, 1, 0.965))
+    fig.savefig(path, dpi=120)
     plt.close(fig)
 
 
@@ -85,9 +95,11 @@ def main(argv=None) -> int:
     parser.add_argument("--extra", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--label", default="mesh")
+    parser.add_argument("--exclude", nargs="*", default=[], help="workloads left out of every table and figure")
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     frame = pd.concat([load(args.base), load(args.extra)], ignore_index=True)
+    frame = frame[~frame.workload.isin(args.exclude)]
     t = table(frame)
     t.round(6).to_csv(args.output / "four_policy_cell_means.csv", index=False)
     title = f"{args.label}, corrected scheduler, mean of 3 mapping x 3 physics seeds"

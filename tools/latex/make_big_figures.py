@@ -24,11 +24,16 @@ MAIN = RES / "experiment1_ten_benchmarks_2026-10-24"
 TORUS_TRACES = RES / "torus_traces_2026-10-24"
 
 
+LANDSCAPE_OPEN = r"\clearpage\newgeometry{margin=12mm}\begin{landscape}"
+LANDSCAPE_CLOSE = r"\end{landscape}\clearpage\restoregeometry"
+
+
 def landscape(name: str, png: str, caption: str, label: str) -> None:
+    """One figure on its own landscape page with narrow margins, as large as the page allows."""
     (GEN / name).write_text("\n".join([
-        r"\begin{landscape}", r"\begin{figure}[p]", r"\centering",
-        rf"\includegraphics[width=\linewidth,height=0.80\textheight,keepaspectratio]{{{png}}}",
-        rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{figure}", r"\end{landscape}"]) + "\n", encoding="utf-8")
+        LANDSCAPE_OPEN, r"\begin{figure}[p]", r"\centering",
+        rf"\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{{{png}}}",
+        rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{figure}", LANDSCAPE_CLOSE]) + "\n", encoding="utf-8")
 
 
 def main() -> int:

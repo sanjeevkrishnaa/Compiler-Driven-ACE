@@ -6,7 +6,7 @@ The explanation below was checked against the source, not inferred from the resu
   \item \textbf{When a dynamic preparation starts.} The planner gives each request a generation layer. For the dynamic policy the candidate layers are tried from the one just
     before the request's own layer, backwards (\code{compiler_trace.py:254}), and the first one with room is taken. The controller launches a layer's preparations when that layer is
     activated (\code{request_scheduler.py:151--158}, \code{compiler_scheduler.py:66}). So a pair for a request in layer $L$ is normally started at the \emph{start} of layer $L-1$
-    and has to wait for all of layer $L-1$ to finish before its request can even be released. The lookahead of eight layers is only an upper limit; it did not matter in any run
+    and has to wait for all of layer $L-1$ to finish before its request can even be released. The lookahead of eight layers is only an upper limit; varying it made no difference
     (Section~\ref{sec:ablations}).
   \item \textbf{What a prepared pair occupies.} A preparation books one memory card at each of its two cores, with a window of 1\,000\,ms
     (\code{adaptive_continuous.py:192--236}), and it may not exceed the compiler cap, the same counter that limits the autonomous protocol

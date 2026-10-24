@@ -46,7 +46,9 @@ CONTEXT = ["workload", "congested", "mapping_seed", "total_memories", "compiler_
 
 
 def compiler_memories(strategy: str, budget: int) -> int:
-    """Compiler slots requested, holding one slot back for demand (3+1 at a budget of four)."""
+    """The cap on compiler memories per core, budget - 1 (3 of 4 at a budget of four).  A cap, not a reservation: the memories are one
+    shared pool and any request can use one that is free.  The CSV column ``demand_bank`` (budget - cap) is the memories the compiler
+    cannot hold; it is not a pool reserved for demand."""
     return max(1, budget - 1)
 
 

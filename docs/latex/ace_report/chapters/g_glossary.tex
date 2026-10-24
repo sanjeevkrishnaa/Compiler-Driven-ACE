@@ -7,7 +7,9 @@
   \item[BSM] Bell-state measurement station placed on a link between two cores; it heralds the generation of an EPR pair.
   \item[Budget] The number of communication memories per core. $1$--$4$ are modelled; above four is counterfactual ($^*$).
   \item[Common latency] Time from when a request could first be asked for until it completes, minus the 5.3\,ms lead (Chapter~\ref{ch:corrections}).
-  \item[Compiler bank] The memories per core given to compiler pre-generation (\code{budget - 1}); one is held for demand.
+  \item[Compiler cap] The most memories per core that compiler pre-generation may hold at once (\code{budget - 1}). The memories are one shared pool: a request can use any memory that is free, including one the compiler could have held.
+  \item[CGP, ACGP] Continuous and adaptive continuous generation: autonomous protocols that keep generating pairs for a neighbour drawn at random (CGP: uniformly; ACGP: with probabilities raised for neighbours seen in recently used paths), whether or not a request wants them (Section~\ref{sec:code-reading}).
+  \item[ODG] On-demand generation: a pair is generated only when a request asks for it.
   \item[Congestion] Requests waiting because a core has no free communication memory.
   \item[Counterfactual] A what-if capacity beyond the modelled hardware.
   \item[Cut-off] Time after which a stored pair is discarded (Chapter~\ref{ch:cutoff}).
@@ -27,7 +29,7 @@
 \section{Questions a reader may have}
 \paragraph{Why is the latency floor 1.1--1.2\,ms?} That is the generation time of one pair once nothing waits; it is the same for every workload and does not depend on the budget.
 
-\paragraph{Why does dynamic start slower than on-demand?} Its compiler bank takes \code{budget - 1} memories and leaves one for demand, so with two memories only one is left for the requests that actually run.
+\paragraph{Why does dynamic start slower than on-demand?} Its prepared pairs may occupy up to \code{budget - 1} memories, and a request needs a free memory of its own even when its pair is ready, so with two memories a prepared pair and the request that uses it already occupy both (Chapter~\ref{ch:why-dynamic}).
 
 \paragraph{Why do GHZ, Bernstein--Vazirani and BMW change under dynamic between two and three memories if they have no congestion?} The structural overload is zero, so it is not congestion; the earlier budget study attributed it to planner coverage (not re-tested here).
 

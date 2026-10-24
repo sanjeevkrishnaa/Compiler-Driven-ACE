@@ -1,0 +1,105 @@
+\chapter{ODG, dynamic, CGP and ACGP compared on nine benchmarks}
+\label{ch:four-policies}
+
+Chapter~\ref{ch:exp1} compared on-demand generation (ODG) and dynamic compiler pre-generation. This chapter adds the two autonomous protocols that the compiler-driven approach is meant to
+improve on: CGP (continuous generation, neighbour drawn uniformly) and ACGP (adaptive continuous generation, neighbour probabilities adapted to recent traffic). The goal
+stated for the compiler-driven approach is a latency comparable to the alternatives with fewer wasted pairs, so the comparison is on latency, delivered fidelity, wasted pairs and readiness, with the
+wait for a free memory as the explanation.
+
+\section{What was run}
+Same traces, memory counts ($2,3,4,6,8,16,32$; QFT also $64$), mapping seeds (42, 43, 44), physics seeds (0, 1, 2), physical parameters and corrected scheduler as Experiment~1, on the mesh and on the
+torus, for CGP and for ACGP: $384$ invocations ($1\,152$ runs) per topology. ODG and dynamic are the Experiment~1 runs, not repeated. Two settings of the autonomous protocols needed a decision and were made so that the
+comparison with dynamic is fair, as opt-in options that leave the default behaviour untouched (the 164-row legacy baseline still reproduces exactly, and all 162 tests pass):
+\begin{itemize}
+  \item \textbf{Cache cap.} ACE's configuration file gives the autonomous protocols a fixed cap of three cached pairs per core whatever the number of memories (\code{adaptive_max_memory}). Dynamic is given a compiler bank of memories$-1$.
+    CGP and ACGP are given the same cap, memories$-1$ (\code{--autonomous-cache-follows-compiler-memories}). With the fixed cap of three they would have been allowed to cache three pairs in two memories.
+  \item \textbf{End of the run.} The autonomous protocols keep generating pairs until the simulation's stop time (300\,s of simulated time), long after the last request. The runs were stopped 1\,ms after the last request completed
+    (\code{--stop-after-workload}), so that wasted pairs are counted over the workload's own duration and not over an arbitrary stop time. This changes no request metric: for QFT at four memories CGP's latency is
+    $9.963931$\,ms with and without it.
+\end{itemize}
+The \textbf{random circuit was set aside} for CGP and ACGP: its runs at large memory counts take over an hour each. It is therefore left out of every table and figure in this chapter (ODG and dynamic for it are in Chapter~\ref{ch:exp1};
+the diagnostic Table~\ref{tab:diag-workloads} has all four policies for it at four memories, mapping seed 42). The runs that had finished when it was stopped are kept in the results folder but not analysed.
+
+\paragraph{Definitions.} Latency is the common latency of Chapter~\ref{ch:corrections}. \emph{Wait} is the part of it spent waiting for a free memory. \emph{Waste} is $(\text{pairs generated}-\text{pairs used})/\text{pairs generated}$ from the
+simulator's protocol counters over the workload's duration; a pair still cached when the run stops counts as not used, as in the compiler's own accounting. (The simulator's own waste figure counts only pairs that expired unused and
+is lower for short workloads; both are in \code{four_policy_cell_means.csv}.) \emph{Readiness} is pairs used per request: for dynamic it equals the share of requests served from a ready pair; for CGP and ACGP it is the number of
+cached pairs that requests consumed, divided by the number of requests (a pair is counted at both of its endpoints, so the counters are divided by twice the number of requests).
+
+\section{Checks}
+\begin{itemize}
+  \item Every one of the $2\,304$ CGP/ACGP runs ($1\,152$ per topology) completed every request (completion rate $1.0$).
+  \item The waste counters were checked against an independent count of the pair events on one run (QFT, four memories, CGP): $4\,720$ pairs generated and $3\,068$ used by both counts. The simulator's ``unused'' counter, which is
+    incremented when a cached memory is released, agreed with the count of pairs that expired while cached to within $1.2\%$ (it also counts $20$ releases of memories that held no pair).
+  \item Dynamic's compiler pairs were all used in every one of the $639$ mesh runs of Experiment~1 (none expired, none left over); on the torus at most one pair expired in any of its $639$ runs (at most $0.013\%$ of a run's pairs).
+  \item The mechanism behind every number was read in the code and measured separately (Chapter~\ref{ch:why-dynamic}).
+\end{itemize}
+
+\section{Latency}
+\input{generated/fig_fp_mesh_lat}
+\input{generated/fp_mesh_lat_4}
+Figure~\ref{fig:fp-mesh-lat} and Table~\ref{tab:fp-mesh-lat-4} give the picture on the mesh. Three results stand out.
+\begin{itemize}
+  \item \textbf{Dynamic is the fastest of the three pre-generation policies at every memory count from two on, on every benchmark} except one cell (CDKM adder at $32$ memories, where CGP and ACGP are $0.27$ against dynamic's $0.30$\,ms; Table~\ref{tab:fp-mesh-where}).
+    At four memories the better of CGP and ACGP takes $1.5$ to $2.4$ times dynamic's latency on the mesh and $1.9$ to $2.5$ times on the torus.
+  \item \textbf{Against ODG, dynamic wins on five of the nine benchmarks at the modelled four memories and loses on four.} It wins on BMW, Bernstein--Vazirani, GHZ, the CDKM adder and VQE, and at $32$ memories it is $74$ to $80\%$ faster than ODG on all nine
+    (ODG's floor is the generation time of about a millisecond, a ready pair needs a quarter of that); on four of the five it is faster from two memories on.
+    It loses on QFT, QAOA, Draper and graph state at two to four memories and overtakes ODG from eight memories on Draper and graph state and from sixteen on QAOA and QFT (Tables~\ref{tab:fp-mesh-gain} and~\ref{tab:fp-mesh-where}).
+    The cause is Chapter~\ref{ch:why-dynamic}.
+  \item \textbf{CGP and ACGP beat ODG only where ODG is already at its floor.} They are faster than ODG at every memory count on BMW, Bernstein--Vazirani, GHZ and the CDKM adder, and on VQE at some, but \emph{never} on QFT, QAOA, Draper or graph state: at four memories
+    they take $4.9$ to $10.6$\,ms on those four against $1.2$ to $1.6$\,ms for ODG. Their wait barely improves with memory.
+\end{itemize}
+ACGP is not measurably better than CGP: their latencies differ by a median of $2.5\%$ on the mesh and $1.9\%$ on the torus (at most $11\%$ and $14\%$), and their waste by under two points. Why the adaptation has so little effect was not investigated.
+\input{generated/fp_mesh_lat_2}
+\input{generated/fp_mesh_gain}
+\input{generated/fp_mesh_where}
+\input{generated/fp_mesh_best}
+
+\section{Delivered fidelity}
+\input{generated/fig_fp_mesh_fid}
+\input{generated/fp_mesh_fid_4}
+ODG delivers $0.950$ always. Dynamic's pairs wait in memory and decohere: its fidelity is $0.911$ to $0.939$ over all budgets ($0.916$ to $0.927$ at four memories) and falls from two to $32$ memories on every benchmark, as the compiler bank grows. CGP and ACGP are lower and more
+variable, $0.838$ to $0.935$ over all budgets ($0.865$ to $0.913$ at four memories), presumably because their pairs age longer before use (the age of CGP and ACGP pairs was not measured). Dynamic's pairs are
+better by $0.01$ to $0.06$ at four memories, but never as good as on-demand pairs. (These figures use ACE's coherence time of one second; under the group's multi-core paper's $1$\,ms every cached pair would expire, Chapter~\ref{ch:exp1}.)
+
+\section{Wasted pairs and readiness}
+\input{generated/fig_fp_mesh_waste}
+\input{generated/fp_mesh_waste_4}
+Dynamic wastes no pair on the mesh (every prepared pair is used). CGP and ACGP waste $34$ to $89\%$ of their pairs at four memories on the mesh, and more with more memory
+($31\%$ on QFT at two memories, $78\%$ at $32$): they make pairs for neighbours drawn at random, and a pair nobody uses before its window ends is lost. The percentage depends on the size of the workload: at four memories it is highest on BMW, Bernstein--Vazirani, GHZ
+and the CDKM adder ($24$ to $456$ requests) and lowest on QAOA, QFT and Draper ($1\,310$ to $3\,068$ requests), so it is comparable only within a benchmark. Cached pairs, used or not, are also what block requests (Chapter~\ref{ch:why-dynamic}).
+\input{generated/fig_fp_mesh_ready}
+Readiness differs less than one would expect. At four memories dynamic serves $100\%$ of the requests of BMW, Bernstein--Vazirani and GHZ from a ready pair, $94$ to $95\%$ on VQE and the CDKM adder, but only $53$ to $74\%$ on the four congested circuits,
+where the planner could not place a preparation for the rest within the compiler's memories (for QFT it placed $1\,330$ of $2\,510$ requests). CGP and ACGP find a cached pair for $62$ to $76\%$ of the requests at four memories --- more than dynamic on QFT and QAOA --- because a cached pair for a link serves any request
+on that link, yet they are slower, because a request that has such a pair still has to wait for a memory of its own (Section~\ref{sec:code-reading}).
+
+\section{Waiting}
+\input{generated/fig_fp_mesh_wait}
+\input{generated/fp_mesh_wait_4}
+Waiting for a free memory is where the policies differ. On the congested circuits at four memories ODG waits $0.02$ to $0.46$\,ms on average, dynamic $2.0$ to $4.9$\,ms and CGP and ACGP $4.3$ to $10.1$\,ms; on the other five circuits nobody waits
+more than about a millisecond. The cause is the number of memory cards held by pre-generated pairs (Chapter~\ref{ch:why-dynamic}).
+
+\section{The torus}
+\input{generated/fp_torus_lat_4}
+\input{generated/fp_torus_gain}
+\input{generated/fp_torus_where}
+\input{generated/fp_torus_best}
+The ordering is the same on the torus: dynamic is faster than the better of CGP and ACGP on every benchmark at every memory count except ties at the floor (Table~\ref{tab:fp-torus-where}); against ODG it wins on the same five benchmarks at four memories,
+loses on QFT, QAOA, Draper and graph state at two to four, and overtakes ODG from eight memories on Draper, graph state and QAOA and from sixteen on QFT. CGP and ACGP beat ODG on BMW, Bernstein--Vazirani, GHZ and the CDKM adder at every
+memory count and on VQE from three or four, and never on the other four. Waste is higher on the torus ($34$ to $92\%$ at four memories). The figures for the torus follow.
+\input{generated/fig_fp_torus_lat}
+\input{generated/fig_fp_torus_fid}
+\input{generated/fig_fp_torus_waste}
+\input{generated/fig_fp_torus_wait}
+\input{generated/fig_fp_torus_ready}
+
+\section{Where dynamic lies}
+\begin{itemize}
+  \item \textbf{Against the autonomous protocols (the stated goal): yes.} At every modelled memory count (two to four) dynamic has lower latency than CGP and ACGP on every one of the nine benchmarks, wastes none of its pairs against $34$ to $89\%$,
+    and delivers higher fidelity on every benchmark ($0.916$ to $0.927$ against $0.865$ to $0.913$ at four memories). This holds on the mesh and on the torus.
+  \item \textbf{Against on-demand generation: only partly.} Dynamic matches or beats ODG's latency on the benchmarks where requests rarely compete for memory (five of nine at four memories), and on all of them once the memory count reaches eight to sixteen. On the
+    congested benchmarks at the modelled two to four memories it is slower than ODG, by a factor of $2.0$ to $3.5$ on the mesh and $1.8$ to $3.2$ on the torus, because prepared pairs occupy memory that requests need. It never matches ODG's fidelity.
+  \item \textbf{What would change this} is not established here. The plan does not account for the memory a ready pair's own request also needs, nor for when a chain hop becomes eligible (Chapter~\ref{ch:why-dynamic}); a planner that did is a possible
+    direction, not a result.
+\end{itemize}
+\paragraph{Limits.} Nine benchmarks (the random circuit was not run for CGP and ACGP); three mapping seeds; ACE's physical parameters, which are undecided (Appendix~\ref{app:params}); the autonomous protocols are configured with a cache cap of memories$-1$, which is my choice for fairness
+and is not ACE's default; the waste of the autonomous protocols depends on the length of the workload and is only comparable within a benchmark.

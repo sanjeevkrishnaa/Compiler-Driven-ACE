@@ -3,7 +3,7 @@
 
 The aim of compiler-driven pre-generation is a latency comparable to or better than on-demand generation (ODG) with fewer wasted pairs than the autonomous
 protocols (CGP, ACGP). Experiment~1 found that, on the corrected scheduler and at the modelled memory counts, dynamic pre-generation is \emph{slower} than ODG on the congested benchmarks
-(QFT at four memories: ODG $1.57$\,ms, dynamic $5.46$\,ms), and faster once memory is plentiful (QFT at sixteen memories: $1.14$ against $0.71$\,ms). This chapter finds out why.
+(QFT at four memories: ODG $1.59$\,ms, dynamic $5.57$\,ms, mean of nine runs), and faster once memory is plentiful (QFT at sixteen memories: $1.14$ against $0.80$\,ms). The tables of this chapter use one mapping seed (42) unless they say otherwise, so their QFT numbers ($1.57$ and $5.46$\,ms at four memories) differ slightly. This chapter finds out why.
 Everything here was measured on ACE with the corrected scheduler, and the explanation is checked against the code (Section~\ref{sec:code-reading}).
 
 \section{What the old, serialized scheduler showed}

@@ -170,7 +170,7 @@ with results from the legacy scheduler. Physical parameters are ACE's current, u
 * **Memory budget:** communication memories per core, 1, 2, 3, 4, 6, 8, 16, 32 (QFT also 64). **1 to 4 are modelled** (the ACGP
   paper's Table I gives four communication qubits per core). **6 to 32 are counterfactual** (what-if capacity), marked `*`.
 * **Policies:** *on-demand* (nothing pre-generated; isolates contention) and *dynamic* compiler pre-generation, with
-  `budget - 1` memories given to the compiler bank and one held for demand, so dynamic starts at 2.
+  the compiler allowed to hold at most `budget - 1` memories per core at once (the memories are a shared pool that any request can use), so dynamic starts at 2.
 * **Seeds:** three physics seeds per mapping, so **nine runs per cell**. Tables give mean ± standard deviation over the nine; the
   figures draw the min to max band. 1,368 runs.
 * **Latency** is the common definition: from the moment a request could first be asked for (its layer starting, or the previous
@@ -232,8 +232,8 @@ Delivered EPR fidelity, dynamic (on-demand delivers {', '.join(f'{x:.4f}' for x 
 
 {table(grouped, "dynamic", "fidelity", 4, budgets=BUDGETS[1:])}
 
-* **For the congested workloads dynamic is slower than on-demand at small budgets, because its compiler bank takes `budget - 1`
-  of the memories** and leaves one for demand (workloads with no congestion gain from pre-generation at once). The first budget at which dynamic is faster than on-demand in the same total budget is
+* **For the congested workloads dynamic is slower than on-demand at small budgets, because its prepared pairs may occupy up to `budget - 1`
+  of the memories** and requests then wait for a free one (workloads with no congestion gain from pre-generation at once). The first budget at which dynamic is faster than on-demand in the same total budget is
   {", ".join(f"{A.TITLES[w]} {cross[w]}" for w in ORDER if cross[w])}.
   So whether pre-generation helps depends on how much memory there is to spend on it, and at the modelled four memories it
   helps only the workloads with little congestion.
