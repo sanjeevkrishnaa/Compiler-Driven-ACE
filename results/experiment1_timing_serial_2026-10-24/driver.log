@@ -1,0 +1,11 @@
+90 invocations (270 runs), scheduler per-qubit
+[10/90] ('bv', 42, 1, 'on-demand') -> ok (0.2 min)
+[20/90] ('graphstate', 42, 2, 'on-demand') -> ok (0.4 min)
+[30/90] ('vqe_real_amp', 42, 2, 'dynamic') -> ok (0.6 min)
+[40/90] ('cdkm_ripple_carry_adder', 42, 4, 'on-demand') -> ok (0.9 min)
+[50/90] ('bmw_quark_cardinality', 42, 4, 'dynamic') -> ok (1.2 min)
+[60/90] ('draper_qft_adder', 42, 8, 'on-demand') -> ok (1.6 min)
+[70/90] ('qft', 42, 8, 'dynamic') -> ok (2.5 min)
+[80/90] ('qaoa', 42, 32, 'on-demand') -> ok (3.7 min)
+[90/90] ('randomcircuit', 42, 32, 'dynamic') -> ok (8.6 min)
+done in 8.6 min (518 s wall clock, 1 jobs): 270 rows ok, 0 not
