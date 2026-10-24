@@ -27,7 +27,18 @@ class Trace:
     hops: list[Hop]
 
 
-def read_trace(path: Path, rows: int, columns: int) -> Trace:
+def adjacent(a: int, b: int, rows: int, columns: int, topology: str = 'mesh') -> bool:
+    """Whether cores a and b share a link on a row-major rows x columns mesh or torus."""
+    (ra, ca), (rb, cb) = divmod(a, columns), divmod(b, columns)
+    dr, dc = abs(ra - rb), abs(ca - cb)
+    if topology == 'torus':
+        dr, dc = min(dr, rows - dr), min(dc, columns - dc)
+    elif topology != 'mesh':
+        raise ValueError(f'unknown topology {topology!r}')
+    return dr + dc == 1 and a != b
+
+
+def read_trace(path: Path, rows: int, columns: int, topology: str = 'mesh') -> Trace:
     markers = {'// number of cores': 'cores', '// number of qubit slots per core': 'slots',
                '// number of qubits': 'qubits'}
     meta, initial, hops = {}, {}, []
@@ -83,10 +94,8 @@ def read_trace(path: Path, rows: int, columns: int) -> Trace:
             raise ValueError(f'request {hop.request_id}: evolving placement mismatch')
         if hop.source not in range(meta['cores']) or hop.target not in range(meta['cores']):
             raise ValueError('request core outside mesh')
-        sr, sc = divmod(hop.source, columns)
-        tr, tc = divmod(hop.target, columns)
-        if abs(sr-tr) + abs(sc-tc) != 1:
-            raise ValueError(f'request {hop.request_id}: nonadjacent mesh hop')
+        if not adjacent(hop.source, hop.target, rows, columns, topology):
+            raise ValueError(f'request {hop.request_id}: nonadjacent {topology} hop')
         location[hop.qubit] = hop.target
     return Trace(meta['cores'], meta['slots'], meta['qubits'], initial, layer+1, hops)
 
