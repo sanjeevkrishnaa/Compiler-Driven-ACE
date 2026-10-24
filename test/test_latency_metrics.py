@@ -80,3 +80,15 @@ class OnTheSimulatorTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AdmissionWaitColumnTests(unittest.TestCase):
+    def test_admission_waits_are_reported_for_the_per_qubit_scheduler_and_absent_for_legacy(self):
+        import run_trace_comparison as runner
+        layers = [[Hop(0, 5, 6, 0), Hop(1, 5, 9, 1), Hop(2, 9, 10, 2)]]
+        per_qubit, _ = simulate(layers, "per-qubit", memories=1)
+        legacy, _ = simulate(layers, "legacy", memories=1)
+        got = runner._admission_waits(per_qubit["stats"])
+        self.assertGreater(got["max_admission_wait_ms"], 0)
+        self.assertEqual(got["requests_that_waited_fraction"], 2 / 3)       # two of three requests had to wait
+        self.assertIsNone(runner._admission_waits(legacy["stats"])["average_admission_wait_ms"])

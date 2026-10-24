@@ -77,6 +77,15 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
     }
 
 
+def _admission_waits(stats: dict) -> dict:
+    waits = [part["admission_wait_time_ms"] for part in stats["timing_breakdown"].values()
+             if "admission_wait_time_ms" in part]
+    if not waits:
+        return {"average_admission_wait_ms": None, "max_admission_wait_ms": None, "requests_that_waited_fraction": None}
+    return {"average_admission_wait_ms": fmean(waits), "max_admission_wait_ms": max(waits),
+            "requests_that_waited_fraction": sum(w > 0 for w in waits) / len(waits)}
+
+
 def _eligible(result: dict, requests, reduce):
     if requests is None:
         return None
@@ -99,6 +108,8 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         # the same definition under every scheduler (latency_metrics.py)
         "average_eligible_latency_ms": _eligible(result, requests, fmean),
         "max_eligible_latency_ms": _eligible(result, requests, max),
+        # time requests spent waiting for a free memory before being admitted (per-qubit scheduler only)
+        **_admission_waits(stats),
                 "metric_version": stats["metric_version"],
         "average_delivered_epr_fidelity": _mean_fidelity(result["fidelity_dict"]),
         "total_retries": stats.get("total_retries", 0),
