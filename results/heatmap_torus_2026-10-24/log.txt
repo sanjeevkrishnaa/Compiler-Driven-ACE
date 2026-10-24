@@ -1,0 +1,1 @@
+wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/heatmap_torus_2026-10-24/per_core_congestion.png

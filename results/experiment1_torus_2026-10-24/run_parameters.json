@@ -1,0 +1,169 @@
+{
+  "experiment": "experiment1",
+  "parameter_set": "torus-ace-default",
+  "topology": "torus",
+  "started_at": "2026-10-24 13:44:11",
+  "finished_at": "2026-10-24 14:09:22",
+  "design": {
+    "workloads": [
+      "ghz",
+      "bv",
+      "graphstate",
+      "vqe_real_amp",
+      "cdkm_ripple_carry_adder",
+      "bmw_quark_cardinality",
+      "draper_qft_adder",
+      "qft",
+      "qaoa",
+      "randomcircuit"
+    ],
+    "mapping_seeds": [
+      42,
+      43,
+      44
+    ],
+    "budgets": [
+      1,
+      2,
+      3,
+      4,
+      6,
+      8,
+      16,
+      32
+    ],
+    "saturation_arms": {
+      "qft": 64
+    },
+    "policies": [
+      "on-demand",
+      "dynamic"
+    ],
+    "physics_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scheduler": "per-qubit",
+    "modelled_capacity_max": 4,
+    "invocations": 456,
+    "runs": 1368,
+    "compiler_memories_rule": "budget - 1 (on-demand: forced to 0 at run time)",
+    "generation_capacity_rule": "equal to the compiler memories requested"
+  },
+  "runner_flags": {
+    "--delta-layers": "6",
+    "--dynamic-lookahead-layers": "8",
+    "--coherence-time-layers": "10",
+    "--compiler-reservation-ms": "1000",
+    "--stop-time-s": "300"
+  },
+  "runner_parameters": {
+    "config": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/config/final_config/grid_4x4_torus_ace_3.json",
+    "mesh": "4x4",
+    "topology": "torus",
+    "delta_layers": 6,
+    "dynamic_lookahead_layers": 8,
+    "coherence_time_layers": 10.0,
+    "fidelity_threshold": 0.01,
+    "pregeneration_buffer_ms": 5.3,
+    "compiler_reservation_ms": 1000.0,
+    "request_duration_ms": 50,
+    "stop_time_s": 300.0,
+    "scheduler": "per-qubit",
+    "admission": "event",
+    "no_starvation_guard": false,
+    "max_layers": null,
+    "verbose": false
+  },
+  "ace_physics": {
+    "config_file": "config/final_config/grid_4x4_torus_ace_3.json",
+    "memory_fidelity": 0.95,
+    "memory_efficiency": 0.95,
+    "memory_coherence_time_s": 1,
+    "bsm_detector_efficiencies": [
+      0.95,
+      0.95
+    ],
+    "encoding": "single_heralded",
+    "adaptive_max_memory_in_file": 3,
+    "gate_fidelity": 0.99,
+    "measurement_fidelity": 0.99,
+    "router_to_bsm_links": [
+      {
+        "distance_m": 0.025,
+        "attenuation_db_per_m": 0.0002
+      }
+    ],
+    "note": "memo_size and the compiler memory limit are set per run from the budget"
+  },
+  "source_constants": {
+    "classical_delay_per_hop_us": 20,
+    "classical_delay_base_us": 100,
+    "classical_delay_formula": "distance / c + hops * per_hop + base (router_net_topo_adaptive.py)",
+    "empty_layer_gap_ms": 5.0,
+    "admission_grace_ps": 1.0,
+    "wait_threshold_ms": 0.001,
+    "retry_period": "1 ms (request_scheduler.RETRY_PERIOD)"
+  },
+  "trace_sha256": {
+    "ghz/seed_42": "64e76d7f08175ed44f918d0841436ae605e9f3fbf0ee940acf668fc9803002d0",
+    "ghz/seed_43": "4de6fb1ebfb87b718f38a527935a49e7adb486bdaa54630046201b3e272551e3",
+    "ghz/seed_44": "254931f21860ad7ec91bcb0c0255db7aafed48f94e016b6c24852faad9a5272e",
+    "bv/seed_42": "62ae839d19e5f9810d1601b293e207445ad954ee226acaf9790fc3fb18052404",
+    "bv/seed_43": "889abf3ffa8ddd94ee3ddbd0ff3eb631e7b7289ed9162113a43406a66eca32af",
+    "bv/seed_44": "e2ce35f80dfb69b5c9ae0feace59953ce91b5219ebc1571eeba2865c711a77b1",
+    "graphstate/seed_42": "ed24a6411e29e88c0a1a7a4c8932d887c11339dfced75575f761c8e5e3e2982d",
+    "graphstate/seed_43": "075f35565f4b24cb5170ad9b5681e06ea9c947077f8bb133b1a9d9c10c7e65d1",
+    "graphstate/seed_44": "2a6dc33bbaf97c90711c04ad30d998379d6d2dacc7e872661af828ec3b64f486",
+    "vqe_real_amp/seed_42": "5bb23849f0d50c8dab6e1e886c24b43c6429f29fc504053c3639d45840a79acd",
+    "vqe_real_amp/seed_43": "9296eebcaeb356cfc6efea90068e26cdf240ea01c3a06506154743ee000c620e",
+    "vqe_real_amp/seed_44": "a2ccd9d050da3d190d4ca14e83e3dcdb7e692c26c77aaa3c8e6681c85afb2192",
+    "cdkm_ripple_carry_adder/seed_42": "080b8681f6d91c1d9347f16dc1650751848bd410653376feeedaaf390b1c7a5b",
+    "cdkm_ripple_carry_adder/seed_43": "f77b0fbb55664ad60a53b935172f8a2d7929ccaf23a4b6ec8ac5ef1d0cf8b80c",
+    "cdkm_ripple_carry_adder/seed_44": "a1b0a1ed19c062d785d6c372f0b9a903bc719264cf80a84669bb5e4fe5e40fc4",
+    "bmw_quark_cardinality/seed_42": "3109007ef0802a8a95d4105bc08ea18c38731bb2c6ded73e1cc360562771a218",
+    "bmw_quark_cardinality/seed_43": "c9d3e46ac9ff856bc7e7028fd95b0056c5244a0c83806337ab042faf249cc8de",
+    "bmw_quark_cardinality/seed_44": "5cccaa44bfea56cfadd85ed6a56767eabcde7b6eaaf1e1404edc46d000425d46",
+    "draper_qft_adder/seed_42": "7cc9febf0aed4f18a0c125f739090a18cee8f1076e75f0cedb90b7ccffc6dd64",
+    "draper_qft_adder/seed_43": "d28a5387298b5eb19f4a36b3f3be8679e2f16099c13b765cc974c17e1c943fbc",
+    "draper_qft_adder/seed_44": "519d1356eeb95383cd05d6bfb0c37a821339664cfd71e27714c77b427cdc6e92",
+    "qft/seed_42": "136c17546da8abe8db138f0407f674b8ab9046dd12b7fa6d85b9cc399f9e5591",
+    "qft/seed_43": "59f5b19ad2596e3bb6be28152709a2fd56d25a260639ed9f1369ba0bd6f95b7f",
+    "qft/seed_44": "b7d6fff2c6f888ae4ea9d5189d64b27d9addc8bd3bb1d775eb7a2de423bdf7c9",
+    "qaoa/seed_42": "461f1c1021b447190123a0ea45be1ba94bb11d0037100bfe3af42960bf4c5dba",
+    "qaoa/seed_43": "c2d5f812b5d2b1bf6cd45d655e883cb94b677a7f181d1dc25570e4b71eb68780",
+    "qaoa/seed_44": "b5386ccaed1c5c9131598f96086b3aef5c5f0bc03d2aa8e411f17af652e3e0a7",
+    "randomcircuit/seed_42": "32a76df3c9a33cf6321f8ede25aaf3e7c39896d9ff197b72c344a6dc13960a91",
+    "randomcircuit/seed_43": "afeec4b562d442193a6d5d4d5dd5a1b8ed205851e758f112325e0b1743a39666",
+    "randomcircuit/seed_44": "28c1158d3198f263740dc153d8c80653f5ab6adf360cb8b9264fea0106eb7b7e"
+  },
+  "code": {
+    "commit": "8b6a5653e6450f3f62eda97d0a702ad88ed9cf4b",
+    "branch": "codex/ace-scheduler-correctness",
+    "uncommitted_changes": false
+  },
+  "machine": {
+    "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3",
+    "cpus": 8
+  },
+  "timing": {
+    "per_workload_sum_of_invocation_seconds": {
+      "ghz": 87.3,
+      "bv": 89.4,
+      "graphstate": 101.7,
+      "vqe_real_amp": 117.0,
+      "cdkm_ripple_carry_adder": 201.7,
+      "bmw_quark_cardinality": 162.3,
+      "draper_qft_adder": 443.8,
+      "qft": 706.8,
+      "qaoa": 635.8,
+      "randomcircuit": 3325.3
+    },
+    "invocations_timed": 456,
+    "parallel_jobs": 4,
+    "total_wall_clock_seconds": 1511.4,
+    "note": "an invocation is one process running three physics seeds; with parallel_jobs > 1 each includes contention from the other jobs, so the sum exceeds the total wall clock"
+  }
+}
