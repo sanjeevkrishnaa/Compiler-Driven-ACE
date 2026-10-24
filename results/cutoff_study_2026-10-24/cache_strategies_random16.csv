@@ -1,0 +1,7 @@
+trace,cutoff_ratio,cutoff_ms,strategy,pairs_generated,pairs_used,unused_counter,reported_waste_percent,true_unused_percent,latency_ms,fidelity,makespan_ms,completion
+Random-16 (data/tracegen/random16_d80_seed303.txt),1 (default),1000,continuous,44936,90,44800,99.7,99.80,5.147,0.9297,378.3,1.0
+Random-16 (data/tracegen/random16_d80_seed303.txt),1 (default),1000,adaptive-continuous,5184,120,5068,97.8,97.69,4.882,0.9258,366.5,1.0
+Random-16 (data/tracegen/random16_d80_seed303.txt),0.2,200.0,continuous,44936,90,44800,99.7,99.80,5.147,0.9297,378.3,1.0
+Random-16 (data/tracegen/random16_d80_seed303.txt),0.2,200.0,adaptive-continuous,5184,120,5068,97.8,97.69,4.882,0.9258,366.5,1.0
+Random-16 (data/tracegen/random16_d80_seed303.txt),0.02,20.0,continuous,447388,122,44736,10.0,99.97,4.865,0.9354,365.5,1.0
+Random-16 (data/tracegen/random16_d80_seed303.txt),0.02,20.0,adaptive-continuous,41472,122,4982,12.0,99.71,4.865,0.9354,365.5,1.0
