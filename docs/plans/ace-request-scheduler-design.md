@@ -1,6 +1,6 @@
 # Request scheduler design (Gate 3)
 
-**Status: DESIGN, not yet implemented.** Written 2026-10-24 for review. Context:
+**Status: implemented** in `request_scheduler.py` (3a polling admission, 3b event-driven admission). Written 2026-10-24. Context:
 [`ace-correctness-and-congestion-program.md`](ace-correctness-and-congestion-program.md) and the
 [audit](../reports/ace-correctness-audit.md).
 
@@ -64,10 +64,30 @@ event running before another. Two consequences:
   booked and be rejected once. It retries, so this costs time and never correctness; with event-driven
   admission (3b) the responder's release wakes it. Whether it happens at one memory per core is
   measured in Gate 4, not assumed.
-* **3b, event-driven (second, separately tested).** A request rejected for lack of memory waits;
-  a release at one of its endpoints wakes it, oldest first. This removes the polling delay seen in
-  the audit (a memory free at 6.5 ms, the waiter admitted at 7.2 ms) and gives the order guarantee
-  R3. Behind `admission="poll" | "event"`.
+* **3b, event-driven (the default).** A released request waits in a line ordered by the time it
+  became eligible, then by trace position. It is handed to the reservation protocol only when both
+  of its cores have a memory free for its whole window. "Free" is read from each core's reservation
+  table (the same overlap test the protocol applies) less the requests already admitted whose
+  responder booking has not arrived yet. A release at any core (a booking removed, or a lease
+  released) wakes the line one picosecond later, so every release of that instant has happened.
+  Waiting counts in the request's latency (its clock starts when it became eligible).
+  Reasoning, in place of the classical-literature claims I could not read first-hand:
+  * *No hold-and-wait.* A request is admitted only if both endpoints are free, so no admitted request
+    ever waits on another; a circular wait cannot form among application requests.
+  * *Why not just poll.* Measured (`test_compiler_scheduler_admission.py`): two requests that swap two
+    cores holding one memory each reject each other on the same 1 ms period for ever (about 2,500
+    submissions each in 3 s). Found by the randomized traces (seed 0, one memory: 8 of 34 requests done in
+    30 s; two requests submitted 25,000 times each).
+  * *Starvation.* With `starvation_guard` (default on) an older request that cannot start yet keeps
+    the free memory it would need, so younger requests cannot take it for ever. Without it a younger
+    request goes ahead (tested both ways).
+  * *Assumption, stated.* The scheduler is a central controller that reads every core's reservation
+    table with no delay. Not measured, not free: a distributed scheduler would see stale tables.
+  * *Fallback.* If requests wait and nothing is in flight, a booking that blocks them can only end
+    with time, which reports no event; the line is then re-examined every millisecond.
+  * *Physical rejections* still happen when something else takes a memory in between (a pre-generated
+    pair); such a request rejoins the line and is re-examined after a millisecond or at the next release.
+  * *Impossible requests* (more memories than a core has) raise `TraceError` when the manager is built.
 
 Doing 3a and 3b as separate steps means any difference in results can be attributed to one change.
 

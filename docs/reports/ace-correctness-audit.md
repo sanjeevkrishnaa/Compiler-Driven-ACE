@@ -170,6 +170,18 @@ At 0.3 ms no request completes in 5 s under either manager (about 900 to 2,700 s
 window is shorter than the generation time, so the retry loop cannot end. That is physics, not a
 scheduling fault, and it is the livelock case a loud failure is for (Gate 3b).
 
+### F10. Polling admission livelocks on a swap (found by randomized traces, Gate 4)
+
+A random 4-layer trace on the 4x4 mesh with one memory per core completed 8 of 34 requests in 30 s.
+Requests 1 (core 8 to 12) and 3 (12 to 8) are a swap: each initiator books its own only memory,
+finds the other core's taken, rolls back, and retries 1 ms later, in step with the other, for ever
+(25,000 submissions each; request 7, which needs core 8, starved behind them). Nothing was booked at
+the end and the invariants held, so this is a livelock, not corruption. The legacy manager avoids it
+only because its per-core batches never let the two requests meet. A fixed retry period cannot break
+the symmetry; admitting a request only when both cores have a memory free can, and does (event
+admission, `docs/plans/ace-request-scheduler-design.md`). The same trace now completes at one, two
+and four memories per core.
+
 ## The hooks change nothing
 
 The event hooks (a `recorder` that defaults to `None`, every emission guarded) were added to
