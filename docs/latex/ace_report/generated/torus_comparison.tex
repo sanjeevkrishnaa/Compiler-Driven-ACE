@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Workload & Hops & Overload\% at C=4 & On-demand ms, 2 mem. & On-demand ms, 4 mem. & Dynamic ms, 8 mem. \\
+\midrule
+GHZ & 24/18 & 0.0/0.0 & 1.17/1.15 & 1.17/1.15 & 0.26/0.28 \\
+Bernstein--Vazirani & 25/21 & 0.0/0.0 & 1.22/1.11 & 1.22/1.11 & 0.24/0.23 \\
+BMW/QUARK cardinality & 144/108 & 0.0/0.0 & 1.12/1.10 & 1.12/1.10 & 0.25/0.25 \\
+VQE real amplitudes & 104/66 & 6.1/1.5 & 1.11/1.14 & 1.11/1.14 & 0.25/0.30 \\
+CDKM ripple-carry adder & 456/406 & 0.6/0.6 & 1.24/1.11 & 1.14/1.09 & 0.30/0.29 \\
+Graph state & 76/60 & 33.3/38.9 & 2.72/1.86 & 1.24/1.11 & 0.95/0.62 \\
+Draper QFT adder & 1310/984 & 41.3/25.8 & 2.16/2.25 & 1.15/1.13 & 0.89/0.74 \\
+QAOA & 3068/2562 & 71.6/57.9 & 3.42/2.47 & 1.27/1.17 & 1.86/1.10 \\
+QFT & 2510/1938 & 65.2/58.0 & 4.72/2.79 & 1.59/1.21 & 2.78/1.16 \\
+Random circuit & 11688/9574 & 8.0/3.4 & 1.27/1.19 & 1.11/1.11 & 0.38/0.29 \\
+\bottomrule
+\end{tabular}
+\caption{Mesh/torus. Hops: mean requests per trace. Overload: \% of active layers with any core above capacity 4. Latencies are means over nine runs.}
+\label{tab:torus}
+\end{table}

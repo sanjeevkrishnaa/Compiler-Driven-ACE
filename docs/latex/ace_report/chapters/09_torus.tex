@@ -1,0 +1,23 @@
+\chapter{The torus topology}
+\label{ch:torus}
+
+\section{What changes}
+A $4\times4$ torus joins the opposite edges of the mesh with eight extra links, so every core has four neighbours and the longest path shrinks from six hops to four. Everything else is held as in the
+mesh experiments: the same ten benchmarks, the same mapper (HQA) with the same seeds, the same ACE parameters, the same link length for every link (a folded layout; the wrap links are not longer),
+the same scheduler, budgets, policies, physics seeds and controls.
+
+\paragraph{Routing.} The routes are the mapper's own: a Dijkstra search for the path with the fewest hops, with the product of link reliabilities as the tie-break (route model \code{shortest}), exactly as for the mesh
+traces. The mapping-only path of the study script was checked to reproduce the archived mesh trace line for line before it was used for the torus. ACE itself needed three changes: trace validation
+knows wrap-around links; the topology file is generated from the mesh file by adding the eight wrap links in the mesh's own link format (every router then has four quantum links, tested by loading it in ACE);
+and a torus trace is refused on a mesh topology file and the reverse.
+
+\paragraph{One caveat.} The mapper is run on the torus graph, so the torus traces differ from the mesh traces in the placement as well as the routes. Differences below are differences of the two systems, not of the topology alone.
+
+\section{Results}
+Torus traces need 11\% to 37\% fewer hops than the mesh traces (CDKM 11\%, QFT 23\%, QAOA 16\%, GHZ 25\%, VQE 37\%). Every control passed on all 1\,368 runs, as for the mesh (Chapter~\ref{ch:exp1}).
+\input{generated/torus_comparison}
+On-demand latency under congestion improves: at two memories QFT goes from $4.72$ to $2.79$\,ms, QAOA from $3.42$ to $2.47$\,ms and graph state from $2.72$ to $1.86$\,ms; at four memories QFT from $1.59$ to $1.21$\,ms. Dynamic pre-generation
+catches on-demand earlier (QFT at eight memories: $2.78$ to $1.16$\,ms). The structural overload at capacity four falls for most workloads (QFT 65.2\% to 58.0\%, QAOA 71.6\% to 57.9\%, Draper 41.3\% to 25.8\%) but not for graph state, where
+it rises from 33.3\% to 38.9\% (only six layers are active, so a single layer is 17 percentage points). Draper at two memories is slightly slower on the torus ($2.16$ to $2.25$\,ms).
+
+\input{generated/fig_heatmap_torus}

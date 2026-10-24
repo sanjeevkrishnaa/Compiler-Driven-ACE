@@ -1,0 +1,41 @@
+\chapter{Can offline routing reduce the congestion?}
+\label{ch:routing}
+
+Experiment~2 (Chapter~\ref{ch:heatmap}) showed that at the modelled capacity of four memories nearly all overload is relay overload: it is caused by routes passing through the
+central cores, not by routes starting or ending there. That raises a question about the routes. The mapper chooses, for every qubit move, one Dijkstra shortest path (fewest hops, link
+reliability as the tie-break), without looking at what the other moves of the layer are doing. Many alternative shortest paths exist: between opposite corners of the $4\times4$ mesh there are
+$\binom{6}{3}=20$. Could choosing them \emph{offline}, with the mapping untouched, spread the relay load and reduce the congestion?
+
+\section{Method}
+The mapping is held fixed: every qubit still moves from the same core to the same core in the same layer. Only the path of each move (a \emph{route}) is re-chosen, layer by layer
+(layers are independent because a layer's routes start and end at fixed cores). For each layer that has any overload, the choice of one candidate path per route is made by solving a small
+mixed-integer program exactly, minimising the \emph{excess}, the demand above capacity summed over cores. The candidates are all simple paths of at most the shortest length plus $0$ or $2$ hops,
+and the mapper's own path is always a candidate, so the result is never worse than the baseline.
+
+Two lower bounds hold for \emph{any} routing, so they show how much is left to gain. Endpoints do not depend on the path, so the demand of a core is at least its endpoint demand; and a route of shortest
+length $k$ puts at least $2k$ hop touches ($k+1$ route touches) on the cores, so the total excess is at least the minimum total demand minus (cores $\times$ capacity). Both are tested.
+
+Demand is counted two ways: by hops (the archive's counting) and by routes, the number of qubits in flight through a core, which is what the per-qubit scheduler experiences.
+
+\section{Structural result}
+\input{generated/routing_struct_mesh}
+Pooled over the ten benchmarks, the best routing removes most of the excess at the modelled capacity: with route counting at capacity four, shortest paths alone cut the excess from 2\,216 to 348 (a 84.3\% reduction)
+and the layers with any overload from 482 to 102; allowing two extra hops cuts it to 237 (89.3\%) at a cost of 0.36\% more hops. The gain shrinks as the capacity shrinks (19.0\% at capacity one),
+because there the total relay volume, not the choice of path, is the limit, which the volume bound shows. With hop counting the reductions are smaller (65.6\% at capacity four).
+
+\section{Simulated effect}
+The structural gain would be an artefact if it did not survive the simulator, so the re-routed traces were run in ACE next to the original routes, on-demand, at the budget they were optimised for, with the same
+mapping, endpoints, physics seeds and parameters. Three mapping seeds and three physics seeds give nine paired runs per cell.
+\input{generated/routing_sim_mesh}
+Re-routing alone makes on-demand requests faster in nearly every pair. At two memories the latency falls by 26\% to 42\% on the congested workloads; at the modelled four memories by 25\% for QFT, 11\% for QAOA and 6\% for graph state,
+and by 1\% or less where there was little congestion. The fraction of requests that had to wait falls accordingly. Two extra hops help at two memories (QFT 26\% to 36\%) but not at four, where the added hop count costs about as much as it saves.
+
+\section{The torus}
+On the torus, which has more paths between cores, the optimum is closer to the lower bound still.
+\input{generated/routing_struct_torus}
+
+\section{What can and cannot be concluded}
+Offline routing \emph{can} reduce congestion: with the mapping fixed, an exact offline choice of paths removes most of the excess demand at the modelled capacity and the simulated latencies fall with it. These
+are results for an offline optimum with global knowledge of every layer, computed per layer for the capacity the hardware has; a practical routing algorithm would be a heuristic for the same problem and would be bounded by it.
+Not shown here: the effect on pre-generation policies (only on-demand was simulated), joint optimisation of mapping and routing, fidelity effects (the on-demand fidelity does not depend on waiting), and a routing policy that does not know
+the layer in advance. Whether to pursue the research further is therefore a question about those directions, and the bounds above say how much headroom each could have.

@@ -1,0 +1,11 @@
+workload,case,completed,requested,violations,violation_kinds,makespan_ms,adaptive_bookings,released_consumed,released_reservation_expired,released_removed,pairs_delivered,pairs_credited,memory_expiry_resets
+ghz,"ACE default: cut-off = coherence time (1 s), window 1000 ms",24,24,0,,303.500,48,48,0,0,96,48,0
+ghz,short reservation window only (20 ms),24,24,0,,311.200,48,36,12,0,96,48,0
+ghz,"cut-off ratio 0.02 (20 ms), window 1000 ms",24,24,0,,311.400,55,34,12,9,94,48,12
+ghz,"cut-off ratio 0.005 (5 ms), window 1000 ms",24,24,0,,322.001,49,0,34,15,82,48,34
+ghz,cut-off ratio 0.02 and window 20 ms,24,24,0,,311.200,48,36,12,0,96,48,0
+graphstate,"ACE default: cut-off = coherence time (1 s), window 1000 ms",76,76,0,,274.500,134,104,0,30,256,152,0
+graphstate,short reservation window only (20 ms),76,76,0,,241.300,134,48,56,30,256,152,0
+graphstate,"cut-off ratio 0.02 (20 ms), window 1000 ms",76,76,0,,351.801,179,24,32,123,208,152,32
+graphstate,"cut-off ratio 0.005 (5 ms), window 1000 ms",76,76,0,,347.401,339,0,34,305,186,152,34
+graphstate,cut-off ratio 0.02 and window 20 ms,76,76,0,,242.501,134,48,56,30,256,152,0

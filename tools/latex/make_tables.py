@@ -127,6 +127,27 @@ def exp1_tables(skipped: list[str]) -> None:
         r"  \item " + tex(l).replace("--", "---") for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
 
 
+def torus_tables(skipped: list[str]) -> None:
+    path = RESULTS / "mesh_vs_torus_2026-10-24" / "comparison.csv"
+    if not path.exists():
+        skipped.append("torus")
+        return
+    rows = load(path)
+    f = lambda x, d=2: "--" if x in ("", None) else f"{float(x):.{d}f}"
+    body = []
+    for r in rows:
+        w = r["workload"]
+        body.append([NAMES[w], f"{float(r['hops_mesh']):.0f}/{float(r['hops_torus']):.0f}",
+                     f"{float(r['overload_c4_mesh']):.1f}/{float(r['overload_c4_torus']):.1f}",
+                     f"{f(r['ondemand_latency_b2_mesh'])}/{f(r['ondemand_latency_b2_torus'])}",
+                     f"{f(r['ondemand_latency_b4_mesh'])}/{f(r['ondemand_latency_b4_torus'])}",
+                     f"{f(r['dynamic_latency_b8_mesh'])}/{f(r['dynamic_latency_b8_torus'])}"])
+    table(GEN / "torus_comparison.tex", ["Workload", "Hops", "Overload\\% at C=4", "On-demand ms, 2 mem.", "On-demand ms, 4 mem.", "Dynamic ms, 8 mem."], body,
+          "Mesh/torus. Hops: mean requests per trace. Overload: \\% of active layers with any core above capacity 4. Latencies are means over nine runs.", "tab:torus", "lrrrrr")
+    figure("fig_heatmap_torus.tex", RESULTS / "heatmap_torus_2026-10-24" / "per_core_congestion.png",
+           "Per-core congestion on the torus (percentage of active layers in which a core's demand exceeds 4 slots; mean over three mapping seeds).", "fig:heatmap-torus")
+
+
 def parameter_tables(skipped: list[str]) -> None:
     path = RESULTS / "experiment1_ten_benchmarks_2026-10-24" / "run_parameters.json"
     if not path.exists():
@@ -168,6 +189,7 @@ def main() -> int:
     heatmap_tables(skipped)
     exp2_tables(skipped)
     exp1_tables(skipped)
+    torus_tables(skipped)
     parameter_tables(skipped)
     print("wrote", len(list(GEN.glob("*.tex"))), "generated files;", "skipped:", skipped or "none")
     return 0

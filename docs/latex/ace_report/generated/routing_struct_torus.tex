@@ -1,0 +1,19 @@
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+Capacity & Extra hops & Excess now & Excess after re-routing & Lower bound & Overloaded layers & Added hops \\
+\midrule
+1 & 0 & 20202 & 15858 (21.5\%) & 14847 & 3826 $\to$ 3339 & 0.00\% \\
+1 & 2 & 20202 & 15387 (23.8\%) & 14847 & 3826 $\to$ 3312 & 1.73\% \\
+2 & 0 & 6108 & 3351 (45.1\%) & 2847 & 1319 $\to$ 702 & 0.00\% \\
+2 & 2 & 6108 & 3108 (49.1\%) & 2847 & 1319 $\to$ 630 & 0.93\% \\
+3 & 0 & 1852 & 363 (80.4\%) & 303 & 562 $\to$ 162 & 0.00\% \\
+3 & 2 & 1852 & 342 (81.5\%) & 303 & 562 $\to$ 159 & 0.09\% \\
+4 & 0 & 493 & 15 (97.0\%) & 6 & 220 $\to$ 15 & 0.00\% \\
+4 & 2 & 493 & 6 (98.8\%) & 6 & 220 $\to$ 6 & 0.04\% \\
+\bottomrule
+\end{tabular}
+\caption{Offline re-routing, torus, route counting, pooled over ten benchmarks and three mapping seeds. Excess is demand above capacity.}
+\label{tab:routing-torus}
+\end{table}
