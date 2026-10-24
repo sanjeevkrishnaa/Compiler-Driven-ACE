@@ -103,11 +103,27 @@ def summarize(violations: Iterable[Violation]) -> Counter:
 
 
 # ----------------------------------------------------------------------------- memory and pairs
+def _all(live) -> list[Booked]:
+    return [booking for bookings in live.values() for booking in bookings]
+
+
+def _windows_overlap(a: Booked, b: Booked) -> bool:
+    """Whether two bookings' reservation windows overlap; unknown windows count as overlapping.
+
+    A booking reserves a memory for a window that may lie in the future, so a memory can be
+    booked for a later window while an earlier reservation still holds it.  That is two
+    reservations in sequence, not a double booking.
+    """
+    if None in (a.start_ps, a.end_ps, b.start_ps, b.end_ps):
+        return True
+    return max(a.start_ps, b.start_ps) <= min(a.end_ps, b.end_ps)
+
+
 def _check_memory_and_pairs(
     events: Sequence[Event], requests: Mapping[int, RequestInfo] | None, require_completion: bool,
 ) -> list[Violation]:
     out: list[Violation] = []
-    live: dict[tuple[str, int], Booked] = {}
+    live: dict[tuple[str, int], list[Booked]] = {}     # per memory: bookings made and not yet released
     credits: Counter = Counter()                        # (reservation_id, side) -> pairs credited
     completions: Counter = Counter()                    # request_id -> times completed
     completing_reservation: dict[int, int] = {}         # request_id -> reservation that completed it
@@ -117,7 +133,7 @@ def _check_memory_and_pairs(
     for event in events:
         if isinstance(event, Booked):
             if event.key_hash is not None:
-                twin = next((b for b in live.values()
+                twin = next((b for b in _all(live)
                              if b.kind == event.kind and b.key_hash == event.key_hash
                              and b.reservation_id != event.reservation_id), None)
                 if twin is not None:
@@ -126,46 +142,50 @@ def _check_memory_and_pairs(
                                          f"{twin.request_id} hold reservations that compare equal "
                                          f"({event.node} memory {event.memory_index} / "
                                          f"{twin.node} memory {twin.memory_index})"))
-            held = live.get((event.node, event.memory_index))
-            if held is not None and held.reservation_id != event.reservation_id:
+            bookings = live.setdefault((event.node, event.memory_index), [])
+            clash = next((b for b in bookings
+                          if b.reservation_id != event.reservation_id and _windows_overlap(b, event)), None)
+            if clash is not None:
                 out.append(Violation(MEMORY_DOUBLE_BOOKED, event.time_ps,
                                      f"{event.node} memory {event.memory_index} booked for request "
                                      f"{event.request_id} ({event.kind}) while held for request "
-                                     f"{held.request_id} ({held.kind})"))
-            live[(event.node, event.memory_index)] = event
+                                     f"{clash.request_id} ({clash.kind}) over an overlapping window"))
+            bookings.append(event)
         elif isinstance(event, Unbooked):
-            held = live.get((event.node, event.memory_index))
-            if held is None or held.reservation_id != event.reservation_id:
+            bookings = live.get((event.node, event.memory_index), [])
+            held = next((b for b in bookings if b.reservation_id == event.reservation_id), None)
+            if held is None:
                 out.append(Violation(RELEASE_NOT_LIVE, event.time_ps,
                                      f"{event.node} memory {event.memory_index}: released a booking for request "
                                      f"{event.request_id} that was not live ({event.reason})"))
             else:
-                del live[(event.node, event.memory_index)]
+                bookings.remove(held)
         elif isinstance(event, MisRemoved):
             out.append(Violation(MISREMOVAL, event.time_ps,
                                  f"{event.node} memory {event.memory_index}: releasing request "
                                  f"{event.request_id}'s reservation removed a different, equal-comparing one"))
-            held = live.get((event.node, event.memory_index))
-            if held is not None and held.reservation_id == event.removed_id:
-                del live[(event.node, event.memory_index)]
+            bookings = live.get((event.node, event.memory_index), [])
+            held = next((b for b in bookings if b.reservation_id == event.removed_id), None)
+            if held is not None:
+                bookings.remove(held)
         elif isinstance(event, RequestSubmitted):
             if event.attempt > 0:
-                stale = sorted({b.request_id for b in live.values()
+                stale = sorted({b.request_id for b in _all(live)
                                 if b.kind == APPLICATION and b.request_id == event.request_id})
                 if stale:
                     out.append(Violation(STALE_BOOKING_ON_RESUBMIT, event.time_ps,
                                          f"request {event.request_id} resubmitted (attempt {event.attempt}) while "
                                          f"its previous attempt still held "
-                                         f"{sum(1 for b in live.values() if b.kind == APPLICATION and b.request_id == event.request_id)}"
+                                         f"{sum(1 for b in _all(live) if b.kind == APPLICATION and b.request_id == event.request_id)}"
                                          f" memory booking(s)"))
         elif isinstance(event, PairDelivered):
-            if (event.node, event.memory_index) not in live:
+            if not live.get((event.node, event.memory_index)):
                 out.append(Violation(ORPHAN_PAIR, event.time_ps,
                                      f"{event.node} memory {event.memory_index}: pair delivered into a memory "
                                      f"no reservation held"))
         elif isinstance(event, PairCredited):
-            held = live.get((event.node, event.memory_index))
-            if held is None or held.reservation_id != event.reservation_id:
+            if not any(b.reservation_id == event.reservation_id
+                       for b in live.get((event.node, event.memory_index), [])):
                 out.append(Violation(CREDIT_WITHOUT_BOOKING, event.time_ps,
                                      f"{event.node} memory {event.memory_index}: pair credited to request "
                                      f"{event.request_id} whose reservation did not hold it"))
@@ -188,7 +208,7 @@ def _check_memory_and_pairs(
             pass
 
     for request_id, reservation_id in sorted(completing_reservation.items()):
-        leftover = [b for b in live.values()
+        leftover = [b for b in _all(live)
                     if b.reservation_id == reservation_id and b.kind == APPLICATION]
         if leftover:
             where = ", ".join(f"{b.node}[{b.memory_index}]" for b in leftover)

@@ -12,7 +12,7 @@ from sequence.resource_management.memory_manager import MemoryInfo
 from sequence.resource_management.rule_manager import Arguments
 from sequence.entanglement_management.entanglement_protocol import EntanglementProtocol
 
-from execution_events import ADAPTIVE, APPLICATION, Booked, MisRemoved, Unbooked
+from execution_events import ADAPTIVE, APPLICATION, Booked, MisRemoved, Unbooked, reservation_serial
 from generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
 from swapping import EntanglementSwappingA_bds, EntanglementSwappingB_bds
 from sequence.entanglement_management.swapping import EntanglementSwappingA, EntanglementSwappingB
@@ -355,7 +355,8 @@ class ObservedTimeCard(MemoryTimeCard):
         if added and recorder is not None:
             request_id, kind = describe_reservation(reservation)
             recorder.record(Booked(self._owner.timeline.now(), self._owner.name, self.memory_index,
-                                   id(reservation), request_id, kind, hash(reservation)))
+                                   reservation_serial(reservation), request_id, kind, hash(reservation),
+                                   reservation.start_time, reservation.end_time))
         return added
 
     def remove(self, reservation) -> bool:
@@ -369,9 +370,9 @@ class ObservedTimeCard(MemoryTimeCard):
             now, node = self._owner.timeline.now(), self._owner.name
             if stored is reservation:
                 request_id, kind = describe_reservation(stored)
-                recorder.record(Unbooked(now, node, self.memory_index, id(stored), request_id, kind, "removed"))
+                recorder.record(Unbooked(now, node, self.memory_index, reservation_serial(stored), request_id, kind, "removed"))
             else:
-                recorder.record(MisRemoved(now, node, self.memory_index, id(reservation), id(stored),
+                recorder.record(MisRemoved(now, node, self.memory_index, reservation_serial(reservation), reservation_serial(stored),
                                            describe_reservation(reservation)[0]))
         if removed:
             notify_release(self._owner)
@@ -452,7 +453,7 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
                 if recorder is not None:
                     request_id, kind = describe_reservation(reservation)
                     recorder.record(Unbooked(timeline.now(), self.owner.name, card.memory_index,
-                                             id(reservation), request_id, kind, reason))
+                                             reservation_serial(reservation), request_id, kind, reason))
             card.reservations[:] = [item for item in card.reservations if item is not reservation]
         adaptive = self.owner.adaptive_continuous
         if lease["compiler"]:

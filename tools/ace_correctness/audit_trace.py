@@ -65,6 +65,7 @@ def audit_trace(
     scheduler: str = "legacy",
     scheduler_options: dict | None = None,
     record: bool = True,
+    compiler_reservation_ms: float = 1000,
 ) -> Audit:
     """Run ``strategy`` on the trace under ``scheduler`` and check the recorded execution.
 
@@ -80,7 +81,7 @@ def audit_trace(
     arguments = Namespace(
         compiler_memories=compiler_memories, generation_capacity=generation_capacity,
         coherence_time_layers=10, delta_layers=6, dynamic_lookahead_layers=8,
-        fidelity_threshold=0.01, compiler_reservation_ms=1000)
+        fidelity_threshold=0.01, compiler_reservation_ms=compiler_reservation_ms)
     spec = _compiler_spec(arguments, trace, columns, strategy)
 
     recorder = ListRecorder() if record else None       # record=False times the bare simulation

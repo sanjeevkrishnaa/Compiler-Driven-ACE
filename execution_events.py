@@ -9,12 +9,14 @@ Times are simulation picoseconds.  Events are stored in emission order, which is
 the simulator's own order of execution, so two events with equal times keep the
 order in which they happened.
 
-``reservation_id`` is Python object identity (``id(reservation)``).  It is
+``reservation_id`` is a per-object serial (``reservation_serial``), never a reused address.  It is
 deliberately *not* the request identity: two distinct reservation objects can
 compare equal under SeQUeNCe's ``Reservation.__eq__``, and telling them apart is
 exactly what the checker needs to be able to do.
 """
 from __future__ import annotations
+
+import itertools
 
 from dataclasses import dataclass, replace
 from typing import Iterable, Protocol, Union
@@ -64,6 +66,8 @@ class Booked:
     request_id: int
     kind: str
     key_hash: int | None = None
+    start_ps: int | None = None         # the reservation's window; None when the emitter did not provide it
+    end_ps: int | None = None
 
 
 @dataclass(frozen=True)
@@ -117,6 +121,23 @@ Event = Union[RequestSubmitted, RequestRejected, RequestCompleted, Booked, Unboo
 
 
 _ID_FIELDS = ("reservation_id", "requested_id", "removed_id")
+
+
+_serials = itertools.count()
+
+
+def reservation_serial(reservation) -> int:
+    """A number that identifies one reservation object for as long as the process lives.
+
+    ``id(reservation)`` is a memory address and is reused once an object is freed, so a log keyed
+    by it can confuse a new reservation with a dead one, and two identical runs can label
+    reservations differently.  A serial taken at first sight is never reused.
+    """
+    serial = getattr(reservation, "_event_serial", None)
+    if serial is None:
+        serial = next(_serials)
+        reservation._event_serial = serial
+    return serial
 
 
 def canonical(events: Iterable[Event]) -> list[Event]:
