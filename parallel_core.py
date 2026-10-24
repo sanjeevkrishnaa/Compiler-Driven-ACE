@@ -493,6 +493,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             request_duration_ms: float, experiment_label: str,
                             seed: int = 0, compiler_spec: dict | None = None,
                             total_memories_per_core: int | None = None,
+                            autonomous_cache_limit: int | None = None,
+                            stop_after_workload: bool = False,
                             simulation_stop_time_s: float | None = None,
                             serialize_conflicts: bool = False,
                             recorder=None,
@@ -577,6 +579,10 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         router.adaptive_continuous.update_prob = update_prob_setting
         router.resource_manager.purify = purify_setting
 
+    if autonomous_cache_limit is not None and compiler_spec is None:
+        # CGP/ACGP: cap the pairs the autonomous protocol may cache, in place of the config file's fixed value
+        for router in network_topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER):
+            router.adaptive_continuous.set_adaptive_max_memory(autonomous_cache_limit)
     compiler_controller = None
     if compiler_spec is not None:
         from compiler_scheduler import CompilerPreGenerationController
@@ -622,6 +628,14 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             pregeneration_time_ms, request_duration_ms, compiler_controller, recorder,
             requests=request_plan, **(scheduler_options or {}),
         )
+    if stop_after_workload:
+        # CGP/ACGP keep generating pairs until the stop time.  Ending the run 1 ms after the last request completes
+        # leaves every request metric unchanged and makes their pair counts cover the workload's own duration.
+        if scheduler != "per-qubit":
+            raise ValueError("stop_after_workload needs the per-qubit scheduler")
+        def _end_run(when, timeline=tl):
+            timeline.stop_time = min(timeline.stop_time, when + MILLISECOND)
+        request_manager.on_series_end = _end_run
     # Compiler-driven runs have always used conflict-free batches because a
     # core cannot serve two reservations at once.  Expose the same batching to
     # non-compiler baselines so a comparison can use an identical workload

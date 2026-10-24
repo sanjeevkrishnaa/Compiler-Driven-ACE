@@ -1,0 +1,268 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/qft/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "continuous",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "4",
+  "--compiler-memories",
+  "3",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "3",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/qft_m4_continuous",
+  "--autonomous-cache-follows-compiler-memories",
+  "--stop-after-workload"
+ ],
+ "per_seed": [
+  {
+   "strategy": "continuous",
+   "average_request_latency_ms": 9.963931186058964,
+   "stats": {
+    "avg_retry_wait_time_ms": 9.3742375253251,
+    "avg_entanglement_generation_time_ms": 0.5896936607338645,
+    "end_to_end_latency_ms": 7370.04757526,
+    "protocol_generated_pairs": 4720,
+    "protocol_used_pairs": 3068,
+    "protocol_unused_pairs": 1626,
+    "protocol_waste_percentage": 34.44915254237288
+   },
+   "average_delivered_epr_fidelity": 0.9078373831213143,
+   "requests": 2510,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 2510,
+     "mean_total_ms": 9.963931186058964,
+     "mean_wait_ms": 9.3742375253251,
+     "mean_generation_ms": 0.5896936607338645,
+     "share_that_waited": 0.6410358565737052
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 9.3696193591,
+    "after_admission_mean": 0.0046181662250996,
+    "dependency_wait_mean": 16.88739978969084
+   },
+   "protocol_rejections": {
+    "events": 26,
+    "requests_rejected_at_least_once": 21,
+    "requests": 2510
+   },
+   "admission_blocking": {
+    "admission_checks": 77950,
+    "checks_that_found_no_free_memory": 35471,
+    "blocked_cards_by_kind_share": {
+     "autonomous": 0.7364,
+     "application": 0.2636
+    },
+    "blocking_window_ms_mean": {
+     "autonomous": 197.8,
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "autonomous": -97.85,
+     "application": 2.21
+    },
+    "mean_cards_per_core_blocked_when_stuck": 3.99
+   },
+   "bookings": {
+    "autonomous": {
+     "bookings": 21594,
+     "mean_hold_ms": 292.63153161315483,
+     "total_card_ms": 6319085.293654466
+    },
+    "application": {
+     "bookings": 5046,
+     "mean_hold_ms": 5.810634475304004,
+     "total_card_ms": 29320.461562384
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.0001,
+      "2": 0.0023,
+      "3": 0.0232,
+      "4": 0.0018,
+      "5": 0.0054,
+      "6": 0.018,
+      "7": 0.0037,
+      "8": 0.006,
+      "9": 0.0169,
+      "10": 0.0052,
+      "11": 0.0081,
+      "12": 0.0136,
+      "13": 0.0067,
+      "14": 0.0087,
+      "15": 0.0127,
+      "16": 0.0081,
+      "17": 0.0071,
+      "18": 0.0113,
+      "19": 0.0087,
+      "20": 0.0073,
+      "21": 0.012,
+      "22": 0.0096,
+      "23": 0.0073,
+      "24": 0.0136,
+      "25": 0.0097,
+      "26": 0.009,
+      "27": 0.0121,
+      "28": 0.0069,
+      "29": 0.0103,
+      "30": 0.0119,
+      "31": 0.007,
+      "32": 0.009,
+      "33": 0.0123,
+      "34": 0.0071,
+      "35": 0.0101,
+      "36": 0.0108,
+      "37": 0.0091,
+      "38": 0.0092,
+      "39": 0.011,
+      "40": 0.008,
+      "41": 0.0101,
+      "42": 0.0099,
+      "43": 0.0068,
+      "44": 0.0112,
+      "45": 0.0097,
+      "46": 0.0077,
+      "47": 0.0101,
+      "48": 0.0102,
+      "49": 0.0082,
+      "50": 0.0085,
+      "51": 0.0112,
+      "52": 0.0077,
+      "53": 0.0097,
+      "54": 0.0115,
+      "55": 0.0076,
+      "56": 0.0096,
+      "57": 0.0114,
+      "58": 0.0086,
+      "59": 0.0097,
+      "60": 0.0103,
+      "61": 0.0103,
+      "62": 0.0125,
+      "63": 0.0103,
+      "64": 0.0081,
+      "65": 0.0125,
+      "66": 0.0112,
+      "67": 0.0088,
+      "68": 0.0092,
+      "69": 0.0125,
+      "70": 0.0101,
+      "71": 0.0086,
+      "72": 0.0105,
+      "73": 0.0086,
+      "74": 0.0085,
+      "75": 0.0104,
+      "76": 0.0089,
+      "77": 0.0082,
+      "78": 0.0112,
+      "79": 0.0095,
+      "80": 0.008,
+      "81": 0.0113,
+      "82": 0.0097,
+      "83": 0.0094,
+      "84": 0.0098,
+      "85": 0.0104,
+      "86": 0.0111,
+      "87": 0.0063,
+      "88": 0.0131,
+      "89": 0.0092,
+      "90": 0.0066,
+      "91": 0.0133,
+      "92": 0.0083,
+      "93": 0.009,
+      "94": 0.0102,
+      "95": 0.0093,
+      "96": 0.0084,
+      "97": 0.0091,
+      "98": 0.0066,
+      "99": 0.0079,
+      "100": 0.0082,
+      "101": 0.0065,
+      "102": 0.006,
+      "103": 0.008,
+      "104": 0.0063,
+      "105": 0.0054,
+      "106": 0.0067,
+      "107": 0.005,
+      "108": 0.0032,
+      "109": 0.0027,
+      "110": 0.003,
+      "111": 0.0015
+     },
+     "peak": 111,
+     "mean_level_when_busy": 53.871
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.9505,
+      "2": 0.0385,
+      "3": 0.0076,
+      "4": 0.0034
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.064
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.9674,
+     "2": 0.0231,
+     "3": 0.0073,
+     "4": 0.0021
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.044
+   },
+   "compiler": {}
+  }
+ ],
+ "job": {
+  "group": "mechanism",
+  "name": "qft_m4_continuous",
+  "workload": "qft",
+  "policy": "continuous",
+  "memories": 4,
+  "cap": 3,
+  "override": {}
+ },
+ "wall_seconds": 21.4
+}

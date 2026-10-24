@@ -67,6 +67,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
     ``requests`` are the trace's ``CompilerRequest`` records (id, layer, qubit, position in layer,
     endpoints); ``layered_requests`` are the same requests in the tuple form ACE's applications take.
     """
+    on_series_end = None            # optional callback(when) once the last layer has completed
 
     def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
                  pregeneration_time_ms: float, request_duration_ms: float,
@@ -289,6 +290,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.layer_end_times[layer] = when
         if layer + 1 >= len(self.layered_requests):
             self.series_end_time = when
+            if self.on_series_end is not None:
+                self.on_series_end(when)
             return
         self.timeline.schedule(Event(when + int(gap_ms * MILLISECOND),
                                      Process(self, "_activate_layer", [layer + 1])))

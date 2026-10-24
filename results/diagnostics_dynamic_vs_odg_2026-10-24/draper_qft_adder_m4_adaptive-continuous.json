@@ -1,0 +1,250 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/draper_qft_adder/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "adaptive-continuous",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "4",
+  "--compiler-memories",
+  "3",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "3",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/draper_qft_adder_m4_adaptive-continuous",
+  "--autonomous-cache-follows-compiler-memories",
+  "--stop-after-workload"
+ ],
+ "per_seed": [
+  {
+   "strategy": "adaptive-continuous",
+   "average_request_latency_ms": 5.690779357446565,
+   "stats": {
+    "avg_retry_wait_time_ms": 5.163364791001526,
+    "avg_entanglement_generation_time_ms": 0.5274145664450381,
+    "end_to_end_latency_ms": 6246.20407601,
+    "protocol_generated_pairs": 3252,
+    "protocol_used_pairs": 1826,
+    "protocol_unused_pairs": 1386,
+    "protocol_waste_percentage": 42.61992619926199
+   },
+   "average_delivered_epr_fidelity": 0.902099002286149,
+   "requests": 1310,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 1310,
+     "mean_total_ms": 5.690779357446565,
+     "mean_wait_ms": 5.163364791001527,
+     "mean_generation_ms": 0.5274145664450381,
+     "share_that_waited": 0.5045801526717557
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 5.158606446675573,
+    "after_admission_mean": 0.004758344325954198,
+    "dependency_wait_mean": 10.084944130403818
+   },
+   "protocol_rejections": {
+    "events": 4,
+    "requests_rejected_at_least_once": 4,
+    "requests": 1310
+   },
+   "admission_blocking": {
+    "admission_checks": 30856,
+    "checks_that_found_no_free_memory": 14371,
+    "blocked_cards_by_kind_share": {
+     "autonomous": 0.7492,
+     "application": 0.2508
+    },
+    "blocking_window_ms_mean": {
+     "autonomous": 198.65,
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "autonomous": -98.93,
+     "application": 2.3
+    },
+    "mean_cards_per_core_blocked_when_stuck": 3.99
+   },
+   "bookings": {
+    "autonomous": {
+     "bookings": 18490,
+     "mean_hold_ms": 238.06666400948285,
+     "total_card_ms": 4401852.617535338
+    },
+    "application": {
+     "bookings": 2624,
+     "mean_hold_ms": 5.768912286046494,
+     "total_card_ms": 15137.625838586
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.0003,
+      "2": 0.0031,
+      "3": 0.0296,
+      "4": 0.0017,
+      "5": 0.0051,
+      "6": 0.0257,
+      "7": 0.0054,
+      "8": 0.0089,
+      "9": 0.0202,
+      "10": 0.0086,
+      "11": 0.0061,
+      "12": 0.0211,
+      "13": 0.006,
+      "14": 0.0092,
+      "15": 0.0193,
+      "16": 0.0057,
+      "17": 0.0109,
+      "18": 0.0158,
+      "19": 0.0076,
+      "20": 0.0123,
+      "21": 0.0136,
+      "22": 0.0095,
+      "23": 0.0121,
+      "24": 0.013,
+      "25": 0.0081,
+      "26": 0.0118,
+      "27": 0.0131,
+      "28": 0.0076,
+      "29": 0.0121,
+      "30": 0.018,
+      "31": 0.0072,
+      "32": 0.0138,
+      "33": 0.0146,
+      "34": 0.0104,
+      "35": 0.0111,
+      "36": 0.0119,
+      "37": 0.0112,
+      "38": 0.0125,
+      "39": 0.0107,
+      "40": 0.0116,
+      "41": 0.0118,
+      "42": 0.0124,
+      "43": 0.0134,
+      "44": 0.014,
+      "45": 0.0099,
+      "46": 0.011,
+      "47": 0.0119,
+      "48": 0.012,
+      "49": 0.0087,
+      "50": 0.0145,
+      "51": 0.0124,
+      "52": 0.0075,
+      "53": 0.0136,
+      "54": 0.0131,
+      "55": 0.0058,
+      "56": 0.0137,
+      "57": 0.015,
+      "58": 0.0059,
+      "59": 0.0135,
+      "60": 0.0145,
+      "61": 0.005,
+      "62": 0.017,
+      "63": 0.0111,
+      "64": 0.0048,
+      "65": 0.0197,
+      "66": 0.0102,
+      "67": 0.0057,
+      "68": 0.0175,
+      "69": 0.0085,
+      "70": 0.0079,
+      "71": 0.0162,
+      "72": 0.0079,
+      "73": 0.0077,
+      "74": 0.0155,
+      "75": 0.0077,
+      "76": 0.0095,
+      "77": 0.0134,
+      "78": 0.0088,
+      "79": 0.0074,
+      "80": 0.0137,
+      "81": 0.0091,
+      "82": 0.0072,
+      "83": 0.0128,
+      "84": 0.0103,
+      "85": 0.0058,
+      "86": 0.0132,
+      "87": 0.0078,
+      "88": 0.0029,
+      "89": 0.0114,
+      "90": 0.0039,
+      "91": 0.0023,
+      "92": 0.0047,
+      "93": 0.0027
+     },
+     "peak": 93,
+     "mean_level_when_busy": 44.623
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.9758,
+      "2": 0.0201,
+      "3": 0.0028,
+      "4": 0.0013
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.03
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.9849,
+     "2": 0.0128,
+     "3": 0.0019,
+     "4": 0.0004
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.018
+   },
+   "compiler": {}
+  }
+ ],
+ "job": {
+  "group": "workloads",
+  "name": "draper_qft_adder_m4_adaptive-continuous",
+  "workload": "draper_qft_adder",
+  "policy": "adaptive-continuous",
+  "memories": 4,
+  "cap": 3,
+  "override": {}
+ },
+ "wall_seconds": 15.81
+}

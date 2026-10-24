@@ -1,0 +1,174 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/qft/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "on-demand",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "2",
+  "--compiler-memories",
+  "1",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "1",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/qft_m2_on-demand"
+ ],
+ "per_seed": [
+  {
+   "strategy": "on-demand",
+   "average_request_latency_ms": 4.61769664850996,
+   "stats": {
+    "avg_retry_wait_time_ms": 3.518861230641036,
+    "avg_entanglement_generation_time_ms": 1.0988354178689244,
+    "end_to_end_latency_ms": 5571.82030026,
+    "protocol_generated_pairs": 0,
+    "protocol_used_pairs": 0,
+    "protocol_unused_pairs": 0,
+    "protocol_waste_percentage": null
+   },
+   "average_delivered_epr_fidelity": 0.9498133577348061,
+   "requests": 2510,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 2510,
+     "mean_total_ms": 4.61769664850996,
+     "mean_wait_ms": 3.518861230641036,
+     "mean_generation_ms": 1.0988354178689244,
+     "share_that_waited": 0.4258964143426295
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 3.518861230641036,
+    "after_admission_mean": 0.0,
+    "dependency_wait_mean": 11.136347615059762
+   },
+   "protocol_rejections": {
+    "events": 0,
+    "requests_rejected_at_least_once": 0,
+    "requests": 2510
+   },
+   "admission_blocking": {
+    "admission_checks": 9334,
+    "checks_that_found_no_free_memory": 1653,
+    "blocked_cards_by_kind_share": {
+     "application": 1.0
+    },
+    "blocking_window_ms_mean": {
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "application": 1.72
+    },
+    "mean_cards_per_core_blocked_when_stuck": 1.97
+   },
+   "bookings": {
+    "application": {
+     "bookings": 5020,
+     "mean_hold_ms": 6.348835292868924,
+     "total_card_ms": 31871.153170202
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6701,
+      "2": 0.3299
+     },
+     "peak": 2,
+     "mean_level_when_busy": 1.33
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6701,
+      "2": 0.3299
+     },
+     "peak": 2,
+     "mean_level_when_busy": 1.33
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.8896,
+     "2": 0.1104
+    },
+    "peak": 2,
+    "mean_level_when_busy": 1.11
+   },
+   "compiler": {
+    "strategy": "on-demand",
+    "requests": 2510,
+    "completed_requests": 2510,
+    "scheduled_preparations": 0,
+    "planner_blocked_preparations": 0,
+    "planner_peak_compiler_memory_per_core": 0,
+    "runtime_admission_attempts": 0,
+    "runtime_launched_preparations": 0,
+    "runtime_accepted_preparations": 0,
+    "runtime_rejected_preparations": 0,
+    "runtime_rejection_events": 0,
+    "pregenerated_hits": 0,
+    "pregenerated_success_rate": 0.0,
+    "intended_request_hits": 0,
+    "intended_request_hit_rate": 0.0,
+    "compiler_not_ready_requests": 2510,
+    "late_compiler_pair_uses": 0,
+    "on_demand_fallbacks": 2510,
+    "on_demand_fallback_rate": 1.0,
+    "generated_compiler_pairs": 0,
+    "utilized_compiler_pairs": 0,
+    "expired_compiler_pairs": 0,
+    "remaining_compiler_pairs": 0,
+    "compiler_expiry_percentage": 0.0,
+    "compiler_waste_percentage": 0.0,
+    "average_fidelity_at_creation": null,
+    "average_fidelity_at_utilization": null,
+    "average_storage_time_ms": null
+   }
+  }
+ ],
+ "job": {
+  "group": "mechanism",
+  "name": "qft_m2_on-demand",
+  "workload": "qft",
+  "policy": "on-demand",
+  "memories": 2,
+  "cap": 1,
+  "override": {}
+ },
+ "wall_seconds": 5.92
+}

@@ -193,6 +193,10 @@ def main() -> None:
                              "different qubits concurrent (docs/plans/ace-request-scheduler-design.md)")
     parser.add_argument("--admission", choices=("poll", "event"), default="event",
                         help="per-qubit scheduler only")
+    parser.add_argument("--autonomous-cache-follows-compiler-memories", action="store_true",
+                        help="CGP/ACGP cache at most --compiler-memories pairs per core (default: the config file's fixed adaptive_max_memory)")
+    parser.add_argument("--stop-after-workload", action="store_true",
+                        help="end the simulation 1 ms after the last request completes (default: run to --stop-time-s); per-qubit only")
     parser.add_argument("--no-starvation-guard", action="store_true", help="per-qubit event admission only")
     parser.add_argument("--max-layers", type=int)
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
@@ -245,6 +249,8 @@ def main() -> None:
                     str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                     args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
                     total_memories_per_core=args.total_memories,
+                    autonomous_cache_limit=(args.compiler_memories if args.autonomous_cache_follows_compiler_memories and strategy in AUTONOMOUS_STRATEGIES else None),
+                    stop_after_workload=args.stop_after_workload,
                     simulation_stop_time_s=args.stop_time_s,
                     serialize_conflicts=True,
                     scheduler=args.scheduler, request_plan=trace.requests,
@@ -256,6 +262,8 @@ def main() -> None:
                         str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                         args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
                         total_memories_per_core=args.total_memories,
+                    autonomous_cache_limit=(args.compiler_memories if args.autonomous_cache_follows_compiler_memories and strategy in AUTONOMOUS_STRATEGIES else None),
+                    stop_after_workload=args.stop_after_workload,
                         simulation_stop_time_s=args.stop_time_s,
                         serialize_conflicts=True,
                         scheduler=args.scheduler, request_plan=trace.requests,

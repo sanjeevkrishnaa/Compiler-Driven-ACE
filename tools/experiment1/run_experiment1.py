@@ -43,10 +43,11 @@ BUDGETS = [1, 2, 3, 4, 6, 8, 16, 32]
 MODELLED_MAX = 4                    # communication qubits per core in the ACGP paper's Table I
 SATURATION = {"qft": 64}
 POLICIES = ["on-demand", "dynamic"]
+ALL_POLICIES = ["on-demand", "dynamic", "continuous", "adaptive-continuous"]   # CGP and ACGP are the last two
 SCHEDULER = "per-qubit"
 
 
-def enumerate_jobs(budgets_wanted=None, mapping_seeds=None) -> list[tuple[str, int, int, str]]:
+def enumerate_jobs(budgets_wanted=None, mapping_seeds=None, policies=None) -> list[tuple[str, int, int, str]]:
     jobs = []
     for workload in WORKLOADS:
         budgets = BUDGETS + ([SATURATION[workload]] if workload in SATURATION else [])
@@ -54,8 +55,8 @@ def enumerate_jobs(budgets_wanted=None, mapping_seeds=None) -> list[tuple[str, i
             budgets = [b for b in budgets if b in budgets_wanted]
         for mapping_seed in (MAPPING_SEEDS if mapping_seeds is None else mapping_seeds):
             for budget in budgets:
-                for policy in POLICIES:
-                    if policy == "dynamic" and budget < 2:
+                for policy in (policies or POLICIES):
+                    if policy != "on-demand" and budget < 2:
                         continue                # a compiler bank needs a memory besides the one held for demand
                     jobs.append((workload, mapping_seed, budget, policy))
     return jobs
@@ -163,11 +164,13 @@ def main(argv=None) -> int:
     parser.add_argument("--parameter-set", default="ace-default", help="label recorded in every row")
     parser.add_argument("--resume", action="store_true", help="keep invocations already on disk")
     parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh")
+    parser.add_argument("--policies", nargs="+", default=None, choices=ALL_POLICIES,
+                        help="default: on-demand and dynamic; CGP is continuous, ACGP adaptive-continuous")
     parser.add_argument("--traces-dir", type=Path, default=None,
                         help="directory <workload>/seed_<n>/requests.txt (default: the committed mesh archive)")
     args = parser.parse_args(argv)
 
-    jobs = [j for j in enumerate_jobs(args.budgets, args.mapping_seeds)
+    jobs = [j for j in enumerate_jobs(args.budgets, args.mapping_seeds, args.policies)
             if args.only_workloads is None or j[0] in args.only_workloads]
     args.output.mkdir(parents=True, exist_ok=True)
     started = time.time()
@@ -182,7 +185,7 @@ def main(argv=None) -> int:
         try:
             return job, [label(dict(r, parameter_set=args.parameter_set))
                          for r in sweep.run_one(job, traces, args.output, SCHEDULER, args.config, args.resume,
-                                                ['--topology', args.topology])]
+                                                ['--topology', args.topology] + (['--autonomous-cache-follows-compiler-memories', '--stop-after-workload'] if job[3] in ('continuous', 'adaptive-continuous') else []))]
         except subprocess.TimeoutExpired:
             return job, [label({"workload": job[0], "mapping_seed": job[1], "total_memories": job[2],
                                 "run_status": "TIMEOUT"})]

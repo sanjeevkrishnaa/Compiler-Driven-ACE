@@ -1,0 +1,179 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/graphstate/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "on-demand",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "4",
+  "--compiler-memories",
+  "3",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "3",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/graphstate_m4_on-demand"
+ ],
+ "per_seed": [
+  {
+   "strategy": "on-demand",
+   "average_request_latency_ms": 1.144769257105263,
+   "stats": {
+    "avg_retry_wait_time_ms": 0.007894901342105264,
+    "avg_entanglement_generation_time_ms": 1.1368743557631578,
+    "end_to_end_latency_ms": 243.00090026,
+    "protocol_generated_pairs": 0,
+    "protocol_used_pairs": 0,
+    "protocol_unused_pairs": 0,
+    "protocol_waste_percentage": null
+   },
+   "average_delivered_epr_fidelity": 0.9498133577348061,
+   "requests": 76,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 76,
+     "mean_total_ms": 1.144769257105263,
+     "mean_wait_ms": 0.007894901342105264,
+     "mean_generation_ms": 1.1368743557631578,
+     "share_that_waited": 0.013157894736842105
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 0.007894901342105264,
+    "after_admission_mean": 0.0,
+    "dependency_wait_mean": 7.619777645263158
+   },
+   "protocol_rejections": {
+    "events": 0,
+    "requests_rejected_at_least_once": 0,
+    "requests": 76
+   },
+   "admission_blocking": {
+    "admission_checks": 133,
+    "checks_that_found_no_free_memory": 1,
+    "blocked_cards_by_kind_share": {
+     "application": 1.0
+    },
+    "blocking_window_ms_mean": {
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "application": 1.9
+    },
+    "mean_cards_per_core_blocked_when_stuck": 4.0
+   },
+   "bookings": {
+    "application": {
+     "bookings": 152,
+     "mean_hold_ms": 6.386874230763158,
+     "total_card_ms": 970.804883076
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6842,
+      "2": 0.2227,
+      "3": 0.0695,
+      "4": 0.0236
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.432
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6842,
+      "2": 0.2227,
+      "3": 0.0695,
+      "4": 0.0236
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.432
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.8354,
+     "2": 0.1489,
+     "3": 0.0157
+    },
+    "peak": 3,
+    "mean_level_when_busy": 1.18
+   },
+   "compiler": {
+    "strategy": "on-demand",
+    "requests": 76,
+    "completed_requests": 76,
+    "scheduled_preparations": 0,
+    "planner_blocked_preparations": 0,
+    "planner_peak_compiler_memory_per_core": 0,
+    "runtime_admission_attempts": 0,
+    "runtime_launched_preparations": 0,
+    "runtime_accepted_preparations": 0,
+    "runtime_rejected_preparations": 0,
+    "runtime_rejection_events": 0,
+    "pregenerated_hits": 0,
+    "pregenerated_success_rate": 0.0,
+    "intended_request_hits": 0,
+    "intended_request_hit_rate": 0.0,
+    "compiler_not_ready_requests": 76,
+    "late_compiler_pair_uses": 0,
+    "on_demand_fallbacks": 76,
+    "on_demand_fallback_rate": 1.0,
+    "generated_compiler_pairs": 0,
+    "utilized_compiler_pairs": 0,
+    "expired_compiler_pairs": 0,
+    "remaining_compiler_pairs": 0,
+    "compiler_expiry_percentage": 0.0,
+    "compiler_waste_percentage": 0.0,
+    "average_fidelity_at_creation": null,
+    "average_fidelity_at_utilization": null,
+    "average_storage_time_ms": null
+   }
+  }
+ ],
+ "job": {
+  "group": "workloads",
+  "name": "graphstate_m4_on-demand",
+  "workload": "graphstate",
+  "policy": "on-demand",
+  "memories": 4,
+  "cap": 3,
+  "override": {}
+ },
+ "wall_seconds": 2.72
+}

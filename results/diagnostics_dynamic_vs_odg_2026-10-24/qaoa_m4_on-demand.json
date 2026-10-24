@@ -1,0 +1,180 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/qaoa/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "on-demand",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "4",
+  "--compiler-memories",
+  "3",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "3",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/qaoa_m4_on-demand"
+ ],
+ "per_seed": [
+  {
+   "strategy": "on-demand",
+   "average_request_latency_ms": 1.2643415621773142,
+   "stats": {
+    "avg_retry_wait_time_ms": 0.14608943133996088,
+    "avg_entanglement_generation_time_ms": 1.1182521308373534,
+    "end_to_end_latency_ms": 5463.22332526,
+    "protocol_generated_pairs": 0,
+    "protocol_used_pairs": 0,
+    "protocol_unused_pairs": 0,
+    "protocol_waste_percentage": null
+   },
+   "average_delivered_epr_fidelity": 0.949813357734806,
+   "requests": 3068,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 3068,
+     "mean_total_ms": 1.2643415621773142,
+     "mean_wait_ms": 0.14608943133996088,
+     "mean_generation_ms": 1.1182521308373534,
+     "share_that_waited": 0.06225554106910039
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 0.14608943133996088,
+    "after_admission_mean": 0.0,
+    "dependency_wait_mean": 7.22735046863103
+   },
+   "protocol_rejections": {
+    "events": 0,
+    "requests_rejected_at_least_once": 0,
+    "requests": 3068
+   },
+   "admission_blocking": {
+    "admission_checks": 5615,
+    "checks_that_found_no_free_memory": 186,
+    "blocked_cards_by_kind_share": {
+     "application": 1.0
+    },
+    "blocking_window_ms_mean": {
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "application": 1.61
+    },
+    "mean_cards_per_core_blocked_when_stuck": 3.95
+   },
+   "bookings": {
+    "application": {
+     "bookings": 6136,
+     "mean_hold_ms": 6.368252005837353,
+     "total_card_ms": 39075.594307818
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6309,
+      "2": 0.2292,
+      "3": 0.0906,
+      "4": 0.0492
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.558
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.6309,
+      "2": 0.2292,
+      "3": 0.0906,
+      "4": 0.0492
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.558
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.8192,
+     "2": 0.1445,
+     "3": 0.0287,
+     "4": 0.0075
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.224
+   },
+   "compiler": {
+    "strategy": "on-demand",
+    "requests": 3068,
+    "completed_requests": 3068,
+    "scheduled_preparations": 0,
+    "planner_blocked_preparations": 0,
+    "planner_peak_compiler_memory_per_core": 0,
+    "runtime_admission_attempts": 0,
+    "runtime_launched_preparations": 0,
+    "runtime_accepted_preparations": 0,
+    "runtime_rejected_preparations": 0,
+    "runtime_rejection_events": 0,
+    "pregenerated_hits": 0,
+    "pregenerated_success_rate": 0.0,
+    "intended_request_hits": 0,
+    "intended_request_hit_rate": 0.0,
+    "compiler_not_ready_requests": 3068,
+    "late_compiler_pair_uses": 0,
+    "on_demand_fallbacks": 3068,
+    "on_demand_fallback_rate": 1.0,
+    "generated_compiler_pairs": 0,
+    "utilized_compiler_pairs": 0,
+    "expired_compiler_pairs": 0,
+    "remaining_compiler_pairs": 0,
+    "compiler_expiry_percentage": 0.0,
+    "compiler_waste_percentage": 0.0,
+    "average_fidelity_at_creation": null,
+    "average_fidelity_at_utilization": null,
+    "average_storage_time_ms": null
+   }
+  }
+ ],
+ "job": {
+  "group": "workloads",
+  "name": "qaoa_m4_on-demand",
+  "workload": "qaoa",
+  "policy": "on-demand",
+  "memories": 4,
+  "cap": 3,
+  "override": {}
+ },
+ "wall_seconds": 8.13
+}

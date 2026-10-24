@@ -1,0 +1,192 @@
+{
+ "arguments": [
+  "--trace",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_traces/mqt_ten_workload_study/draper_qft_adder/seed_42/requests.txt",
+  "--mesh",
+  "4x4",
+  "--strategies",
+  "dynamic",
+  "--seeds",
+  "0",
+  "--total-memories",
+  "4",
+  "--compiler-memories",
+  "3",
+  "--delta-layers",
+  "6",
+  "--dynamic-lookahead-layers",
+  "8",
+  "--coherence-time-layers",
+  "10",
+  "--compiler-reservation-ms",
+  "1000",
+  "--stop-time-s",
+  "300",
+  "--request-duration-ms",
+  "50",
+  "--generation-capacity",
+  "3",
+  "--scheduler",
+  "per-qubit",
+  "--output",
+  "results/diagnostics_dynamic_vs_odg_2026-10-24/_runs/draper_qft_adder_m4_dynamic"
+ ],
+ "per_seed": [
+  {
+   "strategy": "dynamic",
+   "average_request_latency_ms": 2.452760085161069,
+   "stats": {
+    "avg_retry_wait_time_ms": 1.9649650401610685,
+    "avg_entanglement_generation_time_ms": 0.487795045,
+    "end_to_end_latency_ms": 5008.804515511,
+    "protocol_generated_pairs": 1898,
+    "protocol_used_pairs": 1898,
+    "protocol_unused_pairs": 0,
+    "protocol_waste_percentage": 0.0
+   },
+   "average_delivered_epr_fidelity": 0.9223966718800874,
+   "requests": 1310,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 949,
+     "mean_total_ms": 1.6048505925553214,
+     "mean_wait_ms": 1.3543757830189673,
+     "mean_generation_ms": 0.25047480953635404,
+     "share_that_waited": 0.23076923076923078
+    },
+    "fallback": {
+     "requests": 361,
+     "mean_total_ms": 4.681752075418283,
+     "mean_wait_ms": 3.5700874917617726,
+     "mean_generation_ms": 1.1116645836565098,
+     "share_that_waited": 0.518005540166205
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": 20.944037385613278,
+    "p50": 16.700050751,
+    "p90": 38.600003003,
+    "max": 75.80016375,
+    "pairs": 949
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 1.9601558611541985,
+    "after_admission_mean": 0.004809179006870229,
+    "dependency_wait_mean": 7.711460470535878
+   },
+   "protocol_rejections": {
+    "events": 1,
+    "requests_rejected_at_least_once": 1,
+    "requests": 1310
+   },
+   "admission_blocking": {
+    "admission_checks": 4679,
+    "checks_that_found_no_free_memory": 989,
+    "blocked_cards_by_kind_share": {
+     "compiler": 0.6716,
+     "application": 0.3284
+    },
+    "blocking_window_ms_mean": {
+     "compiler": 1000.0,
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "compiler": -15.58,
+     "application": 2.0
+    },
+    "mean_cards_per_core_blocked_when_stuck": 4.0
+   },
+   "bookings": {
+    "application": {
+     "bookings": 2621,
+     "mean_hold_ms": 5.735682064441053,
+     "total_card_ms": 15033.2226909
+    },
+    "compiler": {
+     "bookings": 3131,
+     "mean_hold_ms": 13.6170377597496,
+     "total_card_ms": 42634.945225776
+    },
+    "card_level_all_kinds": {
+     "share_of_busy_time_by_level": {
+      "1": 0.266,
+      "2": 0.3596,
+      "3": 0.221,
+      "4": 0.1534
+     },
+     "peak": 4,
+     "mean_level_when_busy": 2.262
+    },
+    "card_level_application_only": {
+     "share_of_busy_time_by_level": {
+      "1": 0.8175,
+      "2": 0.1677,
+      "3": 0.0142,
+      "4": 0.0005
+     },
+     "peak": 4,
+     "mean_level_when_busy": 1.198
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {
+     "1": 0.4493,
+     "2": 0.3788,
+     "3": 0.1719
+    },
+    "peak": 3,
+    "mean_level_when_busy": 1.723
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.4466,
+     "2": 0.3771,
+     "3": 0.1729,
+     "4": 0.0035
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.733
+   },
+   "compiler": {
+    "strategy": "dynamic",
+    "requests": 1310,
+    "completed_requests": 1310,
+    "scheduled_preparations": 954,
+    "planner_blocked_preparations": 356,
+    "planner_peak_compiler_memory_per_core": 3,
+    "runtime_admission_attempts": 3098,
+    "runtime_launched_preparations": 954,
+    "runtime_accepted_preparations": 949,
+    "runtime_rejected_preparations": 126,
+    "runtime_rejection_events": 2149,
+    "pregenerated_hits": 949,
+    "pregenerated_success_rate": 0.7244274809160305,
+    "intended_request_hits": 949,
+    "intended_request_hit_rate": 0.7244274809160305,
+    "compiler_not_ready_requests": 361,
+    "late_compiler_pair_uses": 0,
+    "on_demand_fallbacks": 361,
+    "on_demand_fallback_rate": 0.27557251908396946,
+    "generated_compiler_pairs": 949,
+    "utilized_compiler_pairs": 949,
+    "expired_compiler_pairs": 0,
+    "remaining_compiler_pairs": 0,
+    "compiler_expiry_percentage": 0.0,
+    "compiler_waste_percentage": 0.0,
+    "average_fidelity_at_creation": 0.949813357734806,
+    "average_fidelity_at_utilization": 0.9121439016325323,
+    "average_storage_time_ms": 20.944037385613278
+   }
+  }
+ ],
+ "job": {
+  "group": "workloads",
+  "name": "draper_qft_adder_m4_dynamic",
+  "workload": "draper_qft_adder",
+  "policy": "dynamic",
+  "memories": 4,
+  "cap": 3,
+  "override": {}
+ },
+ "wall_seconds": 5.06
+}
