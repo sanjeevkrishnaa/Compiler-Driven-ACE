@@ -1,0 +1,50 @@
+\chapter{How and why: method, decisions and corrections}
+\label{ch:how}
+
+\section{The approach in one page}
+The aim was to make ACE's measurements \emph{correct before measuring anything with them}. The order was therefore: (i) record exactly what the legacy simulator does, so any later change can be shown not to disturb it (Gate~0);
+(ii) instrument it, to see what it really does rather than what its comments say (Gate~1); (iii) fix one fault at a time, each with a test that fails without the fix (Gates~2 and~3); (iv) verify broadly (Gate~4); (v) trace every parameter to a source (Gate~5);
+(vi) only then rerun the old study and run the new experiments (Gate~6, Experiments~1 and~2).
+
+\section{Why each major decision was taken}
+\begin{description}
+  \item[A bit-for-bit baseline first.] The simulator's published numbers are the only fixed point. A 164-row baseline (22 cases) is compared as exact text after every change. It reproduces under several Python hash seeds, so it is not an accident of ordering.
+  \item[An event log and an invariant checker, not just results.] Latency alone cannot show that a booking was released twice or a pair credited to the wrong request. Typed events (submissions, bookings, releases, pair deliveries and credits, completions) let rules such as ``no memory double-booked over overlapping windows'' be checked on every run; each rule was validated by deliberately breaking it.
+  \item[Fix request identity before changing the scheduler.] The aliasing fault is in the reservation code and was hidden by the serialization. Removing the serialization first would have produced wrong numbers that looked like congestion.
+  \item[Chains per qubit, concurrency across qubits.] A qubit's consecutive hops cannot run at once (the qubit must arrive before it can move on); hops of different qubits are independent. That is the only dependency the trace implies, so it is the only one imposed. The layer boundary is kept because the trace carries no gate-level dependencies.
+  \item[Event-driven admission.] Polling retries livelock when two requests need each other's only memory (found by randomised traces). Admitting a request only when both of its cores have a free memory removes the hold-and-wait, so no deadlock among application requests can form. It assumes a central controller that reads the reservation tables instantly; that is stated, not hidden.
+  \item[One picosecond.] SeQUeNCe does not order events at the same instant, so nothing may rely on one preceding another; whatever must come after is scheduled 1\,ps later. An A/B test showed the stale-booking violations disappear with that single change.
+  \item[One latency definition.] The legacy latency omits waiting for earlier batches; the new one counts admission waiting. Without a common definition the schedulers cannot be compared at all.
+  \item[On-demand first.] Nothing is pre-generated, so any dependence on the memory budget is contention and nothing else. Dynamic pre-generation is then added with a compiler bank of $\text{budget}-1$ memories, one held for demand, as in the earlier study.
+  \item[Nine runs per cell, controls that must pass.] Mapping and physics both vary, so spread is reported, never only means. A workload with no overload must not respond to the budget, 64 memories must equal 32, completion must be 100\%.
+  \item[The heatmap recomputed independently.] It was rebuilt from the raw traces without reading the archive's precomputed files, and all 160 cells match; that validates both the figure and the pipeline.
+  \item[Two ways of counting demand.] By hops (the archive's counting, a relay counts twice) and by routes (qubits in flight, a relay counts once). Under the per-qubit scheduler a relay's two touches are sequential, so route counting is what the simulator experiences; hop counting overstates contention at one memory (GHZ is structurally ``overloaded'' at one slot yet never waits).
+\end{description}
+
+\section{Mistakes made on the way, and how they were found}
+\label{sec:corrections}
+Listed because a reader should know which statements were once wrong.
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}p{0.43\linewidth}p{0.49\linewidth}@{}}
+\toprule
+What was wrong & How it was found and fixed \\ \midrule
+A validity check was misreported as ``72/72''. & The file said 72/378; the quantity is a coverage rate, not an identity invariant. Corrected in an erratum; the identity check (189/189) is a different, correct quantity. \\
+An early proposal to ``order requests per link''. & Measurement showed the per-link limit was reservation aliasing, not physics. Retracted. \\
+A microcase asked for a move between non-adjacent cores. & ACE routed it through a relay needing two memories and retried for 60\,s. My test error; the harness now refuses non-adjacent hops (and it exposed finding F7). \\
+The design assumed an event scheduled later runs after one queued earlier. & Reading SeQUeNCe's event list showed equal-time events have no defined order. Redesigned around a 1\,ps delay. \\
+The checker flagged double bookings for bookings of a later window. & Forcing cached pairs to expire showed a booking reserves a \emph{window}. The checker now compares windows. \\
+The checker labelled reservations by memory address. & A determinism test failed; addresses are reused after an object is freed. Replaced by stable serial numbers. \\
+Expiry of cached pairs was listed as ``covered''. & No pair had ever expired in any audited run. Expiry was forced with short windows and is now tested on both schedulers. \\
+Two Experiment~1 controls failed on the first run. & Saturation compared to exact equality although a few requests waited the 1\,ps grace; one on-demand step rose by 0.0005\,ms (a thirtieth of the seed spread). Controls refined and tested, ``waited'' redefined, the experiment rerun; the rerun is identical in every other column. \\
+``On-demand results are the least exposed to the parameters.'' & The sensitivity arm showed on-demand fidelity falls from 0.9498 to 0.7861 with the paper's coherence time. Corrected in the parameter document. \\
+The fibre length was called a ``possible unit slip''. & Overstated: 2.5\,cm is plausible on a chip. Reworded as an open question. \\
+Torus hop savings quoted as ``20--35\%''. & The data give 11--37\%. Corrected here. \\
+\bottomrule
+\end{tabular}
+\caption{Corrections log.}
+\end{table}
+
+\section{What is assumed, and what is not}
+Assumed and stated: the scheduler is a central controller with instantaneous knowledge of reservation tables; the physical parameters are ACE's configuration (undecided); links have equal length on the torus (a folded layout); the 5.3\,ms lead, 50\,ms window and 5\,ms empty-layer gap are harness constants shared by both schedulers.
+Not assumed: any mechanism marked ``likely'' or ``probably'' in the text was not isolated by an experiment and is labelled so.

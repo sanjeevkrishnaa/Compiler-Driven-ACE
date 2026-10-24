@@ -1,0 +1,38 @@
+\chapter{Glossary and questions a reader may have}
+\label{app:glossary}
+
+\section{Glossary}
+\begin{description}
+  \item[ACE] Adaptive Continuous Entanglement simulator, built on SeQUeNCe v0.8.1.
+  \item[BSM] Bell-state measurement station placed on a link between two cores; it heralds the generation of an EPR pair.
+  \item[Budget] The number of communication memories per core. $1$--$4$ are modelled; above four is counterfactual ($^*$).
+  \item[Common latency] Time from when a request could first be asked for until it completes, minus the 5.3\,ms lead (Chapter~\ref{ch:corrections}).
+  \item[Compiler bank] The memories per core given to compiler pre-generation (\code{budget - 1}); one is held for demand.
+  \item[Congestion] Requests waiting because a core has no free communication memory.
+  \item[Counterfactual] A what-if capacity beyond the modelled hardware.
+  \item[Cut-off] Time after which a stored pair is discarded (Chapter~\ref{ch:cutoff}).
+  \item[Dynamic] Compiler pre-generation: pairs are prepared ahead of the layer that needs them.
+  \item[Endpoint demand $D_{\mathrm{end}}$] Hops touching a core that start or end a route there.
+  \item[Excess] Demand above the capacity, summed over cores and layers.
+  \item[HQA] The qubit-mapping algorithm (Hungarian-assignment based) that places logical qubits on cores layer by layer.
+  \item[Hop] One request for an EPR pair between two adjacent cores.
+  \item[Layer] One step of the mapped circuit; its hops are the moves needed to reach the next placement.
+  \item[On-demand] A pair is generated only when a request asks for it.
+  \item[Relay] A core strictly between a route's source and destination.
+  \item[Route] A qubit's consecutive hops within one layer.
+  \item[Serialization] The legacy per-core batching that stopped the budget from binding.
+  \item[Torus] A mesh whose opposite edges are joined by extra links.
+\end{description}
+
+\section{Questions a reader may have}
+\paragraph{Why is the latency floor 1.1--1.2\,ms?} That is the generation time of one pair once nothing waits; it is the same for every workload and does not depend on the budget.
+
+\paragraph{Why does dynamic start slower than on-demand?} Its compiler bank takes \code{budget - 1} memories and leaves one for demand, so with two memories only one is left for the requests that actually run.
+
+\paragraph{Why do GHZ, Bernstein--Vazirani and BMW change under dynamic between two and three memories if they have no congestion?} The structural overload is zero, so it is not congestion; the earlier budget study attributed it to planner coverage (not re-tested here).
+
+\paragraph{Are these numbers physical?} They come from a physical simulator with ACE's parameters, but those parameters are undecided; the congestion results depend on them little, the pre-generation and fidelity results entirely (Appendix~\ref{app:params}).
+
+\paragraph{Can the results be reproduced?} Yes: Appendix~\ref{app:repro} lists the commands, and every result folder holds the parameters, trace hashes and code commit it was produced with. The two full Experiment~1 runs (first pass and rerun) are numerically identical apart from the one column that was redefined.
+
+\paragraph{What was not done?} Experiment~1 for fixed pre-generation and the autonomous caches; routing combined with pre-generation; joint mapping and routing; a cut-off sweep against the budget (Chapter~\ref{ch:limits}).

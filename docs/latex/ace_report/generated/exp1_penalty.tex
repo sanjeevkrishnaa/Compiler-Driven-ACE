@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Workload & 1 & 2 & 3 & 4 & 6$^*$ & 8$^*$ \\
+\midrule
+GHZ & +0\% & +0\% & +0\% & +0\% & +0\% & +0\% \\
+Bernstein--Vazirani & +0\% & +0\% & +0\% & +0\% & +0\% & +0\% \\
+BMW/QUARK cardinality & +0\% & +0\% & +0\% & +0\% & +0\% & +0\% \\
+VQE real amplitudes & +109\% & +0\% & +0\% & +0\% & +0\% & +0\% \\
+CDKM ripple-carry adder & +46\% & +9\% & +3\% & +0\% & +0\% & +0\% \\
+Graph state & +676\% & +131\% & +30\% & +5\% & +0\% & +0\% \\
+Draper QFT adder & +549\% & +90\% & +14\% & +1\% & +0\% & +0\% \\
+QAOA & +863\% & +202\% & +53\% & +12\% & +1\% & -0\% \\
+QFT & +1170\% & +316\% & +110\% & +40\% & +6\% & +1\% \\
+Random circuit & +170\% & +14\% & +1\% & +0\% & +0\% & +0\% \\
+\bottomrule
+\end{tabular}}
+\caption{On-demand latency relative to the same workload with 32 memories (saturated), by memories per core. $^*$ counterfactual.}
+\label{tab:exp1-penalty}
+\end{table}

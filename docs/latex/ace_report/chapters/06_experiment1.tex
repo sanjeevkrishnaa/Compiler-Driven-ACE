@@ -21,9 +21,15 @@ Three workloads with no overload (GHZ, Bernstein--Vazirani, BMW) do not respond 
 its saturated latency, QAOA 9.6, graph state 7.8 and Draper 6.5. At the modelled four memories the penalty against 32 memories is $+40\%$ for QFT, $+12\%$ for QAOA, $+5\%$ for graph state and
 $+1\%$ for Draper; the other workloads are within a percent. The floor, reached once nothing waits, is $1.11$ to $1.22$\,ms in every workload: that is generation time, not contention.
 
+\input{generated/exp1_penalty}
+\input{generated/exp1_makespan}
+\input{generated/exp1_by_mapping_seed}
+The makespan is dominated by the fixed $5.3$\,ms lead and $5$\,ms empty-layer gap, so it moves much less than the request latency. The spread between mapping seeds is larger than between physics seeds: the mapping, not the physics, is the main source of variation.
+
 \section{Congestion as waiting}
 \input{generated/fig_waiting_vs_budget}
 \input{generated/exp1_waiting_ondemand}
+\input{generated/exp1_struct_vs_penalty}
 The structural overload of the traces at the same capacity (Chapter~\ref{ch:heatmap}) predicts which workloads pay: across the 60 (workload, budget 1 to 8) points the structural overload and the
 on-demand latency penalty are strongly rank-correlated (Spearman $\rho=0.85$).
 
@@ -39,3 +45,7 @@ dynamic is below the on-demand value ($0.9498$ in every cell) and falls as the c
 This is exploratory, not a result of the study: the parameters are undecided. Five workloads, budgets $2,4,8,32$, mapping seed 42, were rerun with the group's multi-core paper's coherence time ($1$\,ms) and memory efficiency ($0.85$) in place of ACE's
 ($1$\,s and $0.95$). With the paper's values \textbf{every cached pair expires unused} (6 of 15\,700 compiler pairs were used), so dynamic pre-generation gives no benefit at all; on-demand fidelity falls from $0.9498$ to $0.7861$ in every workload and
 budget, and on-demand latency rises by about $0.26$ to $0.42$\,ms. The congestion curves keep their shape. So the congestion results are structural and change little with these parameters, while the pre-generation and fidelity results depend entirely on them.
+
+\section{Workload by workload}
+Each paragraph is generated from the data: structural overload, the on-demand latency curve, the waiting at four memories, and the dynamic curve with the budget at which pre-generation first beats on-demand.
+\input{generated/exp1_profiles}

@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Workload & Hottest core & Overloaded \% & Own \% & Relay-only \% & Relay share of demand & Relay share of excess \\
+\midrule
+GHZ & none & 0.0 & 0.0 & 0.0 & -- & -- \\
+Bernstein--Vazirani & none & 0.0 & 0.0 & 0.0 & -- & -- \\
+BMW/QUARK cardinality & none & 0.0 & 0.0 & 0.0 & -- & -- \\
+VQE real amplitudes & C9 & 4.5 & 0.0 & 4.5 & 80\% & 100\% \\
+CDKM ripple-carry adder & C6 & 0.6 & 0.0 & 0.6 & 85\% & 100\% \\
+Graph state & C5 & 33.3 & 0.0 & 33.3 & 93\% & 100\% \\
+Draper QFT adder & C10 & 23.4 & 0.0 & 23.4 & 81\% & 100\% \\
+QAOA & C10 & 56.0 & 0.0 & 56.0 & 81\% & 100\% \\
+QFT & C10 & 58.0 & 0.0 & 58.0 & 78\% & 100\% \\
+Random circuit & C9 & 3.2 & 0.0 & 3.2 & 87\% & 100\% \\
+\bottomrule
+\end{tabular}}
+\caption{Hottest core of each workload at capacity 4 (hop counting): percentage of active layers overloaded, split into own and relay-only, and the relay share of its demand and of its excess.}
+\label{tab:exp2-hottest}
+\end{table}

@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Workload & 1 memory & 2 & 3 & 4 \\
+\midrule
+GHZ & 20\% / +0\% & 0\% / +0\% & 0\% / +0\% & 0\% / +0\% \\
+Bernstein--Vazirani & 25\% / +0\% & 0\% / +0\% & 0\% / +0\% & 0\% / +0\% \\
+BMW/QUARK cardinality & 20\% / +0\% & 0\% / +0\% & 0\% / +0\% & 0\% / +0\% \\
+VQE real amplitudes & 55\% / +109\% & 32\% / +0\% & 11\% / +0\% & 6\% / +0\% \\
+CDKM ripple-carry adder & 96\% / +46\% & 1\% / +9\% & 1\% / +3\% & 1\% / +0\% \\
+Graph state & 100\% / +676\% & 83\% / +131\% & 50\% / +30\% & 33\% / +5\% \\
+Draper QFT adder & 93\% / +549\% & 65\% / +90\% & 60\% / +14\% & 41\% / +1\% \\
+QAOA & 98\% / +863\% & 85\% / +202\% & 79\% / +53\% & 72\% / +12\% \\
+QFT & 95\% / +1170\% & 76\% / +316\% & 76\% / +110\% & 65\% / +40\% \\
+Random circuit & 90\% / +170\% & 35\% / +14\% & 25\% / +1\% & 8\% / +0\% \\
+\bottomrule
+\end{tabular}}
+\caption{Structural overload of the traces (\% of active layers with any core above capacity) / simulated on-demand latency penalty against 32 memories, at the same capacity.}
+\label{tab:exp1-struct}
+\end{table}

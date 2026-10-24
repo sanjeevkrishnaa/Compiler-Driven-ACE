@@ -38,8 +38,25 @@ another, so a relay needs one memory for the route at a time, not two.
 \input{generated/exp2_own_share_hop}
 \input{generated/exp2_own_share_route}
 
+\input{generated/exp2_hottest}
+\input{generated/exp2_peaks}
+
+\paragraph{Why the counting matters.} Hop counting charges a relay two touches (one arriving hop, one leaving hop), but under per-qubit ordering those two hops run one after the other, so a relay needs one memory at a time. Hop counting therefore overstates
+contention, most visibly at one slot: GHZ is structurally ``overloaded'' at one slot by hop counting (20\% of its layers) yet never waits in the simulator, and route counting, whose peak for GHZ is one route per core, correctly shows no contention. This is why Experiment~1 relates the
+simulated cost to the structure and why both counts are reported.
+
 \paragraph{Findings.} At the modelled capacity of four, almost all overload is relay overload. The peak endpoint demand is 4 for QFT and Draper, 5 for QAOA and at most 3
 for the others, against a total demand up to 24. The only own-overload at capacity 4 is in QAOA, at the corner cores C0 and C3 (0.61\% of active layers each), which is
 0.44\% of QAOA's overload. Smaller budgets bring own demand in: QFT is 77\% own-overload at capacity 1. A routing change can therefore remove at most the relay part;
 the own part is a floor set by the mapping. Route counting finds less overload than hop counting (core C10 of QFT is overloaded in 46.4\% of active layers against
 58.0\%) and relay traffic is still essentially all of what remains.
+
+\section{Every capacity, both countings}
+Capacity four is the modelled value; the smaller capacities show how the split moves as memory is removed. In each figure the left panel is the percentage of a workload's active layers in which the core is overloaded by its own endpoint demand and the right panel
+the percentage in which it is overloaded only because of relay traffic. Per-core numbers for capacities four and two are in Appendix~\ref{app:percore}; the data for all capacities and both countings are in \code{results/experiment2_own_vs_relay_2026-10-24/}.
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c1_hop}\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c2_hop}
+\caption{Own against relay overload, hop counting, capacity 1 (left) and 2 (right).}\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c3_hop}\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c4_route}
+\caption{Hop counting at capacity 3 (left); route counting at capacity 4 (right).}\end{figure}

@@ -1,0 +1,14 @@
+\chapter*{How to read this report}
+\addcontentsline{toc}{chapter}{How to read this report}
+
+\begin{description}
+  \item[If you have ten minutes] read the executive summary, Chapter~\ref{ch:how} (how and why), and the figures of Chapters~\ref{ch:heatmap} and~\ref{ch:exp1}.
+  \item[If you want the evidence] Chapters~\ref{ch:audit} and~\ref{ch:corrections} (what was wrong, how it was fixed and verified), then Experiments~1 and~2 in full
+        (Chapters~\ref{ch:heatmap} and~\ref{ch:exp1}) and Appendices~\ref{app:full} and~\ref{app:percore} (every cell).
+  \item[If you want to find something in the repository] Appendix~\ref{app:repo} lists every important file and folder with a link, and Appendix~\ref{app:timeline} every commit.
+  \item[If a word is unfamiliar] Appendix~\ref{app:glossary}.
+\end{description}
+
+\paragraph{Conventions.} Latency is \emph{common latency} (Chapter~\ref{ch:corrections}) in milliseconds of \emph{simulated} time, never real run time. ``Memories'' means communication memories per core. A $^*$ marks a counterfactual budget
+(above the four slots the group's multi-core paper models). Means are over nine runs (three mapping seeds $\times$ three physics seeds) unless stated; $\pm$ is a standard deviation over those nine. ACE milliseconds are never compared with the
+native SeQUeNCe backend's. Every number in a table is generated from a result file in the repository, so a table and its source cannot disagree.

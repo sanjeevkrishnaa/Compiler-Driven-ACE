@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Workload & 2 mem. seed 42 & 43 & 44 & 4 mem. seed 42 & 43 & 44 \\
+\midrule
+GHZ & 1.21 & 1.13 & 1.18 & 1.21 & 1.13 & 1.18 \\
+Bernstein--Vazirani & 1.24 & 1.22 & 1.21 & 1.24 & 1.22 & 1.21 \\
+BMW/QUARK cardinality & 1.11 & 1.13 & 1.11 & 1.11 & 1.13 & 1.11 \\
+VQE real amplitudes & 1.15 & 1.11 & 1.08 & 1.15 & 1.11 & 1.08 \\
+CDKM ripple-carry adder & 1.26 & 1.28 & 1.18 & 1.14 & 1.13 & 1.14 \\
+Graph state & 2.42 & 2.33 & 3.41 & 1.19 & 1.16 & 1.36 \\
+Draper QFT adder & 2.26 & 1.89 & 2.32 & 1.16 & 1.14 & 1.15 \\
+QAOA & 3.59 & 3.39 & 3.28 & 1.28 & 1.29 & 1.25 \\
+QFT & 4.60 & 4.91 & 4.66 & 1.57 & 1.65 & 1.55 \\
+Random circuit & 1.28 & 1.27 & 1.24 & 1.11 & 1.11 & 1.11 \\
+\bottomrule
+\end{tabular}}
+\caption{On-demand latency (ms) by mapping seed (mean over the three physics seeds): the mapping, not the physics, is the larger source of spread.}
+\label{tab:exp1-mapseed}
+\end{table}

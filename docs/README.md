@@ -1,5 +1,10 @@
 # Documentation
 
+## Start here
+
+- [Comprehensive report (PDF, 53 pages): what was wrong, how and why it was fixed, Experiments 1 and 2 in full, repository map, timeline](latex/ace_report/ace_report.pdf) — LaTeX source in [`latex/ace_report/`](latex/ace_report)
+- [Handoff: state, open decisions, pitfalls](plans/handoff-2026-10-24.md)
+
 ## Current implementation and results
 
 - [Compiler repair validation and reproduction](reports/compiler-repair-validation.md)

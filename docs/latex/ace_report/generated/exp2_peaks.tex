@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Workload & Peak demand $D$ & Peak endpoint demand $D_{\mathrm{end}}$ & Peak routes through one core \\
+\midrule
+GHZ & 2 & 1 & 1 \\
+Bernstein--Vazirani & 2 & 1 & 1 \\
+BMW/QUARK cardinality & 2 & 1 & 1 \\
+VQE real amplitudes & 5 & 2 & 3 \\
+CDKM ripple-carry adder & 9 & 2 & 5 \\
+Graph state & 13 & 3 & 7 \\
+Draper QFT adder & 11 & 4 & 7 \\
+QAOA & 18 & 5 & 10 \\
+QFT & 24 & 4 & 13 \\
+Random circuit & 12 & 3 & 6 \\
+\bottomrule
+\end{tabular}}
+\caption{Peak demand at one core in one layer, over all mapping seeds: how close endpoint demand comes to the capacity.}
+\label{tab:exp2-peaks}
+\end{table}

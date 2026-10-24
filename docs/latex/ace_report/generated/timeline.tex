@@ -1,0 +1,69 @@
+{\scriptsize\setlength{\tabcolsep}{2.4pt}
+\begin{longtable}{@{}lp{0.12\linewidth}p{0.68\linewidth}@{}}
+\caption{Every commit of the branch since the starting point (\texttt{14cfdd2}), in order. Each hash links to the commit on GitHub.}\label{tab:timeline}\\
+\toprule
+Commit & Area & What \\
+\midrule
+\endfirsthead
+\toprule
+Commit & Area & What \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/23a1cff}{\texttt{23a1cff}} & baseline & Add bit-for-bit legacy baseline tool for ACE (Gate 0) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f70fe50}{\texttt{f70fe50}} & docs & Record the working plan: ACE correctness first, then the congestion study \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f4b7a09}{\texttt{f4b7a09}} & audit & Add execution event log and invariant checker with tests (Gate 1) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/6ab1dff}{\texttt{6ab1dff}} & baseline & Record the legacy ACE baseline: 164 rows, reproduced bit for bit (Gate 0) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/691644b}{\texttt{691644b}} & audit & Emit execution events from ACE, with no change in behaviour (Gate 1) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/e14a176}{\texttt{e14a176}} & audit & Add real-simulator harness, microcases and a trace audit tool (Gate 1) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/4a2f49e}{\texttt{4a2f49e}} & docs & Record the Gate 1 audit of legacy ACE: what it does, what it hides \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/3927bc0}{\texttt{3927bc0}} & reservation & Make application reservations distinct bookings: request identity in equality (Gate 2) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/9e1391e}{\texttt{9e1391e}} & docs & Add the request scheduler design: per-qubit order, per-request retry (Gate 3) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/630fcc7}{\texttt{630fcc7}} & scheduler & Add the per-qubit request manager behind scheduler="per-qubit" (Gate 3a) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/ba014c8}{\texttt{ba014c8}} & audit & Audit the per-qubit scheduler on GHZ and record finding F9 (Gate 3a/4) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/242d7a8}{\texttt{242d7a8}} & reservation & Notify an optional release observer when a booking is released \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/5984654}{\texttt{5984654}} & scheduler & Add event-driven admission, fixing a polling livelock (Gate 3b) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/64cbee7}{\texttt{64cbee7}} & docs & Record event admission in the design and finding F10 in the audit \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/e89b4cc}{\texttt{e89b4cc}} & audit & Add a parallel audit matrix over workloads, strategies, memories and seeds (Gate 4) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/05b9a43}{\texttt{05b9a43}} & audit & Record the Gate 4 verification of the per-qubit scheduler: 120-cell matrix clean \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/5dde36e}{\texttt{5dde36e}} & audit & Add a bare-simulation timing mode to the audit tools \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f2ae05a}{\texttt{f2ae05a}} & docs & Compare ACE's physical parameters with the ACGP paper's Table I (Gate 5) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/cdb502d}{\texttt{cdb502d}} & audit & Record wall-clock time of every benchmark under both schedulers \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/062d155}{\texttt{062d155}} & metrics & Add a latency definition that means the same under every scheduler \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/5d1270d}{\texttt{5d1270d}} & runner & Add --scheduler/--admission to the trace runner and eligible-latency columns \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/fac0b9a}{\texttt{fac0b9a}} & audit & Let the audit matrix cover the archive's three mapping seeds \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/1d30f23}{\texttt{1d30f23}} & audit & Record mapping seeds 43/44 (120 cells clean) and the CGP/ACGP and latency findings \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/9bbc4cd}{\texttt{9bbc4cd}} & study & Add a parameterized rerun of the congestion budget study with a scheduler option (Gate 6) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0cc4d0e}{\texttt{0cc4d0e}} & study & Rerun the 378-run budget study under the corrected scheduler: the budget now binds (Gate 6) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/4c6f29a}{\texttt{4c6f29a}} & heatmap & Regenerate the per-core congestion heatmap from raw traces; all 160 cells match the project figure \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0d368db}{\texttt{0d368db}} & audit & Make the invariant checker window-aware and label reservations with stable serials \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8d32809}{\texttt{8d32809}} & heatmap & Document the regenerated per-core congestion heatmap: definition, parameters, worked example \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/db87af8}{\texttt{db87af8}} & docs & Trace ACE's physical parameters to their sources and frame the open decision (Gate 5) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/6116603}{\texttt{6116603}} & experiment1 & Add the Experiment 1 driver (ten benchmarks x memory budgets) and admission-wait columns \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0a48ed4}{\texttt{0a48ed4}} & experiment2 & Split per-core congestion into own endpoint demand and relay demand \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/55ffc56}{\texttt{55ffc56}} & experiment1 & Add resume/config options, the analysis script, the unattended finisher and handoff notes \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/e510235}{\texttt{e510235}} & experiment1 & Refine the controls and the definition of "waited" after the first full run \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/5f529a5}{\texttt{5f529a5}} & experiment1 & Add the report generator; correct the parameter doc: coherence decides pre-generation and fidelity \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/993d98c}{\texttt{993d98c}} & experiment1 & Record each invocation's wall-clock time in the sweep driver \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/7c53796}{\texttt{7c53796}} & experiment1 & Record every parameter, each invocation's time and the total with each experiment; add a serial timing pass \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/1284a41}{\texttt{1284a41}} & routing & Add exact offline re-routing with proven lower bounds; make the trace reader topology-aware \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/6c8d046}{\texttt{6c8d046}} & experiment1 & Results of the ten-benchmark memory-budget experiment: 1,368 runs, all five controls pass \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/7fdf5d2}{\texttt{7fdf5d2}} & routing & Add the offline re-routing study driver (all benchmarks, capacities, variants, detour allowances) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/dea7468}{\texttt{dea7468}} & report & Start the LaTeX report: scope, background, audit findings, corrections and verification \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8562c0b}{\texttt{8562c0b}} & experiment1 & Sensitivity arm: ACGP Table I memory parameters (coherence 1 ms, efficiency 0.85); controls pass \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/79f39fb}{\texttt{79f39fb}} & cutoff & Add the cut-off mechanism script (which timer discards a pair, and what ACE does next) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/6d91eb2}{\texttt{6d91eb2}} & torus & Add the torus config generator and topology/mapping-only options for the mapping study \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f5e046b}{\texttt{f5e046b}} & experiment1 & Quiet serial timing pass: every benchmark at budgets 1,2,4,8,32, one invocation at a time \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/392c57b}{\texttt{392c57b}} & torus & Run ACE on the torus: topology-aware validation and guard, torus config, mapped torus traces, torus-capable tools \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/c4d7ed8}{\texttt{c4d7ed8}} & report & Report chapters for heatmap, Experiment 1 and appendices; table generator reads the committed results \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8b6a565}{\texttt{8b6a565}} & routing & Add the simulation of re-routed traces (original routes vs optimal re-routing, same mapping and seeds) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/8e32530}{\texttt{8e32530}} & torus & Results on the 4x4 torus: heatmap, own-vs-relay split and Experiment 1 (1,368 runs, all five controls pass) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/3e9290f}{\texttt{3e9290f}} & torus & Mesh-versus-torus comparison table (hops, structural overload, latency) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/1e739c6}{\texttt{1e739c6}} & routing & Offline re-routing results on the mesh and torus: structural study and simulation of re-routed mesh traces \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/0ef04f7}{\texttt{0ef04f7}} & timing & Run-times report: every experiment's wall clock, per-benchmark times (parallel and serial), scheduler cost \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/f51f0da}{\texttt{f51f0da}} & report & Routing, torus and run-times chapters; offline-routing report generator; cut-off mechanism data \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/b9abefb}{\texttt{b9abefb}} & cutoff & Study the memory cut-off: ACE already has it (SeQUeNCe cutoff\_ratio), unused by default; measured what a discard does \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/9d38d30}{\texttt{9d38d30}} & report & Compiled LaTeX report (32 pages), the Experiment 1 report from the final data, routing/torus/run-time reports and cut-off tests \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/commit/d3c2b76}{\texttt{d3c2b76}} & docs & Update the handoff notes to the final state of the session \\
+\end{longtable}}

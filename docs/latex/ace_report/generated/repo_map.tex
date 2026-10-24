@@ -1,0 +1,65 @@
+{\small
+\subsection*{Reports and plans}
+\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/ace-correctness-audit.md}{\nolinkurl{docs/reports/ace-correctness-audit.md}} & what was wrong in the legacy simulator (F1--F10) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/ace-scheduler-verification.md}{\nolinkurl{docs/reports/ace-scheduler-verification.md}} & verification of the corrected scheduler; wall-clock times \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/ace-physical-parameters.md}{\nolinkurl{docs/reports/ace-physical-parameters.md}} & every physical parameter, its source, the open decision and the question for the guide \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/ace-budget-rerun.md}{\nolinkurl{docs/reports/ace-budget-rerun.md}} & the 378-run budget study rerun (Gate 6) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/experiment1-ten-benchmarks.md}{\nolinkurl{docs/reports/experiment1-ten-benchmarks.md}} & Experiment 1 report (generated from the data) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/experiment2-own-vs-relay.md}{\nolinkurl{docs/reports/experiment2-own-vs-relay.md}} & Experiment 2 report \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/memory-cutoff-study.md}{\nolinkurl{docs/reports/memory-cutoff-study.md}} & memory cut-off study \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/offline-routing-research.md}{\nolinkurl{docs/reports/offline-routing-research.md}} & can offline routing reduce congestion? \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/reports/run-times.md}{\nolinkurl{docs/reports/run-times.md}} & run times of every experiment \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/ace-correctness-and-congestion-program.md}{\nolinkurl{docs/plans/ace-correctness-and-congestion-program.md}} & the day plan and gates \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/ace-request-scheduler-design.md}{\nolinkurl{docs/plans/ace-request-scheduler-design.md}} & scheduler design and reasoning \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/plans/handoff-2026-10-24.md}{\nolinkurl{docs/plans/handoff-2026-10-24.md}} & state, open decisions, pitfalls \\
+\end{longtable}
+\subsection*{ACE source changed or added}
+\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/request_scheduler.py}{\nolinkurl{request_scheduler.py}} & the per-qubit request manager with event-driven admission \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/reservation.py}{\nolinkurl{reservation.py}} & request identity in reservations; release observer; event hooks \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/parallel_core.py}{\nolinkurl{parallel_core.py}} & scheduler selection (legacy or per-qubit) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/execution_events.py}{\nolinkurl{execution_events.py}} & typed execution events and stable reservation serials \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/invariants.py}{\nolinkurl{invariants.py}} & the invariant checker (window-aware) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/latency_metrics.py}{\nolinkurl{latency_metrics.py}} & the common latency definition \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/compiler_trace.py}{\nolinkurl{compiler_trace.py}} & topology-aware trace validation, torus guard \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/run_trace_comparison.py}{\nolinkurl{run_trace_comparison.py}} & the runner: --scheduler, --topology, new columns \\
+\end{longtable}
+\subsection*{Tools}
+\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/ace_correctness}{\nolinkurl{tools/ace_correctness}} & baseline, audit, harness and audit matrix \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/experiment1}{\nolinkurl{tools/experiment1}} & Experiment 1 driver, analysis, report and unattended finisher \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/experiment2}{\nolinkurl{tools/experiment2}} & endpoint-versus-relay split \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/heatmap}{\nolinkurl{tools/heatmap}} & heatmap regeneration from raw traces \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/ace_budget_rerun}{\nolinkurl{tools/ace_budget_rerun}} & parameterised budget sweep driver \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/routing_research}{\nolinkurl{tools/routing_research}} & offline re-routing: optimiser, study, simulation \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/torus}{\nolinkurl{tools/torus}} & torus config generator and runner \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/cutoff_study}{\nolinkurl{tools/cutoff_study}} & cut-off mechanism study \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/timing}{\nolinkurl{tools/timing}} & run-times report \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/tools/latex}{\nolinkurl{tools/latex}} & generators for this report \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/tools/congestion_study/run_study.py}{\nolinkurl{tools/congestion_study/run_study.py}} & mapping study script (--topology torus, --mapping-only) \\
+\end{longtable}
+\subsection*{Results and data}
+\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/ace_correctness_baseline_2026-10-24}{\nolinkurl{results/ace_correctness_baseline_2026-10-24}} & the 164-row legacy baseline \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/ace_scheduler_verification_2026-10-24}{\nolinkurl{results/ace_scheduler_verification_2026-10-24}} & verification matrices and wall times \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/ace_budget_rerun_2026-10-24}{\nolinkurl{results/ace_budget_rerun_2026-10-24}} & budget study rerun, both schedulers \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/heatmap_regenerated_2026-10-24}{\nolinkurl{results/heatmap_regenerated_2026-10-24}} & regenerated heatmap, its README and CSV \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment2_own_vs_relay_2026-10-24}{\nolinkurl{results/experiment2_own_vs_relay_2026-10-24}} & Experiment 2 data and figures, capacities 1--4 \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_ten_benchmarks_2026-10-24}{\nolinkurl{results/experiment1_ten_benchmarks_2026-10-24}} & Experiment 1 (mesh): results.csv, controls, figures, parameters, timings \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_sensitivity_acgp_table1_2026-10-24}{\nolinkurl{results/experiment1_sensitivity_acgp_table1_2026-10-24}} & sensitivity arm \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_timing_serial_2026-10-24}{\nolinkurl{results/experiment1_timing_serial_2026-10-24}} & quiet serial timing pass \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/experiment1_torus_2026-10-24}{\nolinkurl{results/experiment1_torus_2026-10-24}} & Experiment 1 on the torus \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/torus_traces_2026-10-24}{\nolinkurl{results/torus_traces_2026-10-24}} & mapped torus traces \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/mesh_vs_torus_2026-10-24}{\nolinkurl{results/mesh_vs_torus_2026-10-24}} & mesh-versus-torus table \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/offline_routing_2026-10-24}{\nolinkurl{results/offline_routing_2026-10-24}} & offline routing data and re-routed traces \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/cutoff_study_2026-10-24}{\nolinkurl{results/cutoff_study_2026-10-24}} & cut-off study data \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/congestion/mqt_ten_workload_congestion_results.zip}{\nolinkurl{results/congestion/mqt_ten_workload_congestion_results.zip}} & the archived mapped traces (ten workloads, seeds 42--44) \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/mapper}{\nolinkurl{mapper}} & the vendored HQA mapper with provenance \\
+\end{longtable}
+\subsection*{This report}
+\begin{longtable}{@{}p{0.60\linewidth}p{0.36\linewidth}@{}}
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/docs/latex/ace_report}{\nolinkurl{docs/latex/ace_report}} & LaTeX source of this report \\
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/ace_report/ace_report.pdf}{\nolinkurl{docs/latex/ace_report/ace_report.pdf}} & the compiled report \\
+\end{longtable}
+}
