@@ -45,6 +45,8 @@ class Audit:
     violations: list[Violation]
     makespan_ms: float = 0.0
     total_retries: int = 0
+    max_retries_one_request: int = 0
+    max_admission_wait_ms: float = 0.0
 
 
 def audit_trace(
@@ -90,8 +92,11 @@ def audit_trace(
     violations = check_events(recorder.events, info, require_completion=True,
                               submission_after_predecessor=(scheduler == "per-qubit"))
     stats = result["stats"]
+    parts = stats["timing_breakdown"].values()
     return Audit(len(info), stats["completed_requests"], recorder.events, violations,
-                 stats["end_to_end_latency_ms"], stats.get("total_retries", 0))
+                 stats["end_to_end_latency_ms"], stats.get("total_retries", 0),
+                 max((p["retry_count"] for p in parts), default=0),
+                 max((p.get("admission_wait_time_ms", 0.0) for p in parts), default=0.0))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
