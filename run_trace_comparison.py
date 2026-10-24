@@ -21,6 +21,7 @@ from pathlib import Path
 from statistics import fmean
 
 from compiler_trace import (
+    config_topology,
     mesh_dimensions,
     parse_compiler_trace,
     plan_preparations,
@@ -168,6 +169,8 @@ def main() -> None:
     parser.add_argument("--trace", required=True, type=Path)
     parser.add_argument("--config", type=Path, default=Path("config/final_config/grid_4x4_ace_3.json"))
     parser.add_argument("--mesh", default="4x4")
+    parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh",
+                        help="interconnect of the trace; --config must be the matching topology file (checked)")
     parser.add_argument(
         "--strategies",
         default="on-demand,continuous,adaptive-continuous,fixed,dynamic",
@@ -215,7 +218,10 @@ def main() -> None:
             layer_count=min(trace.layer_count, args.max_layers),
         )
     rows, columns = mesh_dimensions(trace, args.mesh)
-    validate_neighbor_requests(trace, rows, columns)
+    validate_neighbor_requests(trace, rows, columns, args.topology)
+    declared = config_topology(json.loads(Path(args.config).read_text(encoding='utf-8')), rows, columns)
+    if declared != args.topology:
+        parser.error(f"--topology {args.topology} needs a {args.topology} topology file, but {args.config} is a {declared}")
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
     scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard}
                          if args.scheduler == "per-qubit" else None)

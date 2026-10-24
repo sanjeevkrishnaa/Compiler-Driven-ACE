@@ -110,19 +110,25 @@ def split_trace(trace, capacity: int, variant: str) -> dict:
     return rows
 
 
-def compute(capacity: int = 4, variant: str = "hop", directory: Path | None = None) -> dict:
+def compute(capacity: int = 4, variant: str = "hop", directory: Path | None = None, topology: str = "mesh",
+            traces_dir: Path | None = None) -> dict:
     """workload -> seed -> core -> row, from the archive's raw traces."""
     own = tempfile.TemporaryDirectory() if directory is None else None
     base = Path(own.name) if own else directory
     out: dict = {}
+    archive = zipfile.ZipFile(ARCHIVE) if traces_dir is None else None
     try:
-        with zipfile.ZipFile(ARCHIVE) as archive:
-            for key, _ in ORDER:
-                out[key] = {}
-                for seed in SEEDS:
+        for key, _ in ORDER:
+            out[key] = {}
+            for seed in SEEDS:
+                if traces_dir is None:
                     path = Path(archive.extract(f"{PREFIX}/{key}/seed_{seed}/requests.txt", base))
-                    out[key][seed] = split_trace(read_trace(path, 4, 4), capacity, variant)
+                else:
+                    path = Path(traces_dir) / key / f"seed_{seed}" / "requests.txt"
+                out[key][seed] = split_trace(read_trace(path, 4, 4, topology), capacity, variant)
     finally:
+        if archive is not None:
+            archive.close()
         if own:
             own.cleanup()
     return out
@@ -186,11 +192,13 @@ def draw(data: dict, capacity: int, variant: str, path: Path) -> None:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--capacity", type=int, default=4)
+    parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh")
+    parser.add_argument("--traces-dir", type=Path, default=None)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     for variant in VARIANTS:
-        data = compute(args.capacity, variant)
+        data = compute(args.capacity, variant, topology=args.topology, traces_dir=args.traces_dir)
         write_csv(data, args.output / f"split_{variant}.csv")
         draw(data, args.capacity, variant, args.output / f"split_{variant}.png")
         print(f"wrote {args.output / f'split_{variant}.csv'} and .png")

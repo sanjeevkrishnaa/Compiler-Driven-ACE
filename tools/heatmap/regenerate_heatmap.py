@@ -49,23 +49,31 @@ def core_percentages(trace, capacity: int) -> tuple[list[float], int, int]:
     return [100.0 * over[c] / active if active else 0.0 for c in range(trace.cores)], active, any_over
 
 
-def compute(capacity: int = 4, directory: Path | None = None) -> dict[str, dict]:
+def compute(capacity: int = 4, directory: Path | None = None, topology: str = 'mesh',
+            traces_dir: Path | None = None) -> dict[str, dict]:
     own = tempfile.TemporaryDirectory() if directory is None else None
     base = Path(own.name) if own else directory
     result = {}
     try:
-        with zipfile.ZipFile(ARCHIVE) as archive:
+        archive = zipfile.ZipFile(ARCHIVE) if traces_dir is None else None
+        try:
             for key, _ in ORDER:
                 per_seed = []
                 for seed in SEEDS:
-                    path = Path(archive.extract(f"{PREFIX}/{key}/seed_{seed}/requests.txt", base))
-                    per_seed.append(core_percentages(read_trace(path, ROWS, COLUMNS), capacity))
+                    if traces_dir is None:
+                        path = Path(archive.extract(f"{PREFIX}/{key}/seed_{seed}/requests.txt", base))
+                    else:
+                        path = Path(traces_dir) / key / f"seed_{seed}" / "requests.txt"
+                    per_seed.append(core_percentages(read_trace(path, ROWS, COLUMNS, topology), capacity))
                 result[key] = {
                     "mean": [sum(s[0][c] for s in per_seed) / len(per_seed) for c in range(ROWS * COLUMNS)],
                     "per_seed": {seed: s[0] for seed, s in zip(SEEDS, per_seed)},
                     "active_layers": {seed: s[1] for seed, s in zip(SEEDS, per_seed)},
                     "overloaded_layers": {seed: s[2] for seed, s in zip(SEEDS, per_seed)},
                 }
+        finally:
+            if archive is not None:
+                archive.close()
     finally:
         if own:
             own.cleanup()
@@ -110,10 +118,12 @@ def write_csv(data: dict[str, dict], path: Path) -> None:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--capacity", type=int, default=4)
+    parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh")
+    parser.add_argument("--traces-dir", type=Path, default=None, help="<workload>/seed_<n>/requests.txt (default: the committed mesh archive)")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
-    data = compute(args.capacity)
+    data = compute(args.capacity, topology=args.topology, traces_dir=args.traces_dir)
     write_csv(data, args.output / "per_core_percent.csv")
     draw(data, args.capacity, args.output / "per_core_congestion.png")
     print(f"wrote {args.output / 'per_core_congestion.png'}")

@@ -122,11 +122,11 @@ def controls(rows, grouped):
     return out
 
 
-def structural(budget_list):
+def structural(budget_list, topology="mesh", traces_dir=None):
     """workload -> budget -> % of communication-active layers with any core overloaded, pooled over the three mapping seeds."""
     result = defaultdict(dict)
     for b in budget_list:
-        data = heatmap.compute(b)
+        data = heatmap.compute(b, topology=topology, traces_dir=traces_dir)
         for k in ORDER:
             active = sum(data[k]["active_layers"].values())
             result[k][b] = 100.0 * sum(data[k]["overloaded_layers"].values()) / active if active else 0.0
@@ -179,6 +179,8 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh")
+    parser.add_argument("--traces-dir", type=Path, default=None)
     args = parser.parse_args(argv)
     rows = load(args.results)
     grouped = cells(rows)
@@ -206,7 +208,7 @@ def main(argv=None) -> int:
            title="Delivered EPR fidelity against communication memories per core")
     figure(grouped, "waited_fraction", "fraction of requests that waited", args.output / "waiting_vs_budget.png",
            policies=("on-demand", "dynamic"), title="Requests that had to wait for a free memory")
-    struct = structural([b for b in budgets if b <= 64])
+    struct = structural([b for b in budgets if b <= 64], args.topology, args.traces_dir)
     import json
     (args.output / "structural_overload.json").write_text(json.dumps(struct, indent=1), encoding="utf-8")
     (args.output / "controls.txt").write_text("\n".join(("PASS " if ok else "FAIL ") + n + " -- " + d for n, ok, d in checks) + "\n")

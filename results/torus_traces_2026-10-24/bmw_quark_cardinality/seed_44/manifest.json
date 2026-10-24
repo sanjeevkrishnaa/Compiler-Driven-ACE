@@ -1,0 +1,62 @@
+{
+  "status": "complete",
+  "mapping_only": true,
+  "workload": "bmw_quark_cardinality",
+  "seed": 44,
+  "source": {
+    "kind": "mqt-bench",
+    "benchmark": "bmw_quark_cardinality",
+    "factory_options": {},
+    "factory_source": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/hqa-reproduction/env/lib/python3.14/site-packages/mqt/bench/benchmarks/bmw_quark_cardinality.py",
+    "factory_sha256": "47568a1b2c05dc8ead12d4f2ecafd1724eb67efd160a161500c8440cc8d0ba9c",
+    "reference": "https://github.com/munich-quantum-toolkit/bench/blob/main/src/mqt/bench/benchmarks/bmw_quark_cardinality.py",
+    "actual_qubits": 48,
+    "normalized_depth": 1292,
+    "normalized_gates": 3224,
+    "basis_gates": [
+      "rz",
+      "sx",
+      "x",
+      "cx"
+    ],
+    "optimization_level": 0,
+    "circuit_seed": 42,
+    "final_measurements_removed": true
+  },
+  "topology": "torus",
+  "architecture": {
+    "mesh": "4x4",
+    "rows": 4,
+    "columns": 4,
+    "cores": 16,
+    "physical_qubits": 128,
+    "physical_slots_per_core": 8,
+    "communication_slots_per_core": 4,
+    "compiler_slots_per_core": 3,
+    "fallback_slots_per_core": 1,
+    "data_slots_per_core": 4,
+    "data_capacity": 64,
+    "initial_spare_data_slots_per_core": 1,
+    "initial_workload_capacity": 48,
+    "requested_circuit_qubits": 48,
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "seconds": 0.060398999994504265,
+  "hops": 108,
+  "layers": 1297,
+  "trace_sha256": "5cccaa44bfea56cfadd85ed6a56767eabcde7b6eaaf1e1404edc46d000425d46",
+  "versions": {
+    "python": "3.14.0",
+    "mqt-bench": "2.3.0",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "networkx": "3.6.1",
+    "qm2026": "not installed"
+  },
+  "normalized_circuit_sha256": "fde46f24d87ad8a1a8a82b4196af5994840ee919084cc295ca14718b4062ac00"
+}

@@ -1,0 +1,195 @@
+{
+  "algorithm": "HQA",
+  "initial_placement": "oee",
+  "route_model": "shortest",
+  "mapping": {
+    "placer": "HQA",
+    "benchmark": "graphstate",
+    "circuit": "graphstate",
+    "grid": "4x4",
+    "n_cores": 16,
+    "n_qubits": 48,
+    "n_slices": 25,
+    "n_two_qubit_gates": 48,
+    "reliability_band": "0.10-1.00",
+    "repeat": 0,
+    "runtime_seconds": 0.004569374999846332,
+    "evictions": 0,
+    "rounds": 6,
+    "cost": 188.95264672887726,
+    "epr_latency": 85.89905784095312,
+    "path_quality": 12.652092536671324,
+    "infeasible_operations": 25,
+    "migrations": 28,
+    "mean_transfer_cost": 7.55810586915509,
+    "residual_operations": 0,
+    "residual_cost": 0.0,
+    "is_complete": true,
+    "hops": 60.0
+  },
+  "maximum_data_occupancy": 4,
+  "data_capacity_enforced": 4,
+  "seed_path": "42",
+  "links": [
+    {
+      "source": 0,
+      "target": 4,
+      "reliability": 0.45627020038474486
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "reliability": 0.2825883334298357
+    },
+    {
+      "source": 0,
+      "target": 12,
+      "reliability": 0.3672254916805886
+    },
+    {
+      "source": 0,
+      "target": 3,
+      "reliability": 0.3162583876440472
+    },
+    {
+      "source": 1,
+      "target": 5,
+      "reliability": 0.8221128833695485
+    },
+    {
+      "source": 1,
+      "target": 2,
+      "reliability": 0.5473808446000872
+    },
+    {
+      "source": 1,
+      "target": 13,
+      "reliability": 0.5697106901696856
+    },
+    {
+      "source": 2,
+      "target": 6,
+      "reliability": 0.8454623504861232
+    },
+    {
+      "source": 2,
+      "target": 3,
+      "reliability": 0.8283331586490535
+    },
+    {
+      "source": 2,
+      "target": 14,
+      "reliability": 0.12428807334685374
+    },
+    {
+      "source": 3,
+      "target": 7,
+      "reliability": 0.9328464506064316
+    },
+    {
+      "source": 3,
+      "target": 15,
+      "reliability": 0.6691549793032863
+    },
+    {
+      "source": 4,
+      "target": 8,
+      "reliability": 0.8044637709395406
+    },
+    {
+      "source": 4,
+      "target": 5,
+      "reliability": 0.9682756976848674
+    },
+    {
+      "source": 4,
+      "target": 7,
+      "reliability": 0.6227977588045354
+    },
+    {
+      "source": 5,
+      "target": 9,
+      "reliability": 0.7931776006390842
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "reliability": 0.11938376172928773
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "reliability": 0.4140727240217143
+    },
+    {
+      "source": 6,
+      "target": 7,
+      "reliability": 0.9727174435347046
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "reliability": 0.6213613951077298
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "reliability": 0.21889775291569924
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "reliability": 0.3502759611387833
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "reliability": 0.4552495893825752
+    },
+    {
+      "source": 9,
+      "target": 13,
+      "reliability": 0.8550834700389374
+    },
+    {
+      "source": 9,
+      "target": 10,
+      "reliability": 0.16461176510966255
+    },
+    {
+      "source": 10,
+      "target": 14,
+      "reliability": 0.17112497175196073
+    },
+    {
+      "source": 10,
+      "target": 11,
+      "reliability": 0.8482895703821827
+    },
+    {
+      "source": 11,
+      "target": 15,
+      "reliability": 0.8808368421251139
+    },
+    {
+      "source": 12,
+      "target": 13,
+      "reliability": 0.25475311733314754
+    },
+    {
+      "source": 12,
+      "target": 15,
+      "reliability": 0.49876627290441977
+    },
+    {
+      "source": 13,
+      "target": 14,
+      "reliability": 0.5323665134947543
+    },
+    {
+      "source": 14,
+      "target": 15,
+      "reliability": 0.45266934389994357
+    }
+  ]
+}

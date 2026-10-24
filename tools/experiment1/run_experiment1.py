@@ -162,19 +162,27 @@ def main(argv=None) -> int:
     parser.add_argument("--config", type=Path, default=None, help="topology/physics config (default: ACE's)")
     parser.add_argument("--parameter-set", default="ace-default", help="label recorded in every row")
     parser.add_argument("--resume", action="store_true", help="keep invocations already on disk")
+    parser.add_argument("--topology", choices=("mesh", "torus"), default="mesh")
+    parser.add_argument("--traces-dir", type=Path, default=None,
+                        help="directory <workload>/seed_<n>/requests.txt (default: the committed mesh archive)")
     args = parser.parse_args(argv)
 
     jobs = [j for j in enumerate_jobs(args.budgets, args.mapping_seeds)
             if args.only_workloads is None or j[0] in args.only_workloads]
     args.output.mkdir(parents=True, exist_ok=True)
     started = time.time()
-    traces = extract_traces(args.output / "_traces")
+    if args.topology == "torus" and args.config is None:
+        args.config = REPO_ROOT / "config" / "final_config" / "grid_4x4_torus_ace_3.json"
+    if args.topology == "torus" and args.traces_dir is None:
+        parser.error("--topology torus needs --traces-dir (the mapped torus traces)")
+    traces = args.traces_dir.resolve() if args.traces_dir else extract_traces(args.output / "_traces")
     print(f"{len(jobs)} invocations ({3 * len(jobs)} runs), scheduler {SCHEDULER}", flush=True)
 
     def work(job):
         try:
             return job, [label(dict(r, parameter_set=args.parameter_set))
-                         for r in sweep.run_one(job, traces, args.output, SCHEDULER, args.config, args.resume)]
+                         for r in sweep.run_one(job, traces, args.output, SCHEDULER, args.config, args.resume,
+                                                ['--topology', args.topology])]
         except subprocess.TimeoutExpired:
             return job, [label({"workload": job[0], "mapping_seed": job[1], "total_memories": job[2],
                                 "run_status": "TIMEOUT"})]
@@ -189,7 +197,7 @@ def main(argv=None) -> int:
     finished = time.time()
     config_path = (args.config or (REPO_ROOT / "config" / "final_config" / "grid_4x4_ace_3.json")).resolve()
     record = {
-        "experiment": "experiment1", "parameter_set": args.parameter_set,
+        "experiment": "experiment1", "parameter_set": args.parameter_set, "topology": args.topology,
         "started_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(started)),
         "finished_at": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(finished)),
         "design": {"workloads": args.only_workloads or WORKLOADS, "mapping_seeds": args.mapping_seeds or MAPPING_SEEDS,

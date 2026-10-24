@@ -1,0 +1,358 @@
+{
+  "started_at": "2026-10-24T08:10:42.067878+00:00",
+  "architecture": {
+    "mesh": "4x4",
+    "rows": 4,
+    "columns": 4,
+    "cores": 16,
+    "physical_qubits": 128,
+    "physical_slots_per_core": 8,
+    "communication_slots_per_core": 4,
+    "compiler_slots_per_core": 3,
+    "fallback_slots_per_core": 1,
+    "data_slots_per_core": 4,
+    "data_capacity": 64,
+    "initial_spare_data_slots_per_core": 1,
+    "initial_workload_capacity": 48,
+    "requested_circuit_qubits": 48,
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "policy": "dynamic",
+  "parameters": {
+    "mapper_dir": "mapper",
+    "bench_dir": null,
+    "workloads": [
+      "ghz",
+      "bv",
+      "graphstate",
+      "vqe_real_amp",
+      "cdkm_ripple_carry_adder",
+      "bmw_quark_cardinality",
+      "draper_qft_adder",
+      "qft",
+      "qaoa",
+      "randomcircuit"
+    ],
+    "qasm": [],
+    "workload_options": null,
+    "mesh": "4x4",
+    "topology": "torus",
+    "mapping_only": true,
+    "total_qubits": 128,
+    "memory_slots": 4,
+    "on_demand_reserve": 1,
+    "spare_data_slots_per_core": 1,
+    "logical_qubits": null,
+    "policy": "dynamic",
+    "dynamic_lookahead_layers": 8,
+    "coherence_time_layers": 10,
+    "delta_layers": 6,
+    "placer": "HQA",
+    "initial_placement": "oee",
+    "reliability_min": 0.1,
+    "reliability_max": 1.0,
+    "seeds": [
+      "42",
+      "43",
+      "44"
+    ],
+    "circuit_seed": 42,
+    "optimization_level": 0,
+    "buffer_ms": 5.3,
+    "hop_service_ms": null,
+    "simulate": false,
+    "ace_dir": null,
+    "sequence_dir": null,
+    "ace_config": null,
+    "stop_time_s": 300,
+    "output": "/Users/dhruvrpansuriya/.claude/jobs/aa966293/tmp/torus_traces"
+  },
+  "versions": {
+    "python": "3.14.0",
+    "mqt-bench": "2.3.0",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "networkx": "3.6.1",
+    "qm2026": "not installed"
+  },
+  "mapper_dir": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/mapper",
+  "mapper_git_commit": "f5e046b909ed3c4573e8a0f35eff1436f924e26b",
+  "bench_git_commit": null,
+  "mapper_source_sha256": {
+    "qmap/__init__.py": "7291e5eaf147a3efd9d148aa4ac1878d871bc3dd38e5ed65ab664037f8cf4d81",
+    "qmap/__main__.py": "eba37f5c604e7ed2c2ab8133909c5be51d8ef6bc8ec23f53491a9ecfc9f6a4b3",
+    "qmap/architecture/__init__.py": "b2c7279a75fc3c568b2819d9c36e98960c2d002038c2354cd87c45c6ea01a354",
+    "qmap/architecture/architecture.py": "acbffe5778875da3d6247d9c9684a48e17707e1734cf416bbdad2b43a228b697",
+    "qmap/architecture/core.py": "4108898188d687be28276a8cc4b2f40bbf83bb1c4169d68062384df991e3d678",
+    "qmap/architecture/reliability.py": "03b9df57b1986f1718b1570bf03c8db157e03192da05683cf3b48998e766a497",
+    "qmap/architecture/topology.py": "9b71c88b797ef0cdf8ad7244f776cf442dbbccf44bc744d67bfa50a38a500862",
+    "qmap/circuit/__init__.py": "ed7a5f25805f367f83140f07e25d649916d3ddcf02bdfb26af389e4978e613de",
+    "qmap/circuit/generators.py": "cf26c838f83ed3840a90ff09814fc69057e267c441ced63638cd53f88f19b2b0",
+    "qmap/circuit/ir.py": "9c5dcb863041d3f635fee26af9a6c4be3252547f568a3f6fe37bd5e1c1be1ec3",
+    "qmap/circuit/loader.py": "8aa77a05b3012b5b0737c3b987bc27dd306d86a017f2a68a2d109e97c0eb96e1",
+    "qmap/circuit/slicer.py": "0d5504d7ac9aa5a36526018977d027e68f0bc58c668f16ee09740b9ed68fccea",
+    "qmap/cli/__init__.py": "a8c206a3e09dc36395a18b64cc35a0f075d7cba519648ca1d4b455d4b990798f",
+    "qmap/cli/commands.py": "f5e5cedc60d09dcdda9d8d22e0c559631364453a476cc94ca951cbcde2071ba4",
+    "qmap/cli/parser.py": "8cb27efafe1be987ed9e1ad0466c5c01e28fedb135ddbcb5c20dd784b938ed2e",
+    "qmap/exceptions.py": "fadebe9e535d9051937ce0be42468f6fa87a036511db44b3350a14392f820b38",
+    "qmap/experiments/__init__.py": "c87509abbc1ae8f5fd6b6f84f9a5b5884b7436d140437a399e66994e953f24c2",
+    "qmap/experiments/reliability.py": "017c1229c18f07b2cf2632bcf4e56d2f800f12a007c55c0e5c07ad2949d6a127",
+    "qmap/experiments/reproduction.py": "14b1ed5018ce2daa131b21f55e9af25c7af96b193b05242259867adc16628564",
+    "qmap/experiments/runner.py": "9f28321b09c9d9d9b5c2bec8b2fbf9cec07fdb2edba99abdc76bf80725672ec7",
+    "qmap/experiments/scaling.py": "21beeb8604d96fac80611b10a9462ec71de2f63ae7b73d3da450e1c258d38a4b",
+    "qmap/experiments/timing.py": "edac810a96f96d022f84b97cff9fa71932ad0c7e29dc572fdf4df455c6ca9750",
+    "qmap/io/__init__.py": "d7cc1ddc83f11e6648d9a81eeecc7e3bb3def6efece21d63c206ccf848356fc8",
+    "qmap/io/requests.py": "a96bee3866c6b3363ea2cf737b6c15838d4c8a34cd857859ac8ef443fbfc5e8c",
+    "qmap/io/results.py": "46c28d512b15085e9e35448f04e139f5386bb44e7652d180dc9aef1e2a43aaa8",
+    "qmap/io/traces.py": "3d53a14bcba6d40e0a288808a0a05ccf7153f2509d6455a46874c5f5dad7a2ba",
+    "qmap/metrics/__init__.py": "abc5f85b6a92cd56d536c5485ff49e2380d3bf617d8d168d3442419217c70e54",
+    "qmap/metrics/cost.py": "5354968fd6a670df04bedd869afe8787dbe99b66b873db9d0979acae38be27e6",
+    "qmap/metrics/distance.py": "677e4174c7831824ae567cf127c9f5e65b725d41692aa22f20ff0c0a522bba3c",
+    "qmap/metrics/interaction.py": "d7b5515330359dbe334f109a8b769e0039035f6ef5d235d245da3cfa18e7716b",
+    "qmap/partition.py": "156815212efcd52986d83e9554fb0e2d89fc0821f40d5b37a00df271eeeef768",
+    "qmap/placement/GTR_QA.py": "7905afdd8a49d64f5985019c9ed80ba67fb897757166ad5f55f23b5a47a3d903",
+    "qmap/placement/HQA.py": "538dd9bc2765d893f0061398b47271825fcc6b1b215bd4b8010a82f736d8cf06",
+    "qmap/placement/TR_HQA.py": "8926fb4b7f55dd58104500ae0c6c9c05cbda8a31f97445afdc18d21f6b939144",
+    "qmap/placement/T_HQA.py": "fff91e96e526f560aadddeb3bc838d8ecbdfab0dcfc9d9ec674e29cee90a390a",
+    "qmap/placement/T_HQAR.py": "0aa3ce9cc07c0639392d1ac64280d00800432aa6c11471ae803b03c25b486736",
+    "qmap/placement/__init__.py": "7aaedb534ae8787594733c93447154351af964dabb1b5ff25ac42d7b243c073c",
+    "qmap/placement/assignment.py": "b8427fd62224cd7e8e9d167f200269f1488da225a9250489806f3cae86a25637",
+    "qmap/placement/attraction.py": "dfcee3bde43670771863c3a693a8291c4f0899d4f48497351a855b9f29127ada",
+    "qmap/placement/base.py": "f84d60ad5699426cacbe9f4fc549f6460b6b39e79e4ccff5efc98549b3dccac6",
+    "qmap/placement/cost.py": "b2da1c66e7d42f8820c1dfca9e82cd7ab98fd51f3ad572315542dee08e7fa681",
+    "qmap/placement/initial.py": "5087b7f09e8692d44e4c051f92f5ef1c0f81a01246279932a0a31d4486badc89",
+    "qmap/placement/lambda_scaling.py": "ae3458ef0c4ef002019399575873998d8fe7dd9d1d06cd74759020fd2ae83f9b",
+    "qmap/placement/oee.py": "6624d3f3dc78d776541803c87709da26eb045b297a3467b31c82bcb736cb3b2d",
+    "qmap/placement/registry.py": "e96857492aa9887fdf1844207debc33f617cad72d27b5555350d100505c4041a",
+    "qmap/rng.py": "b1d1250fc8534af7805b1d6942bb5fc19c6c4cabe15a2cc9278a4dd1e0acf0f0",
+    "qmap/validation.py": "bd059a1f4fc2ca7d4baf35f5fe3867b9b7664455bb9024f83053783ddd880144",
+    "qmap/viz/__init__.py": "be9da6df33ebc3dec52dd2c1ab27c336dd4890ac2f1eb2e576554fd30e25bab9",
+    "qmap/viz/plots.py": "1b8034fb6a9867aa3fdf115c4c772753d7f9f8cab2f47ec367a9af24342f3b26"
+  },
+  "pipeline_source_sha256": {
+    "run_study.py": "bbc1d478b0f80a1931979ed69d913fb4f90907b19fe7689efbf593c192aea1be",
+    "hotspot_analysis.py": "4052df45e1554e9ef016e2f1764beb3d6dc3ab335803f24c56d27d7f2a01395d",
+    "package_results.py": "1837bf544a1ec936899614459232ff761a69fe54556fae57f31c9c0bdf71535d"
+  },
+  "benchmark_reference": "https://github.com/munich-quantum-toolkit/bench/tree/main/src/mqt/bench/benchmarks",
+  "status": "complete",
+  "finished_at": "2026-10-24T08:10:45.881338+00:00",
+  "trials": [
+    {
+      "workload": "ghz",
+      "seed": 42,
+      "hop_requests": 18,
+      "layers": 50,
+      "seconds": 0.4224136249977164
+    },
+    {
+      "workload": "ghz",
+      "seed": 43,
+      "hop_requests": 18,
+      "layers": 50,
+      "seconds": 0.005585249993600883
+    },
+    {
+      "workload": "ghz",
+      "seed": 44,
+      "hop_requests": 18,
+      "layers": 50,
+      "seconds": 0.005464500005473383
+    },
+    {
+      "workload": "bv",
+      "seed": 42,
+      "hop_requests": 21,
+      "layers": 162,
+      "seconds": 0.011572667004656978
+    },
+    {
+      "workload": "bv",
+      "seed": 43,
+      "hop_requests": 21,
+      "layers": 162,
+      "seconds": 0.010641208005836233
+    },
+    {
+      "workload": "bv",
+      "seed": 44,
+      "hop_requests": 21,
+      "layers": 162,
+      "seconds": 0.010287124998285435
+    },
+    {
+      "workload": "graphstate",
+      "seed": 42,
+      "hop_requests": 60,
+      "layers": 25,
+      "seconds": 0.009291125010349788
+    },
+    {
+      "workload": "graphstate",
+      "seed": 43,
+      "hop_requests": 60,
+      "layers": 25,
+      "seconds": 0.008792208987870254
+    },
+    {
+      "workload": "graphstate",
+      "seed": 44,
+      "hop_requests": 60,
+      "layers": 25,
+      "seconds": 0.008593209000537172
+    },
+    {
+      "workload": "vqe_real_amp",
+      "seed": 42,
+      "hop_requests": 66,
+      "layers": 71,
+      "seconds": 0.01969383300456684
+    },
+    {
+      "workload": "vqe_real_amp",
+      "seed": 43,
+      "hop_requests": 66,
+      "layers": 71,
+      "seconds": 0.012134958000387996
+    },
+    {
+      "workload": "vqe_real_amp",
+      "seed": 44,
+      "hop_requests": 66,
+      "layers": 71,
+      "seconds": 0.011568957997951657
+    },
+    {
+      "workload": "cdkm_ripple_carry_adder",
+      "seed": 42,
+      "hop_requests": 406,
+      "layers": 715,
+      "seconds": 0.042504666998866014
+    },
+    {
+      "workload": "cdkm_ripple_carry_adder",
+      "seed": 43,
+      "hop_requests": 406,
+      "layers": 715,
+      "seconds": 0.043733790997066535
+    },
+    {
+      "workload": "cdkm_ripple_carry_adder",
+      "seed": 44,
+      "hop_requests": 406,
+      "layers": 715,
+      "seconds": 0.0463211250025779
+    },
+    {
+      "workload": "bmw_quark_cardinality",
+      "seed": 42,
+      "hop_requests": 108,
+      "layers": 1297,
+      "seconds": 0.06201941600011196
+    },
+    {
+      "workload": "bmw_quark_cardinality",
+      "seed": 43,
+      "hop_requests": 108,
+      "layers": 1297,
+      "seconds": 0.06089662500016857
+    },
+    {
+      "workload": "bmw_quark_cardinality",
+      "seed": 44,
+      "hop_requests": 108,
+      "layers": 1297,
+      "seconds": 0.060565000007045455
+    },
+    {
+      "workload": "draper_qft_adder",
+      "seed": 42,
+      "hop_requests": 984,
+      "layers": 470,
+      "seconds": 0.07205837500805501
+    },
+    {
+      "workload": "draper_qft_adder",
+      "seed": 43,
+      "hop_requests": 984,
+      "layers": 470,
+      "seconds": 0.0677575000008801
+    },
+    {
+      "workload": "draper_qft_adder",
+      "seed": 44,
+      "hop_requests": 984,
+      "layers": 470,
+      "seconds": 0.06816475000232458
+    },
+    {
+      "workload": "qft",
+      "seed": 42,
+      "hop_requests": 1938,
+      "layers": 382,
+      "seconds": 0.09564533400407527
+    },
+    {
+      "workload": "qft",
+      "seed": 43,
+      "hop_requests": 1938,
+      "layers": 382,
+      "seconds": 0.10199704200203996
+    },
+    {
+      "workload": "qft",
+      "seed": 44,
+      "hop_requests": 1938,
+      "layers": 382,
+      "seconds": 0.09183525000116788
+    },
+    {
+      "workload": "qaoa",
+      "seed": 42,
+      "hop_requests": 2562,
+      "layers": 367,
+      "seconds": 0.08645162498578429
+    },
+    {
+      "workload": "qaoa",
+      "seed": 43,
+      "hop_requests": 2562,
+      "layers": 367,
+      "seconds": 0.0874086670082761
+    },
+    {
+      "workload": "qaoa",
+      "seed": 44,
+      "hop_requests": 2562,
+      "layers": 367,
+      "seconds": 0.08827295800438151
+    },
+    {
+      "workload": "randomcircuit",
+      "seed": 42,
+      "hop_requests": 9574,
+      "layers": 3341,
+      "seconds": 0.5015684159880038
+    },
+    {
+      "workload": "randomcircuit",
+      "seed": 43,
+      "hop_requests": 9574,
+      "layers": 3341,
+      "seconds": 0.5026452500023879
+    },
+    {
+      "workload": "randomcircuit",
+      "seed": 44,
+      "hop_requests": 9574,
+      "layers": 3341,
+      "seconds": 0.5005970420024823
+    }
+  ],
+  "errors": []
+}

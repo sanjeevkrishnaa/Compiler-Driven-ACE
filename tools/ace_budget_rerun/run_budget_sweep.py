@@ -75,7 +75,7 @@ def extract_traces(directory: Path) -> Path:
 
 
 def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None = None,
-            reuse: bool = False) -> list[dict]:
+            reuse: bool = False, extra_flags: list[str] | None = None) -> list[dict]:
     """Run one invocation (three physics seeds).  ``reuse`` keeps an invocation already on disk; its metadata is
     still checked against the request, so a stale folder cannot pass for a different configuration."""
     workload, mapping_seed, budget, strategy = job
@@ -92,6 +92,7 @@ def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None
                "--output", str(outdir)]
     if config is not None:
         command += ["--config", str(config)]
+    command += list(extra_flags or [])
     wall = ""
     if not (reuse and (outdir / "summary.csv").exists() and (outdir / "metadata.json").exists()):
         started = time.perf_counter()

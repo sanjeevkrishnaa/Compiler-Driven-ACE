@@ -1,0 +1,195 @@
+{
+  "algorithm": "HQA",
+  "initial_placement": "oee",
+  "route_model": "shortest",
+  "mapping": {
+    "placer": "HQA",
+    "benchmark": "bmw_quark_cardinality",
+    "circuit": "bmw_quark_cardinality",
+    "grid": "4x4",
+    "n_cores": 16,
+    "n_qubits": 48,
+    "n_slices": 1297,
+    "n_two_qubit_gates": 282,
+    "reliability_band": "0.10-1.00",
+    "repeat": 0,
+    "runtime_seconds": 0.004088125002454035,
+    "evictions": 0,
+    "rounds": 90,
+    "cost": 371.1269166911199,
+    "epr_latency": 241.08907645649492,
+    "path_quality": 53.64044388272704,
+    "infeasible_operations": 90,
+    "migrations": 90,
+    "mean_transfer_cost": 4.12363240767911,
+    "residual_operations": 0,
+    "residual_cost": 0.0,
+    "is_complete": true,
+    "hops": 108.0
+  },
+  "maximum_data_occupancy": 4,
+  "data_capacity_enforced": 4,
+  "seed_path": "43",
+  "links": [
+    {
+      "source": 0,
+      "target": 4,
+      "reliability": 0.15398535200051958
+    },
+    {
+      "source": 0,
+      "target": 1,
+      "reliability": 0.8138677023369698
+    },
+    {
+      "source": 0,
+      "target": 12,
+      "reliability": 0.1829802062212949
+    },
+    {
+      "source": 0,
+      "target": 3,
+      "reliability": 0.9217040559091368
+    },
+    {
+      "source": 1,
+      "target": 5,
+      "reliability": 0.1076527346875145
+    },
+    {
+      "source": 1,
+      "target": 2,
+      "reliability": 0.872067893925182
+    },
+    {
+      "source": 1,
+      "target": 13,
+      "reliability": 0.864098847423831
+    },
+    {
+      "source": 2,
+      "target": 6,
+      "reliability": 0.38300195069442905
+    },
+    {
+      "source": 2,
+      "target": 3,
+      "reliability": 0.5805856294819944
+    },
+    {
+      "source": 2,
+      "target": 14,
+      "reliability": 0.9354768384315236
+    },
+    {
+      "source": 3,
+      "target": 7,
+      "reliability": 0.3878757875829907
+    },
+    {
+      "source": 3,
+      "target": 15,
+      "reliability": 0.41722492348484524
+    },
+    {
+      "source": 4,
+      "target": 8,
+      "reliability": 0.8459609730290654
+    },
+    {
+      "source": 4,
+      "target": 5,
+      "reliability": 0.725221156995248
+    },
+    {
+      "source": 4,
+      "target": 7,
+      "reliability": 0.10756673479539375
+    },
+    {
+      "source": 5,
+      "target": 9,
+      "reliability": 0.9820370915785204
+    },
+    {
+      "source": 5,
+      "target": 6,
+      "reliability": 0.9848763756646228
+    },
+    {
+      "source": 6,
+      "target": 10,
+      "reliability": 0.7949298919984301
+    },
+    {
+      "source": 6,
+      "target": 7,
+      "reliability": 0.42675550958034786
+    },
+    {
+      "source": 7,
+      "target": 11,
+      "reliability": 0.5238379346014358
+    },
+    {
+      "source": 8,
+      "target": 12,
+      "reliability": 0.833908011548414
+    },
+    {
+      "source": 8,
+      "target": 9,
+      "reliability": 0.8897633492259499
+    },
+    {
+      "source": 8,
+      "target": 11,
+      "reliability": 0.1654562819556175
+    },
+    {
+      "source": 9,
+      "target": 13,
+      "reliability": 0.41819584909600205
+    },
+    {
+      "source": 9,
+      "target": 10,
+      "reliability": 0.49963364148254835
+    },
+    {
+      "source": 10,
+      "target": 14,
+      "reliability": 0.3952153491140213
+    },
+    {
+      "source": 10,
+      "target": 11,
+      "reliability": 0.7703231453887135
+    },
+    {
+      "source": 11,
+      "target": 15,
+      "reliability": 0.6741606345638166
+    },
+    {
+      "source": 12,
+      "target": 13,
+      "reliability": 0.4981185396126805
+    },
+    {
+      "source": 12,
+      "target": 15,
+      "reliability": 0.4077478446625368
+    },
+    {
+      "source": 13,
+      "target": 14,
+      "reliability": 0.4685860260478181
+    },
+    {
+      "source": 14,
+      "target": 15,
+      "reliability": 0.9024612818901593
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""Write the LaTeX tables and copy the figures of docs/latex/ace_report from the committed result files.
+
+Every number in the report's tables comes from here; nothing is typed by hand.  Sections whose data does not exist yet are skipped
+and reported.
+
+    python tools/latex/make_tables.py
+"""
+from __future__ import annotations
+
+import csv
+import json
+import shutil
+import statistics as st
+import sys
+from collections import defaultdict
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+OUT = REPO / "docs" / "latex" / "ace_report"
+GEN, FIG = OUT / "generated", OUT / "figures"
+RESULTS = REPO / "results"
+sys.path.insert(0, str(REPO / "tools" / "heatmap"))
+sys.path.insert(0, str(REPO / "tools" / "experiment2"))
+sys.path.insert(0, str(REPO / "tools" / "experiment1"))
+
+NAMES = {"ghz": "GHZ", "bv": "Bernstein--Vazirani", "bmw_quark_cardinality": "BMW/QUARK cardinality",
+         "vqe_real_amp": "VQE real amplitudes", "cdkm_ripple_carry_adder": "CDKM ripple-carry adder", "graphstate": "Graph state",
+         "draper_qft_adder": "Draper QFT adder", "qaoa": "QAOA", "qft": "QFT", "randomcircuit": "Random circuit"}
+ORDER = list(NAMES)
+BUDGETS = [1, 2, 3, 4, 6, 8, 16, 32]
+
+
+def tex(s) -> str:
+    return str(s).replace("_", r"\_").replace("%", r"\%").replace("&", r"\&")
+
+
+def table(path: Path, header: list[str], rows: list[list[str]], caption: str, label: str, colspec: str | None = None,
+          small: bool = True) -> None:
+    colspec = colspec or "l" + "r" * (len(header) - 1)
+    lines = [r"\begin{table}[H]", r"\centering" + (r"\small" if small else ""), rf"\begin{{tabular}}{{@{{}}{colspec}@{{}}}}", r"\toprule",
+             " & ".join(header) + r" \\", r"\midrule"]
+    lines += [" & ".join(r) + r" \\" for r in rows]
+    lines += [r"\bottomrule", r"\end{tabular}", rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{table}"]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def figure(name: str, source: Path, caption: str, label: str, width: str = r"\linewidth") -> None:
+    shutil.copy(source, FIG / source.name)
+    (GEN / name).write_text("\n".join([r"\begin{figure}[H]", r"\centering",
+                                       rf"\includegraphics[width={width}]{{{source.name}}}",
+                                       rf"\caption{{{caption}}}", rf"\label{{{label}}}", r"\end{figure}"]) + "\n", encoding="utf-8")
+
+
+def load(path: Path) -> list[dict]:
+    with path.open(newline="", encoding="utf-8") as h:
+        return list(csv.DictReader(h))
+
+
+def heatmap_tables(skipped: list[str]) -> None:
+    import regenerate_heatmap as hm
+    data = hm.compute(4)
+    rows = []
+    for k in ORDER:
+        d = data[k]
+        act, ov = sum(d["active_layers"].values()), sum(d["overloaded_layers"].values())
+        top = max(range(16), key=lambda c: d["mean"][c])
+        rows.append([NAMES[k], "/".join(str(d["active_layers"][s]) for s in hm.SEEDS), f"{100 * ov / act:.1f}\\%",
+                     f"C{top} ({d['mean'][top]:.1f}\\%)"])
+    table(GEN / "heatmap_summary.tex", ["Workload", "Active layers (seeds 42/43/44)", "Layers with any overload", "Hottest core"], rows,
+          "Structural overload at capacity 4, pooled over the three mapping seeds.", "tab:heatmap", "lrrr")
+    figure("fig_heatmap.tex", RESULTS / "heatmap_regenerated_2026-10-24" / "per_core_congestion.png",
+           "Per-core congestion: percentage of communication-active layers in which a core's demand exceeds 4 slots (mean over three "
+           "mapping seeds). All 160 cells match the project's earlier figure at 0.1\\% resolution.", "fig:heatmap")
+
+
+def exp2_tables(skipped: list[str]) -> None:
+    import split_congestion as s
+    cap_rows = {}
+    for variant in ("hop", "route"):
+        rows = []
+        for k in ORDER:
+            cells = []
+            for C in (1, 2, 3, 4):
+                d = s.compute(C, variant) if (variant, C) not in cap_rows else cap_rows[(variant, C)]
+                cap_rows[(variant, C)] = d
+                own = sum(s.mean_over_seeds(d, k, c, "own_percent") for c in range(16))
+                rel = sum(s.mean_over_seeds(d, k, c, "relay_only_percent") for c in range(16))
+                cells.append("none" if own + rel == 0 else f"{100 * own / (own + rel):.1f}\\%")
+            rows.append([NAMES[k]] + cells)
+        table(GEN / f"exp2_own_share_{variant}.tex", ["Workload", "C=1", "C=2", "C=3", "C=4"], rows,
+              f"Share of overloaded core-layers caused by a core's own endpoint demand ({variant} counting); the rest is relay-only overload.",
+              f"tab:exp2-{variant}")
+    figure("fig_exp2.tex", RESULTS / "experiment2_own_vs_relay_2026-10-24" / "capacity_4" / "split_hop.png",
+           "Own endpoint demand against relay demand per core at capacity 4 (hop counting).", "fig:exp2", r"0.7\linewidth")
+
+
+def exp1_tables(skipped: list[str]) -> None:
+    main = RESULTS / "experiment1_ten_benchmarks_2026-10-24"
+    if not (main / "results.csv").exists():
+        skipped.append("experiment 1")
+        return
+    import analyze as A
+    rows = A.load(main / "results.csv")
+    grouped = A.cells(rows)
+    for policy, metric, digits, name, cap in (("on-demand", "latency_ms", 2, "exp1_latency_ondemand", "Request latency (ms), on-demand, mean $\\pm$ sd over nine runs."),
+                                              ("dynamic", "latency_ms", 2, "exp1_latency_dynamic", "Request latency (ms), dynamic pre-generation."),
+                                              ("dynamic", "fidelity", 4, "exp1_fidelity_dynamic", "Delivered EPR fidelity, dynamic pre-generation."),
+                                              ("on-demand", "waited_fraction", 3, "exp1_waiting_ondemand", "Fraction of requests that waited more than a microsecond for a free memory, on-demand.")):
+        budgets = BUDGETS if policy == "on-demand" else BUDGETS[1:]
+        body = []
+        for w in ORDER:
+            cells = []
+            for b in budgets:
+                s = A.stats(grouped.get((w, policy, b), {}).get(metric, []))
+                cells.append("--" if s is None else (f"{s['mean']:.{digits}f}" if metric == "waited_fraction" or metric == "fidelity"
+                                                     else f"{s['mean']:.{digits}f}$\\pm${s['sd']:.{digits}f}"))
+            body.append([NAMES[w]] + cells)
+        head = ["Workload"] + [f"{b}" + ("$^*$" if b > 4 else "") for b in budgets]
+        table(GEN / f"{name}.tex", head, body, cap + " Budgets marked $^*$ are counterfactual (beyond the modelled four slots).",
+              f"tab:{name.replace('_', '-')}", small=True)
+    for fn, cap, lab in (("latency_vs_budget.png", "Request latency against communication memories per core.", "fig:exp1-latency"),
+                         ("fidelity_vs_budget.png", "Delivered EPR fidelity against communication memories per core.", "fig:exp1-fidelity"),
+                         ("waiting_vs_budget.png", "Fraction of requests that had to wait for a free memory.", "fig:exp1-waiting")):
+        figure(f"fig_{fn.split('.')[0]}.tex", main / fn, cap + " Line: mean of nine runs; band: minimum to maximum; grey: counterfactual budgets.", lab)
+    (GEN / "exp1_controls.tex").write_text(r"\begin{itemize}" + "\n" + "\n".join(
+        r"  \item " + tex(l).replace("--", "---") for l in (main / "controls.txt").read_text(encoding="utf-8").strip().splitlines()) + "\n" + r"\end{itemize}" + "\n")
+
+
+def main() -> int:
+    GEN.mkdir(parents=True, exist_ok=True)
+    FIG.mkdir(parents=True, exist_ok=True)
+    skipped: list[str] = []
+    heatmap_tables(skipped)
+    exp2_tables(skipped)
+    exp1_tables(skipped)
+    print("wrote", len(list(GEN.glob("*.tex"))), "generated files;", "skipped:", skipped or "none")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

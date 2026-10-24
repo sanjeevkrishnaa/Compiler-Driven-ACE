@@ -188,15 +188,34 @@ def router_name(core: int, columns: int) -> str:
     return f"router_{core // columns}_{core % columns}"
 
 
-def validate_neighbor_requests(trace: CompilerTrace, rows: int, columns: int) -> None:
+def cores_adjacent(a: int, b: int, rows: int, columns: int, topology: str = "mesh") -> bool:
+    """Whether cores a and b share a link on a row-major mesh or torus."""
+    (ra, ca), (rb, cb) = divmod(a, columns), divmod(b, columns)
+    if not (ra < rows and rb < rows):
+        return False
+    dr, dc = abs(ra - rb), abs(ca - cb)
+    if topology == "torus":
+        dr, dc = min(dr, rows - dr), min(dc, columns - dc)
+    elif topology != "mesh":
+        raise ValueError(f"unknown topology {topology!r}")
+    return a != b and dr + dc == 1
+
+
+def validate_neighbor_requests(trace: CompilerTrace, rows: int, columns: int, topology: str = "mesh") -> None:
     for request in trace.requests:
-        src = divmod(request.source_core, columns)
-        dst = divmod(request.destination_core, columns)
-        if not (src[0] < rows and dst[0] < rows and abs(src[0] - dst[0]) + abs(src[1] - dst[1]) == 1):
+        if not cores_adjacent(request.source_core, request.destination_core, rows, columns, topology):
             raise ValueError(
-                f"request {request.request_id} is not an elementary mesh hop: "
+                f"request {request.request_id} is not an elementary {topology} hop: "
                 f"{request.source_core}->{request.destination_core}"
             )
+
+
+def config_topology(config: dict, rows: int, columns: int) -> str:
+    """'torus' if the topology file joins the opposite edges of the grid with direct links, else 'mesh'."""
+    links = {(c["source"], c["destination"]) for c in config["cchannels"]
+             if c["source"].startswith("router") and c["destination"].startswith("router")}
+    wrap = (router_name(columns - 1, columns), router_name(0, columns)) in links
+    return "torus" if wrap else "mesh"
 
 
 def to_ace_layers(

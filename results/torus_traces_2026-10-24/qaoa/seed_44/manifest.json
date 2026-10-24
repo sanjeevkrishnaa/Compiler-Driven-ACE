@@ -1,0 +1,64 @@
+{
+  "status": "complete",
+  "mapping_only": true,
+  "workload": "qaoa",
+  "seed": 44,
+  "source": {
+    "kind": "mqt-bench",
+    "benchmark": "qaoa",
+    "factory_options": {
+      "seed": 42
+    },
+    "factory_source": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/hqa-reproduction/env/lib/python3.14/site-packages/mqt/bench/benchmarks/qaoa.py",
+    "factory_sha256": "2a388ae495e5685a3b2580b10fe1b88a9a774c4b46fd20d0d72a667b26b2070a",
+    "reference": "https://github.com/munich-quantum-toolkit/bench/blob/main/src/mqt/bench/benchmarks/qaoa.py",
+    "actual_qubits": 48,
+    "normalized_depth": 367,
+    "normalized_gates": 4116,
+    "basis_gates": [
+      "rz",
+      "sx",
+      "x",
+      "cx"
+    ],
+    "optimization_level": 0,
+    "circuit_seed": 42,
+    "final_measurements_removed": true
+  },
+  "topology": "torus",
+  "architecture": {
+    "mesh": "4x4",
+    "rows": 4,
+    "columns": 4,
+    "cores": 16,
+    "physical_qubits": 128,
+    "physical_slots_per_core": 8,
+    "communication_slots_per_core": 4,
+    "compiler_slots_per_core": 3,
+    "fallback_slots_per_core": 1,
+    "data_slots_per_core": 4,
+    "data_capacity": 64,
+    "initial_spare_data_slots_per_core": 1,
+    "initial_workload_capacity": 48,
+    "requested_circuit_qubits": 48,
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "seconds": 0.08809045801172033,
+  "hops": 2562,
+  "layers": 367,
+  "trace_sha256": "b5386ccaed1c5c9131598f96086b3aef5c5f0bc03d2aa8e411f17af652e3e0a7",
+  "versions": {
+    "python": "3.14.0",
+    "mqt-bench": "2.3.0",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "networkx": "3.6.1",
+    "qm2026": "not installed"
+  },
+  "normalized_circuit_sha256": "cfa269e3f82296cdcf18dd85016885b8901c35219bdaff57ed41f5a8a0ff0453"
+}

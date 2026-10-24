@@ -1,0 +1,62 @@
+{
+  "status": "complete",
+  "mapping_only": true,
+  "workload": "cdkm_ripple_carry_adder",
+  "seed": 43,
+  "source": {
+    "kind": "mqt-bench",
+    "benchmark": "cdkm_ripple_carry_adder",
+    "factory_options": {},
+    "factory_source": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/hqa-reproduction/env/lib/python3.14/site-packages/mqt/bench/benchmarks/cdkm_ripple_carry_adder.py",
+    "factory_sha256": "f1e55b79954fdb91670cc97944e23253e9bb4c5cb55b7afc4fe55e1ac241b826",
+    "reference": "https://github.com/munich-quantum-toolkit/bench/blob/main/src/mqt/bench/benchmarks/cdkm_ripple_carry_adder.py",
+    "actual_qubits": 48,
+    "normalized_depth": 715,
+    "normalized_gates": 967,
+    "basis_gates": [
+      "rz",
+      "sx",
+      "x",
+      "cx"
+    ],
+    "optimization_level": 0,
+    "circuit_seed": 42,
+    "final_measurements_removed": true
+  },
+  "topology": "torus",
+  "architecture": {
+    "mesh": "4x4",
+    "rows": 4,
+    "columns": 4,
+    "cores": 16,
+    "physical_qubits": 128,
+    "physical_slots_per_core": 8,
+    "communication_slots_per_core": 4,
+    "compiler_slots_per_core": 3,
+    "fallback_slots_per_core": 1,
+    "data_slots_per_core": 4,
+    "data_capacity": 64,
+    "initial_spare_data_slots_per_core": 1,
+    "initial_workload_capacity": 48,
+    "requested_circuit_qubits": 48,
+    "seeds": [
+      42,
+      43,
+      44
+    ]
+  },
+  "seconds": 0.043541874998481944,
+  "hops": 406,
+  "layers": 715,
+  "trace_sha256": "f77b0fbb55664ad60a53b935172f8a2d7929ccaf23a4b6ec8ac5ef1d0cf8b80c",
+  "versions": {
+    "python": "3.14.0",
+    "mqt-bench": "2.3.0",
+    "qiskit": "2.5.2",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "networkx": "3.6.1",
+    "qm2026": "not installed"
+  },
+  "normalized_circuit_sha256": "27f493c7029d40333857c8200c82e8b8b7dfdeec28c8f3ed29160b3b22752b57"
+}
