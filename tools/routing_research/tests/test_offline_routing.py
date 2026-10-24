@@ -111,3 +111,20 @@ class TraceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StudyTests(unittest.TestCase):
+    def test_the_study_rows_obey_the_bounds_on_a_small_workload(self):
+        import run_routing_study as run_study
+        with tempfile.TemporaryDirectory() as tmp:
+            import zipfile
+            with zipfile.ZipFile(run_study.ARCHIVE) as z:
+                path = z.extract(f"{run_study.PREFIX}/graphstate/seed_42/requests.txt", tmp)
+            rows = run_study.study_trace((path, "graphstate", 42, "mesh"))
+        self.assertEqual(len(rows), len(run_study.CAPACITIES) * len(run_study.VARIANTS) * len(run_study.EXTRAS))
+        for r in rows:
+            self.assertLessEqual(r["optimised_excess"], r["baseline_excess"])
+            self.assertGreaterEqual(r["optimised_excess"], r["best_lower_bound"])
+            self.assertGreaterEqual(r["best_lower_bound"], max(r["endpoint_lower_bound"], 0))
+            if r["extra_hops"] == 0:
+                self.assertEqual(r["added_hops"], 0)
