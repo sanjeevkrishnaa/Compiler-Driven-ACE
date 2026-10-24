@@ -27,7 +27,7 @@ because there the total relay volume, not the choice of path, is the limit, whic
 The structural gain would be an artefact if it did not survive the simulator, so the re-routed traces were run in ACE next to the original routes, on-demand, at the budget they were optimised for, with the same
 mapping, endpoints, physics seeds and parameters. Three mapping seeds and three physics seeds give nine paired runs per cell.
 \input{generated/routing_sim_mesh}
-Re-routing alone makes on-demand requests faster in nearly every pair. At two memories the latency falls by 26\% to 42\% on the congested workloads; at the modelled four memories by 25\% for QFT, 11\% for QAOA and 6\% for graph state,
+Re-routing alone makes on-demand requests faster in nearly every pair. At two memories the latency falls by 21\% to 42\% on the four congested workloads (graph state, Draper, QAOA, QFT) and by 11\% on the random circuit; at the modelled four memories by 25\% for QFT, 11\% for QAOA and 6\% for graph state,
 and by 1\% or less where there was little congestion. The fraction of requests that had to wait falls accordingly. Two extra hops help at two memories (QFT 26\% to 36\%) but not at four, where the added hop count costs about as much as it saves.
 
 \section{The torus}

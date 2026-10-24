@@ -29,11 +29,6 @@ all 480 per-trial rows of the archive's per-core file exactly.
 \paragraph{Counting qubits in flight.} A second variant counts routes instead of hops: under per-qubit ordering the hops of a route run one after
 another, so a relay needs one memory for the route at a time, not two.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.7\linewidth,height=0.72\textheight,keepaspectratio]{fig_exp2_capacity4}
-\caption{Per core, the share of layers overloaded by the core's own endpoint demand (left) and only because of relay traffic (right), at capacity 4, hop counting. Workloads without overload are omitted.}
-\end{figure}
 
 \input{generated/exp2_own_share_hop}
 \input{generated/exp2_own_share_route}
@@ -54,9 +49,4 @@ the own part is a floor set by the mapping. Route counting finds less overload t
 \section{Every capacity, both countings}
 Capacity four is the modelled value; the smaller capacities show how the split moves as memory is removed. In each figure the left panel is the percentage of a workload's active layers in which the core is overloaded by its own endpoint demand and the right panel
 the percentage in which it is overloaded only because of relay traffic. Per-core numbers for capacities four and two are in Appendix~\ref{app:percore}; the data for all capacities and both countings are in \code{results/experiment2_own_vs_relay_2026-10-24/}.
-\begin{figure}[H]\centering
-\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c1_hop}\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c2_hop}
-\caption{Own against relay overload, hop counting, capacity 1 (left) and 2 (right).}\end{figure}
-\begin{figure}[H]\centering
-\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c3_hop}\includegraphics[width=0.62\linewidth,height=0.42\textheight,keepaspectratio]{exp2_c4_route}
-\caption{Hop counting at capacity 3 (left); route counting at capacity 4 (right).}\end{figure}
+\input{generated/exp2_figs}

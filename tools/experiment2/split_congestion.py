@@ -161,15 +161,15 @@ def write_csv(data: dict, path: Path) -> None:
                                 [data[key][s][core]["incident_hops"] for s in SEEDS])
 
 
-def draw(data: dict, capacity: int, variant: str, path: Path) -> None:
+def draw(data: dict, capacity: int, variant: str, path: Path, workloads=None, figwidth=8.2, rowheight=3.4, text=6, title_size=8, dpi=130) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    shown = [k for k, _ in ORDER if max(mean_over_seeds(data, k, c, "overloaded_percent") for c in range(CORES)) > 0.5]
+    shown = workloads or [k for k, _ in ORDER if max(mean_over_seeds(data, k, c, "overloaded_percent") for c in range(CORES)) > 0.5]
     titles = dict(ORDER)
     panels = [("own_percent", "Overloaded by the core's own endpoint demand (%)"),
               ("relay_only_percent", "Overloaded only because of relay traffic (%)")]
-    figure, axes = plt.subplots(len(shown), 2, figsize=(8.2, 3.4 * len(shown)))
+    figure, axes = plt.subplots(len(shown), 2, figsize=(figwidth, rowheight * len(shown)), squeeze=False)
     image = None
     for r, key in enumerate(shown):
         for c, (field, title) in enumerate(panels):
@@ -177,15 +177,15 @@ def draw(data: dict, capacity: int, variant: str, path: Path) -> None:
             grid = [[mean_over_seeds(data, key, row * 4 + col, field) for col in range(4)] for row in range(4)]
             image = axis.imshow(grid, cmap="YlOrRd", vmin=0, vmax=100)
             axis.set_xticks(range(4)); axis.set_yticks(range(4))
-            axis.set_title(f"{titles[key]}: {title}" if r == 0 else titles[key], fontsize=8)
+            axis.set_title(f"{titles[key]}: " + ("own demand" if c == 0 else "relay only"), fontsize=title_size)
             for row in range(4):
                 for col in range(4):
                     v = grid[row][col]
-                    axis.text(col, row, f"C{row * 4 + col}\n{v:.1f}%", ha="center", va="center", fontsize=6,
+                    axis.text(col, row, f"C{row * 4 + col}\n{v:.1f}%", ha="center", va="center", fontsize=text,
                               color="white" if v > 60 else "black")
     figure.suptitle(f"Own demand vs relay demand per core ({variant} counting, capacity {capacity})", fontsize=11)
     figure.colorbar(image, ax=axes, fraction=0.03, pad=0.03, label="% of communication-active layers")
-    figure.savefig(path, dpi=130, bbox_inches="tight")
+    figure.savefig(path, dpi=dpi, bbox_inches="tight")
     plt.close(figure)
 
 

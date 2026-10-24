@@ -133,12 +133,12 @@ def structural(budget_list, topology="mesh", traces_dir=None):
     return result
 
 
-def figure(grouped, metric, ylabel, path, policies=("on-demand", "dynamic"), log_y=False, title=""):
+def figure(grouped, metric, ylabel, path, policies=("on-demand", "dynamic"), log_y=False, title="", figsize=(17, 6.6), scale=1.0, dpi=130):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     colour = {"on-demand": BLUE, "dynamic": ORANGE}
-    figure_, axes = plt.subplots(2, 5, figsize=(17, 6.6), sharex=True)
+    figure_, axes = plt.subplots(2, 5, figsize=figsize, sharex=True)
     budgets = sorted({k[2] for k in grouped})
     for axis, workload in zip(axes.flat, ORDER):
         for policy in policies:
@@ -149,25 +149,25 @@ def figure(grouped, metric, ylabel, path, policies=("on-demand", "dynamic"), log
                     xs.append(b); mean.append(s["mean"]); low.append(s["min"]); high.append(s["max"])
             if xs:
                 axis.fill_between(xs, low, high, color=colour[policy], alpha=0.16, linewidth=0)
-                axis.plot(xs, mean, color=colour[policy], linewidth=2, marker="o", markersize=4, label=policy)
+                axis.plot(xs, mean, color=colour[policy], linewidth=2 * scale, marker="o", markersize=4 * scale, label=policy)
         axis.axvspan(MODELLED_MAX, max(budgets) * 1.3, color="#888888", alpha=0.08, linewidth=0)
         axis.set_xscale("log", base=2)
         if log_y:
             axis.set_yscale("log")
         axis.set_xticks([1, 2, 4, 8, 16, 32, 64])
-        axis.set_xticklabels(["1", "2", "4", "8", "16", "32", "64"], fontsize=7)
-        axis.set_title(TITLES[workload], fontsize=9)
-        axis.tick_params(labelsize=7)
+        axis.set_xticklabels(["1", "2", "4", "8", "16", "32", "64"], fontsize=7 * scale)
+        axis.set_title(TITLES[workload], fontsize=9 * scale)
+        axis.tick_params(labelsize=7 * scale)
         axis.grid(True, color="#dddddd", linewidth=0.5)
         axis.spines[["top", "right"]].set_visible(False)
     for axis in axes[:, 0]:
-        axis.set_ylabel(ylabel, fontsize=8)
+        axis.set_ylabel(ylabel, fontsize=8 * scale)
     for axis in axes[1]:
-        axis.set_xlabel("communication memories per core", fontsize=8)
-    axes[0][0].legend(fontsize=8, frameon=False)
-    figure_.suptitle(title + "  (line: mean of 9 runs; band: min to max; grey: beyond the modelled 4 slots, counterfactual)", fontsize=10)
+        axis.set_xlabel("memories per core" if scale > 1 else "communication memories per core", fontsize=8 * scale)
+    axes[0][0].legend(fontsize=8 * scale, frameon=False)
+    figure_.suptitle(title if scale > 1 else title + "  (line: mean of 9 runs; band: min to max; grey: beyond the modelled 4 slots, counterfactual)", fontsize=10 * scale)
     figure_.tight_layout()
-    figure_.savefig(path, dpi=130)
+    figure_.savefig(path, dpi=dpi)
     plt.close(figure_)
 
 

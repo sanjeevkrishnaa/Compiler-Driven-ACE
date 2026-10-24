@@ -80,28 +80,28 @@ def compute(capacity: int = 4, directory: Path | None = None, topology: str = 'm
     return result
 
 
-def draw(data: dict[str, dict], capacity: int, path: Path) -> None:
+def draw(data: dict[str, dict], capacity: int, path: Path, figsize=(21, 8.2), text=6.5, dpi=130, title_size=10) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    figure, axes = plt.subplots(2, 5, figsize=(21, 8.2))
+    figure, axes = plt.subplots(2, 5, figsize=figsize)
     image = None
     for axis, (key, title) in zip(axes.flat, ORDER):
         grid = [data[key]["mean"][r * COLUMNS:(r + 1) * COLUMNS] for r in range(ROWS)]
         image = axis.imshow(grid, cmap="YlOrRd", vmin=0, vmax=100)
-        axis.set_title(title, fontsize=10)
+        axis.set_title(title, fontsize=title_size)
         axis.set_xticks(range(COLUMNS)); axis.set_yticks(range(ROWS))
         axis.set_xlabel("Mesh column", fontsize=8); axis.set_ylabel("Mesh row", fontsize=8)
         for r in range(ROWS):
             for c in range(COLUMNS):
                 value = grid[r][c]
-                axis.text(c, r, f"C{r * COLUMNS + c}\n{value:.1f}%", ha="center", va="center", fontsize=6.5,
+                axis.text(c, r, f"C{r * COLUMNS + c}\n{value:.1f}%", ha="center", va="center", fontsize=text,
                           color="white" if value > 60 else "black")
     figure.suptitle("Per-core congestion across ten workloads", fontsize=15)
     figure.colorbar(image, ax=axes, fraction=0.012, pad=0.02, label="Overloaded communication-active layers (%)")
     figure.text(0.5, 0.01, f"Demand > {capacity} slots/core · equal-weight mean across three mapping seeds · "
                            "common 0–100% scale · zero means no overload, not no traffic", ha="center", fontsize=9)
-    figure.savefig(path, dpi=130, bbox_inches="tight")
+    figure.savefig(path, dpi=dpi, bbox_inches="tight")
     plt.close(figure)
 
 

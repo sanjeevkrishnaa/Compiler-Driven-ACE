@@ -6,7 +6,7 @@ communication memories. When many moves need the same core at once, requests wai
 how it was corrected, and what the corrected simulator says about ten benchmark circuits on a $4\times4$ mesh of cores.
 
 \paragraph{What was wrong.} ACE split every layer of requests into batches with at most one request per core, so a core never held more than one request and the memory budget could not bind;
-the earlier budget study therefore could not measure congestion. Under that serialization hid a second fault: two requests that looked alike (same endpoints, window, size and fidelity) were treated as one booking
+the earlier budget study therefore could not measure congestion. That serialization also hid a second fault: two requests that looked alike (same endpoints, window, size and fidelity) were treated as one booking
 by SeQUeNCe's reservation code (four requests on one link took up to 68\,ms instead of 2.4\,ms). Ten findings are in Chapter~\ref{ch:audit}.
 
 \paragraph{What was built.} A reservation-identity fix; a per-qubit request manager with event-driven admission (hops of one qubit in order, different qubits concurrent, a request starts only when both of
@@ -19,13 +19,13 @@ The legacy simulator is untouched and still reproduces its 164-row baseline exac
         where it saturates (64 memories reproduces 32). The floor of about $1.1$--$1.2$\,ms is generation time.
   \item \textbf{Who pays.} At the modelled four memories the on-demand penalty against saturation is $+40\%$ for QFT, $+12\%$ for QAOA, $+5\%$ for graph state and about $1\%$ or less for the rest. GHZ, Bernstein--Vazirani and BMW never wait.
   \item \textbf{Pre-generation is not free.} Dynamic compiler pre-generation reaches $0.25$\,ms at 32 memories, but its compiler bank takes $\text{budget}-1$ memories, so for the congested workloads it is slower than on-demand until 8 to 16 memories, and it
-        lowers the delivered fidelity (down to $0.909$ for QFT, against $0.9498$ on-demand).
+        lowers the delivered fidelity (QFT down to $0.9185$ and the random circuit, the lowest, to $0.907$, against $0.9498$ on-demand).
   \item \textbf{Where congestion comes from (Experiment 2).} At four memories nearly all overload is \emph{relay} overload: a core is overloaded because routes pass through it, not because routes start or end there. Endpoint demand alone peaks at 4--5, total demand at 24.
         With one memory, own demand matters (QFT 77\% own-overload).
   \item \textbf{Structure predicts cost.} The heatmap's overload share and the simulated on-demand penalty are strongly rank-correlated (Spearman $\rho=0.85$ over 60 points).
 \end{itemize}
 
-\paragraph{Beyond Experiments 1 and 2 (shorter chapters).} The torus needs 11--37\% fewer hops and is less congested; offline re-routing with the mapping fixed removes most of the excess demand and makes on-demand requests up to 42\% faster; ACE already contains a memory cut-off
+\paragraph{Beyond Experiments 1 and 2 (shorter chapters).} The torus needs 11--37\% fewer hops, has lower structural overload for five workloads (unchanged for four, higher for graph state); offline re-routing with the mapping fixed removes most of the excess demand and makes on-demand requests up to 42\% faster; ACE already contains a memory cut-off
 (\code{cutoff_ratio}) that is unused by default.
 
 \paragraph{What is not settled.} The physical parameters. ACE's coherence time (1\,s) and memory efficiency (0.95) differ from the group's multi-core paper (1\,ms, 0.85). With the paper's values every pre-generated pair expires unused, so every pre-generation
