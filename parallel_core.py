@@ -497,7 +497,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             serialize_conflicts: bool = False,
                             recorder=None,
                             scheduler: str = "legacy",
-                            request_plan=None):
+                            request_plan=None,
+                            scheduler_options: dict | None = None):
     """
     Run an experiment with parallel layered requests.
 
@@ -505,6 +506,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     (``request_scheduler.QubitOrderedRequestManager``, which releases requests in the order
     their qubits need them).  The latter needs ``request_plan``, the trace's
     ``CompilerRequest`` records; a compiler run supplies them through ``compiler_spec``.
+    ``scheduler_options`` are passed to that manager (``admission="poll"|"event"``,
+    ``starvation_guard``).
 
     ``recorder`` is an optional ``execution_events`` recorder.  When given, the request
     manager, every router's reservation timecards and every application report what they
@@ -617,7 +620,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         request_manager = QubitOrderedRequestManager(
             tl, name_to_apps, layered_requests,
             pregeneration_time_ms, request_duration_ms, compiler_controller, recorder,
-            requests=request_plan,
+            requests=request_plan, **(scheduler_options or {}),
         )
     # Compiler-driven runs have always used conflict-free batches because a
     # core cannot serve two reservations at once.  Expose the same batching to

@@ -80,6 +80,7 @@ def run_layers(
     submission_after_predecessor: bool = False,
     scheduler: str = "legacy",
     request_duration_ms: float = 50,
+    scheduler_options: dict | None = None,
 ) -> Outcome:
     """Run ``layers`` and check the recorded execution.
 
@@ -118,7 +119,8 @@ def run_layers(
             result = run_parallel_experiment(
                 str(config), False, False, layered, 5.3, request_duration_ms, "harness", seed=seed,
                 compiler_spec=None, total_memories_per_core=memories, simulation_stop_time_s=stop_time_s,
-                serialize_conflicts=serialize, recorder=recorder, scheduler=scheduler, request_plan=plan)
+                serialize_conflicts=serialize, recorder=recorder, scheduler=scheduler, request_plan=plan,
+                scheduler_options=scheduler_options)
     stats = result["stats"]
     violations = check_events(recorder.events, info, require_completion=True,
                               submission_after_predecessor=submission_after_predecessor)

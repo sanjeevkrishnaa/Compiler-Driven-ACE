@@ -59,6 +59,7 @@ def audit_trace(
     config: Path = DEFAULT_CONFIG,
     mesh: str = "4x4",
     scheduler: str = "legacy",
+    scheduler_options: dict | None = None,
 ) -> Audit:
     """Run ``strategy`` on the trace under ``scheduler`` and check the recorded execution.
 
@@ -83,7 +84,7 @@ def audit_trace(
             str(config), False, False, layers, 5.3, 50, f"audit-{strategy}-{seed}", seed=seed,
             compiler_spec=spec, total_memories_per_core=total_memories,
             simulation_stop_time_s=stop_time_s, serialize_conflicts=True, recorder=recorder,
-            scheduler=scheduler)
+            scheduler=scheduler, scheduler_options=scheduler_options)
 
     info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order) for r in trace.requests}
     violations = check_events(recorder.events, info, require_completion=True,
@@ -103,12 +104,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--stop-time-s", type=float, default=300.0)
     parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="legacy")
+    parser.add_argument("--admission", choices=("poll", "event"), default=None,
+                        help="per-qubit scheduler only (default: event)")
+    parser.add_argument("--no-starvation-guard", action="store_true", help="per-qubit event admission only")
     parser.add_argument("--show", type=int, default=5, help="examples to print per invariant")
     args = parser.parse_args(argv)
 
+    options = {}
+    if args.admission is not None:
+        options["admission"] = args.admission
+    if args.no_starvation_guard:
+        options["starvation_guard"] = False
     audit = audit_trace(args.trace, args.strategy, seed=args.seed, total_memories=args.total_memories,
                         compiler_memories=args.compiler_memories, generation_capacity=args.generation_capacity,
-                        stop_time_s=args.stop_time_s, scheduler=args.scheduler)
+                        stop_time_s=args.stop_time_s, scheduler=args.scheduler,
+                        scheduler_options=options)
     print(f"{args.strategy} [{args.scheduler}]: {audit.completed}/{audit.requested} requests completed, "
           f"makespan {audit.makespan_ms:.2f} ms, {audit.total_retries} retries, "
           f"{len(audit.events)} events, {len(audit.violations)} violations")
