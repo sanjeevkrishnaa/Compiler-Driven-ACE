@@ -32,7 +32,7 @@ WORKLOADS = ("ghz", "bv", "graphstate", "vqe_real_amp", "cdkm_ripple_carry_adder
              "bmw_quark_cardinality", "draper_qft_adder", "qft", "qaoa", "randomcircuit")
 COLUMNS = ["workload", "strategy", "memories", "seed", "scheduler", "admission", "requested", "completed",
            "violations", "violation_kinds", "makespan_ms", "retries", "max_retries_one_request",
-           "max_admission_wait_ms"]
+           "max_admission_wait_ms", "wall_seconds"]
 
 
 def extract(workload: str, directory: Path) -> Path:
@@ -45,14 +45,16 @@ def run_cell(cell: dict) -> dict:
     audit = audit_trace(Path(cell["trace"]), cell["strategy"], seed=cell["seed"], total_memories=cell["memories"],
                         compiler_memories=min(3, cell["memories"] - 1) if cell["memories"] > 1 else 0,
                         generation_capacity=min(3, cell["memories"]),
-                        scheduler=cell["scheduler"], scheduler_options=options or None)
+                        scheduler=cell["scheduler"], scheduler_options=options or None,
+                        record=not cell.get("time_only", False))
     kinds = sorted({v.invariant for v in audit.violations})
     return {"workload": cell["workload"], "strategy": cell["strategy"], "memories": cell["memories"],
             "seed": cell["seed"], "scheduler": cell["scheduler"], "admission": cell["admission"] or "-",
             "requested": audit.requested, "completed": audit.completed, "violations": len(audit.violations),
             "violation_kinds": "|".join(kinds), "makespan_ms": f"{audit.makespan_ms:.6f}",
             "retries": audit.total_retries, "max_retries_one_request": audit.max_retries_one_request,
-            "max_admission_wait_ms": f"{audit.max_admission_wait_ms:.6f}"}
+            "max_admission_wait_ms": f"{audit.max_admission_wait_ms:.6f}",
+            "wall_seconds": f"{audit.wall_seconds:.3f}"}
 
 
 def build_cells(workloads, strategies, memories, seeds, scheduler, admission, directory: Path) -> list[dict]:
@@ -71,6 +73,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="per-qubit")
     parser.add_argument("--admission", choices=("poll", "event"), default=None)
     parser.add_argument("--jobs", type=int, default=4)
+    parser.add_argument("--time-only", action="store_true",
+                        help="time the bare simulation: no event recorder, no invariant check, one run at a time")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
 
@@ -78,6 +82,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         cells = build_cells(args.workloads, args.strategies, args.memories, args.seeds,
                             args.scheduler, args.admission, Path(tmp))
         # Largest traces first so the pool does not end waiting on one long cell.
+        for cell in cells:
+            cell["time_only"] = args.time_only
+        if args.time_only:
+            args.jobs = 1
         cells.sort(key=lambda c: -WORKLOADS.index(c["workload"]) if c["workload"] in ("randomcircuit", "qaoa", "qft") else 0)
         with ProcessPoolExecutor(max_workers=args.jobs) as pool:
             rows = list(pool.map(run_cell, cells))

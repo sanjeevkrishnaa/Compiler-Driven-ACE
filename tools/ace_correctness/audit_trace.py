@@ -16,6 +16,7 @@ import argparse
 import contextlib
 import io
 import sys
+import time
 from argparse import Namespace
 from dataclasses import dataclass
 from pathlib import Path
@@ -47,6 +48,7 @@ class Audit:
     total_retries: int = 0
     max_retries_one_request: int = 0
     max_admission_wait_ms: float = 0.0
+    wall_seconds: float = 0.0
 
 
 def audit_trace(
@@ -62,6 +64,7 @@ def audit_trace(
     mesh: str = "4x4",
     scheduler: str = "legacy",
     scheduler_options: dict | None = None,
+    record: bool = True,
 ) -> Audit:
     """Run ``strategy`` on the trace under ``scheduler`` and check the recorded execution.
 
@@ -80,7 +83,8 @@ def audit_trace(
         fidelity_threshold=0.01, compiler_reservation_ms=1000)
     spec = _compiler_spec(arguments, trace, columns, strategy)
 
-    recorder = ListRecorder()
+    recorder = ListRecorder() if record else None       # record=False times the bare simulation
+    started = time.perf_counter()
     with contextlib.redirect_stdout(io.StringIO()):
         result = run_parallel_experiment(
             str(config), False, False, layers, 5.3, 50, f"audit-{strategy}-{seed}", seed=seed,
@@ -88,6 +92,13 @@ def audit_trace(
             simulation_stop_time_s=stop_time_s, serialize_conflicts=True, recorder=recorder,
             scheduler=scheduler, scheduler_options=scheduler_options)
 
+    wall = time.perf_counter() - started
+    if recorder is None:
+        stats = result["stats"]
+        parts = stats["timing_breakdown"].values()
+        return Audit(len(trace.requests), stats["completed_requests"], [], [], stats["end_to_end_latency_ms"],
+                     stats.get("total_retries", 0), max((p["retry_count"] for p in parts), default=0),
+                     max((p.get("admission_wait_time_ms", 0.0) for p in parts), default=0.0), wall)
     info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order) for r in trace.requests}
     violations = check_events(recorder.events, info, require_completion=True,
                               submission_after_predecessor=(scheduler == "per-qubit"))
@@ -96,7 +107,7 @@ def audit_trace(
     return Audit(len(info), stats["completed_requests"], recorder.events, violations,
                  stats["end_to_end_latency_ms"], stats.get("total_retries", 0),
                  max((p["retry_count"] for p in parts), default=0),
-                 max((p.get("admission_wait_time_ms", 0.0) for p in parts), default=0.0))
+                 max((p.get("admission_wait_time_ms", 0.0) for p in parts), default=0.0), wall)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
