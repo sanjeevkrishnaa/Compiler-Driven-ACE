@@ -6,6 +6,9 @@ optionally, the trace metadata of the requests.  It never touches the simulator.
 Invariants
 ----------
 Memory ownership (needs only the log)
+    ALIASED_RESERVATIONS       two live reservation objects compare equal, so every lookup
+                               by equality (timecards, rules, per-reservation dictionaries)
+                               can confuse them
     MEMORY_DOUBLE_BOOKED       a memory was booked while another reservation held it
     RELEASE_NOT_LIVE           a booking was released that was not live (double release)
     MISREMOVAL                 releasing one reservation released a different one that
@@ -46,6 +49,7 @@ from execution_events import (
     RequestCompleted, RequestRejected, RequestSubmitted, Unbooked,
 )
 
+ALIASED_RESERVATIONS = "ALIASED_RESERVATIONS"
 MEMORY_DOUBLE_BOOKED = "MEMORY_DOUBLE_BOOKED"
 RELEASE_NOT_LIVE = "RELEASE_NOT_LIVE"
 MISREMOVAL = "MISREMOVAL"
@@ -112,6 +116,16 @@ def _check_memory_and_pairs(
 
     for event in events:
         if isinstance(event, Booked):
+            if event.key_hash is not None:
+                twin = next((b for b in live.values()
+                             if b.kind == event.kind and b.key_hash == event.key_hash
+                             and b.reservation_id != event.reservation_id), None)
+                if twin is not None:
+                    out.append(Violation(ALIASED_RESERVATIONS, event.time_ps,
+                                         f"request {event.request_id} ({event.kind}) and request "
+                                         f"{twin.request_id} hold reservations that compare equal "
+                                         f"({event.node} memory {event.memory_index} / "
+                                         f"{twin.node} memory {twin.memory_index})"))
             held = live.get((event.node, event.memory_index))
             if held is not None and held.reservation_id != event.reservation_id:
                 out.append(Violation(MEMORY_DOUBLE_BOOKED, event.time_ps,

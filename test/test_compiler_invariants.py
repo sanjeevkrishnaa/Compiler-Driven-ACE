@@ -5,7 +5,8 @@ from execution_events import (
     PairDelivered, RequestCompleted, RequestRejected, RequestSubmitted, Unbooked, canonical,
 )
 from invariants import (
-    BOOKING_SURVIVES_COMPLETION, COMPLETION_COUNT, CREDIT_EXCEEDS_REQUEST, CREDIT_WITHOUT_BOOKING,
+    ALIASED_RESERVATIONS, BOOKING_SURVIVES_COMPLETION, COMPLETION_COUNT, CREDIT_EXCEEDS_REQUEST,
+    CREDIT_WITHOUT_BOOKING,
     LAYER_BARRIER, MEMORY_DOUBLE_BOOKED, MISREMOVAL, ORPHAN_PAIR, RELEASE_NOT_LIVE,
     STALE_BOOKING_ON_RESUBMIT, SUBMISSION_BEFORE_PREDECESSOR, USE_ORDER, RequestInfo,
     check_events, summarize,
@@ -75,6 +76,35 @@ class CanonicalTests(unittest.TestCase):
         original = [book(1, "a", 0, 9001, 0)]
         canonical(original)
         self.assertEqual(original[0].reservation_id, 9001)
+
+
+class AliasingTests(unittest.TestCase):
+    def test_two_live_reservations_with_the_same_key_hash_are_flagged(self):
+        log = [Booked(1, "a", 0, 1, 0, APPLICATION, key_hash=77), Booked(2, "a", 1, 2, 1, APPLICATION, key_hash=77)]
+        found = check_events(log)
+        self.assertEqual(names(found), [ALIASED_RESERVATIONS])
+        self.assertIn("request 1", found[0].detail)
+
+    def test_different_hashes_do_not_alias(self):
+        log = [Booked(1, "a", 0, 1, 0, APPLICATION, key_hash=77), Booked(2, "a", 1, 2, 1, APPLICATION, key_hash=78)]
+        self.assertEqual(check_events(log), [])
+
+    def test_one_reservation_booking_several_memories_is_not_aliasing_itself(self):
+        log = [Booked(1, "a", 0, 1, 0, APPLICATION, key_hash=77), Booked(1, "b", 0, 1, 0, APPLICATION, key_hash=77)]
+        self.assertEqual(check_events(log), [])
+
+    def test_equal_hashes_across_kinds_are_not_aliasing(self):
+        log = [Booked(1, "a", 0, 1, 0, APPLICATION, key_hash=77), Booked(2, "a", 1, 2, -1, ADAPTIVE, key_hash=77)]
+        self.assertEqual(check_events(log), [])
+
+    def test_sequential_reservations_with_the_same_key_are_not_aliasing(self):
+        log = [Booked(1, "a", 0, 1, 0, APPLICATION, key_hash=77), unbook(2, "a", 0, 1, 0),
+               Booked(3, "a", 0, 2, 0, APPLICATION, key_hash=77)]
+        self.assertEqual(check_events(log), [])
+
+    def test_a_missing_hash_disables_the_check_for_that_booking(self):
+        log = [book(1, "a", 0, 1, 0), book(2, "a", 1, 2, 1)]
+        self.assertEqual(check_events(log), [])
 
 
 class MemoryOwnershipTests(unittest.TestCase):

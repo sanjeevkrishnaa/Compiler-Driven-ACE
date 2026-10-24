@@ -220,6 +220,29 @@ def es_req_func_adaptive(protocols: List["EntanglementProtocol"], args: Argument
 
 
 
+class ApplicationReservation(Reservation):
+    """A reservation made on behalf of one trace request.
+
+    SeQUeNCe's ``Reservation`` compares and hashes on initiator, responder, start, end, size
+    and fidelity, and ignores ``identity``.  Two requests with the same endpoints and window are
+    then the same reservation to every lookup by equality: ``MemoryTimeCard.remove`` releases
+    the first equal one, rule creation picks memories with ``reservation in card.reservations``,
+    and the application keys its timestamps and latencies by reservation.  Including the request
+    identity makes two requests distinct bookings.  A resubmission has a new window, so it never
+    equals the attempt it replaces.
+
+    An application reservation equals only another application reservation, so it can never be
+    mistaken for a CGP/ACGP or compiler reservation.
+    """
+
+    def __eq__(self, other):
+        return (isinstance(other, ApplicationReservation) and super().__eq__(other)
+                and self.identity == other.identity)
+
+    def __hash__(self):
+        return hash((super().__hash__(), self.identity))
+
+
 class ReservationAdaptive(Reservation):
     """Tracking of reservation parameters for the network manager.
        Each request will generate a reservation
@@ -264,7 +287,8 @@ class ReservationAdaptive(Reservation):
         # Simultaneous preparations on the same edge are different jobs.
         # Base Reservation equality omits the target, which otherwise aliases
         # their timecards, protocol pairing and one-shot completion flags.
-        return (isinstance(other, Reservation) and super().__eq__(other)
+        return (isinstance(other, Reservation) and not isinstance(other, ApplicationReservation)
+                and super().__eq__(other)
                 and self.compiler_target_request_id ==
                     getattr(other, "compiler_target_request_id", None))
 
@@ -320,7 +344,7 @@ class ObservedTimeCard(MemoryTimeCard):
         if added and recorder is not None:
             request_id, kind = describe_reservation(reservation)
             recorder.record(Booked(self._owner.timeline.now(), self._owner.name, self.memory_index,
-                                   id(reservation), request_id, kind))
+                                   id(reservation), request_id, kind, hash(reservation)))
         return added
 
     def remove(self, reservation) -> bool:
@@ -350,6 +374,23 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         self.timecards = [ObservedTimeCard(card.memory_index, owner) for card in self.timecards]
         # Local ownership: the reservation object can be shared by endpoints.
         self._reservation_leases = {}
+
+    def push(self, responder: str, start_time: int, end_time: int, memory_size: int, target_fidelity: float,
+             entanglement_number: int = 1, identity: int = 0):
+        """Receive a reservation request from the application.
+
+        Identical to ``ResourceReservationProtocol.push`` except that the reservation is an
+        ``ApplicationReservation``, which carries the request identity in its equality.
+        """
+        reservation = ApplicationReservation(self.owner.name, responder, start_time, end_time, memory_size,
+                                             target_fidelity, entanglement_number, identity)
+        if self.schedule(reservation):
+            msg = ResourceReservationMessage(RSVPMsgType.REQUEST, self.name, reservation)
+            msg.qcaps.append(QCap(self.owner.name))
+            self._push(dst=responder, msg=msg)
+        else:
+            msg = ResourceReservationMessage(RSVPMsgType.REJECT, self.name, reservation, path=[])
+            self._pop(msg=msg)
 
     def _track_reservation_event(self, reservation, event):
         lease = self._reservation_leases.get(id(reservation))

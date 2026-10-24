@@ -50,7 +50,12 @@ class RequestCompleted:
 
 @dataclass(frozen=True)
 class Booked:
-    """A memory's timecard accepted a reservation."""
+    """A memory's timecard accepted a reservation.
+
+    ``key_hash`` is ``hash(reservation)``: two reservations that compare equal hash alike, so
+    two live bookings with different ``reservation_id`` but the same ``key_hash`` are the
+    aliasing the checker looks for.  ``None`` when the emitter did not provide it.
+    """
 
     time_ps: int
     node: str
@@ -58,6 +63,7 @@ class Booked:
     reservation_id: int
     request_id: int
     kind: str
+    key_hash: int | None = None
 
 
 @dataclass(frozen=True)

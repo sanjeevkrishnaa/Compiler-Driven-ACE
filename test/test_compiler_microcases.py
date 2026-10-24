@@ -7,7 +7,6 @@ major, so core 9 is router_2_1 and its neighbours are 5, 8, 10 and 13.
 import unittest
 
 from execution_events import Booked, RequestCompleted, RequestRejected, Unbooked, canonical
-from invariants import ORPHAN_PAIR, summarize
 from compiler_trace import router_name
 from tools.ace_correctness.harness import Hop, are_neighbours, run_layers
 
@@ -66,21 +65,35 @@ class RejectionTests(unittest.TestCase):
 
 
 class AliasingTests(unittest.TestCase):
-    @unittest.expectedFailure
+    """Requests with equal endpoints, window, size and fidelity are still separate bookings.
+
+    SeQUeNCe's Reservation compares equal on exactly those fields, which used to make such
+    requests alias: three retries and latencies up to 68 ms for four requests on one link.
+    """
+
     def test_identical_looking_requests_on_one_link_complete_without_a_retry(self):
-        """The behaviour a correct ACE must have. It fails today because SeQUeNCe's
-        Reservation compares equal for equal endpoints, window, size and fidelity, so the
-        reservations alias; the marker comes off when the reservation identity is fixed."""
         outcome = run_layers(SAME_LINK, memories=32)
         self.assertEqual((outcome.completed, outcome.total_retries), (4, 0))
         self.assertEqual(outcome.violations, [])
+        self.assertLess(max(outcome.latencies_ms.values()), 5.0)
 
-    def test_the_monitor_flags_the_legacy_aliasing_failure(self):
-        """Characterisation of the current defect, deleted together with the fix: the
-        second pair lands in a memory whose reservation has already been released."""
-        outcome = run_layers(SAME_LINK, memories=32)
+    def test_many_identical_looking_requests_on_one_link_overlap(self):
+        for k in (2, 8, 16):
+            outcome = run_layers([[Hop(i, 5, 9, qubit=i) for i in range(k)]], memories=32)
+            self.assertEqual((outcome.completed, outcome.total_retries), (k, 0), k)
+            self.assertEqual(outcome.violations, [], k)
+
+    def test_equal_looking_requests_behave_exactly_like_requests_with_distinct_targets(self):
+        alike = run_layers(SAME_LINK, memories=32)
+        distinct = run_layers(SAME_LINK, memories=32, distinct_fidelity_targets=True)
+        self.assertEqual(alike.latencies_ms, distinct.latencies_ms)
+        self.assertEqual((alike.total_retries, alike.retry_layers), (distinct.total_retries, distinct.retry_layers))
+
+    def test_identical_looking_requests_still_wait_for_a_scarce_memory_and_complete(self):
+        outcome = run_layers(SAME_LINK, memories=1)
+        self.assertEqual(outcome.completed, 4)
         self.assertGreater(outcome.total_retries, 0)
-        self.assertIn(ORPHAN_PAIR, summarize(outcome.violations))
+        self.assertEqual(outcome.violations, [])
 
 
 class HarnessTests(unittest.TestCase):
