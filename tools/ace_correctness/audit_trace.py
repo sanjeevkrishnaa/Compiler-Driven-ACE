@@ -43,6 +43,8 @@ class Audit:
     completed: int
     events: list[Event]
     violations: list[Violation]
+    makespan_ms: float = 0.0
+    total_retries: int = 0
 
 
 def audit_trace(
@@ -56,8 +58,13 @@ def audit_trace(
     stop_time_s: float = 300.0,
     config: Path = DEFAULT_CONFIG,
     mesh: str = "4x4",
+    scheduler: str = "legacy",
 ) -> Audit:
-    """Run ``strategy`` on the trace and check the recorded execution."""
+    """Run ``strategy`` on the trace under ``scheduler`` and check the recorded execution.
+
+    With the per-qubit scheduler a request must also be submitted only after the previous hop of
+    its qubit completed, so that invariant is checked as well.
+    """
     if strategy not in COMPILER_STRATEGIES:
         raise ValueError(f"strategy must be one of {COMPILER_STRATEGIES}, got {strategy!r}")
     trace = parse_compiler_trace(trace_path)
@@ -75,11 +82,15 @@ def audit_trace(
         result = run_parallel_experiment(
             str(config), False, False, layers, 5.3, 50, f"audit-{strategy}-{seed}", seed=seed,
             compiler_spec=spec, total_memories_per_core=total_memories,
-            simulation_stop_time_s=stop_time_s, serialize_conflicts=True, recorder=recorder)
+            simulation_stop_time_s=stop_time_s, serialize_conflicts=True, recorder=recorder,
+            scheduler=scheduler)
 
     info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order) for r in trace.requests}
-    violations = check_events(recorder.events, info, require_completion=True)
-    return Audit(len(info), result["stats"]["completed_requests"], recorder.events, violations)
+    violations = check_events(recorder.events, info, require_completion=True,
+                              submission_after_predecessor=(scheduler == "per-qubit"))
+    stats = result["stats"]
+    return Audit(len(info), stats["completed_requests"], recorder.events, violations,
+                 stats["end_to_end_latency_ms"], stats.get("total_retries", 0))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -91,13 +102,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--compiler-memories", type=int, default=3)
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--stop-time-s", type=float, default=300.0)
+    parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="legacy")
     parser.add_argument("--show", type=int, default=5, help="examples to print per invariant")
     args = parser.parse_args(argv)
 
     audit = audit_trace(args.trace, args.strategy, seed=args.seed, total_memories=args.total_memories,
                         compiler_memories=args.compiler_memories, generation_capacity=args.generation_capacity,
-                        stop_time_s=args.stop_time_s)
-    print(f"{args.strategy}: {audit.completed}/{audit.requested} requests completed, "
+                        stop_time_s=args.stop_time_s, scheduler=args.scheduler)
+    print(f"{args.strategy} [{args.scheduler}]: {audit.completed}/{audit.requested} requests completed, "
+          f"makespan {audit.makespan_ms:.2f} ms, {audit.total_retries} retries, "
           f"{len(audit.events)} events, {len(audit.violations)} violations")
     for name, count in sorted(summarize(audit.violations).items()):
         print(f"  {name}: {count}")

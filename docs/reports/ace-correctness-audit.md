@@ -147,6 +147,29 @@ admitted at 7.2 ms, because retries run every 1 ms plus a 0.2 ms round trip. The
 the retry period for each wait, and it is added to every request's latency. Gate 3 replaces it with
 admission triggered by the release.
 
+### F9. Resubmission at the instant the old booking expires (found in Gate 3a)
+
+Three requests (5->9, 13->9, 9->10), four memories per core, and a request window of 0.6 ms, short
+enough that attempts time out. Six physics seeds, checker attached:
+
+| manager | seeds with a violation | what the checker reported |
+|---|---|---|
+| legacy (batches, retry layers) | 4 of 6 | `STALE_BOOKING_ON_RESUBMIT` in 4; `MEMORY_DOUBLE_BOOKED` and `RELEASE_NOT_LIVE` also in 2 |
+| per-qubit, resubmit 1 ps after the window ends | 0 of 6 | none |
+| per-qubit, resubmit at the instant the window ends | 4 of 6 | the same classes as legacy |
+
+The last row is the cause: with the 1 ps delay as the only change, the violations disappear. The
+legacy manager starts its retry layer at the timeout instant, and SeQUeNCe does not order events
+that share an instant (its event list is a heap on time and priority only), so whether the old
+booking has expired by then depends on heap order. This is a legacy defect that appears only when a
+window times out. It is not in the 164-row baseline (no violation was looked for there); whether the
+published runs contain any timeouts is part of Gate 4. The window here is artificially short to force
+timeouts; the finding is about ordering, not about this window size.
+
+At 0.3 ms no request completes in 5 s under either manager (about 900 to 2,700 submissions): the
+window is shorter than the generation time, so the retry loop cannot end. That is physics, not a
+scheduling fault, and it is the livelock case a loud failure is for (Gate 3b).
+
 ## The hooks change nothing
 
 The event hooks (a `recorder` that defaults to `None`, every emission guarded) were added to
