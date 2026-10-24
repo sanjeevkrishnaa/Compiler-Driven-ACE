@@ -33,3 +33,16 @@ class DesignTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WallTimeTests(unittest.TestCase):
+    def test_a_real_invocation_records_its_wall_time(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as tmp:
+            traces = sweep.extract_traces(Path(tmp) / "traces")
+            rows = sweep.run_one(("ghz", 42, 4, "on-demand"), traces, Path(tmp), "per-qubit")
+            reused = sweep.run_one(("ghz", 42, 4, "on-demand"), traces, Path(tmp), "per-qubit", reuse=True)
+        self.assertEqual(len(rows), 3)
+        self.assertTrue(all(float(r["invocation_wall_seconds"]) > 0 for r in rows))
+        self.assertTrue(all(r["invocation_wall_seconds"] == "" for r in reused))     # reused: nothing was run, no time claimed

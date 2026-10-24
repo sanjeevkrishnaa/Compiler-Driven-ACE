@@ -90,8 +90,11 @@ def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None
                "--output", str(outdir)]
     if config is not None:
         command += ["--config", str(config)]
+    wall = ""
     if not (reuse and (outdir / "summary.csv").exists() and (outdir / "metadata.json").exists()):
+        started = time.perf_counter()
         process = subprocess.run(command, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=7200)
+        wall = f"{time.perf_counter() - started:.2f}"
         if process.returncode != 0:
             tail = (process.stderr.strip().splitlines() or ["?"])[-1][:200]
             return [dict(base, run_status="FAILED: " + tail)]
@@ -102,7 +105,7 @@ def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None
     rows = []
     with (outdir / "summary.csv").open(encoding="utf-8") as handle:
         for result in csv.DictReader(handle):
-            row = dict(base, run_status="ok", **result)
+            row = dict(base, run_status="ok", invocation_wall_seconds=wall, **result)
             if float(row.get("completion_rate", 0)) != 1.0:
                 row["run_status"] = f"INCOMPLETE: completion_rate={row.get('completion_rate')}"
             rows.append(row)
