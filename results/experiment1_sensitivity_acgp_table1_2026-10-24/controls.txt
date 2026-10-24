@@ -1,0 +1,5 @@
+PASS every run completes every request -- 120 rows, 0 not ok
+PASS zero-congestion control: GHZ on-demand latency does not respond to the budget -- 0 of 3 (mapping, physics) runs vary across budgets
+PASS saturation: QFT with 64 memories reproduces 32 run for run (relative 1e-6) -- not applicable: no 64-memory runs in this data
+PASS on-demand delivered fidelity does not depend on the budget -- 0 of 15 runs vary
+PASS on-demand latency does not rise when memory is added, beyond seed-to-seed noise -- 45 budget steps: 0 rise by less than the physics-seed spread (largest 0.0000 ms), 0 rise by more

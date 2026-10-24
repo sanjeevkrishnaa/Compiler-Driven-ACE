@@ -1,0 +1,6 @@
+40 invocations (120 runs), scheduler per-qubit
+[10/40] ('graphstate', 42, 2, 'dynamic') -> ok (0.1 min)
+[20/40] ('draper_qft_adder', 42, 4, 'dynamic') -> ok (0.4 min)
+[30/40] ('qft', 42, 8, 'dynamic') -> ok (1.0 min)
+[40/40] ('qaoa', 42, 32, 'dynamic') -> ok (1.8 min)
+done in 1.8 min (105 s wall clock, 4 jobs): 120 rows ok, 0 not

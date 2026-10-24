@@ -1,0 +1,126 @@
+{
+  "experiment": "experiment1",
+  "parameter_set": "acgp-table1",
+  "started_at": "2026-10-24 13:29:20",
+  "finished_at": "2026-10-24 13:31:05",
+  "design": {
+    "workloads": [
+      "ghz",
+      "graphstate",
+      "draper_qft_adder",
+      "qaoa",
+      "qft"
+    ],
+    "mapping_seeds": [
+      42
+    ],
+    "budgets": [
+      2,
+      4,
+      8,
+      32
+    ],
+    "saturation_arms": {
+      "qft": 64
+    },
+    "policies": [
+      "on-demand",
+      "dynamic"
+    ],
+    "physics_seeds": [
+      0,
+      1,
+      2
+    ],
+    "scheduler": "per-qubit",
+    "modelled_capacity_max": 4,
+    "invocations": 40,
+    "runs": 120,
+    "compiler_memories_rule": "budget - 1 (on-demand: forced to 0 at run time)",
+    "generation_capacity_rule": "equal to the compiler memories requested"
+  },
+  "runner_flags": {
+    "--delta-layers": "6",
+    "--dynamic-lookahead-layers": "8",
+    "--coherence-time-layers": "10",
+    "--compiler-reservation-ms": "1000",
+    "--stop-time-s": "300"
+  },
+  "runner_parameters": {
+    "config": "config/final_config/grid_4x4_ace_3_acgp_table1.json",
+    "mesh": "4x4",
+    "delta_layers": 6,
+    "dynamic_lookahead_layers": 8,
+    "coherence_time_layers": 10.0,
+    "fidelity_threshold": 0.01,
+    "pregeneration_buffer_ms": 5.3,
+    "compiler_reservation_ms": 1000.0,
+    "request_duration_ms": 50,
+    "stop_time_s": 300.0,
+    "scheduler": "per-qubit",
+    "admission": "event",
+    "no_starvation_guard": false,
+    "max_layers": null,
+    "verbose": false
+  },
+  "ace_physics": {
+    "config_file": "config/final_config/grid_4x4_ace_3_acgp_table1.json",
+    "memory_fidelity": 0.95,
+    "memory_efficiency": 0.85,
+    "memory_coherence_time_s": 0.001,
+    "bsm_detector_efficiencies": [
+      0.95,
+      0.95
+    ],
+    "encoding": "single_heralded",
+    "adaptive_max_memory_in_file": 3,
+    "gate_fidelity": 0.99,
+    "measurement_fidelity": 0.99,
+    "router_to_bsm_links": [
+      {
+        "distance_m": 0.025,
+        "attenuation_db_per_m": 0.0002
+      }
+    ],
+    "note": "memo_size and the compiler memory limit are set per run from the budget"
+  },
+  "source_constants": {
+    "classical_delay_per_hop_us": 20,
+    "classical_delay_base_us": 100,
+    "classical_delay_formula": "distance / c + hops * per_hop + base (router_net_topo_adaptive.py)",
+    "empty_layer_gap_ms": 5.0,
+    "admission_grace_ps": 1.0,
+    "wait_threshold_ms": 0.001,
+    "retry_period": "1 ms (request_scheduler.RETRY_PERIOD)"
+  },
+  "trace_sha256": {
+    "ghz/seed_42": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3",
+    "graphstate/seed_42": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed",
+    "draper_qft_adder/seed_42": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570",
+    "qft/seed_42": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a",
+    "qaoa/seed_42": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252"
+  },
+  "code": {
+    "commit": "7fdf5d231042e49b45b4fc86c4f53a0c605aef6a",
+    "branch": "codex/ace-scheduler-correctness",
+    "uncommitted_changes": false
+  },
+  "machine": {
+    "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+    "python": "3.13.3",
+    "cpus": 8
+  },
+  "timing": {
+    "per_workload_sum_of_invocation_seconds": {
+      "ghz": 23.2,
+      "graphstate": 24.2,
+      "draper_qft_adder": 76.8,
+      "qft": 126.9,
+      "qaoa": 127.4
+    },
+    "invocations_timed": 40,
+    "parallel_jobs": 4,
+    "total_wall_clock_seconds": 105.0,
+    "note": "an invocation is one process running three physics seeds; with parallel_jobs > 1 each includes contention from the other jobs, so the sum exceeds the total wall clock"
+  }
+}
