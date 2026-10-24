@@ -1,0 +1,150 @@
+{
+  "ace": {
+    "commit": "14cfdd2ce1f96ec5435e303957c03e1bc0be2e88",
+    "branch": "codex/ace-scheduler-correctness",
+    "tracked_files_modified": false,
+    "source_sha256": {
+      "node.py": "21045767db1b79b4752bb400db8ea4b6527735345627e9ba242dc0e93a05681d",
+      "reservation.py": "8a130dd0e28ca07b6c597bb5071342a4a07c8a78b19fd2037d6ea519121fcde8",
+      "resource_manager.py": "037f2fa97b05a06847030a3d73fc74d6a15a19fa34d837b8993cc0ec372e8f17",
+      "generation.py": "526b6c15a9f82f2825ef23289dbed6913f0a9b23059d55b5348fe5eeb5733aaa",
+      "adaptive_continuous.py": "3babb81211d8b127b2b7ba8c9d72d51369f5c180c6b348f63b6941aef81d34a6",
+      "request_app_parallel.py": "64b8ae0f8eba03fbeea9665bae5e8204013e8380b1a1d81793067b72830b85fb",
+      "parallel_core.py": "065f5f334961d1273f701ad59f8a97945845c805c29a53b8056654df898367ca",
+      "compiler_scheduler.py": "4215336a3354decb38dc51967490901c6c765a5e0bb23c08867418ada11ee44a",
+      "compiler_trace.py": "f810a012dba86e6f44a1c5f5a1c7008c8529bc5d4af5cea9f4005326c9afa712",
+      "run_trace_comparison.py": "981e2eaa5acbc732b2e1565354c43b2cee39de5233780e16aced206b1989068a"
+    }
+  },
+  "sequence": {
+    "path": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/SeQUeNCe-0.8.1",
+    "commit": "cf5283cdfd6692a82a090d15fb09fbc01bd322fc",
+    "describe": "v0.8.1",
+    "tracked_files_modified": false
+  },
+  "python": "3.13.3",
+  "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+  "packages": {
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "networkx": "3.6.1",
+    "qutip": "5.3.1",
+    "sequence": "0.8.1"
+  },
+  "pythonhashseed": null,
+  "schema": 1,
+  "recorded_utc": "2026-10-24T02:33:34+00:00",
+  "traces": {
+    "random16": {
+      "kind": "repo",
+      "ref": "data/tracegen/random16_d80_seed303.txt",
+      "sha256": "f0f340cf92f5a07759ed4e0b4ab346a61b6a8c013c7e2dfa565070359e59a289"
+    },
+    "qft96": {
+      "kind": "external",
+      "ref": "qft96",
+      "sha256": "61d97492195aea40fad48d5bc4e1b48b2dd019eea20fe24aada8c954e3073da1"
+    },
+    "mqt-ghz-s42-c2": {
+      "kind": "archive",
+      "ref": "ghz/seed_42/requests.txt",
+      "sha256": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3"
+    },
+    "mqt-ghz-s42-c4": {
+      "kind": "archive",
+      "ref": "ghz/seed_42/requests.txt",
+      "sha256": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3"
+    },
+    "mqt-ghz-s42-c32": {
+      "kind": "archive",
+      "ref": "ghz/seed_42/requests.txt",
+      "sha256": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3"
+    },
+    "mqt-ghz-s42-c4-fixed": {
+      "kind": "archive",
+      "ref": "ghz/seed_42/requests.txt",
+      "sha256": "34231e68862ab23efc31a4751840338ba3344ce7f509d17374260e4b569744d3"
+    },
+    "mqt-graphstate-s42-c2": {
+      "kind": "archive",
+      "ref": "graphstate/seed_42/requests.txt",
+      "sha256": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed"
+    },
+    "mqt-graphstate-s42-c4": {
+      "kind": "archive",
+      "ref": "graphstate/seed_42/requests.txt",
+      "sha256": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed"
+    },
+    "mqt-graphstate-s42-c32": {
+      "kind": "archive",
+      "ref": "graphstate/seed_42/requests.txt",
+      "sha256": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed"
+    },
+    "mqt-graphstate-s42-c4-fixed": {
+      "kind": "archive",
+      "ref": "graphstate/seed_42/requests.txt",
+      "sha256": "3e777b9377fcbd8ba80bc28790d109950690c361f3305c2cfeda49462f264eed"
+    },
+    "mqt-draper_qft_adder-s42-c2": {
+      "kind": "archive",
+      "ref": "draper_qft_adder/seed_42/requests.txt",
+      "sha256": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570"
+    },
+    "mqt-draper_qft_adder-s42-c4": {
+      "kind": "archive",
+      "ref": "draper_qft_adder/seed_42/requests.txt",
+      "sha256": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570"
+    },
+    "mqt-draper_qft_adder-s42-c32": {
+      "kind": "archive",
+      "ref": "draper_qft_adder/seed_42/requests.txt",
+      "sha256": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570"
+    },
+    "mqt-draper_qft_adder-s42-c4-fixed": {
+      "kind": "archive",
+      "ref": "draper_qft_adder/seed_42/requests.txt",
+      "sha256": "b4fa9fa10325f76bc3444b0256ca2af1c6485a769a62e81d9affacb71b63c570"
+    },
+    "mqt-qft-s42-c2": {
+      "kind": "archive",
+      "ref": "qft/seed_42/requests.txt",
+      "sha256": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a"
+    },
+    "mqt-qft-s42-c4": {
+      "kind": "archive",
+      "ref": "qft/seed_42/requests.txt",
+      "sha256": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a"
+    },
+    "mqt-qft-s42-c32": {
+      "kind": "archive",
+      "ref": "qft/seed_42/requests.txt",
+      "sha256": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a"
+    },
+    "mqt-qft-s42-c4-fixed": {
+      "kind": "archive",
+      "ref": "qft/seed_42/requests.txt",
+      "sha256": "4de00fd4352cdc17fadfccdf269162240891224bf0608b2adef7284fbc70fc2a"
+    },
+    "mqt-qaoa-s42-c2": {
+      "kind": "archive",
+      "ref": "qaoa/seed_42/requests.txt",
+      "sha256": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252"
+    },
+    "mqt-qaoa-s42-c4": {
+      "kind": "archive",
+      "ref": "qaoa/seed_42/requests.txt",
+      "sha256": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252"
+    },
+    "mqt-qaoa-s42-c32": {
+      "kind": "archive",
+      "ref": "qaoa/seed_42/requests.txt",
+      "sha256": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252"
+    },
+    "mqt-qaoa-s42-c4-fixed": {
+      "kind": "archive",
+      "ref": "qaoa/seed_42/requests.txt",
+      "sha256": "037fc32d0763ceb397ac87ec6e799374f8990f97975dd7aedd02f7168248a252"
+    }
+  },
+  "skipped": {}
+}
