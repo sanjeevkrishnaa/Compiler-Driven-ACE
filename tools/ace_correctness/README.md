@@ -49,8 +49,29 @@ python tools/ace_correctness/baseline.py verify-published --golden results/<dir>
   modified, Python and package versions, and the SHA-256 of every trace. `check` fails if a trace
   changed and warns if the environment differs.
 
+## Execution monitor
+
+ACE can report what it does to a recorder (`execution_events.py`): request submissions and
+completions, memory bookings and releases, and pair delivery and credit. `invariants.py` checks a
+recorded log; it is a pure function, tested on hand-built logs. Passing `recorder=` to
+`run_parallel_experiment` turns it on; results are identical with or without it, which the baseline
+check confirms.
+
+`harness.py` runs small request sets through the real simulator with speculative generation off and
+the monitor attached (`run_layers`). It refuses hops between cores that are not neighbours, because
+ACE would route those through relays that can never be admitted at a small budget.
+
+`audit_trace.py` runs a compiler trace under on-demand, fixed or dynamic with the monitor attached:
+
+```bash
+python tools/ace_correctness/audit_trace.py --trace <requests.txt> --strategy dynamic --seed 0
+```
+
+Findings so far: [`docs/reports/ace-correctness-audit.md`](../../docs/reports/ace-correctness-audit.md).
+
 ## Tests
 
 ```bash
-python -B -m unittest discover -s tools/ace_correctness/tests -v
+python -B -m unittest discover -s tools/ace_correctness/tests -v      # the baseline tool
+python -B -m unittest discover -s test -p 'test_compiler*.py' -v      # monitor, checker, microcases
 ```
