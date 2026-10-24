@@ -495,9 +495,16 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             total_memories_per_core: int | None = None,
                             simulation_stop_time_s: float | None = None,
                             serialize_conflicts: bool = False,
-                            recorder=None):
+                            recorder=None,
+                            scheduler: str = "legacy",
+                            request_plan=None):
     """
     Run an experiment with parallel layered requests.
+
+    ``scheduler`` is ``"legacy"`` (the historical per-core batches) or ``"per-qubit"``
+    (``request_scheduler.QubitOrderedRequestManager``, which releases requests in the order
+    their qubits need them).  The latter needs ``request_plan``, the trace's
+    ``CompilerRequest`` records; a compiler run supplies them through ``compiler_spec``.
 
     ``recorder`` is an optional ``execution_events`` recorder.  When given, the request
     manager, every router's reservation timecards and every application report what they
@@ -506,6 +513,10 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     Returns:
         Dictionary with comprehensive results and statistics
     """
+    if scheduler not in ("legacy", "per-qubit"):
+        raise ValueError(f"unknown scheduler {scheduler!r}; use 'legacy' or 'per-qubit'")
+    if scheduler == "per-qubit" and request_plan is None and compiler_spec is None:
+        raise ValueError("scheduler 'per-qubit' needs request_plan (the trace's requests)")
     log_filename = f'log/log_{experiment_label.replace(" ", "_")}'
     
     topology_config_file = config_file
@@ -594,15 +605,25 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         compiler_controller.attach()
     
     # Create parallel layer request manager
-    request_manager = ParallelLayerRequestManager(
-        tl, name_to_apps, layered_requests,
-        pregeneration_time_ms, request_duration_ms, compiler_controller, recorder
-    )
+    if scheduler == "legacy":
+        request_manager = ParallelLayerRequestManager(
+            tl, name_to_apps, layered_requests,
+            pregeneration_time_ms, request_duration_ms, compiler_controller, recorder
+        )
+    elif scheduler == "per-qubit":
+        if request_plan is None:
+            request_plan = compiler_spec["requests"]
+        from request_scheduler import QubitOrderedRequestManager     # imports this module
+        request_manager = QubitOrderedRequestManager(
+            tl, name_to_apps, layered_requests,
+            pregeneration_time_ms, request_duration_ms, compiler_controller, recorder,
+            requests=request_plan,
+        )
     # Compiler-driven runs have always used conflict-free batches because a
     # core cannot serve two reservations at once.  Expose the same batching to
     # non-compiler baselines so a comparison can use an identical workload
     # submission schedule without changing the historical default behavior.
-    if serialize_conflicts and compiler_controller is None:
+    if serialize_conflicts and compiler_controller is None and scheduler == "legacy":
         request_manager.layered_requests, request_manager.working_layer_origins = \
             serialize_core_conflicts(layered_requests)
     

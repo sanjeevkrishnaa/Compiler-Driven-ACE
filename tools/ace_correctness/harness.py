@@ -23,7 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:          # ACE's modules live at the repository root
     sys.path.insert(0, str(REPO_ROOT))
 
-from compiler_trace import router_name                      # noqa: E402
+from compiler_trace import CompilerRequest, router_name     # noqa: E402
 from execution_events import Event, ListRecorder           # noqa: E402
 from invariants import RequestInfo, Violation, check_events  # noqa: E402
 from parallel_core import run_parallel_experiment          # noqa: E402
@@ -78,9 +78,13 @@ def run_layers(
     distinct_fidelity_targets: bool = False,
     stop_time_s: float = 60.0,
     submission_after_predecessor: bool = False,
+    scheduler: str = "legacy",
+    request_duration_ms: float = 50,
 ) -> Outcome:
     """Run ``layers`` and check the recorded execution.
 
+    ``scheduler`` is passed to ``run_parallel_experiment``; the per-qubit one is given the
+    hops as the trace's request records, so consecutive hops of one qubit in a layer chain.
     ``distinct_fidelity_targets`` gives every request a slightly different fidelity target
     (``0.01 + request_id * 1e-6``).  The difference is physically irrelevant, but it makes
     otherwise identical reservations compare unequal, which separates "the simulator copes
@@ -105,14 +109,16 @@ def run_layers(
         for order, hop in enumerate(layer):
             info[hop.request_id] = RequestInfo(hop.request_id, layer_index, hop.qubit, order)
 
+    plan = [CompilerRequest(hop.request_id, layer_index, order, hop.qubit, hop.source_core, hop.destination_core)
+            for layer_index, layer in enumerate(layers) for order, hop in enumerate(layer)]
     recorder = ListRecorder()
     with tempfile.TemporaryDirectory(prefix="ace-harness-") as tmp:
         config = _config_without_speculation(Path(tmp))
         with contextlib.redirect_stdout(io.StringIO()):
             result = run_parallel_experiment(
-                str(config), False, False, layered, 5.3, 50, "harness", seed=seed, compiler_spec=None,
-                total_memories_per_core=memories, simulation_stop_time_s=stop_time_s,
-                serialize_conflicts=serialize, recorder=recorder)
+                str(config), False, False, layered, 5.3, request_duration_ms, "harness", seed=seed,
+                compiler_spec=None, total_memories_per_core=memories, simulation_stop_time_s=stop_time_s,
+                serialize_conflicts=serialize, recorder=recorder, scheduler=scheduler, request_plan=plan)
     stats = result["stats"]
     violations = check_events(recorder.events, info, require_completion=True,
                               submission_after_predecessor=submission_after_predecessor)
