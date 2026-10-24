@@ -1,0 +1,19 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Workload & ODG (ms) & Dynamic (ms) & CGP (ms) & ACGP (ms) & Dynamic hits & Dyn. stuck checks & ODG stuck checks \\
+\midrule
+CDKM ripple-carry adder & 1.14 & 0.30 & 0.82 & 0.76 & 95\% & 0.0\% & 0.0\% \\
+VQE real amplitudes & 1.15 & 0.83 & 1.41 & 1.43 & 96\% & 4.4\% & 0.0\% \\
+Random circuit & 1.11 & 0.97 & 2.08 & 2.13 & 87\% & 12.9\% & 0.0\% \\
+Draper QFT adder & 1.16 & 2.45 & 5.45 & 5.65 & 73\% & 21.7\% & 0.5\% \\
+Graph state & 1.19 & 4.24 & 5.03 & 5.07 & 68\% & 16.0\% & 0.7\% \\
+QAOA & 1.28 & 4.07 & 8.12 & 8.43 & 56\% & 22.3\% & 3.4\% \\
+QFT & 1.57 & 5.46 & 10.15 & 10.52 & 53\% & 17.2\% & 6.8\% \\
+\bottomrule
+\end{tabular}}
+\caption{Request latency at four memories on the other benchmarks (mapping seed 42, mean of three physics seeds), the share of requests dynamic served from a ready pair, and the share of admission checks that found no free memory under dynamic and under on-demand. Dynamic is faster than on-demand where its own prepared pairs rarely get in the way.}
+\label{tab:diag-workloads}
+\end{table}

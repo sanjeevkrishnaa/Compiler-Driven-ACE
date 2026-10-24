@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}rrrrrrrrr@{}}
+\toprule
+Mem. & ODG lat. & ODG wait & Dynamic lat. & Dynamic wait & CGP lat. & CGP wait & ACGP lat. & ACGP wait \\
+\midrule
+2 & 4.60 & 3.48 & 9.43 & 8.50 & 12.29 & 11.39 & 11.86 & 10.99 \\
+3 & 2.36 & 1.23 & 7.05 & 6.28 & 10.58 & 9.89 & 10.65 & 9.96 \\
+4 & 1.57 & 0.44 & 5.46 & 4.81 & 10.15 & 9.58 & 10.52 & 9.98 \\
+6 & 1.20 & 0.07 & 3.44 & 2.95 & 8.98 & 8.56 & 9.47 & 9.08 \\
+8 & 1.15 & 0.01 & 2.62 & 2.24 & 8.92 & 8.55 & 9.26 & 8.92 \\
+16 & 1.14 & 0.00 & 0.71 & 0.46 & 8.03 & 7.74 & 8.95 & 8.66 \\
+\bottomrule
+\end{tabular}}
+\caption{QFT, mapping seed 42, mean of three physics seeds: request latency and the part of it spent waiting for a free memory (ms). The remainder of the latency is generation.}
+\label{tab:diag-latency-wait}
+\end{table}

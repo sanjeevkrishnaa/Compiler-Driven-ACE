@@ -1,0 +1,31 @@
+\section{What the code does with a pre-generated pair}
+\label{sec:code-reading}
+The explanation below was checked against the source, not inferred from the results. File and line numbers refer to the repository at the commit that contains this report.
+
+\begin{enumerate}
+  \item \textbf{When a dynamic preparation starts.} The planner gives each request a generation layer. For the dynamic policy the candidate layers are tried from the one just
+    before the request's own layer, backwards (\code{compiler_trace.py:254}), and the first one with room is taken. The controller launches a layer's preparations when that layer is
+    activated (\code{request_scheduler.py:151--158}, \code{compiler_scheduler.py:66}). So a pair for a request in layer $L$ is normally started at the \emph{start} of layer $L-1$
+    and has to wait for all of layer $L-1$ to finish before its request can even be released. The lookahead of eight layers is only an upper limit; it did not matter in any run
+    (Section~\ref{sec:ablations}).
+  \item \textbf{What a prepared pair occupies.} A preparation books one memory card at each of its two cores, with a window of 1\,000\,ms
+    (\code{adaptive_continuous.py:192--236}), and it may not exceed the compiler cap, the same counter that limits the autonomous protocol
+    (\code{adaptive_continuous.py:201}). The booking is released only when the pair is consumed (\code{reservation.py:473}) or its window ends.
+    If the cap is reached the preparation is rejected and retried every millisecond until its request starts (\code{compiler_scheduler.py:113--120}).
+  \item \textbf{A request that has a ready pair still needs a memory of its own.} Admission asks for a free card at both cores, and a card with any overlapping booking
+    is not free (\code{request_scheduler.py:202--215, 232--255}); the prepared pair's own booking overlaps. When the request's reservation runs, the generation protocol
+    looks for a ready pair for the same two cores, and if it finds one it \emph{swaps} the pair's state into the request's own memory after a classical delay
+    (\code{generation.py:265--296, 301--343}) and only then releases the prepared pair's memory (\code{generation.py:342}). So for a short time a hit holds \emph{two} cards
+    at each core. This is a property of ACE's design, not of the compiler policy, and it is why requests served from a ready pair can still wait for admission.
+  \item \textbf{What an on-demand request occupies.} One card per core, from admission until completion. Its booking window is the request duration (50\,ms), but the booking is
+    released at completion, so what matters is the time it exists, about 6\,ms in the measurements, not the window.
+  \item \textbf{CGP and ACGP.} Every cycle of the autonomous protocol draws a neighbour by roulette wheel over a probability table (\code{adaptive_continuous.py:262--276}) and books one card at both
+    ends until a 0.2\,s boundary within the next 0.2\,s (\code{adaptive_continuous.py:147--178}; the period is $2\times10^{11}$\,ps, \code{node.py:57}), as long as fewer than the cap are in use.
+    The table is uniform for CGP (\code{adaptive_continuous.py:243--260}). For ACGP it is updated every 0.2\,s: each neighbour that appears in an entanglement path used in the last 0.2\,s gains $0.05$
+    and the table is renormalized (\code{adaptive_continuous.py:404--447}). Pairs are therefore made for whichever neighbour was drawn, not for a particular request.
+    An application request takes a pair for its own two cores if one exists: first a compiler pair targeted at \emph{that} request, otherwise an ordinary autonomous pair with no
+    compiler metadata (\code{adaptive_continuous.py:511--523}), through the same swap. A pair nobody uses before its window ends is discarded; that is the waste the experiments count.
+\end{enumerate}
+Two consequences follow directly from the code and are tested in the measurements below. First, pre-generation always costs memory cards for longer than an on-demand request does
+(a ready pair exists \emph{before} its request, and for a later hop of a chain well before it, because a hop is released only after its predecessor completed). Second, it
+saves only the generation time (a request served from a ready pair generates in about a quarter of a millisecond instead of about a millisecond); the lead and the classical delays are the same either way.

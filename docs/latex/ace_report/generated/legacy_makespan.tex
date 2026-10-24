@@ -1,0 +1,17 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Workload & Old ODG & Old Dyn. & New ODG & New Dyn. \\
+\midrule
+QFT & 13.23 & 12.34 & 4.66 & 5.75 \\
+QAOA & 12.76 & 11.72 & 5.48 & 6.62 \\
+Draper QFT adder & 7.64 & 6.97 & 4.88 & 5.03 \\
+Graph state & 0.40 & 0.36 & 0.24 & 0.26 \\
+GHZ & 0.33 & 0.30 & 0.33 & 0.30 \\
+\bottomrule
+\end{tabular}}
+\caption{End-to-end time of the whole trace (s) at four memories per core, old serialized scheduler and corrected scheduler (mean of nine runs).}
+\label{tab:legacy-makespan}
+\end{table}

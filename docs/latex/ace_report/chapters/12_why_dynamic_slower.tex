@@ -1,0 +1,78 @@
+\chapter{Why dynamic pre-generation can be slower than on-demand}
+\label{ch:why-dynamic}
+
+The aim of compiler-driven pre-generation is a latency comparable to or better than on-demand generation (ODG) with fewer wasted pairs than the autonomous
+protocols (CGP, ACGP). Experiment~1 found that, on the corrected scheduler and at the modelled memory counts, dynamic pre-generation is \emph{slower} than ODG on the congested benchmarks
+(QFT at four memories: ODG $1.57$\,ms, dynamic $5.46$\,ms), and faster once memory is plentiful (QFT at sixteen memories: $1.14$ against $0.71$\,ms). This chapter finds out why.
+Everything here was measured on ACE with the corrected scheduler, and the explanation is checked against the code (Section~\ref{sec:code-reading}).
+
+\section{What the old, serialized scheduler showed}
+The scheduler used before the corrections let each core serve one request per batch. Under it the same comparison gave the opposite sign
+(Table~\ref{tab:legacy-vs-corrected}): dynamic was faster than ODG at every memory count, by $41\%$ on QFT at four memories in the old scheduler's own latency.
+Two things changed. First, the old latency started a request's clock when its batch was submitted, so the long waits for earlier batches were not in it; counting them
+(``old common'') the gain on QFT at four memories is $11\%$, and the whole trace took $13.2$\,s with ODG and $12.3$\,s with dynamic (Table~\ref{tab:legacy-makespan}).
+Second, the old scheduler let a core serve one request at a time, and in the old QFT runs at four memories no request waited for a memory under either policy
+(retry wait $0.0$\,ms for ODG and for dynamic), while ODG's own latency did not respond to the number of memories at all. The corrected scheduler runs the requests of a layer
+concurrently, as the hardware would, and the waiting appears.
+\input{generated/legacy_vs_corrected}
+\input{generated/legacy_makespan}
+
+\input{chapters/12a_code_reading}
+
+\section{Measurements}
+\label{sec:measurements}
+Diagnostic runs (the code is in \code{tools/diagnostics/}; the results are listed in the repository map, Appendix~\ref{app:repo}) record, for each run, how long each request waited and why: at every
+admission check that found no free memory they record which kind of booking held the memory cards at the stuck core. They use ACE as it is and change nothing in the simulation.
+
+\subsection{The extra latency is waiting, not generation}
+\input{generated/diag_latency_wait}
+Generation itself gets faster with pre-generation (QFT at four memories: $1.13$\,ms for ODG, $0.65$\,ms for dynamic on average, $0.25$\,ms for a request served from a ready pair),
+but the wait for a free memory grows from $0.44$ to $4.81$\,ms. CGP and ACGP wait even more ($9.6$ and $10.0$\,ms) and improve little with more memory: their wait is
+$7.7$ and $8.7$\,ms even at sixteen memories (Table~\ref{tab:diag-latency-wait}).
+
+\subsection{What holds the memories}
+\input{generated/diag_blocking}
+At four memories $17\%$ of dynamic's admission checks find no free memory, against $7\%$ for ODG; of the cards taken at a stuck core, $60\%$ are held by the compiler's own prepared
+pairs. For CGP and ACGP $42$ to $47\%$ of checks are stuck at every memory count, and $74\%$ of the taken cards at four memories ($94\%$ at sixteen) are autonomous bookings: the
+protocol fills every memory it is allowed to, with pairs for neighbours drawn at random (Table~\ref{tab:diag-blocking}).
+
+\subsection{Requests with a ready pair still wait}
+\input{generated/diag_hits}
+Of the requests dynamic serves from a ready pair, $35\%$ still wait for admission at four memories (Table~\ref{tab:diag-hits}). That follows from the code: the request needs a free card of its own
+in addition to the card the ready pair occupies (item~3 of Section~\ref{sec:code-reading}).
+A ready pair waits $24$\,ms in memory on average before it is used at four memories; an ordinary request keeps its card booked for $5.9$\,ms.
+
+\subsection{Why a prepared pair waits so long}
+\input{generated/diag_chain}
+A pair is made at the start of the layer before its request's layer (Section~\ref{sec:code-reading}, item~1), and the request is released only when its layer has started
+and, for the second and later hop of a qubit's chain, when the previous hop has completed. Table~\ref{tab:diag-chain} shows both effects: the pair of a later hop is made about as early as the pair of a first hop
+but its request is eligible much later, so the pair holds a memory for $24$ and $39$\,ms instead of $12$\,ms. More than half of dynamic's pairs on QFT ($54\%$) are for hops after the first.
+
+\section{What does and does not change the result}
+\label{sec:ablations}
+\input{generated/diag_ablation}
+Each row of Table~\ref{tab:diag-ablation} changes one setting of the QFT run at four memories.
+\begin{itemize}
+  \item \textbf{No effect:} the request duration (the nominal booking window, $10$ to $100$\,ms), the compiler reservation window ($100$ to $1000$\,ms) and the generation capacity per core.
+    What matters is how long a booking \emph{exists}, not the length of the window it was made for. The planner's lookahead (one, two, four or eight layers) makes no difference either, because the planner takes the layer just before the request when it has room (Section~\ref{sec:code-reading}, item~1).
+  \item \textbf{Strong effect:} the number of memories the compiler may hold. One of four: $1.88$\,ms; two: $2.77$\,ms; three: $5.46$\,ms (ODG: $1.57$\,ms). Fewer prepared pairs, less waiting.
+  \item \textbf{Preparing only first hops} (later hops fall back to on-demand): $1.89$\,ms with the compiler's three memories, and the ready pairs wait $11$ instead of $24$\,ms. This supports the chain explanation
+    but does not make dynamic better than ODG at four memories; it is an experiment to isolate the cause, not a proposed policy.
+\end{itemize}
+
+\section{Other mapping seeds and other benchmarks}
+\input{generated/diag_seeds}
+\input{generated/diag_workloads}
+The picture is the same on the other two mapping seeds (Table~\ref{tab:diag-seeds}). On the other benchmarks (Table~\ref{tab:diag-workloads}) dynamic is faster than ODG on the three benchmarks where the fewest of its admission checks are stuck (the CDKM adder $0\%$, VQE $4\%$, the random circuit $13\%$)
+and slower on the four where more are ($16$ to $22\%$: graph state, QFT, Draper, QAOA). That is a correlation across seven benchmarks, consistent with the mechanism, not a separate test of it. The full grid of benchmarks and memory counts is in Chapter~\ref{ch:four-policies}.
+
+\section{What this establishes, and what it does not}
+\begin{itemize}
+  \item \textbf{Established} (measured, with the mechanism read in the code): at the modelled memory counts, pre-generated pairs occupy memory cards for several times as long as an on-demand request does, the
+    resulting scarcity of free cards costs more waiting than the avoided generation saves, and the effect disappears when the cards are not scarce.
+  \item \textbf{Established:} no tested setting of the simulator's windows or capacities explains the effect; the number of memories the compiler may hold does.
+  \item \textbf{Not established:} that a better plan could not do better. The planner works in whole layers and does not know when a chain hop will actually become eligible, or that a ready pair also needs a card for its request.
+    A planner that did would be a new algorithm; none is proposed or tested here.
+  \item \textbf{Not established:} how this changes under other physical parameters (Chapter~\ref{ch:exp1}, sensitivity arm) or on other topologies beyond what Chapter~\ref{ch:four-policies} reports.
+  \item The diagnosis rests on QFT in depth; the other benchmarks give the same sign of effect in one mapping seed.
+\end{itemize}

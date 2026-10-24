@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}rrrrrrrr@{}}
+\toprule
+Mem. & ODG & Dynamic & CGP & ACGP & Dyn. by compiler & CGP by cache & ACGP by cache \\
+\midrule
+2 & 18.3\% & 23.3\% & 42.2\% & 44.4\% & 40\% & 47\% & 46\% \\
+3 & 12.0\% & 21.3\% & 44.8\% & 45.9\% & 55\% & 65\% & 65\% \\
+4 & 6.8\% & 17.2\% & 45.3\% & 46.1\% & 60\% & 74\% & 74\% \\
+6 & 1.6\% & 12.0\% & 46.5\% & 47.0\% & 66\% & 83\% & 83\% \\
+8 & 0.4\% & 8.6\% & 45.9\% & 47.3\% & 73\% & 87\% & 87\% \\
+16 & 0.0\% & 1.1\% & 46.5\% & 46.8\% & 81\% & 94\% & 94\% \\
+\bottomrule
+\end{tabular}}
+\caption{QFT, mapping seed 42. Left: share of admission checks that found no free memory at one of the request's two cores. Right: of the memory cards found taken at a stuck core, the share held by the policy's own pre-generation bookings (the rest are held by other requests).}
+\label{tab:diag-blocking}
+\end{table}

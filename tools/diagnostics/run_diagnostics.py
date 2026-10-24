@@ -6,6 +6,8 @@ Groups
   ablation   QFT at 4 memories: dynamic and on-demand with one setting changed from the baseline
              (generation capacity, request duration = booking window, compiler reservation window, compiler cap)
   workloads  the other benchmarks at 4 memories: on-demand, dynamic, CGP, ACGP
+  seeds      QFT at 4 memories on mapping seeds 43 and 44 (the others use 42)
+Every job runs physics seeds 0, 1 and 2; the summary averages them.
 Baseline settings are those of Experiment 1 (see tools/ace_budget_rerun/run_budget_sweep.RUNNER_FLAGS).
 Ablations change a setting to find out which one the effect depends on; they are not proposed parameter values.
 
@@ -35,9 +37,10 @@ OTHER_WORKLOADS = ["qaoa", "graphstate", "draper_qft_adder", "randomcircuit", "v
 
 def jobs_for(groups):
     jobs = []
-    def add(group, name, workload, policy, memories, cap=None, **override):
+    def add(group, name, workload, policy, memories, cap=None, mapping_seed=42, diag=(), **override):
         jobs.append({"group": group, "name": name, "workload": workload, "policy": policy, "memories": memories,
-                     "cap": memories - 1 if cap is None else cap, "override": override})
+                     "cap": memories - 1 if cap is None else cap, "override": override, "mapping_seed": mapping_seed,
+                     "diag": list(diag)})
     if "mechanism" in groups:
         for memories in (2, 3, 4, 6, 8, 16):
             for policy in POLICIES:
@@ -53,6 +56,14 @@ def jobs_for(groups):
             add("ablation", f"qft_m4_dynamic_reservation{crm}", "qft", "dynamic", 4, **{"compiler-reservation-ms": str(crm)})
         for cap in (1, 2):
             add("ablation", f"qft_m4_dynamic_cap{cap}", "qft", "dynamic", 4, cap=cap)
+        for look in (1, 2, 4):
+            add("ablation", f"qft_m4_dynamic_lookahead{look}", "qft", "dynamic", 4, **{"dynamic-lookahead-layers": str(look)})
+        for hops in (1, 2):
+            add("ablation", f"qft_m4_dynamic_first{hops}hops", "qft", "dynamic", 4, diag=("--only-chain-hops-below", str(hops)))
+    if "seeds" in groups:
+        for mapping_seed in (43, 44):
+            for policy in POLICIES:
+                add("seeds", f"qft_m4_{policy}_map{mapping_seed}", "qft", policy, 4, mapping_seed=mapping_seed)
     if "workloads" in groups:
         for workload in OTHER_WORKLOADS:
             for policy in POLICIES:
@@ -64,12 +75,12 @@ def run_job(job, traces: Path, output: Path):
     out_json = output / f"{job['name']}.json"
     if out_json.exists():
         return job["name"], 0.0, "kept"
-    trace = traces / job["workload"] / "seed_42" / "requests.txt"
+    trace = traces / job["workload"] / f"seed_{job['mapping_seed']}" / "requests.txt"
     flags = dict(BASE, **job["override"])
     flags.setdefault("generation-capacity", str(job["cap"]))
     cap = job["cap"]                         # the runner itself applies zero compiler memories to on-demand
-    command = [sys.executable, "-B", str(ROOT / "tools/diagnostics/occupancy.py"), "--out", str(out_json), "--",
-               "--trace", str(trace), "--mesh", "4x4", "--strategies", job["policy"], "--seeds", "0",
+    command = [sys.executable, "-B", str(ROOT / "tools/diagnostics/occupancy.py"), "--out", str(out_json), *job["diag"], "--",
+               "--trace", str(trace), "--mesh", "4x4", "--strategies", job["policy"], "--seeds", "0,1,2",
                "--total-memories", str(job["memories"]), "--compiler-memories", str(cap),
                *[x for k, v in flags.items() for x in (f"--{k}", v)],
                "--scheduler", "per-qubit", "--output", str(output / "_runs" / job["name"])]
@@ -91,15 +102,16 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--jobs", type=int, default=4)
-    parser.add_argument("--groups", nargs="+", default=["mechanism", "ablation", "workloads"],
-                        choices=["mechanism", "ablation", "workloads"])
+    parser.add_argument("--groups", nargs="+", default=["mechanism", "ablation", "workloads", "seeds"],
+                        choices=["mechanism", "ablation", "workloads", "seeds"])
     args = parser.parse_args(argv)
     args.output.mkdir(parents=True, exist_ok=True)
     traces = args.output / "_traces"
     with zipfile.ZipFile(sweep.ARCHIVE) as archive:
         for workload in ["qft"] + OTHER_WORKLOADS:
-            if not (traces / sweep.PREFIX / workload / "seed_42" / "requests.txt").exists():
-                archive.extract(f"{sweep.PREFIX}/{workload}/seed_42/requests.txt", traces)
+            for mapping_seed in (42, 43, 44):
+                if not (traces / sweep.PREFIX / workload / f"seed_{mapping_seed}" / "requests.txt").exists():
+                    archive.extract(f"{sweep.PREFIX}/{workload}/seed_{mapping_seed}/requests.txt", traces)
     jobs = jobs_for(args.groups)
     print(f"{len(jobs)} diagnostic jobs", flush=True)
     started = time.time()

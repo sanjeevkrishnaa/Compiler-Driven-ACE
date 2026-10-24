@@ -103,13 +103,16 @@ def histogram(intervals_by_core: dict) -> dict:
 
 
 def bookings(events, horizon: int) -> dict:
-    """Memory-card bookings, which is what admission checks.  A booking runs from its Booked to its Unbooked event.
+    """Memory-card bookings seen in the event log, per kind.
 
     kind: application (a trace request), compiler (a preparation for request id >= 0) or autonomous (CGP/ACGP).
-    Reports, per kind, the number and mean hold, and the time-weighted share of busy card time and card level.
+    A booking is "transient" if it is released within 1 ms of being made: the reservation handshake adds a booking on
+    the initiator and removes it again when the attempt is rejected.  "Still open" bookings were never released in the
+    log (autonomous reservations that are accepted expire without a release event), so their hold is NOT measured and
+    must not be read from this table; only closed, non-transient bookings have a measured hold.
     """
     open_: dict = {}
-    spans: dict = defaultdict(list)                       # kind -> [(node, card, start, end)]
+    closed: dict = defaultdict(list)
     for e in events:
         if isinstance(e, Booked):
             kind = "application" if e.kind != ADAPTIVE else ("compiler" if e.request_id >= 0 else "autonomous")
@@ -117,20 +120,16 @@ def bookings(events, horizon: int) -> dict:
         elif isinstance(e, Unbooked):
             kind, start = open_.pop((e.node, e.memory_index, e.reservation_id), (None, None))
             if kind is not None:
-                spans[kind].append((e.node, e.memory_index, start, e.time_ps))
-    for (node, card, _), (kind, start) in open_.items():
-        spans[kind].append((node, card, start, horizon))        # still booked when the run ended
+                closed[kind].append((e.time_ps - start) / PS_PER_MS)
+    still_open: dict = defaultdict(int)
+    for kind, _ in open_.values():
+        still_open[kind] += 1
     out = {}
-    by_node: dict = defaultdict(lambda: defaultdict(list))
-    for kind, items in spans.items():
-        holds = [(e - s) / PS_PER_MS for _, _, s, e in items]
-        out[kind] = {"bookings": len(items), "mean_hold_ms": fmean(holds) if holds else None,
-                     "total_card_ms": sum(holds)}
-        for node, card, s, e in items:
-            by_node[node][kind].append((s, e))
-    all_by_node = {n: [iv for ivs in kinds.values() for iv in ivs] for n, kinds in by_node.items()}
-    out["card_level_all_kinds"] = histogram(all_by_node)
-    out["card_level_application_only"] = histogram({n: k.get("application", []) for n, k in by_node.items()})
+    for kind in sorted(set(closed) | set(still_open)):
+        holds = closed.get(kind, [])
+        kept = [h for h in holds if h >= 1.0]
+        out[kind] = {"closed": len(holds), "transient_under_1ms": len(holds) - len(kept), "still_open_at_end": still_open.get(kind, 0),
+                     "mean_hold_ms_of_closed_non_transient": fmean(kept) if kept else None}
     return out
 
 

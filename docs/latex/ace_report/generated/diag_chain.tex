@@ -1,0 +1,15 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Position in the chain & Pairs used & Made before its layer started (ms) & Ready pair held (ms) & Request eligible after pair ready (ms) \\
+\midrule
+first hop & 604 & 4.4 & 11.9 & 4.4 \\
+second hop & 257 & 4.6 & 23.7 & 12.2 \\
+third hop or later & 464 & 4.9 & 39.2 & 31.4 \\
+\bottomrule
+\end{tabular}}
+\caption{Dynamic, QFT, four memories, mapping seed 42 (mean of three physics seeds): the pair of a later hop is made as early as the pair of a first hop, but its request becomes eligible much later, so the pair waits longer.}
+\label{tab:diag-chain}
+\end{table}

@@ -7,7 +7,7 @@
   "--strategies",
   "adaptive-continuous",
   "--seeds",
-  "0",
+  "0,1,2",
   "--total-memories",
   "4",
   "--compiler-memories",
@@ -81,6 +81,7 @@
     "requests_rejected_at_least_once": 17,
     "requests": 2510
    },
+   "pair_hold_by_chain_position": {},
    "admission_blocking": {
     "admission_checks": 112920,
     "checks_that_found_no_free_memory": 52743,
@@ -99,144 +100,17 @@
     "mean_cards_per_core_blocked_when_stuck": 3.99
    },
    "bookings": {
-    "autonomous": {
-     "bookings": 31621,
-     "mean_hold_ms": 206.68751772521986,
-     "total_card_ms": 6535665.997989178
-    },
     "application": {
-     "bookings": 5041,
-     "mean_hold_ms": 5.75244010725372,
-     "total_card_ms": 28998.050580666
+     "closed": 5041,
+     "transient_under_1ms": 21,
+     "still_open_at_end": 0,
+     "mean_hold_ms_of_closed_non_transient": 5.775667444256175
     },
-    "card_level_all_kinds": {
-     "share_of_busy_time_by_level": {
-      "1": 0.0001,
-      "2": 0.0022,
-      "3": 0.0227,
-      "4": 0.0018,
-      "5": 0.0048,
-      "6": 0.018,
-      "7": 0.0035,
-      "8": 0.0078,
-      "9": 0.0167,
-      "10": 0.0048,
-      "11": 0.0092,
-      "12": 0.0124,
-      "13": 0.0089,
-      "14": 0.0111,
-      "15": 0.0116,
-      "16": 0.0051,
-      "17": 0.0105,
-      "18": 0.0107,
-      "19": 0.0064,
-      "20": 0.0102,
-      "21": 0.0123,
-      "22": 0.0077,
-      "23": 0.0113,
-      "24": 0.0083,
-      "25": 0.0102,
-      "26": 0.0094,
-      "27": 0.0088,
-      "28": 0.0091,
-      "29": 0.0099,
-      "30": 0.01,
-      "31": 0.0076,
-      "32": 0.0105,
-      "33": 0.0093,
-      "34": 0.0085,
-      "35": 0.0119,
-      "36": 0.0071,
-      "37": 0.0102,
-      "38": 0.0106,
-      "39": 0.008,
-      "40": 0.0101,
-      "41": 0.0087,
-      "42": 0.0089,
-      "43": 0.0112,
-      "44": 0.0107,
-      "45": 0.0052,
-      "46": 0.0111,
-      "47": 0.0107,
-      "48": 0.005,
-      "49": 0.0101,
-      "50": 0.0107,
-      "51": 0.0062,
-      "52": 0.0101,
-      "53": 0.0105,
-      "54": 0.0066,
-      "55": 0.0117,
-      "56": 0.0096,
-      "57": 0.0094,
-      "58": 0.0088,
-      "59": 0.0088,
-      "60": 0.0124,
-      "61": 0.0073,
-      "62": 0.0071,
-      "63": 0.0123,
-      "64": 0.0118,
-      "65": 0.0079,
-      "66": 0.0088,
-      "67": 0.0142,
-      "68": 0.0086,
-      "69": 0.009,
-      "70": 0.012,
-      "71": 0.0068,
-      "72": 0.0096,
-      "73": 0.0119,
-      "74": 0.0062,
-      "75": 0.0112,
-      "76": 0.0089,
-      "77": 0.0091,
-      "78": 0.0098,
-      "79": 0.0117,
-      "80": 0.0086,
-      "81": 0.012,
-      "82": 0.0099,
-      "83": 0.0092,
-      "84": 0.0101,
-      "85": 0.009,
-      "86": 0.0112,
-      "87": 0.0088,
-      "88": 0.0086,
-      "89": 0.0107,
-      "90": 0.0084,
-      "91": 0.0082,
-      "92": 0.0103,
-      "93": 0.0069,
-      "94": 0.0089,
-      "95": 0.0118,
-      "96": 0.0072,
-      "97": 0.008,
-      "98": 0.0111,
-      "99": 0.0098,
-      "100": 0.0063,
-      "101": 0.0092,
-      "102": 0.0071,
-      "103": 0.0049,
-      "104": 0.0102,
-      "105": 0.004,
-      "106": 0.005,
-      "107": 0.0082,
-      "108": 0.0031,
-      "109": 0.0042,
-      "110": 0.0059,
-      "111": 0.001,
-      "112": 0.002,
-      "113": 0.0002
-     },
-     "peak": 113,
-     "mean_level_when_busy": 54.462
-    },
-    "card_level_application_only": {
-     "share_of_busy_time_by_level": {
-      "1": 0.9659,
-      "2": 0.0257,
-      "3": 0.0049,
-      "4": 0.0036
-     },
-     "peak": 4,
-     "mean_level_when_busy": 1.046
+    "autonomous": {
+     "closed": 29923,
+     "transient_under_1ms": 29923,
+     "still_open_at_end": 1698,
+     "mean_hold_ms_of_closed_non_transient": null
     }
    },
    "occupancy_cached_pairs": {
@@ -255,6 +129,198 @@
     "mean_level_when_busy": 1.031
    },
    "compiler": {}
+  },
+  {
+   "strategy": "adaptive-continuous",
+   "average_request_latency_ms": 10.316932642436257,
+   "stats": {
+    "avg_retry_wait_time_ms": 9.785527735731474,
+    "avg_entanglement_generation_time_ms": 0.5314049067047808,
+    "end_to_end_latency_ms": 7476.84085026,
+    "protocol_generated_pairs": 5040,
+    "protocol_used_pairs": 3336,
+    "protocol_unused_pairs": 1674,
+    "protocol_waste_percentage": 33.214285714285715
+   },
+   "average_delivered_epr_fidelity": 0.904394920712278,
+   "requests": 2510,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 2510,
+     "mean_total_ms": 10.316932642436255,
+     "mean_wait_ms": 9.785527735731474,
+     "mean_generation_ms": 0.5314049067047808,
+     "share_that_waited": 0.6565737051792828
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 9.7750878609251,
+    "after_admission_mean": 0.010439874806374502,
+    "dependency_wait_mean": 17.41276374687689
+   },
+   "protocol_rejections": {
+    "events": 35,
+    "requests_rejected_at_least_once": 32,
+    "requests": 2510
+   },
+   "pair_hold_by_chain_position": {},
+   "admission_blocking": {
+    "admission_checks": 105980,
+    "checks_that_found_no_free_memory": 48851,
+    "blocked_cards_by_kind_share": {
+     "autonomous": 0.7412,
+     "application": 0.2588
+    },
+    "blocking_window_ms_mean": {
+     "autonomous": 198.11,
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "autonomous": -98.82,
+     "application": 2.27
+    },
+    "mean_cards_per_core_blocked_when_stuck": 3.99
+   },
+   "bookings": {
+    "application": {
+     "closed": 5055,
+     "transient_under_1ms": 35,
+     "still_open_at_end": 0,
+     "mean_hold_ms_of_closed_non_transient": 5.781404781704781
+    },
+    "autonomous": {
+     "closed": 26699,
+     "transient_under_1ms": 26699,
+     "still_open_at_end": 1722,
+     "mean_hold_ms_of_closed_non_transient": null
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.9728,
+     "2": 0.0223,
+     "3": 0.0045,
+     "4": 0.0005
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.033
+   },
+   "compiler": {}
+  },
+  {
+   "strategy": "adaptive-continuous",
+   "average_request_latency_ms": 10.682151285647011,
+   "stats": {
+    "avg_retry_wait_time_ms": 10.119550213321114,
+    "avg_entanglement_generation_time_ms": 0.5626010723258964,
+    "end_to_end_latency_ms": 7550.23933851,
+    "protocol_generated_pairs": 4996,
+    "protocol_used_pairs": 3276,
+    "protocol_unused_pairs": 1684,
+    "protocol_waste_percentage": 33.70696557245797
+   },
+   "average_delivered_epr_fidelity": 0.9062236338385361,
+   "requests": 2510,
+   "hit_vs_fallback": {
+    "hit": {
+     "requests": 0,
+     "mean_total_ms": null,
+     "mean_wait_ms": null,
+     "mean_generation_ms": null,
+     "share_that_waited": null
+    },
+    "fallback": {
+     "requests": 2510,
+     "mean_total_ms": 10.682151285647011,
+     "mean_wait_ms": 10.119550213321116,
+     "mean_generation_ms": 0.5626010723258964,
+     "share_that_waited": 0.6505976095617529
+    }
+   },
+   "pair_ready_hold_ms": {
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "max": null,
+    "pairs": 0
+   },
+   "wait_split_ms": {
+    "before_admission_mean": 10.113979313820717,
+    "after_admission_mean": 0.005570899500398406,
+    "dependency_wait_mean": 17.79521509604661
+   },
+   "protocol_rejections": {
+    "events": 29,
+    "requests_rejected_at_least_once": 25,
+    "requests": 2510
+   },
+   "pair_hold_by_chain_position": {},
+   "admission_blocking": {
+    "admission_checks": 90378,
+    "checks_that_found_no_free_memory": 41192,
+    "blocked_cards_by_kind_share": {
+     "autonomous": 0.7425,
+     "application": 0.2575
+    },
+    "blocking_window_ms_mean": {
+     "autonomous": 198.05,
+     "application": 50.0
+    },
+    "blocking_window_start_offset_ms_mean": {
+     "autonomous": -96.07,
+     "application": 2.22
+    },
+    "mean_cards_per_core_blocked_when_stuck": 3.99
+   },
+   "bookings": {
+    "application": {
+     "closed": 5049,
+     "transient_under_1ms": 29,
+     "still_open_at_end": 0,
+     "mean_hold_ms_of_closed_non_transient": 5.812600947325897
+    },
+    "autonomous": {
+     "closed": 23881,
+     "transient_under_1ms": 23881,
+     "still_open_at_end": 1730,
+     "mean_hold_ms_of_closed_non_transient": null
+    }
+   },
+   "occupancy_cached_pairs": {
+    "share_of_busy_time_by_level": {},
+    "peak": 0,
+    "mean_level_when_busy": null
+   },
+   "occupancy_cached_plus_in_service": {
+    "share_of_busy_time_by_level": {
+     "1": 0.9679,
+     "2": 0.0231,
+     "3": 0.0064,
+     "4": 0.0026
+    },
+    "peak": 4,
+    "mean_level_when_busy": 1.044
+   },
+   "compiler": {}
   }
  ],
  "job": {
@@ -264,7 +330,9 @@
   "policy": "adaptive-continuous",
   "memories": 4,
   "cap": 3,
-  "override": {}
+  "override": {},
+  "mapping_seed": 42,
+  "diag": []
  },
- "wall_seconds": 25.69
+ "wall_seconds": 92.47
 }

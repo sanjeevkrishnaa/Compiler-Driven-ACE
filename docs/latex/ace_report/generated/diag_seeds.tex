@@ -1,0 +1,16 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Policy & map 42 lat. & map 42 wait & map 43 lat. & map 43 wait & map 44 lat. & map 44 wait \\
+\midrule
+ODG & 1.57 & 0.44 & 1.65 & 0.52 & 1.55 & 0.42 \\
+Dynamic & 5.46 & 4.81 & 5.84 & 5.19 & 5.40 & 4.73 \\
+CGP & 10.15 & 9.58 & 10.26 & 9.68 & 9.94 & 9.37 \\
+ACGP & 10.52 & 9.98 & 10.76 & 10.22 & 10.53 & 9.97 \\
+\bottomrule
+\end{tabular}}
+\caption{QFT, four memories: the diagnosis on the three mapping seeds (mean of three physics seeds each; latency and wait in ms).}
+\label{tab:diag-seeds}
+\end{table}

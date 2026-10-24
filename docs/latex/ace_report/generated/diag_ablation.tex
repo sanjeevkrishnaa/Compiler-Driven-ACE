@@ -1,0 +1,31 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Policy & Change from the baseline & Latency (ms) & Wait (ms) & Ready-pair hits & Fidelity \\
+\midrule
+Dynamic & baseline & 5.46 & 4.81 & 53\% & 0.9274 \\
+Dynamic & compiler memories 1 of 4 & 1.88 & 0.95 & 21\% & 0.9431 \\
+Dynamic & compiler memories 2 of 4 & 2.77 & 2.01 & 39\% & 0.9364 \\
+Dynamic & request-duration-ms=10 & 5.45 & 4.80 & 53\% & 0.9274 \\
+Dynamic & request-duration-ms=100 & 5.46 & 4.80 & 53\% & 0.9274 \\
+Dynamic & request-duration-ms=20 & 5.46 & 4.80 & 53\% & 0.9274 \\
+Dynamic & pairs only for the first 1 & 1.89 & 0.98 & 24\% & 0.9449 \\
+Dynamic & pairs only for the first 2 & 3.06 & 2.25 & 35\% & 0.9406 \\
+Dynamic & compiler memories 3 of 4 & 5.54 & 4.88 & 53\% & 0.9221 \\
+Dynamic & compiler memories 3 of 4 & 5.43 & 4.77 & 53\% & 0.9262 \\
+Dynamic & dynamic-lookahead-layers=1 & 5.46 & 4.81 & 53\% & 0.9274 \\
+Dynamic & dynamic-lookahead-layers=2 & 5.46 & 4.81 & 53\% & 0.9274 \\
+Dynamic & dynamic-lookahead-layers=4 & 5.46 & 4.81 & 53\% & 0.9274 \\
+Dynamic & compiler-reservation-ms=100 & 5.46 & 4.81 & 53\% & 0.9274 \\
+Dynamic & compiler-reservation-ms=300 & 5.46 & 4.80 & 53\% & 0.9274 \\
+ODG & baseline & 1.57 & 0.44 & 0\% & 0.9498 \\
+ODG & request-duration-ms=10 & 1.57 & 0.44 & 0\% & 0.9498 \\
+ODG & request-duration-ms=100 & 1.57 & 0.44 & 0\% & 0.9498 \\
+ODG & request-duration-ms=20 & 1.57 & 0.44 & 0\% & 0.9498 \\
+\bottomrule
+\end{tabular}}
+\caption{QFT, four memories, mapping seed 42, mean of three physics seeds. Each row changes one setting. These are experiments to find the cause, not proposed settings.}
+\label{tab:diag-ablation}
+\end{table}

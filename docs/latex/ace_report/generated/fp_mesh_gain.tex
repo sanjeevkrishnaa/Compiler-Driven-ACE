@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Workload & 2 & 3 & 4 & 6$^*$ & 8$^*$ & 16$^*$ & 32$^*$ \\
+\midrule
+GHZ & 56\% & 78\% & 78\% & 78\% & 78\% & 78\% & 78\% \\
+Bernstein--Vazirani & 62\% & 80\% & 80\% & 80\% & 80\% & 80\% & 80\% \\
+BMW/QUARK cardinality & 56\% & 78\% & 78\% & 78\% & 78\% & 78\% & 78\% \\
+VQE real amplitudes & -37\% & -7\% & 21\% & 63\% & 77\% & 77\% & 77\% \\
+CDKM ripple-carry adder & 39\% & 67\% & 73\% & 74\% & 74\% & 74\% & 74\% \\
+Graph state & -134\% & -228\% & -161\% & -36\% & 19\% & 77\% & 79\% \\
+Draper QFT adder & -111\% & -182\% & -116\% & -41\% & 21\% & 78\% & 78\% \\
+QAOA & -101\% & -207\% & -205\% & -137\% & -64\% & 69\% & 78\% \\
+QFT & -113\% & -214\% & -250\% & -209\% & -142\% & 29\% & 78\% \\
+Random circuit & -51\% & -22\% & 15\% & 50\% & 66\% & 77\% & 77\% \\
+\bottomrule
+\end{tabular}}
+\caption{Latency gain of dynamic over on-demand, $(\text{ODG}-\text{Dyn.})/\text{ODG}$, mesh; negative means dynamic is slower. Budgets marked $^*$ are counterfactual.}
+\label{tab:fp-mesh-gain}
+\end{table}

@@ -1,0 +1,22 @@
+\begin{table}[H]
+\centering\small
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Workload & ODG & Dynamic & CGP & ACGP \\
+\midrule
+GHZ & 0.9498 & 0.9344 & 0.9199 & 0.9195 \\
+Bernstein--Vazirani & 0.9498 & 0.9345 & 0.9102 & 0.9111 \\
+BMW/QUARK cardinality & 0.9498 & 0.9343 & 0.9190 & 0.9142 \\
+VQE real amplitudes & 0.9498 & 0.9344 & 0.9269 & 0.9285 \\
+CDKM ripple-carry adder & 0.9498 & 0.9354 & 0.9353 & 0.9336 \\
+Graph state & 0.9498 & 0.9341 & 0.9278 & 0.9283 \\
+Draper QFT adder & 0.9498 & 0.9368 & 0.9288 & 0.9282 \\
+QAOA & 0.9498 & 0.9390 & 0.9299 & 0.9294 \\
+QFT & 0.9498 & 0.9386 & 0.9309 & 0.9296 \\
+Random circuit & 0.9498 & 0.9320 & 0.9277 & 0.9270 \\
+\bottomrule
+\end{tabular}}
+\caption{Delivered EPR fidelity, mesh, 2 memories per core (modelled), mean of three mapping seeds of the mean of three physics seeds.}
+\label{tab:fp-mesh-fid-2}
+\end{table}
