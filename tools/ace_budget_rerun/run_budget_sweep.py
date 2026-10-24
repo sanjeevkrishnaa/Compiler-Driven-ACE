@@ -38,6 +38,9 @@ BUDGETS = [2, 3, 4, 32]
 SATURATION = {"qft": 64}
 STRATEGIES = ["on-demand", "dynamic"]
 PHYSICS_SEEDS = "0,1,2"
+# Passed to every run besides the budget-dependent ones; recorded in each experiment's run_parameters.json.
+RUNNER_FLAGS = {"--delta-layers": "6", "--dynamic-lookahead-layers": "8", "--coherence-time-layers": "10",
+                "--compiler-reservation-ms": "1000", "--stop-time-s": "300"}
 CONTEXT = ["workload", "congested", "mapping_seed", "total_memories", "compiler_memories", "demand_bank",
            "scheduler", "trace_sha256", "run_status"]
 
@@ -85,8 +88,7 @@ def run_one(job, traces: Path, output: Path, scheduler: str, config: Path | None
     command = [sys.executable, "-B", str(RUNNER), "--trace", str(trace), "--mesh", "4x4",
                "--strategies", strategy, "--seeds", PHYSICS_SEEDS, "--total-memories", str(budget),
                "--compiler-memories", str(comp), "--generation-capacity", str(comp),
-               "--delta-layers", "6", "--dynamic-lookahead-layers", "8", "--coherence-time-layers", "10",
-               "--compiler-reservation-ms", "1000", "--stop-time-s", "300", "--scheduler", scheduler,
+               *[item for pair in RUNNER_FLAGS.items() for item in pair], "--scheduler", scheduler,
                "--output", str(outdir)]
     if config is not None:
         command += ["--config", str(config)]

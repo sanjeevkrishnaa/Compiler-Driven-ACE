@@ -88,6 +88,13 @@ def main(argv=None) -> int:
     flat = [w for w in ORDER if max(abs(pen4[w]), 0) < 0.5 and abs(pen1[w] - 1) < 0.005]
     settle = {w: smallest_budget_within(grouped, w, "on-demand") for w in ORDER}
     cross = {w: crossover(grouped, w) for w in ORDER}
+    od32 = [mean(grouped, (w, "on-demand", 32), "latency_ms") for w in ORDER]
+    dy32 = [mean(grouped, (w, "dynamic", 32), "latency_ms") for w in ORDER]
+    dyn_settle = {w: smallest_budget_within(grouped, w, "dynamic", 0.10) for w in ORDER}
+    uncongested = [w for w in ORDER if max(struct[w][str(b)] for b in (4,)) == 0]
+    dyn23 = {w: (mean(grouped, (w, "dynamic", 2), "latency_ms"), mean(grouped, (w, "dynamic", 3), "latency_ms")) for w in uncongested}
+    fid_dyn_max = max(mean(grouped, (w, "dynamic", b), "fidelity") for w in ORDER for b in BUDGETS[1:])
+    fid_od = sorted({round(mean(grouped, (w, "on-demand", b), "fidelity"), 4) for w in ORDER for b in BUDGETS})
 
     # relation between structural overload and the physical cost, on-demand, budgets 1..8
     from scipy.stats import spearmanr
@@ -195,8 +202,8 @@ Cost of too few memories, relative to the same workload with 32 (saturated), on-
   {pen4['graphstate']:+.0f}%, Draper {pen4['draper_qft_adder']:+.0f}%, CDKM {pen4['cdkm_ripple_carry_adder']:+.0f}%, random circuit {pen4['randomcircuit']:+.0f}%.
 * **Memory buys latency with diminishing returns.** The smallest budget within 5% of the saturated latency is
   {", ".join(f"{A.TITLES[w]} {settle[w]}" for w in ORDER)}.
-* **The floor is generation, not contention:** about 1.1 to 1.2 ms for every workload once nothing waits (the same value the
-  zero-congestion workloads show at every budget).
+* **The floor is generation, not contention:** with 32 memories the on-demand latency is {min(od32):.2f} to {max(od32):.2f} ms across the ten
+  workloads, which is also what the workloads with no overload show at every budget.
 
 ## Result 2: congestion as waiting, and its structural source
 
@@ -221,7 +228,7 @@ Request latency in ms, dynamic:
 
 {table(grouped, "dynamic", "latency_ms", 2, budgets=BUDGETS[1:])}
 
-Delivered EPR fidelity, dynamic (on-demand delivers 0.9498 in every workload at every budget):
+Delivered EPR fidelity, dynamic (on-demand delivers {', '.join(f'{x:.4f}' for x in fid_od)} in every workload at every budget):
 
 {table(grouped, "dynamic", "fidelity", 4, budgets=BUDGETS[1:])}
 
@@ -230,14 +237,16 @@ Delivered EPR fidelity, dynamic (on-demand delivers 0.9498 in every workload at 
   {", ".join(f"{A.TITLES[w]} {cross[w]}" for w in ORDER if cross[w])}.
   So whether pre-generation helps depends on how much memory there is to spend on it, and at the modelled four memories it
   helps only the workloads with little congestion.
-* **At large budgets dynamic reaches about 0.25 ms**, a request served from an already generated pair, against about 1.1 ms
-  on-demand. The memory it needs to get there is large (QFT and graph state need 16 to 32), well beyond the modelled four.
-* **Fidelity is the price.** Delivered fidelity under dynamic is below the on-demand 0.9498 everywhere and falls as the
-  compiler bank grows from 2 to about 8 memories and then levels off (pairs wait longer in storage): for example QFT {cell(grouped, ('qft','dynamic',2), 'fidelity', 4, False)} at 2 memories to
-  {cell(grouped, ('qft','dynamic',8), 'fidelity', 4, False)} at 8. The effect is small in absolute terms under ACE's 1 s coherence time.
-* **GHZ, Bernstein-Vazirani and BMW also change between 2 and 3 memories under dynamic** although they have no congestion
-  (their dynamic latency drops from about 0.5 to 0.25 ms). That is planner coverage (one compiler memory at a budget of two cannot
-  prepare everything), not congestion, as the earlier budget study noted.
+* **At 32 memories dynamic reaches {min(dy32):.2f} to {max(dy32):.2f} ms**, a request served from an already generated pair, against
+  {min(od32):.2f} to {max(od32):.2f} ms on-demand. The smallest budget within 10% of that is {", ".join(f"{A.TITLES[w]} {dyn_settle[w]}" for w in ORDER)}:
+  the congested workloads need far more than the modelled four.
+* **Fidelity is the price.** Delivered fidelity under dynamic (at most {fid_dyn_max:.4f}) is below the on-demand {fid_od[0]:.4f} everywhere and falls as the
+  compiler bank grows from 2 to about 8 memories and then levels off (probably because more pairs are prepared earlier and wait longer in storage; the storage time was not measured here): for example QFT {cell(grouped, ('qft','dynamic',2), 'fidelity', 4, False)} at 2 memories to
+  {cell(grouped, ('qft','dynamic',8), 'fidelity', 4, False)} at 8. The largest drop below the on-demand value in these tables is {max(fid_od[0] - mean(grouped, (w, 'dynamic', b), 'fidelity') for w in ORDER for b in BUDGETS[1:]):.4f}, under ACE's 1 s coherence time.
+* **Workloads with no overload at four memories ({", ".join(A.TITLES[w] for w in uncongested)}) still change between 2 and 3 memories under dynamic**
+  ({"; ".join(f"{A.TITLES[w]} {a:.2f} to {b:.2f} ms" for w, (a, b) in dyn23.items())}). The structural overload there is zero, so this is not congestion. The
+  earlier budget study attributed the same effect to planner coverage (one compiler memory at a budget of two cannot prepare
+  every request); that explanation is carried over, not re-tested here.
 
 ## Sensitivity: the ACGP paper's memory parameters (exploratory)
 
