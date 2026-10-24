@@ -1,0 +1,47 @@
+\chapter{What was wrong in the legacy simulator}
+\label{ch:audit}
+
+The audit ran the legacy simulator on the real SeQUeNCe stack with an execution-event recorder and an invariant checker
+attached (Chapter~\ref{ch:corrections}). Each finding below states its evidence: \emph{source} (code read), \emph{measured}
+(run), or both.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}p{0.05\linewidth}p{0.36\linewidth}p{0.52\linewidth}@{}}
+\toprule
+ & Question & Answer \\ \midrule
+F1 & Does ACE let two requests share a core? & No. \code{serialize_core_conflicts} splits every layer into batches with at most one request per core, whenever a compiler controller is attached. On QFT the peak demand per core falls from 24 to 1, so the memory budget cannot bind. Source and measured. \\
+F2 & Can two requests be mistaken for one? & \textbf{Yes.} SeQUeNCe's \code{Reservation} equality compares initiator, responder, window, size and fidelity, not the request identity. Serialization hid this in every legacy run. Source and measured. \\
+F3 & Does a rejection release earlier bookings? & Yes, exactly once on every node it travelled back through. \\
+F4 & Does the physics layer limit a link to one pair at a time? & \textbf{No.} 1 to 16 simultaneous requests on one link completed with zero retries. \\
+F5 & Phantom occupancy from compiler preparations? & Not in the 24 legacy audits: every booking was released. \\
+F6 & Is a trace layer a real barrier? & A conservative one; it is kept. \\
+F7 & A request that can never be admitted? & It retries for ever (found with a mistaken test case). \\
+F8 & Is waiting measured faithfully? & No: admission was polled every 1\,ms. \\
+F9 & Resubmission at the instant a booking expires? & With short windows, stale or double bookings appear in 4 of 6 seeds; a delay of 1\,ps removes them. \\
+F10 & Polling admission with one memory per core? & Two requests that swap two cores livelock: 25\,000 submissions each. \\
+\bottomrule
+\end{tabular}
+\caption{Findings of the audit. Full evidence is in \code{docs/reports/ace-correctness-audit.md}.}
+\end{table}
+
+\section{Reservation aliasing (F2)}
+With four requests on one link and 32 memories per core, the legacy code gave latencies of $1.2/55.7/62.2/67.9$\,ms with three
+retries and two orphaned pairs; the same requests, once they are distinct bookings, take $2.4/0.4/1.6/1.2$\,ms with no retry. The
+mechanism is that releasing a booking removes the \emph{first equal} reservation, rules are matched to \emph{any equal}
+reservation, and the application's dictionaries are keyed by reservation. Reverting only the equality reproduces the old
+behaviour and the checker flags it, which shows that the fix is the cause.
+
+\section{Event order is undefined (F9)}
+SeQUeNCe's event list is a binary heap ordered by time and priority only, so events at the same instant have no defined order. The
+legacy manager started a retry at the very instant the old booking expired. In an A/B test the only change was to resubmit 1\,ps later:
+the violations disappeared. No code in the corrected scheduler relies on one same-instant event preceding another.
+
+\section{Livelock under polling (F10)}
+Randomized small traces found a request set that never completes under polling admission: requests 1 (core 8 to 12) and 3 (12 to 8),
+with one memory per core, each book their own memory, find the other's taken, roll back and retry on the same 1\,ms period. The
+invariants held (nothing was corrupted), so this is a livelock, not corruption.
+
+\section{What the audit did not cover}
+One mapping seed and one physics seed for the 24 legacy audits; the autonomous strategies; and expiry of unused cached pairs, which
+was found later to never occur in the default runs and was then forced (Section~\ref{sec:expiry}).

@@ -1,0 +1,41 @@
+\chapter{Scope and method}
+
+\section{What this report is about}
+A multi-core quantum computer connects small processor cores over a network-on-chip. When a program moves a logical qubit
+from one core to another, the move is carried out by teleportation, which consumes an entangled pair (an EPR pair)
+shared between the two cores. Pre-generating those pairs before the program needs them can hide their generation latency,
+but every core has only a few \emph{communication memories} in which pairs can wait, and many moves may need the same
+core at once. This report studies that contention (\emph{congestion}) on a $4\times4$ mesh of cores.
+
+The simulator used is \emph{ACE}, an adaptive-continuous-entanglement simulator built on SeQUeNCe v0.8.1. The first part of the
+report documents what was found wrong with how ACE released requests to the network, how it was corrected, and how the
+correction was verified. The second part reports the experiments that the corrected simulator makes possible:
+latency, fidelity and waiting of ten benchmarks across communication-memory budgets (Experiment~1), the split of each
+core's congestion into its own endpoint demand and relay traffic (Experiment~2), a study of ACE's memory cut-off
+mechanisms, a study of whether offline routing can reduce congestion, and the same questions on a torus.
+
+\section{Ground rules followed}
+The following rules were fixed at the start and held throughout.
+\begin{itemize}
+  \item Milliseconds measured in ACE are never compared with milliseconds from the native SeQUeNCe backend.
+  \item Results from the legacy and the corrected scheduler are never merged in one table.
+  \item A fallback to on-demand generation is not a failure, but a dropped request is.
+  \item Nothing is claimed as measured unless it was run; mechanisms that were inferred are labelled as such.
+  \item Congestion-aware routing is not claimed to exist: no routing policy is simulated, only bounded structurally
+        (Chapter~\ref{ch:routing}).
+  \item Structural (trace-based) results are not called physical results.
+  \item Physical parameters were not changed silently; the choice of parameters is an open decision
+        (Appendix~\ref{app:params}).
+\end{itemize}
+
+\section{How the work was organised}
+The work followed a gated plan, each gate committed separately on the branch \code{codex/ace-scheduler-correctness}:
+\begin{description}
+  \item[Gate 0] a bit-for-bit baseline of the legacy simulator (164 result rows) that must still reproduce after every change;
+  \item[Gate 1] an execution event log, an invariant checker, microcases and an audit of the legacy simulator;
+  \item[Gate 2] making two requests that look alike distinct bookings (reservation identity);
+  \item[Gate 3] replacing per-core serialization by a per-qubit request manager with event-driven admission;
+  \item[Gate 4] verification on all ten benchmarks, three strategies, three mapping seeds and several memory budgets;
+  \item[Gate 5] tracing every physical parameter to its source;
+  \item[Gate 6] rerunning the earlier 378-run budget study under the corrected scheduler.
+\end{description}

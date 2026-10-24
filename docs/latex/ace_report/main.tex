@@ -1,0 +1,46 @@
+% Technical report: correcting the ACE request scheduler and measuring communication-memory congestion.
+% Compile with:  tectonic main.tex   (or pdflatex main.tex twice).  Tables in generated/ are written by
+% tools/latex/make_tables.py from the committed result files; do not edit them by hand.
+\documentclass[11pt,a4paper]{report}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=blue}
+\setlength{\emergencystretch}{2em}
+\captionsetup{font=small,labelfont=bf}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\graphicspath{{figures/}}
+
+\title{Correcting the ACE Request Scheduler\\and Measuring Communication-Memory Congestion\\ in a Multi-Core Quantum Mesh}
+\author{BTP, MARS Lab, IIT Guwahati}
+\date{Draft of 24 October 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\input{chapters/01_scope}
+\input{chapters/02_background}
+\input{chapters/03_audit}
+\input{chapters/04_corrections}
+\input{chapters/05_heatmap_and_split}
+\input{chapters/06_experiment1}
+\input{chapters/07_cutoff}
+\input{chapters/08_routing}
+\input{chapters/09_torus}
+\input{chapters/10_runtimes}
+\input{chapters/11_limits}
+
+\appendix
+\input{chapters/a_parameters}
+\input{chapters/b_reproduce}
+\end{document}

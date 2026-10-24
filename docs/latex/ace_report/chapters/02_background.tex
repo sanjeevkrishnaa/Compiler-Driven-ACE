@@ -1,0 +1,32 @@
+\chapter{Background}
+
+\section{The pipeline}
+A benchmark circuit from MQT Bench is transpiled to the gate set $\{R_z,\sqrt X,X,\mathrm{CX}\}$ and cut into layers by an
+as-soon-as-possible schedule of its dependency graph. A qubit mapper (HQA, Hungarian-assignment based) places the logical
+qubits on cores layer by layer. Whenever the placement changes between two layers, the qubit has to move, and the move is expanded into one
+\emph{hop} per link along a path found by Dijkstra's algorithm on the core graph: shortest in hops, with the product of
+link reliabilities as the tie-break. The result is a \emph{trace}: for every layer, a list of hops
+$(\text{qubit},\text{source core},\text{destination core})$. Every hop of the traces used here joins two adjacent cores.
+The traces carry no gate-level dependencies, so a layer boundary stands in for them.
+
+ACE then executes the trace: each hop is a request for one EPR pair between two adjacent cores, submitted through
+SeQUeNCe's resource-reservation protocol (RSVP), which books one communication memory at each end for a time window.
+
+\section{ACE and the native SeQUeNCe backend}
+ACE adds, on top of SeQUeNCe, adaptive continuous pre-generation of entanglement (cached pairs in spare memories), a compiler
+controller that pre-generates exactly the pairs the trace will need (the policies \emph{fixed} and \emph{dynamic}),
+and a request manager that submits a layer's requests together. The native backend instead uses a central scheduler
+with one generation job per link. The two backends are never compared in this report.
+
+\section{Policies}
+\emph{On-demand} generates a pair only when a request asks for it, so it isolates contention. \emph{Dynamic} compiler
+pre-generation prepares pairs ahead of the layer that needs them, using at most \code{budget - 1} memories per core as a
+compiler bank and leaving one for demand. Autonomous caches (\emph{continuous}, \emph{adaptive-continuous}) guess which pairs
+will be needed.
+
+\section{Parameters in force}
+Unless stated, the physical parameters are ACE's configuration: memory fidelity $0.95$, memory efficiency $0.95$, coherence
+time $1$\,s, detector efficiency $0.95$, gate and measurement fidelity $0.99$, classical delay $100\,\mu$s plus $20\,\mu$s
+per hop, and a router-to-BSM fibre of $0.025$ (read as metres) with attenuation $0.2$\,dB/km. These come from the
+metro-scale adaptive-continuous protocol paper and differ from the group's multi-core paper in two values that matter
+(Appendix~\ref{app:params}).

@@ -1,0 +1,59 @@
+\chapter{The corrections and how they were verified}
+\label{ch:corrections}
+
+\section{Making requests distinct (Gate 2)}
+Application reservations became a subclass whose equality and hash include the request identity. The protocol's \code{push} builds
+that class; adaptive (autonomous) reservations keep the stock contract. Tests cover equality, hashing, symmetry, timecard removal and
+the \code{push} path; a checker invariant (\code{ALIASED_RESERVATIONS}) detects a regression.
+
+\section{The per-qubit request manager (Gate 3)}
+The legacy manager is untouched and remains the default. The new manager, selected with \code{scheduler="per-qubit"}, applies these rules.
+\begin{itemize}
+  \item \textbf{Chains.} The hops of one qubit within one layer form a chain in trace order; a hop is released when the previous hop has completed.
+  \item \textbf{Independence.} Hops of different qubits are released together and compete for memory.
+  \item \textbf{Layer barrier.} Layer $L+1$ starts when every request of layer $L$ has completed; the 5\,ms empty-layer gap of the legacy manager is kept.
+  \item \textbf{Event-driven admission.} A request is handed to the reservation protocol only when both of its cores have a memory free for its
+        whole window (read from the reservation tables, less requests admitted but not yet booked); the oldest request that fits goes first, and
+        a release at any core wakes the line one picosecond later. A request that cannot start yet keeps the memory it would need
+        (the \emph{starvation guard}).
+  \item \textbf{Timeouts} resubmit one picosecond after the window ends, one request at a time, not as a serialized retry layer.
+\end{itemize}
+No request waits while holding a memory that another needs, so a deadlock among application requests cannot form. The scheduler is
+modelled as a central controller that reads each core's reservation table without delay; that is an assumption about the system.
+
+\section{The checker}
+The invariant checker works on a typed event log (submissions, bookings, releases, pair deliveries and credits, completions). It checks, among
+others: no memory double-booked over overlapping windows; no release of a booking that was not live; no orphan pair; no credit beyond the
+request; exactly one completion per request; no resubmission with a stale booking; a hop submitted only after its predecessor completed;
+the layer barrier. It was validated by deliberately breaking each rule, and it was corrected twice during the work: it first treated every
+booking as occupying a memory from the moment it was made (wrong for a booking of a later window), and it labelled reservations by memory
+address, which can be reused. Both faults were in the checker, not in ACE.
+
+\section{Verification}
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}p{0.5\linewidth}p{0.42\linewidth}@{}}
+\toprule
+Check & Result \\ \midrule
+Legacy baseline (164 rows, 22 cases), after every change & reproduced exactly, under several Python hash seeds \\
+Ten workloads $\times$ three strategies $\times$ 2 and 4 memories $\times$ mapping seeds 42, 43, 44 (360 audited cells) & every request completes, no invariant violated \\
+GHZ against the legacy manager & identical event logs (on-demand, dynamic) \\
+Random small traces at 1, 2, 4, 16 memories & all complete, never more bookings than memories \\
+Forced expiry of cached pairs, both schedulers & all complete, no violation \\
+Python hash seeds 1 and 2 & identical makespan, events and retries \\
+\bottomrule
+\end{tabular}
+\caption{Verification summary (\code{docs/reports/ace-scheduler-verification.md}).}
+\end{table}
+
+\section{One latency definition for both schedulers}
+The legacy manager's per-request latency starts at a request's first submission, so time spent waiting for earlier per-core batches is not
+counted, while the new manager counts admission waiting. They are not comparable as defined. Throughout this report latency means
+\emph{common latency}: from the moment a request could first be asked for (its layer starting, or the previous hop of its qubit completing)
+to its completion, minus the fixed 5.3\,ms pre-generation lead.
+
+\section{The budget study rerun (Gate 6)}
+The earlier 378-run budget study could not measure congestion because of the serialization. Rerun with the legacy scheduler through a
+parameterized driver, it reproduces the published results in every column (0 differing cells of $378\times58$), so the driver is faithful. Under
+the corrected scheduler the on-demand latency now depends on the budget: for QFT it falls from $4.72$\,ms at 2 memories to $1.13$\,ms at 32
+(Chapter~\ref{ch:exp1}).
