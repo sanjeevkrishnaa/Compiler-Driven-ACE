@@ -133,6 +133,42 @@ def validate_output(output: Path, job: dict[str, Any], *, require_execution_reco
             raise ValueError(f"execution record input hashes differ for job {job['job_id']}")
 
 
+def verify_source_lock(repository: Path, lock: dict[str, Any], *, commit: str | None = None) -> None:
+    if lock.get("schema") != "golden-study-source-lock-v1":
+        raise ValueError("invalid Golden-study source lock schema")
+    failures: list[str] = []
+    for relative, expected in lock.get("repository_files", {}).items():
+        if commit is None:
+            path = (repository / relative).resolve()
+            actual = sha256(path) if path.is_file() else None
+        else:
+            result = subprocess.run(["git", "show", f"{commit}:{relative}"], cwd=repository, capture_output=True)
+            actual = hashlib.sha256(result.stdout).hexdigest() if result.returncode == 0 else None
+        if actual != expected:
+            failures.append(f"{relative}: {actual} != {expected}")
+    if failures:
+        location = "working tree" if commit is None else f"commit {commit}"
+        raise ValueError(f"simulator source lock mismatch in {location}: " + "; ".join(failures))
+
+
+def sequence_identity(python: Path) -> dict[str, Any]:
+    code = "import json, pathlib, sequence; print(json.dumps({'package': str(pathlib.Path(sequence.__file__).resolve().parent)}))"
+    package = Path(json.loads(subprocess.run([str(python), "-c", code], check=True, text=True, capture_output=True).stdout)["package"])
+    repository = Path(subprocess.run(["git", "-C", str(package), "rev-parse", "--show-toplevel"], check=True, text=True, capture_output=True).stdout.strip())
+    head = subprocess.run(["git", "-C", str(repository), "rev-parse", "HEAD"], check=True, text=True, capture_output=True).stdout.strip()
+    clean = (subprocess.run(["git", "-C", str(repository), "diff", "--quiet"]).returncode == 0
+             and subprocess.run(["git", "-C", str(repository), "diff", "--cached", "--quiet"]).returncode == 0)
+    return {"git_sha": head, "tracked_tree_clean": clean}
+
+
+def verify_sequence_lock(python: Path, lock: dict[str, Any]) -> dict[str, Any]:
+    actual = sequence_identity(python)
+    expected = lock.get("sequence")
+    if actual != expected:
+        raise ValueError(f"SeQUeNCe source lock mismatch: {actual} != {expected}")
+    return actual
+
+
 def verify_inputs(repository: Path, root: Path, job: dict[str, Any]) -> None:
     trace = (root / job["trace_path"]).resolve()
     config = (repository / job["config_path"]).resolve()
@@ -158,11 +194,14 @@ def tracked_tree_clean(repository: Path) -> bool:
     return unstaged and staged
 
 
-def run_one(python: Path, repository: Path, root: Path, job: dict[str, Any], commit: str) -> tuple[str, str]:
+def run_one(python: Path, repository: Path, root: Path, job: dict[str, Any], commit: str,
+            source_lock: dict[str, Any], sequence: dict[str, Any]) -> tuple[str, str]:
     verify_inputs(repository, root, job)
     output = root / job["output_path"]
     if output.exists():
         validate_output(output, job, require_execution_record=True)
+        record = read_json(output / "execution.json")
+        verify_source_lock(repository, source_lock, commit=record["git_sha"])
         return job["job_id"], "validated-existing"
     partial_parent = root / "raw" / ".partial"
     partial_parent.mkdir(parents=True, exist_ok=True)
@@ -186,6 +225,7 @@ def run_one(python: Path, repository: Path, root: Path, job: dict[str, Any], com
         "trace_sha256": job["trace_sha256"], "config_sha256": job["config_sha256"],
         "git_sha": commit, "tracked_tree_clean_at_launch": True,
         "python_executable": str(python),
+        "sequence": sequence,
         "python_version": subprocess.run([str(python), "--version"], check=True, text=True, capture_output=True).stdout.strip(),
         "command": command, "started_at": started.isoformat(),
         "completed_at": datetime.now(timezone.utc).isoformat(),
@@ -198,8 +238,15 @@ def run_one(python: Path, repository: Path, root: Path, job: dict[str, Any], com
     return job["job_id"], "completed"
 
 
-def select_jobs(jobs: Iterable[dict[str, Any]], job_ids: set[str], limit: int | None) -> list[dict[str, Any]]:
-    selected = [job for job in jobs if not job_ids or job["job_id"] in job_ids]
+def select_jobs(jobs: Iterable[dict[str, Any]], job_ids: set[str], limit: int | None, *,
+                workloads: set[str] | None = None, topologies: set[str] | None = None,
+                routes: set[str] | None = None) -> list[dict[str, Any]]:
+    workloads, topologies, routes = workloads or set(), topologies or set(), routes or set()
+    selected = [job for job in jobs
+                if (not job_ids or job["job_id"] in job_ids)
+                and (not workloads or any(alias["workload"] in workloads for alias in job["trace_aliases"]))
+                and (not topologies or job["topology"] in topologies)
+                and (not routes or any(alias["route_policy"] in routes for alias in job["trace_aliases"]))]
     missing = job_ids - {job["job_id"] for job in selected}
     if missing:
         raise ValueError("unknown requested job ids: " + ", ".join(sorted(missing)))
@@ -214,6 +261,9 @@ def main() -> int:
     parser.add_argument("--workers", type=int, required=True)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--job-id", action="append", default=[])
+    parser.add_argument("--workload", action="append", default=[])
+    parser.add_argument("--topology", action="append", default=[])
+    parser.add_argument("--route-policy", action="append", default=[])
     args = parser.parse_args()
     if args.workers < 1 or (args.limit is not None and args.limit < 1):
         parser.error("--workers and --limit must be positive")
@@ -225,11 +275,19 @@ def main() -> int:
         parser.error(f"Python interpreter does not exist: {python}")
     if not tracked_tree_clean(repository):
         raise SystemExit("refusing execution with staged or unstaged tracked changes; commit the simulator first")
-    jobs = select_jobs(read_jobs(args.manifest.resolve()), set(args.job_id), args.limit)
+    jobs = select_jobs(
+        read_jobs(args.manifest.resolve()), set(args.job_id), args.limit,
+        workloads=set(args.workload), topologies=set(args.topology), routes=set(args.route_policy),
+    )
+    if not jobs:
+        raise SystemExit("selection matched no jobs")
     commit = git_sha(repository)
+    source_lock = read_json(root / spec["source_lock"])
+    verify_source_lock(repository, source_lock)
+    sequence = verify_sequence_lock(python, source_lock)
     failures: list[str] = []
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
-        futures = {pool.submit(run_one, python, repository, root, job, commit): job for job in jobs}
+        futures = {pool.submit(run_one, python, repository, root, job, commit, source_lock, sequence): job for job in jobs}
         for future in as_completed(futures):
             job = futures[future]
             try:

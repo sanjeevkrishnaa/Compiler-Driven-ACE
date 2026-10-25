@@ -44,6 +44,14 @@ only when every expected strategy/seed row exists and `completion_rate == 1.0`.
 An existing `summary.csv` is never enough for resume: the execution-record job hash,
 trace hash, config hash, row set, and runner metadata must all match.
 
+The phase also has an immutable
+[`source lock`](../../../results/golden_study_2026-10-25/manifests/base-evaluation_source-lock.json).
+It hashes the ACE runner, scheduler, compiler controller, physical protocols, metric
+code, and supporting invariant/event modules. It also requires the imported
+SeQUeNCe checkout to be clean at Git commit `cf5283c`. Existing jobs are checked by
+reading these files from their recorded Git commit, so documentation-only commits
+may differ without mixing simulator implementations.
+
 `C=0` is a tested boundary. CGP, ACGP, and Dynamic admit no pre-generated pairs and
 reduce exactly to ODG rather than crashing or silently borrowing compiler memory.
 

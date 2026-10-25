@@ -3,6 +3,7 @@
   "study_id": "golden-ace-2026-10-25",
   "phase": "base-evaluation",
   "repository_root": "../..",
+  "source_lock": "manifests/base-evaluation_source-lock.json",
   "mapping_audit": "validation/mapping_audit.csv",
   "trace_path_template": "traces/placements/{topology}/{mapping_algorithm}/{workload}/seed_{mapping_seed}/routes/{route_policy}/requests.txt",
   "trace_selector": {

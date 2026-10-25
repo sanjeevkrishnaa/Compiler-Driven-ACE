@@ -40,7 +40,9 @@ python -m tools.golden_study.run_execution \
 ```
 
 Use `--limit N` for a bounded first batch. A result is reusable only when its full
-job/input hashes, expected rows, metadata, and completion rates validate.
+job/input hashes, expected rows, metadata, completion rates, ACE source lock, and
+SeQUeNCe Git revision validate. Filters such as `--workload ghz --topology mesh
+--route-policy xy` select a scientifically named resumable batch.
 
 After any batch, rebuild the incremental source table and LaTeX progress table:
 

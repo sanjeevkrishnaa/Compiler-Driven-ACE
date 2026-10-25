@@ -3,10 +3,18 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from tools.golden_study.run_execution import build_command, interpreter_path
+from tools.golden_study.run_execution import build_command, interpreter_path, select_jobs
 
 
 class ExecutionRunnerTests(unittest.TestCase):
+    def test_filters_jobs_by_conceptual_alias(self):
+        jobs = [
+            {"job_id": "a", "topology": "mesh", "trace_aliases": [{"workload": "ghz", "route_policy": "xy"}]},
+            {"job_id": "b", "topology": "torus", "trace_aliases": [{"workload": "qft", "route_policy": "dijkstra"}]},
+        ]
+        selected = select_jobs(jobs, set(), None, workloads={"ghz"}, topologies={"mesh"}, routes={"xy"})
+        self.assertEqual([job["job_id"] for job in selected], ["a"])
+
     def test_interpreter_path_does_not_resolve_venv_symlink(self):
         path = interpreter_path(Path(".venv/bin/python"), Path("/repo"))
         self.assertEqual(path, Path("/repo/.venv/bin/python"))
