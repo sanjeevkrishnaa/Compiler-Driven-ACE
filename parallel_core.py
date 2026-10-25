@@ -649,6 +649,9 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             planner_peak_memory=compiler_spec["planner_peak_memory"],
             fidelity=compiler_spec["fidelity"],
             reservation_duration_ms=compiler_spec["reservation_duration_ms"],
+            trigger=compiler_spec.get("trigger", "layer-start"),
+            trigger_delay_ms=compiler_spec.get("trigger_delay_ms", 0.0),
+            chain_hops_prepared=compiler_spec.get("chain_hops_prepared"),
         )
         compiler_controller.attach()
     

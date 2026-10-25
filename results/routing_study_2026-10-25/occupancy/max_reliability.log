@@ -1,0 +1,7 @@
+on-demand            seed=0 complete=100.00% latency=1.5612995020236684 ms fidelity=0.949813357734806
+dynamic              seed=0 complete=100.00% latency=2.568278678849704 ms fidelity=0.9437128022350427
+on-demand            seed=1 complete=100.00% latency=1.544119546402367 ms fidelity=0.949813357734806
+dynamic              seed=1 complete=100.00% latency=2.6051237738153845 ms fidelity=0.9436562598386717
+on-demand            seed=2 complete=100.00% latency=1.5728382298343195 ms fidelity=0.949813357734806
+dynamic              seed=2 complete=100.00% latency=2.64561810731716 ms fidelity=0.9435699512738094
+Wrote results/routing_study_2026-10-25/occupancy/run_max_reliability/summary.csv

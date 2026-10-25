@@ -502,3 +502,24 @@ Arms: `original` (supplied file, control: must reproduce 1.5256 / 2.5701 ms), `x
 the 30-seed run above (`tools/mapper_ace/run_routing_arms.sh`). Output: `results/routing_study_2026-10-25/runs/<arm>/`. Analysis:
 `tools/mapper_ace/compare_routing.py` (Welch intervals; seeds treated as independent because arms have different request sequences).
 Memory occupancy is not a column of `summary.csv`; it will be measured with `tools/diagnostics/occupancy.py` on a seed subset.
+
+### Routing study, QFT-96, 30 physics seeds: RESULT (finished 2026-10-25 ~13:40)
+Control check passed first: the supplied-file arm reproduces the committed run exactly (ODG 1.5256 ± 0.0160 ms, dynamic 2.5701 ± 0.0960 ms, makespan 4.3372 / 4.6939 s).
+Settings: 4 memories (3 compiler), generation capacity 3, delta 6, lookahead 8, coherence window 10 layers, per-qubit scheduler, event admission, buffer 0 (RSVP guard 0.2 ms).
+Full tables: `results/routing_study_2026-10-25/runs/comparison.md` (+ `comparison.csv`, `differences.csv`); occupancy raw data: `occupancy/<arm>.json` (seeds 0–2; NOT yet analysed).
+
+| arm | ODG latency (ms) | Dynamic latency (ms) | Dynamic p95 (ms) | Dynamic admission wait (ms) | ODG makespan (s) | Dynamic makespan (s) | dynamic / ODG latency | dynamic / ODG makespan |
+|---|---|---|---|---|---|---|---|---|
+| supplied file (control) | 1.5256 | 2.5701 | 8.54 | 1.638 | 4.337 | 4.694 | 1.685 | 1.082 |
+| shortest_reliable (synthetic map) | 1.5377 | 2.5181 | 8.29 | 1.574 | 4.345 | 4.717 | 1.638 | 1.085 |
+| max_reliability (synthetic map, +116 hops) | 1.5639 | 2.5966 | 8.68 | 1.640 | 4.387 | 4.781 | 1.660 | 1.090 |
+| **xy** | 1.3401 | **1.4840** | 4.37 | 0.603 | 4.244 | **4.076** | 1.107 | **0.961** |
+| yx | 1.3395 | 1.6275 | 5.06 | 0.759 | 4.247 | 4.136 | 1.215 | 0.974 |
+
+Differences from the control for dynamic (Welch 95% interval): xy latency −1.086 ± 0.047 ms (p≈5e-47), p95 −4.17 ± 0.21 ms, admission wait −1.034 ± 0.038 ms, makespan −617 ± 40 ms;
+yx −0.943 ± 0.051 ms, makespan −558 ± 43 ms. shortest_reliable −0.052 ± 0.046 ms (marginal, p=0.026). max_reliability latency no change (p=0.28), makespan +87 ± 39 ms (worse).
+Under the pre-written decision rule: **XY and YX reduce Dynamic congestion; shortest_reliable and max_reliability do not (on QFT-96's synthetic reliability map).**
+Also for ODG: XY/YX cut admission wait 0.200 → 0.018 ms and latency 1.526 → 1.340 ms. With XY, Dynamic's makespan (4.076 s) is below ODG's (4.244 s) for the first time, while its mean latency is still 11% above ODG's.
+Dynamic with XY: EPR hit rate 0.50 (control 0.445), cached-pair storage 6.1 ms (control 8.2), fidelity at use 0.9386 (control 0.9348), compiler EPR waste 0.49%.
+Mechanism (INFERRED, not yet tested): the supplied routes come from a shortest-hop search with a reliability tie-break and concentrate relay traffic (busiest relay core 9: 961 visits under shortest_reliable vs 424 under XY, same total 3,184 visits); XY spreads the load. The relay-load figures are from the exported traces, not from the ACE runs.
+Not established: that XY is the best routing; the O1TURN-style mix and an offline congestion-aware route are not run yet. The reliability map for QFT-96 is synthetic, so the two reliability arms say nothing about the mapper's real map.

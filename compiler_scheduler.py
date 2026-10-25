@@ -11,6 +11,12 @@ from sequence.kernel.event import Event
 from sequence.kernel.process import Process
 
 
+TRIGGERS = ("layer-start", "predecessor-start")
+"""When a planned preparation is launched.  ``layer-start``: when its planned generation layer activates, plus
+``trigger_delay_ms`` (the original behaviour with a zero delay).  ``predecessor-start``: a later hop of a qubit's chain is
+launched when the previous hop of that chain begins; first hops follow ``layer-start``."""
+
+
 def _pair_key(pair: tuple) -> tuple:
     return tuple(sorted(pair))
 
@@ -31,7 +37,12 @@ class CompilerPreGenerationController:
         planner_peak_memory: int,
         fidelity: float,
         reservation_duration_ms: float,
+        trigger: str = "layer-start",
+        trigger_delay_ms: float = 0.0,
+        chain_hops_prepared: int | None = None,
     ):
+        if trigger not in TRIGGERS:
+            raise ValueError(f"unknown preparation trigger {trigger!r}; expected one of {TRIGGERS}")
         self.timeline = timeline
         self.routers = routers
         self.requests = {request.request_id: request for request in requests}
@@ -41,6 +52,22 @@ class CompilerPreGenerationController:
         self.planner_peak_memory = planner_peak_memory
         self.fidelity = fidelity
         self.reservation_duration_ms = reservation_duration_ms
+        self.trigger = trigger
+        self.trigger_delay = int(trigger_delay_ms * MILLISECOND)
+        # position of every request inside its qubit's chain of hops in one layer, and the hop before it
+        chains = defaultdict(list)
+        for request in requests:
+            chains[(request.layer, request.qubit)].append(request)
+        self.chain_position, self.chain_predecessor = {}, {}
+        for hops in chains.values():
+            hops.sort(key=lambda r: r.order)
+            for index, request in enumerate(hops):
+                self.chain_position[request.request_id] = index
+                if index:
+                    self.chain_predecessor[request.request_id] = hops[index - 1].request_id
+        if chain_hops_prepared is not None:
+            schedule = tuple(item for item in schedule if self.chain_position[item.request_id] < chain_hops_prepared)
+        self.waiting_for_predecessor = defaultdict(list)
         self.schedule = {item.request_id: item.generation_layer for item in schedule}
         self.by_generation_layer = defaultdict(list)
         for item in schedule:
@@ -68,16 +95,29 @@ class CompilerPreGenerationController:
             return
         self.triggered_generation_layers.add(layer)
         for request_id in self.by_generation_layer.get(layer, ()):
-            request = self.requests[request_id]
-            self.pending_preparations[request_id] = {
-                "request_id": request_id,
-                "generation_layer": layer,
-                "target_layer": request.layer,
-                "strategy": self.strategy,
-                "fidelity": self.fidelity,
-                "reservation_duration_ms": self.reservation_duration_ms,
-            }
-            self.retry_preparation(request_id)
+            if self.trigger == "predecessor-start" and request_id in self.chain_predecessor:
+                # a later hop is prepared when the hop before it of the same qubit begins
+                self.waiting_for_predecessor[self.chain_predecessor[request_id]].append(request_id)
+            elif self.trigger_delay > 0:
+                self.timeline.schedule(Event(self.timeline.now() + self.trigger_delay,
+                                             Process(self, "launch_preparation", [request_id])))
+            else:
+                self.launch_preparation(request_id)
+
+    def launch_preparation(self, request_id: int) -> None:
+        """Ask the directed protocol for the request's pair now (unless the request has already started)."""
+        if request_id in self.deadlines or request_id in self.accepted:
+            return
+        request = self.requests[request_id]
+        self.pending_preparations[request_id] = {
+            "request_id": request_id,
+            "generation_layer": self.schedule[request_id],
+            "target_layer": request.layer,
+            "strategy": self.strategy,
+            "fidelity": self.fidelity,
+            "reservation_duration_ms": self.reservation_duration_ms,
+        }
+        self.retry_preparation(request_id)
 
     def retry_preparation(self, request_id):
         self.preparation_retry_events.pop(request_id, None)
@@ -99,6 +139,9 @@ class CompilerPreGenerationController:
         event = self.preparation_retry_events.pop(request_id, None)
         if event is not None:
             self.timeline.remove_event(event)
+        waiting = getattr(self, "waiting_for_predecessor", None)      # absent on bare test doubles
+        for successor in (waiting.pop(request_id, ()) if waiting else ()):
+            self.launch_preparation(successor)
 
     def _router_name(self, core: int) -> str:
         return f"router_{core // self.columns}_{core % self.columns}"

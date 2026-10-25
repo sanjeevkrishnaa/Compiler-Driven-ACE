@@ -76,6 +76,9 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         "compiler_memories_per_core": 0 if strategy == "on-demand" else args.compiler_memories,
         "fidelity": args.fidelity_threshold,
         "reservation_duration_ms": args.compiler_reservation_ms,
+        "trigger": getattr(args, "preparation_trigger", "layer-start"),
+        "trigger_delay_ms": getattr(args, "preparation_delay_ms", 0.0),
+        "chain_hops_prepared": getattr(args, "chain_hops_prepared", None),
     }
 
 
@@ -200,6 +203,12 @@ def main() -> None:
     parser.add_argument("--compiler-memories", type=int, default=3)
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
+    parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
+                        help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
+    parser.add_argument("--preparation-delay-ms", type=float, default=0.0,
+                        help="launch delay after the planned generation layer activates (first hops under predecessor-start)")
+    parser.add_argument("--chain-hops-prepared", type=int, default=None,
+                        help="prepare only the first N hops of each qubit's chain (default: all)")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
