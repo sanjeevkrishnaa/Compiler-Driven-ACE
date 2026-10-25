@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import unittest
 
 from compiler_trace import CompilerRequest, router_name
-from latency_metrics import eligible_latencies_ms, layer_activation_times
+from latency_metrics import arrival_latencies_ms, layer_activation_times
 from parallel_core import run_parallel_experiment
 from tools.ace_correctness import harness
 from tools.ace_correctness.harness import Hop
@@ -42,17 +42,17 @@ class DefinitionTests(unittest.TestCase):
     def test_retry_batches_do_not_define_a_layer_start(self):
         self.assertEqual(layer_activation_times({0: 10, 1: 30}, [0, None]), {0: 10})
 
-    def test_a_request_is_measured_from_its_layer_start_and_a_chain_hop_from_its_predecessor(self):
+    def test_a_request_is_measured_from_arrival_without_subtracting_the_buffer(self):
         requests = [CompilerRequest(0, 0, 0, 7, 5, 9), CompilerRequest(1, 0, 1, 7, 9, 10),
                     CompilerRequest(2, 0, 2, 8, 1, 2)]
-        got = eligible_latencies_ms(manager({0: 0}, [0], {0: 6 * MS, 1: 14 * MS, 2: 9 * MS}), requests)
-        self.assertAlmostEqual(got[0], 6 - 5.3)           # from the layer start
-        self.assertAlmostEqual(got[1], 14 - 6 - 5.3)      # from the moment hop 0 completed
-        self.assertAlmostEqual(got[2], 9 - 5.3)           # another qubit: from the layer start too
+        got = arrival_latencies_ms(manager({0: 0}, [0], {0: 6 * MS, 1: 14 * MS, 2: 9 * MS}), requests)
+        self.assertAlmostEqual(got[0], 6)                 # from the layer start
+        self.assertAlmostEqual(got[1], 14 - 6)            # from the moment hop 0 completed
+        self.assertAlmostEqual(got[2], 9)                 # another qubit: from the layer start too
 
     def test_unfinished_requests_are_left_out(self):
         requests = [CompilerRequest(0, 0, 0, 7, 5, 9), CompilerRequest(1, 0, 1, 8, 1, 2)]
-        got = eligible_latencies_ms(manager({0: 0}, [0], {0: 6 * MS}), requests)
+        got = arrival_latencies_ms(manager({0: 0}, [0], {0: 6 * MS}), requests)
         self.assertEqual(set(got), {0})
 
 
@@ -63,7 +63,7 @@ class OnTheSimulatorTests(unittest.TestCase):
         """That manager already starts a request's clock at eligibility, so the two must agree."""
         result, plan = simulate(self.LAYERS, "per-qubit")
         own = result["stats"]["individual_latencies"]
-        common = eligible_latencies_ms(result["request_manager"], plan)
+        common = arrival_latencies_ms(result["request_manager"], plan)
         self.assertEqual(set(own), set(common))
         for request_id in own:
             self.assertAlmostEqual(own[request_id], common[request_id], places=6)
@@ -71,7 +71,7 @@ class OnTheSimulatorTests(unittest.TestCase):
     def test_legacy_latency_leaves_out_waiting_for_earlier_batches_and_the_common_one_counts_it(self):
         result, plan = simulate(self.LAYERS, "legacy")
         own = result["stats"]["individual_latencies"]
-        common = eligible_latencies_ms(result["request_manager"], plan)
+        common = arrival_latencies_ms(result["request_manager"], plan)
         self.assertEqual(set(own), set(common))
         for request_id in own:
             self.assertGreaterEqual(common[request_id] + 1e-9, own[request_id])

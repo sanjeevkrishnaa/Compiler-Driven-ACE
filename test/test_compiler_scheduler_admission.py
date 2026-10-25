@@ -49,7 +49,7 @@ class SwapTests(unittest.TestCase):
         for admission in ("poll", "event"):
             outcome = run(SWAP, admission, memories=2)
             self.assertEqual((outcome.completed, outcome.total_retries, outcome.violations), (2, 0, []), admission)
-            self.assertLess(max(outcome.latencies_ms.values()), 5.0)
+            self.assertLess(max(outcome.latencies_ms.values()), 10.0)
 
 
 class OrderTests(unittest.TestCase):

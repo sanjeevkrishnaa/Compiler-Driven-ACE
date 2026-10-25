@@ -50,7 +50,7 @@ class ChainTests(unittest.TestCase):
         self.assertEqual((outcome.completed, outcome.total_retries, outcome.violations), (2, 0, []))
         submitted = first_submissions(outcome)
         self.assertEqual((submitted[0], submitted[1]), (0, 0))
-        self.assertLess(max(outcome.latencies_ms.values()), 5.0)
+        self.assertLess(max(outcome.latencies_ms.values()), 10.0)
 
     def test_a_longer_chain_keeps_trace_order(self):
         outcome = run([[Hop(0, 4, 5, qubit=3), Hop(1, 5, 9, qubit=3), Hop(2, 9, 10, qubit=3)]])

@@ -71,12 +71,13 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(manager.request_attempt_submission_times[0], 55)
         manager.request_approval_times[0] = 57
         manager.request_end_times[0] = 62
-        self.assertEqual(manager.get_individual_latencies()[0], 57)
+        self.assertEqual(manager.get_individual_latencies()[0], 62)
         row = manager.get_individual_latencies_breakdown()[0]
         self.assertEqual(row['retry_wait_time_ms'], 55)
         self.assertEqual(row['reservation_setup_time_ms'], 0)
         self.assertEqual(row['entanglement_generation_time_ms'], 2)
-        self.assertEqual(row['total_time_ms'], 57)
+        self.assertEqual(row['initial_buffer_time_ms'], 5)
+        self.assertEqual(row['total_time_ms'], 62)
 
     def test_setup_beyond_buffer_is_counted_once(self):
         manager = self.manager()

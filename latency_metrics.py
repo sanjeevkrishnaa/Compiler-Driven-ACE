@@ -1,4 +1,4 @@
-"""One latency definition that means the same under every request manager.
+"""One arrival-to-completion latency definition for every request manager.
 
 ``ParallelLayerRequestManager.get_individual_latencies`` starts a request's clock at its first
 submission.  Under the legacy manager a request in a later per-core batch is submitted only after
@@ -11,8 +11,9 @@ Here a request's clock starts when it could first have been asked for:
 * for a hop that follows another hop of the same qubit in the same layer, the moment that hop
   completed (the qubit has to arrive before it can move on).
 
-Latency is completion minus that moment, minus the configured pre-generation lead once, as in the
-manager's own definition.
+Latency is completion minus that arrival moment.  The configured
+pre-generation lead happens after an on-demand request arrives, therefore it
+is real latency and is deliberately included.
 """
 from __future__ import annotations
 
@@ -32,8 +33,8 @@ def layer_activation_times(layer_start_times: Mapping[int, int], working_layer_o
     return first
 
 
-def eligible_latencies_ms(manager, requests: Sequence) -> dict[int, float]:
-    """Latency of every completed request, from the moment it could first be asked for."""
+def arrival_latencies_ms(manager, requests: Sequence) -> dict[int, float]:
+    """Latency of every completed request, from arrival until completion."""
     activation = layer_activation_times(manager.layer_start_times, manager.working_layer_origins)
     chains: dict[tuple[int, int], list] = defaultdict(list)
     for r in requests:
@@ -55,5 +56,10 @@ def eligible_latencies_ms(manager, requests: Sequence) -> dict[int, float]:
             eligible = activation.get(r.layer)
         if eligible is None:
             continue
-        latencies[r.request_id] = (end - eligible - manager.pregeneration_time) / MILLISECOND
+        latencies[r.request_id] = (end - eligible) / MILLISECOND
     return latencies
+
+
+# Kept as a compatibility import for callers while they move to the precise
+# arrival terminology.  Its value now follows the documented latency contract.
+eligible_latencies_ms = arrival_latencies_ms

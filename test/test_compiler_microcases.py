@@ -20,13 +20,13 @@ class ConcurrentDemandTests(unittest.TestCase):
         outcome = run_layers(SAME_LINK, memories=32, distinct_fidelity_targets=True)
         self.assertEqual((outcome.completed, outcome.total_retries), (4, 0))
         self.assertEqual(outcome.violations, [])
-        self.assertLess(max(outcome.latencies_ms.values()), 5.0)
+        self.assertLess(max(outcome.latencies_ms.values()), 10.0)
 
     def test_different_links_through_one_core_overlap_without_a_retry(self):
         outcome = run_layers(FOUR_LINKS_THROUGH_CORE_9, memories=4)
         self.assertEqual((outcome.completed, outcome.total_retries), (4, 0))
         self.assertEqual(outcome.violations, [])
-        self.assertLess(max(outcome.latencies_ms.values()), 5.0)
+        self.assertLess(max(outcome.latencies_ms.values()), 10.0)
 
     def test_one_memory_per_core_makes_requests_wait_and_all_still_complete(self):
         outcome = run_layers(FOUR_LINKS_THROUGH_CORE_9, memories=1)
@@ -75,7 +75,7 @@ class AliasingTests(unittest.TestCase):
         outcome = run_layers(SAME_LINK, memories=32)
         self.assertEqual((outcome.completed, outcome.total_retries), (4, 0))
         self.assertEqual(outcome.violations, [])
-        self.assertLess(max(outcome.latencies_ms.values()), 5.0)
+        self.assertLess(max(outcome.latencies_ms.values()), 10.0)
 
     def test_many_identical_looking_requests_on_one_link_overlap(self):
         for k in (2, 8, 16):

@@ -402,26 +402,28 @@ class ParallelLayerRequestManager:
     def get_individual_latencies(self) -> dict:
         """
         Returns latency for each request in milliseconds.
-        Latency = (completion_time - submission_time) - pre_generation_time
-        Includes failed attempts and retry buffers; excludes the initial buffer once.
+        Latency = completion_time - first manager submission.
+
+        This is the manager-local metric.  The configured pre-generation
+        buffer is real elapsed time after that submission, so it must not be
+        subtracted.  Failed attempts and retry waits are included too.  The
+        trace-level, cross-scheduler arrival metric is in
+        ``latency_metrics.arrival_latencies_ms``.
         """
         latencies = {}
         for req_id in self.request_submission_times:
             if req_id in self.request_end_times:
                 submission_time = self.request_submission_times[req_id]
                 completion_time = self.request_end_times[req_id]
-                # Subtract pre-generation time to get only setup + generation time
-                latency_with_pregen = completion_time - submission_time
-                latency_without_pregen = latency_with_pregen - self.pregeneration_time
-                latencies[req_id] = latency_without_pregen / MILLISECOND
+                latencies[req_id] = (completion_time - submission_time) / MILLISECOND
         return latencies
     
     def get_individual_latencies_breakdown(self) -> dict:
-        """Disjoint stages summing to retry-inclusive request latency.
+        """Disjoint stages summing to full first-submission-to-completion time.
 
-        Only the initial configured buffer is excluded. Retry waiting includes
-        failed attempts and subsequent buffers. Setup overlapping the initial
-        buffer is not counted a second time.
+        ``arrival_to_completion_time_ms`` is retained as a compatibility name
+        for the manager-local interval; the trace-level arrival metric is
+        calculated separately by ``latency_metrics``.
         """
         breakdown = {}
         for req_id, completion in self.request_end_times.items():
@@ -432,13 +434,16 @@ class ParallelLayerRequestManager:
             generation = self.request_generation_start_times[req_id]
             approval = self.request_approval_times[req_id]
             retry_wait = (attempt - first) / MILLISECOND
+            initial_buffer = min(self.pregeneration_time, generation - first) / MILLISECOND
             setup = max(0, approval - generation) / MILLISECOND
             service = (completion - max(generation, approval)) / MILLISECOND
             breakdown[req_id] = {
+                'arrival_to_completion_time_ms': (completion - first) / MILLISECOND,
+                'initial_buffer_time_ms': initial_buffer,
                 'retry_wait_time_ms': retry_wait,
                 'reservation_setup_time_ms': setup,
                 'entanglement_generation_time_ms': service,
-                'total_time_ms': retry_wait + setup + service,
+                'total_time_ms': initial_buffer + retry_wait + setup + service,
                 'retry_count': self.request_retry_count.get(req_id, 0),
             }
         return breakdown
@@ -452,8 +457,8 @@ class ParallelLayerRequestManager:
             'total_requests': sum(len(layer) for layer in self.original_layered_requests),
             'completed_requests': len(self.request_end_times),
             'end_to_end_latency_ms': self.get_end_to_end_latency(),
-            'metric_version': 2,
-            'request_latency_definition': 'first submission to completion, excluding initial buffer only; includes retries',
+            'metric_version': 3,
+            'request_latency_definition': 'first manager submission to completion; includes initial buffer and retries',
             'end_to_end_latency_definition': 'wall-clock makespan including buffers, idle layers and retries',
             'layer_latencies': self.get_layer_latencies(),
             'individual_latencies': self.get_individual_latencies(),
@@ -695,8 +700,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     print(f"{'='*80}")
     print(f"Configuration: {config_file}")
     print(f"Update probability: {update_prob_setting}")
-    print(f"Pre-generation buffer: {pregeneration_time_ms:.2f} ms (excluded from measurements)")
-    print(f"\nStatistics (request latency excludes initial buffer; makespan includes all elapsed time):")
+    print(f"Pre-generation buffer: {pregeneration_time_ms:.2f} ms (included in request latency)")
+    print(f"\nStatistics (request latency and makespan include all elapsed time):")
     print(f"  Original layers: {stats['total_layers']}")
     print(f"  Retry layers (due to congestion): {stats['retry_layers']}")
     print(f"  Total layers processed: {stats['total_layers_with_retries']}")

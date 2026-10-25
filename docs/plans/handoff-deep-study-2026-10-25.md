@@ -93,9 +93,9 @@ Map of what was read and verified in this session (file:line refer to this commi
 
 ## 4. The latency definition
 
-Current definition (`latency_metrics.py`, column `average_eligible_latency_ms`): for each completed request, completion time minus the time it became eligible minus the 5.3 ms lead. Eligible = the start of its layer for a first hop,
-the completion of the previous hop for a later hop of the same qubit's chain. It therefore **includes** waiting for a free memory, the reservation messages' classical delay and generation; it **excludes** the wait for earlier hops of
-the chain and for earlier layers (those are `dependency_wait`), and the 5.3 ms lead. Definition and tests: Chapter 5 of the report, `test/test_latency_metrics.py`.
+Current definition (`latency_metrics.py`, column `average_arrival_latency_ms`): for each completed request, completion time minus the time it arrived. Arrival = the start of its layer for a first hop,
+or the completion of the previous hop for a later hop of the same qubit's chain. It therefore **includes** the configured 5.3 ms lead, waiting for a free memory, the reservation messages' classical delay and generation; it excludes the wait for earlier hops of
+the chain and for earlier layers (those are `dependency_wait`). This supersedes the earlier, incorrect definition that subtracted the 5.3 ms lead. Definition and tests: `test/test_latency_metrics.py`.
 
 Questions to settle before improving dynamic (each changes the headline):
 * It is **per hop**, not per route or per qubit move. Is per-hop the right unit for the claim "pre-generation reduces latency"?
