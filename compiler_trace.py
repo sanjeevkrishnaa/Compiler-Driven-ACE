@@ -244,6 +244,7 @@ def _candidate_layers(
     strategy: str,
     delta_layers: int,
     dynamic_lookahead_layers: int,
+    lead_layers: int = 1,
 ) -> tuple[int, ...]:
     if strategy == "on-demand":
         return ()
@@ -251,7 +252,7 @@ def _candidate_layers(
         return (request.layer - delta_layers,)
     if strategy == "dynamic":
         lower = max(0, request.layer - dynamic_lookahead_layers)
-        return tuple(range(request.layer - 1, lower - 1, -1))
+        return tuple(range(request.layer - lead_layers, lower - 1, -1))
     raise ValueError(f"unknown compiler strategy {strategy!r}")
 
 
@@ -264,6 +265,7 @@ def plan_preparations(
     coherence_time_layers: float,
     delta_layers: int = 2,
     dynamic_lookahead_layers: int = 8,
+    lead_layers: int = 1,
 ) -> tuple[tuple[ScheduledPreparation, ...], int, int]:
     """Plan request-specific preparations under per-layer memory limits."""
 
@@ -271,6 +273,8 @@ def plan_preparations(
         raise ValueError("compiler memory and generation capacities must be positive")
     if coherence_time_layers <= 0 or delta_layers < 1 or dynamic_lookahead_layers < 1:
         raise ValueError("coherence and lookahead values must be positive")
+    if not 1 <= lead_layers <= dynamic_lookahead_layers:
+        raise ValueError("the planner lead must lie between 1 and the lookahead")
     if strategy == "on-demand":
         return (), 0, 0
 
@@ -281,7 +285,7 @@ def plan_preparations(
     for request in trace.requests:
         chosen: int | None = None
         for generation_layer in _candidate_layers(
-            request, strategy, delta_layers, dynamic_lookahead_layers
+            request, strategy, delta_layers, dynamic_lookahead_layers, lead_layers
         ):
             if generation_layer < 0:
                 continue

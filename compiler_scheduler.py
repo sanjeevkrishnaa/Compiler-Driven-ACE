@@ -71,8 +71,9 @@ class CompilerPreGenerationController:
             hops.sort(key=lambda r: r.order)
             for index, request in enumerate(hops):
                 self.chain_position[request.request_id] = index
-                if index:
-                    self.chain_predecessor[request.request_id] = hops[index - 1].request_id
+                # the hop whose start launches this one: predecessor_distance positions earlier, if the chain has one
+                if index >= predecessor_distance:
+                    self.chain_predecessor[request.request_id] = hops[index - predecessor_distance].request_id
         if chain_hops_prepared is not None:
             schedule = tuple(item for item in schedule if self.chain_position[item.request_id] < chain_hops_prepared)
         if congestion_threshold is not None:

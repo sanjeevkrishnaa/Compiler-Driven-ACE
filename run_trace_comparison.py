@@ -65,6 +65,7 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         coherence_time_layers=args.coherence_time_layers,
         delta_layers=args.delta_layers,
         dynamic_lookahead_layers=args.dynamic_lookahead_layers,
+        lead_layers=getattr(args, "planner_lead_layers", 1),
     )
     return {
         "requests": trace.requests,
@@ -209,6 +210,10 @@ def main() -> None:
                         help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
     parser.add_argument("--preparation-delay-ms", type=float, default=0.0,
                         help="launch delay after the planned generation layer activates (first hops under predecessor-start)")
+    parser.add_argument("--planner-lead-layers", type=int, default=1,
+                        help="the planner tries the layer this many before the request first, then earlier ones (default 1: the layer before)")
+    parser.add_argument("--predecessor-distance", type=int, default=1,
+                        help="predecessor-start launches a hop when the hop this many positions earlier in its chain begins")
     parser.add_argument("--chain-hops-prepared", type=int, default=None,
                         help="prepare only the first N hops of each qubit's chain (default: all)")
     parser.add_argument("--congestion-threshold", type=int, default=None,
