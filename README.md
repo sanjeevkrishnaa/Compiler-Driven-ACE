@@ -9,14 +9,21 @@ batches, safe reservation release, and retry-inclusive latency accounting.
 
 ## Compiler experiments
 
-Use the compatible SeQUeNCe fork from
-[qnoc-stress-testing](https://github.com/anub-dota/qnoc-stress-testing), with
-its `SeQUeNCe` directory installed in your Python environment or on PYTHONPATH.
+ACE currently runs against the local **SeQUeNCe 0.8.1** checkout. It is not
+compatible with the separate native SeQUeNCe 1.0.0 fork used for the
+shared-pool/congestion experiments. Run ACE through the checked-in launcher;
+it pins the imported simulator and refuses to run against the wrong checkout.
 
 ```powershell
-$env:PYTHONPATH = 'C:/path/to/qnoc-stress-testing/SeQUeNCe'
-python run_compiler_pregeneration.py --trace C:/path/to/requests.txt --strategies on-demand,fixed,dynamic --seeds 0,1,2 --total-memories 4 --compiler-memories 3 --output output/compiler_study
+tools/run_ace.sh -B run_trace_comparison.py --trace data/tracegen/qft16_seed101.txt --strategies on-demand,fixed,dynamic --seeds 0,1,2 --total-memories 4 --compiler-memories 3 --output output/compiler_study
 ```
+
+By default the launcher expects a `.venv` in this checkout and a sibling
+`../SeQUeNCe-0.8.1` directory. Override those deliberately with `ACE_PYTHON`
+and `SEQUENCE_ROOT` only for another verified SeQUeNCe 0.8.1 checkout; the
+launcher rejects every other version. Each new ACE experiment records the actual Python
+executable, imported `sequence.__file__`, SeQUeNCe version/commit and ACE
+commit in its metadata.
 
 The repaired dynamic policy reduced mean request latency by 37.52% on the
 original QFT-96 trace (three matched seeds) and 55.70% on the small random

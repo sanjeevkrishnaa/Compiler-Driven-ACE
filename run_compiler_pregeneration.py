@@ -21,6 +21,7 @@ from compiler_trace import (
     validate_neighbor_requests,
 )
 from parallel_core import run_parallel_experiment
+from runtime_provenance import runtime_provenance
 
 
 def _csv_values(value: str) -> list[str]:
@@ -208,8 +209,9 @@ def main() -> None:
             "implementation_version": 4,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py']},
+                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'runtime_provenance.py']},
             "readiness_definition": "physical creation strictly before first application submission",
+            "runtime": runtime_provenance(Path(__file__).resolve().parent),
             "trace": str(args.trace.resolve()),
             "config": str(args.config.resolve()),
             "mesh": f"{rows}x{columns}",
