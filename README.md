@@ -65,3 +65,10 @@ simulation output, logs and caches are ignored; curated results live in `results
 Research foundations:
 [Design and Simulation of the Adaptive Continuous Entanglement Generation Protocol](https://arxiv.org/abs/2502.01964),
 [Adaptive, Continuous Entanglement Generation for Quantum Networks](https://ieeexplore.ieee.org/document/9798130).
+
+## Fresh golden study
+
+The consolidated ODG/CGP/ACGP/Dynamic study is intentionally separate from the
+historical result folders. Its contract blocks an experiment until its workload
+traces, hashes, seed sets, route policy, and configuration are explicit. Start at
+[the golden-study README](docs/research/golden-study/README.md).

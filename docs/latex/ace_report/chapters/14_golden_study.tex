@@ -1,0 +1,23 @@
+\chapter{Fresh Golden Study: Contract and Execution Record}
+
+This chapter is the living record for the consolidated experiment program. It is
+kept separate from historical ACE results so that a result cannot be promoted merely
+because it exists in an older output directory. Every accepted observation must have
+an immutable trace hash, a configuration manifest, paired seeds, complete requests,
+and a source CSV listed in the study registry.
+
+The cross-policy headline metric is request eligibility-to-EPR-delivery latency. It
+includes admission wait, reservation, retry, and generation time. It excludes time
+before eligibility during which a cached pair was merely stored. Whole-program cost
+is reported separately as makespan.
+
+\input{generated/golden_study_contract}
+
+The planned capacity study includes constrained settings and deliberately labelled
+architecture-scaling settings. Capacities greater than the current four-memory model
+are sensitivity points, not claims about the baseline hardware. The torus arm uses
+Dijkstra routing only. Mesh routing comparisons hold a placement contract fixed.
+
+At report build time, this chapter contains no performance conclusion until the
+contract has been made run-ready and the corresponding registry rows, raw CSV files,
+and validation records exist.

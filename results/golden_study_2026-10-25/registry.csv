@@ -1,0 +1,1 @@
+study_id,experiment_id,workload,mapping_algorithm,mapping_seed,physics_seed,topology,route_policy,route_parameters,scheduler_policy,scheduler_parameters,total_memories_per_core,compiler_memories_per_core,trace_path,trace_sha256,config_sha256,git_sha,raw_output_path,completion_rate,accepted,notes

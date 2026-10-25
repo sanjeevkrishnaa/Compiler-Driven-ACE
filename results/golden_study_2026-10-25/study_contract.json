@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "study_id": "golden-ace-2026-10-25",
+  "status": "design-locked-execution-blocked",
+  "purpose": "Fresh, traceable comparison of EPR scheduling policies. Historical result folders are inputs for audit only and are never silently reused as golden-study data.",
+  "model_scope": {
+    "request_model": "adjacent-hop ACE trace",
+    "excluded_claim": "This study does not claim native end-to-end entanglement swapping or data-qubit relay storage unless a separately versioned trace-v2 experiment implements it.",
+    "latency_metric": "request eligibility to EPR delivery, including admission wait, reservation, retries, and generation; excluding cached-pair storage before eligibility",
+    "makespan_metric": "wall-clock simulator completion time after the workload completes"
+  },
+  "workloads": {
+    "required_count": 10,
+    "inventory": "workload_inventory.json",
+    "rule": "Every workload, placement, route, and trace must be explicitly registered with relative paths and SHA-256 digests before execution."
+  },
+  "seeds": {
+    "mapping": [],
+    "physics_training": [],
+    "physics_evaluation": [],
+    "rule": "Seed lists are intentionally empty until approved. A final run requires disjoint non-empty training and evaluation physics seed lists and a non-empty mapping seed list."
+  },
+  "memory_experiment": {
+    "total_memories_per_core": [2, 3, 4, 6, 8, 16, 32, 64],
+    "compiler_memory_allocations": "enumerate every integer allocation from 0 through total_memories_per_core - 1 for policies that use compiler reservations; on-demand uses 0 by definition",
+    "classification": {
+      "2,3,4": "constrained/current-model settings",
+      "6,8,16,32,64": "architecture-scaling sensitivity settings; never report as the current physical hardware setting"
+    }
+  },
+  "policy_definitions": {
+    "ODG": {"runner_strategy": "on-demand", "kind": "baseline", "parameters": {}},
+    "CGP": {"runner_strategy": "continuous", "kind": "autonomous-cache", "parameters": {}},
+    "ACGP": {"runner_strategy": "adaptive-continuous", "kind": "autonomous-cache", "parameters": {}},
+    "Dynamic-full-chain": {"runner_strategy": "dynamic", "kind": "compiler-directed", "parameters": {"chain_hops_prepared": null, "congestion_threshold": null}},
+    "Dynamic-first-hop": {"runner_strategy": "dynamic", "kind": "compiler-directed", "parameters": {"chain_hops_prepared": 1, "congestion_threshold": null}},
+    "Dynamic-congestion-adaptive": {"runner_strategy": "dynamic", "kind": "compiler-directed", "parameters": {"chain_hops_prepared": null, "congestion_threshold": "MUST_BE_PREREGISTERED"}}
+  },
+  "routing": {
+    "mesh": ["xy", "yx", "shortest_reliable", "max_reliability"],
+    "torus": ["dijkstra"],
+    "rule": "A routing comparison reuses one immutable placement contract. Every route is exported before ACE execution and validated for endpoint replay, adjacency, topology, and hash."
+  },
+  "mapping": {
+    "new_experiments": "T-HQA with explicitly recorded initial-placement configuration",
+    "control": "HQA",
+    "rule": "Mapping and routing are never varied in the same causal comparison."
+  },
+  "required_metrics": [
+    "completion_rate", "request_latency_mean_ms", "request_latency_median_ms", "request_latency_p95_ms", "request_latency_max_ms", "end_to_end_latency_ms",
+    "average_admission_wait_ms", "avg_entanglement_generation_time_ms", "requests_that_waited_fraction", "total_retries", "requests_with_retries",
+    "pregenerated_success_rate", "intended_request_hit_rate", "on_demand_fallback_rate", "protocol_waste_percentage", "compiler_waste_percentage", "compiler_expiry_percentage",
+    "average_storage_time_ms", "average_fidelity_at_creation", "average_fidelity_at_utilization", "average_delivered_epr_fidelity",
+    "endpoint_wait_ms", "relay_wait_ms", "peak_memory_occupancy", "max_core_load", "hotspot_gini"
+  ],
+  "acceptance_rules": [
+    "completion_rate must equal 1.0 for every accepted run",
+    "all compared policies must use the same trace hash and paired physics seeds",
+    "a result must include a Git SHA, source hashes, configuration hash, and raw-output paths",
+    "every report figure must cite its source CSV and be accompanied by a numeric table",
+    "screening and final evaluation results must be labelled separately"
+  ]
+}
