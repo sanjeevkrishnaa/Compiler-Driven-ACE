@@ -1,0 +1,3 @@
+placer,benchmark,circuit,grid,n_cores,n_qubits,n_slices,n_two_qubit_gates,reliability_band,repeat,runtime_seconds,evictions,rounds,cost,epr_latency,path_quality,infeasible_operations,migrations,mean_transfer_cost,residual_operations,residual_cost,is_complete,hops
+HQA,qft,qft_96,4x4,16,96,766,9264,0.10-1.00,0,0.060072499996749684,0,237,52966.057604869304,15012.273586486655,447.38842786919787,1739,1770,30.457767455359,0,0.0,True,4954.0
+T-HQA,qft,qft_96,4x4,16,96,766,9264,0.10-1.00,0,0.059191209002165124,0,302,34900.40203444651,13023.779663763626,541.8030644566966,1904,1965,18.330043085318547,0,0.0,True,3876.0

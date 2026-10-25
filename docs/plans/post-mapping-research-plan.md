@@ -29,6 +29,24 @@ later request's clock only when its predecessors finish, so delays that push lat
 
 ## 2. Workstreams, in order
 
+### Placement policy for new experiments (fixed 2026-10-25)
+
+New trace-generation studies use **T-HQA** with the documented OEE initial
+placement, while retaining **HQA** as the historical baseline. This chooses the
+logical migration endpoints once; downstream XY, YX and other route experiments
+must reuse the identical T-HQA placement contract so that routing is the only
+variable. It does not establish that T-HQA is universally better: its mapping
+objective is topology distance, while the final ACE metric is physical
+arrival-to-delivery latency. Every publication table therefore includes an
+HQA-versus-T-HQA placement comparison before attributing a result to routing or
+pre-generation.
+
+The initial QFT-96 mapper-only comparison is archived in
+`results/hqa-vs-thqa-qft96-2026-10-25`. With OEE, a 4x4 mesh, 96 qubits, and
+reliability seeds 42–44, T-HQA consistently produces 3,876 shortest-path hops
+versus HQA's 4,954, but its reliability-weighted mapper cost varies by seed.
+This is a reason to test T-HQA in ACE, not a claim that it has already won.
+
 ### A. Routing study on QFT-96 (steps 1–5 of the plan)
 - **done** Placement recovery and contract exporter (commit f426699): the mapper's own partition is in `mapping.npz` for the 30 archived 48-qubit traces;
   replay of any hop trace reproduces it (30/30). QFT-96 replays to 1,770 migrations / 4,954 hops.
