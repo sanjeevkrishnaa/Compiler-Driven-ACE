@@ -97,3 +97,21 @@ memories in these observed plateaus. Thus Dynamic full-chain is the strongest
 latency--capacity--fidelity trade-off in this sparse slice, while the high-capacity
 CGP/ACGP point has the absolute minimum latency. No cross-workload claim follows
 until the remaining registered slices are complete.
+
+The second complete slice repeats the same exhaustive memory grid for BV without
+changing the simulator or physical parameters.
+
+\input{generated/golden_bv_mesh_xy_memory_sweep}
+
+For BV, Dynamic full-chain reaches the exact 0.44400~ms latency floor and
+736.10~ms makespan with $C=2$ from $M=3$ onward. This is 67.05\% below the
+1.34737~ms ODG request latency. Its intended-request hit rate is 100\%, its
+on-demand fallback rate is zero, and no compiler or protocol waste is observed.
+CGP and ACGP first tie that latency at $M=32$, using $C=18$; at $M=64$ their
+smallest tied allocations are respectively 17 and 15. Their corresponding
+delivered fidelity is approximately 0.781--0.782, roughly 0.160 below Dynamic
+full-chain's 0.94168. At the latency-minimum points in
+Table~\ref{tab:golden-bv-xy-envelope}, CGP/ACGP protocol waste spans
+58.36--71.79\%, while Dynamic full-chain has zero observed protocol and compiler
+waste. Unlike GHZ, CGP and ACGP differ at intermediate capacities, demonstrating
+why conclusions must be checked workload by workload.

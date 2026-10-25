@@ -23,10 +23,11 @@ The frozen, hash-checked base simulation matrix and its exact size are recorded 
 separate training-only phase so evaluation results cannot choose its threshold.
 
 Validated batches and current aggregate tables are tracked in
-[Execution progress](03-execution-progress.md). The complete GHZ/T-HQA/mesh-XY
-memory sweep now contributes 16,440 validated policy-seed evaluations: all eight
-total-memory values and every legal compiler-memory allocation. Its `C=0` rows
-also prove the shared zero-cache boundary across all five base policy labels.
+[Execution progress](03-execution-progress.md). The complete GHZ and BV
+T-HQA/mesh-XY memory sweeps now contribute 32,880 validated policy-seed
+evaluations: all eight total-memory values and every legal compiler-memory
+allocation. Their `C=0` rows also prove the shared zero-cache boundary across all
+five base policy labels.
 
 ## Research questions
 
@@ -59,7 +60,8 @@ and a corresponding CSV table. A graph without its CSV and numeric table is reje
 
 The source corpus, mapper outputs, route audit, disjoint seed sets, explicit physical
 parameters, and base-evaluation manifest are frozen. The first complete controlled
-slice (GHZ/T-HQA/mesh-XY) is accepted; 278 of 30,580 base jobs are complete.
+two controlled slices (GHZ and BV, T-HQA/mesh-XY) are accepted; 556 of 30,580
+base jobs are complete.
 Adaptive-congestion threshold selection and standardized endpoint-versus-relay
 occupancy diagnostics remain separate gates; neither is guessed from final
 evaluation data.

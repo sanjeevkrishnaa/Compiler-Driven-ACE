@@ -84,6 +84,39 @@ workloads.
 
 ![Every tested compiler-memory allocation with matched ODG baselines](../../../results/golden_study_2026-10-25/figures/ghz_thqa_mesh_xy_memory_sweep_all_allocations.png)
 
+## Complete BV / T-HQA / mesh-XY memory sweep
+
+The second complete slice adds another 278 jobs and 16,440 policy-seed evaluations.
+The cumulative accepted base result is now 556 of 30,580 jobs and 32,880 of
+1,808,400 policy-seed evaluations (1.8182%). The full BV envelope is
+[`bv_thqa_mesh_xy_memory_sweep_observed_minima.csv`](../../../results/golden_study_2026-10-25/summaries/bv_thqa_mesh_xy_memory_sweep_observed_minima.csv).
+
+| Total memories `M` | Lowest observed policy | Smallest tied `C` | Mean latency | Change vs ODG | Fidelity |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 2 | Dynamic full-chain | 1 | 0.68734 ms | −48.99% | 0.94357 |
+| 3 | Dynamic full-chain | 2 | 0.44400 ms | −67.05% | 0.94168 |
+| 4 | Dynamic full-chain | 2 | 0.44400 ms | −67.05% | 0.94168 |
+| 6 | Dynamic full-chain | 2 | 0.44400 ms | −67.05% | 0.94168 |
+| 8 | Dynamic full-chain | 2 | 0.44400 ms | −67.05% | 0.94168 |
+| 16 | Dynamic full-chain | 2 | 0.44400 ms | −67.05% | 0.94168 |
+| 32 | CGP, ACGP, and Dynamic full-chain (exact tie) | 18 / 18 / 2 | 0.44400 ms | −67.05% | 0.78187 / 0.78233 / 0.94168 |
+| 64 | CGP, ACGP, and Dynamic full-chain (exact tie) | 17 / 15 / 2 | 0.44400 ms | −67.05% | 0.78165 / 0.78095 / 0.94168 |
+
+This slice strengthens—but still does not generalize—the GHZ observation. Dynamic
+full-chain reaches the exact latency and makespan floor with `C=2`, 100% intended
+hits, zero fallback, and zero observed waste. At `M=32` and `M=64`, CGP/ACGP need
+15--18 compiler memories to tie its 0.44400 ms latency while their mean fidelity is
+about 0.781--0.782, roughly 0.160 below Dynamic. Across their latency-minimum
+points, CGP/ACGP protocol waste is 58.36--71.79%, whereas Dynamic full-chain has
+zero observed protocol and compiler waste. Dynamic first-hop again saturates at
+`C=1`; it hits 64% of intended requests, falls back for 36%, and reaches 0.79935 ms.
+Unlike sparse GHZ, CGP and ACGP are not identical at intermediate capacities,
+which confirms that their relative behavior is workload-dependent.
+
+![BV observed latency-minimum envelope](../../../results/golden_study_2026-10-25/figures/bv_thqa_mesh_xy_memory_sweep_envelope.png)
+
+![BV every tested compiler-memory allocation](../../../results/golden_study_2026-10-25/figures/bv_thqa_mesh_xy_memory_sweep_all_allocations.png)
+
 ## Launcher incident retained
 
 The first attempt exposed a reproducibility bug: resolving the explicit virtualenv
