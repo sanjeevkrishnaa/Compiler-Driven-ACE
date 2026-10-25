@@ -60,10 +60,17 @@ contains no performance conclusion until the corresponding raw CSV files and
 validation records exist.
 
 The first accepted matrix slice is the zero-cache boundary for GHZ on mesh--XY
-with two communication memories per core. Table~\ref{tab:golden-progress} is
+with two communication memories per core. Table~\ref{tab:golden-progress-zero} is
 generated directly from the validated raw job directories. Its five policies are
 expected to match because no policy may retain a pre-generated pair when $C=0$;
 this is a boundary invariant, not evidence that the policies are equivalent at
 positive cache capacity.
 
 \input{generated/golden_execution_progress}
+
+Table~\ref{tab:golden-progress-positive} is the first positive-cache comparison.
+On this sparse GHZ trace, full-chain Dynamic has the lowest mean latency and
+makespan; its mean latency is 50.10\% below ODG. First-hop Dynamic is 42.58\%
+below ODG, and CGP/ACGP are 21.66\% below ODG. This one cell is evidence that the
+implementations can benefit from pre-generation, but it is not a cross-workload
+or routing conclusion.

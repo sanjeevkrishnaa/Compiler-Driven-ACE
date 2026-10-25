@@ -2,8 +2,8 @@
 \begin{table}[H]
 \centering
 \small
-\caption{Validated execution progress: 3 of 30,580 jobs and 150 of 1,808,400 policy-seed evaluations.}
-\label{tab:golden-progress}
+\caption{Validated zero-cache boundary: 5 of 30,580 jobs and 270 of 1,808,400 policy-seed evaluations are complete. \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv}{Source CSV}.}
+\label{tab:golden-progress-zero}
 \begin{tabular}{lrrr}
 \toprule
 Policy at $M=2,C=0$ & Seeds & Mean latency (ms) & Mean p95 (ms) \\
@@ -13,6 +13,24 @@ CGP & 30 & 1.36684 $\pm$ 0.15897 & 2.93341 $\pm$ 0.61272 \\
 Dynamic-first-hop & 30 & 1.36684 $\pm$ 0.15897 & 2.93341 $\pm$ 0.61272 \\
 Dynamic-full-chain & 30 & 1.36684 $\pm$ 0.15897 & 2.93341 $\pm$ 0.61272 \\
 ODG & 30 & 1.36684 $\pm$ 0.15897 & 2.93341 $\pm$ 0.61272 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{First positive-cache comparison on GHZ, mesh--XY, $M=2$, 30 paired seeds. ODG has $C=0$ by definition; other policies use $C=1$. \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv}{Source CSV}.}
+\label{tab:golden-progress-positive}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Mean latency (ms) & Mean p95 (ms) & Makespan (ms) & Fidelity \\
+\midrule
+ODG & 1.36684 $\pm$ 0.15897 & 2.93341 $\pm$ 0.61272 & 202.80409 & 0.94981 \\
+ACGP & 1.07072 $\pm$ 0.15880 & 2.65007 $\pm$ 0.53676 & 195.69717 & 0.91146 \\
+CGP & 1.07072 $\pm$ 0.15880 & 2.65007 $\pm$ 0.53676 & 195.69717 & 0.91146 \\
+Dynamic-first-hop & 0.78488 $\pm$ 0.09312 & 2.02673 $\pm$ 0.62751 & 188.83701 & 0.94509 \\
+Dynamic-full-chain & 0.68209 $\pm$ 0.08403 & 1.74672 $\pm$ 0.69470 & 186.37024 & 0.94372 \\
 \bottomrule
 \end{tabular}
 \end{table}
