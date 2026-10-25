@@ -14,6 +14,7 @@ from tools.mapper_ace.adapter import (
     write_adjacent_requests,
     write_migration_trace,
 )
+from tools.mapper_ace.export import export
 from tools.mapper_ace.routing import route_path
 
 
@@ -68,3 +69,25 @@ def test_migration_trace_is_authoritative_and_hop_export_is_derived(tmp_path) ->
     request_text = request_path.read_text()
     assert "(0, 0, 2)" in request_text
     assert "(0, 2, 3)" in request_text
+
+
+def test_export_writes_manifest_and_is_rerunnable(tmp_path) -> None:
+    placement = tmp_path / "placement.json"
+    placement.write_text(json.dumps({
+        "topology": "mesh",
+        "dimensions": [2, 2],
+        "qubits_per_core": 2,
+        "reserved_ancilla": 0,
+        "seed": 7,
+        "reliability_min": 0.9,
+        "initial_assignment": [0, 1],
+        "assignments": [[3, 1]],
+    }))
+    output = tmp_path / "export"
+    manifest = export(placement, output, "yx")
+    assert manifest["routing_policy"] == "yx"
+    assert manifest["placement"]["logical_migrations"] == 1
+    assert manifest["placement"]["physical_hops"] == 2
+    assert (output / "migrations.jsonl").exists()
+    assert (output / "requests.txt").exists()
+    assert json.loads((output / "manifest.json").read_text())["input_sha256"]

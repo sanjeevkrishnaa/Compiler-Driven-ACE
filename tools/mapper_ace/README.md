@@ -23,3 +23,19 @@ Every migration is validated for endpoint correctness and physical adjacency;
 the complete trace is also checked against the original partition transitions.
 This prevents a malformed route or an accidental mismatch between mapper and
 ACE input from silently entering a benchmark.
+
+## Reproducible command
+
+`export.py` accepts a JSON placement contract containing the mapper's initial
+placement and per-layer assignments. Run it from the repository root with the
+mapper package on `PYTHONPATH`:
+
+```bash
+PYTHONPATH=mapper python -m tools.mapper_ace.export \
+  placement.json results/mapper_export --policy shortest_reliable
+```
+
+The output directory contains `migrations.jsonl` (authoritative),
+`requests.txt` (legacy ACE input), and `manifest.json` (input hash, policy,
+topology, migration count, and hop count). The command never edits qmap output
+in place and can be rerun for every routing policy.

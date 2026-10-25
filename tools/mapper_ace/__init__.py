@@ -12,6 +12,7 @@ from .adapter import (
     write_adjacent_requests,
     write_migration_trace,
 )
+from .export import export, load_partition
 from .routing import route_path
 
 __all__ = [
@@ -21,4 +22,6 @@ __all__ = [
     "write_adjacent_requests",
     "write_migration_trace",
     "route_path",
+    "export",
+    "load_partition",
 ]
