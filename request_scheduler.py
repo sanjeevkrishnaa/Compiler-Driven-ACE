@@ -235,7 +235,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         if not self.waiting:
             return
         now = self.timeline.now()
-        start = now + self.pregeneration_time
+        start = self._reservation_start_time(now)
         end = start + self.request_duration
         free: dict[str, int] = {}
 

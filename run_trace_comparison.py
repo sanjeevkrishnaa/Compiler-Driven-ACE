@@ -189,7 +189,8 @@ def main() -> None:
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
-    parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
+    parser.add_argument("--pregeneration-buffer-ms", type=float, default=0,
+                        help="additional experiment delay before reservation start; default 0 (the RSVP channel guard is calculated from the topology)")
     parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
