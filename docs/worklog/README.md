@@ -181,7 +181,7 @@ not fully read):
 ### DECISION: model B, entanglement swapping (user, 2026-10-25)
 A move from 0 to 2 via 1: link pairs 0–1 and 1–2, swap at 1, one end-to-end pair 0–2, one teleport 0→2. The data
 qubit never lands in the relay. This matches the group's ACGP paper, upstream SeQUeNCe, the group's native fork and
-the literature (three-node teleportation between non-neighbouring nodes: Hermans et al., Nature 2022). The
+the literature (a Nature paper on qubit teleportation between non-neighbouring nodes, cited in the user paste; authors and year not checked). The
 store-and-forward proposal is dropped, and with it the relay "8 of 8" question.
 
 ### What is still not correct in ACE under swapping (checked in code unless marked)
@@ -351,3 +351,154 @@ the bug exists only in our sparse-mesh adaptation.
   (all four multi-hop cases: `0 != 1`) and passes with the fix.
 - Full suite: 151 tests OK (149 existing + 2 new).
 - Baseline check (`tools/ace_correctness/baseline.py check --strict`, incl. QFT-96): 164 rows compared, 164 identical, PASS.
+
+### The ACGP paper's code: where it is and what it is built on (checked)
+- The paper (arXiv 2607.14592, Suance, **Dutta**, Gupta, Jose; ISVLSI) gives no code link.
+- Its code is the **ACE import**, commit `c29d5e6` (Sanjeev, 2026-09-05, "Import ACE simulation project"). Evidence:
+  `parallel_real.py` hard-codes `/home/btp_comm/qnoc-stress-testing/ACE/real_benchmarks/...`; the import holds
+  `real_benchmarks/` (generator `fixed_mapping_generator.py` using mqt.bench, and traffic files for qft, cuccaro, draper,
+  mcmtv on meshes 1x2, 2x2, 4x4, 8x4, 8x8 with 8 qubits per core and stride 1 or 2), and result CSVs for every
+  mesh × {ODG, CGP, ACGP, each with and without purification} × benchmark in `data/` and `data_direct_map/`.
+  These are exactly the paper's grid (Figs. 3–5).
+- Origin repo: `github.com/anub-dota/qnoc-stress-testing` (`anub-dota` = Anubhab Dutta, second author; the account
+  exists, the repo returns **404**: private or deleted). ACE's README names it as the required SeQUeNCe fork.
+- Base code: Zhan et al.'s public ACE, `github.com/caitaozhan/adaptive-continuous` (cloned to the scratchpad).
+  Compared with the import: `resource_manager.py`, `memory_manager.py` and `main.py` are identical; small changes in
+  `generation.py` (3 lines), `router_net_topo_adaptive.py` (2), `purification.py` (5), `request_app.py` (9),
+  `swapping.py` (13), `adaptive_continuous.py` (28), `reservation.py` (40); `node.py` (85) adds `xyrouting`, hop-by-hop
+  classical forwarding and a 0.2 s ACP period.
+- **Classical forwarding:** public ACE configs give every router pair a direct classical channel (bottleneck_20: 380 =
+  20×19; as_200: 39,800). The paper's authors moved to a sparse mesh and added XY forwarding with
+  `transmit(msg, msg.src, inf)`. Our commit `2310181` changed this to `transmit(msg, self, inf)` for stock SeQUeNCe
+  0.8.1, which dropped the original sender. That is the bug fixed in `2a6b73a`.
+- **The paper's requests are end-to-end multi-hop.** Hop counts in the authors' result CSVs: `data/4x4_ODG_qft`
+  1–6 hops; `data/8x8_ODG_cuccaro` up to 14 hops. They completed, so swapping worked in the authors' setup.
+- **Open:** traffic `qft_fixed_4x4_q8_s1` has 15,552 requests, but `data/4x4_ODG_qft.csv` has 3,708 rows and
+  `4x4_ACGP_qft.csv` 1,104, with repeated request ids. Why the counts differ is not understood (stop time? which
+  traffic file and stride produced which folder?). Averages, for reference: `data/4x4` QFT ODG 2.3613 ms, CGP 1.4487,
+  ACGP 1.3320; `data_direct_map/4x4` QFT ODG 2.0088, CGP 0.8784, ACGP 0.7311.
+
+### Week 2, what it was (from `BTP_Codex_Handoff_2026-08-29/repository/docs/week-2-*.md`)
+- Done **before** the authors' code arrived. Two parts: (1) a policy-level analytical simulator in our SeQUeNCe fork
+  (`example/multicore_entanglement`, random traffic, then circuit traffic; contiguous mapping core = q // 8,
+  generation 1 time unit, exponential age decay, fidelity 1.0 for fresh pairs); (2) later a native SeQUeNCe 10-seed
+  run, normalised to 2×1 ODG (mid-term slides 7–8).
+- It matched the paper only qualitatively: QFT −26.3% (CGP) / −27.5% (ACGP) against the paper's −53% / −61%;
+  Cuccaro −67.8% / −75.9% against −49% / −57%. The reports blame missing inputs: circuit widths, mapping, timing,
+  T_rand, delta, seeds. The import supplies most of these.
+
+### Weeks 1–4 (from the Notion pages the user pasted, 2026-10-25) and how they meet today's findings
+- **Week 1** (our SeQUeNCe fork, commit `2cd7dd6`): neighbour-only classical links, `RoutedMessage` envelope;
+  per Notion "the destination unwraps the payload and delivers it using the original source name". So our native fork
+  forwarded correctly. ACE's own forwarding (`2310181`) did not, until `2a6b73a`. (Native behaviour taken from
+  Notion, not re-checked here.)
+- **Week 2** (Aug 11–17, branch `week-2`, uncommitted then): analytical policy simulator (`policies.py`,
+  `simulation.py`, `circuit_workload.py`). Own circuits (contiguous mapping q // 8, width capped at 64), generation =
+  1 time unit, fresh fidelity 1.0, exponential age decay, no physics. Built **without** the authors' code or inputs.
+- **Week 3** (Aug 18–30, native fork `94f3b49`): QFT-96 trace through native Barrett–Kok; 3+1 / 2+2 / 1+1 splits.
+  Its §10 argues "two communication memories" from the trace's 8 slots. That contradicts today's finding
+  (8 computation + 4 communication, separate; ACGP paper Table I), and the user dropped that rule on 2026-10-24.
+- **Week 4** (Sep 1–9): ACE lifecycle repair, 30-seed audited ACE and native matrices, ACE ODG/CGP/ACGP vs compiler.
+  These ran on the hop-split trace with the legacy per-core serialised scheduler, which the 2026-10-24 correction work
+  showed masks memory contention. They are historical, not final.
+- The authors' code and data (import `c29d5e6`) arrived on Sep 5, after Week 2. Week 2 was never redone with them.
+
+### DECISION CHANGED: hop-by-hop teleportation (Rajeswari, via the user, 2026-10-25). Supersedes the swapping decision.
+Source: ISVLSI 2025, "Decentralized Framework for Teleportation in Quantum Core Interconnects" (Suance, Gupta, Palesi,
+Jose), read in full.
+- §IV-A: hop-by-hop is "the baseline communication infrastructure". The path is XY; at each hop an EPR pair is made
+  through the BSM node between the two neighbours and the qubit is **teleported to the next core**, "repeated until the
+  qubit reaches the destination core". So the qubit **does** land in every relay core.
+- §IV-B: two-way teleportation (both operands move toward a middle core, Algorithm 1: X from the source, Y from the
+  destination on diagonals) is the paper's optimisation: −40% delay (synthetic), −30% (real), −24% depth.
+- §V-C: "Quantum swapping and quantum purification … are applicable … However, the limited availability of on-chip
+  resources restricts their implementation." So this architecture deliberately does **not** swap.
+- §V-C: two-way teleportation can congest middle cores, which "may experience a higher density of qubits", blamed on
+  deterministic XY routing; future work is adaptive routing (which is the PDP direction).
+- Setup: 4×4 mesh, direct 1:1 mapping, random circuits (depth 5, 10) plus QFT, MCMT, Cuccaro, Quantum Volume;
+  metric = end-to-end communication delay and circuit depth. No physical parameters are given.
+
+Consequences for our pipeline:
+1. Today's hop-split trace and ACE's per-qubit chain (hop k after hop k−1) **match** hop-by-hop teleportation.
+   ACE needs no multi-hop requests for our own experiments. The forwarding fix (`2a6b73a`) stays, since it is a
+   correct fix, but swapping is not used.
+2. **The relay "8 of 8" question returns.** The qubit occupies a computation qubit at each relay, and the mapper never
+   checks relays. Computation-qubit occupancy at relays is back in scope.
+3. Teleportation time is now paid **once per hop**, not once per move. It is still the same for every policy per
+   hop, but it scales with route length, which matters for routing comparisons.
+4. Routing in the group's model is XY. The mapper's routes are not XY (reliability tie-break).
+
+**Conflict between the group's two papers (to raise with Rajeswari):** the ACGP paper (2026) §III-A describes ODG with
+swapping at intermediate cores and lists swap probability 0.95 in Table I, and **its own result CSVs are end-to-end
+multi-hop requests** (`data/4x4_ODG_qft`: 1–6 hops in one request; `data/8x8_ODG_cuccaro`: up to 14). So the ACGP
+paper's experiments used swapping, while ISVLSI 2025 and Rajeswari say hop-by-hop. For the reproduction (option C,
+step A) we must run what the authors' code did (end-to-end with swapping). Our own pipeline follows hop-by-hop.
+
+### Relay-occupancy count on QFT-96 (read-only replay, 2026-10-25; script in the session scratchpad `relay_count.py`)
+Replayed `qft_requests.txt` layer by layer from the initial placement (6 qubits per core, cap 8), checking each chain
+is continuous and starts where the placement says. The trace does not give the order of different qubits' chains
+inside a layer, so each relay visit is classified by what is certain:
+- 227 active layers, 1,770 chains, 1,322 multi-hop chains, **3,184 relay visits**.
+- **certain** (the relay holds 8 qubits that stay put all layer, so there is no slot whatever the order): **7 visits
+  (0.2%)**. The five printed examples are layers 711–727, relay core 4, qubits moving 10→9→8→4→0 and back.
+- **needs_exit** (relay holds 8 at the start of the layer, so a visit works only if one of its qubits leaves first):
+  **56 visits (1.8%)**. Order-dependent, and a deadlock if the leaver in turn waits for this core.
+- **at_risk** (start occupancy + chains entering > 8): 2,328 visits (73.1%). **A loose upper bound**: it assumes every
+  arrival precedes every departure and counts passers-through as permanent. The true share lies between 2% and 73%
+  and needs a timed model.
+- The mapper's own check holds: no core is over 8 at the end of any layer (0 violations); 569 of 3,632 core-layers
+  (15.7%) end at 8.
+- Flagged relay visits by core: 9 → 917, 5 → 581, 8 → 289, 1 → 211 (core 9 is also the known hotspot).
+
+## 2026-10-25 (evening): routing study, step 1 — the mapper's placement IS recoverable (checked)
+
+Question raised: the status note said the full placement partition was missing and XY/YX could not be claimed. Checked, and that is wrong in
+three ways:
+1. **The mapper's own partition is in the archive.** `results/congestion/mqt_ten_workload_congestion_results.zip` holds, for every workload and
+   seed (30 of them), `mapping.npz` with `initial` (48,), `placements` (slices, 48) and `mesh`, plus `mapping.csv` (`layer,qubit,core`).
+   `Partition.transition(t)` in `mapper/qmap/partition.py` returns `(qubits, source cores, target cores)` of every layer, which is the
+   `(q, src, dst)` list asked for; `mapper/qmap/io/traces.py` writes it as `Transfer` records.
+2. **A hop trace carries the partition.** Both request formats list the initial placement and, per layer, each qubit's hop chain; the chain's
+   last core is the qubit's new core and every other qubit stays. `tools/mapper_ace/adapter.import_legacy_request_file` replays this.
+   **Verified:** for all 30 archived 48-qubit traces the replay equals the mapper's `placements` exactly (30/30; the 0–14 trailing slices the
+   trace does not list are static). So XY/YX re-routing needs only `(q, src, dst)` per layer, which exists for every trace.
+3. **QFT-96 (supplied `qft_requests.txt`, sha256 `61d97492…3da1`):** replay gives 1,770 migrations over 764 layers with requests (the file declares
+   766; the last two are empty), 4,954 hops, no core above 8 qubits. The mapper's own partition and reliability map are NOT available for it
+   (who produced it is still unknown), so it is `mapper_partition_exact = false` in the contract.
+
+What is genuinely not recoverable from a hop trace: the mapper's reliability map (rebuilt from seed and band, so `shortest_reliable` and
+`max_reliability` on QFT-96 use a SYNTHETIC map and do not reproduce the supplied routes), and the order of different qubits' chains inside a layer
+(the trace order is kept).
+
+**Finding (verified for qft, qaoa, randomcircuit, ghz; not checked for the other six):** `placements` are byte-identical across mapping seeds 42, 43, 44
+while `requests.txt` differs. The seeds only change the random link reliabilities (hence tie-break routes), so the "3 mapping seeds" of
+Experiments 1–2 are three route variants of one placement, not three independent mappings. (Cause inferred from `architecture.seeds` and the
+reliability tie-break; the placer ignoring reliability was not read.)
+
+**Source of the 1.526 ms / 2.570 ms figures:** `results/qft96_physical_per_qubit_30seed_2026-10-25` (merged from the arrival-latency branch): QFT-96,
+4 shared memories (3 compiler), per-qubit scheduler, event admission, `--pregeneration-buffer-ms 0` (the 0.2 ms RSVP guard replaces the 5.3 ms),
+30 physics seeds: ODG 1.5256 ± 0.0160 ms, dynamic 2.5701 ± 0.0960 ms, makespan 4.337 s vs 4.694 s, admission wait 0.200 vs 1.638 ms.
+
+### Code (commit f426699)
+- `tools/mapper_ace/placement_contract.py`: writes the `ace-placement-contract-v1` JSON that `export.py` reads, from `mapping.npz` (exact) or by replaying a
+  legacy request file (padded to the declared layer count, because ACE spends a gap on every empty layer).
+- `tools/mapper_ace/validate_policies.py`: re-imports each policy's `requests.txt`, requires the replayed partition to equal the contract's, compares routes with
+  the original file. `mapper/tests/test_placement_contract.py`: 3 tests; the mapper test suite passes (7 tests).
+- `results/routing_study_2026-10-25/qft96/`: `placement.json`, one directory per policy (`migrations.jsonl`, `requests.txt`, `manifest.json`), `validation.json`.
+
+### Validation of the four QFT-96 policy traces (all pass: replay == contract)
+| policy | logical migrations | physical hops | relay visits | busiest relay core | routes equal to the supplied file |
+|---|---|---|---|---|---|
+| supplied file (control) | 1,770 | 4,954 | 3,184 | - | 1,770 |
+| xy | 1,770 | 4,954 | 3,184 | core 9 (424) | 1,013 |
+| yx | 1,770 | 4,954 | 3,184 | core 6 (427) | 1,013 |
+| shortest_reliable (synthetic map, seed 42, band 0.1–1.0) | 1,770 | 4,954 | 3,184 | core 9 (961) | 825 |
+| max_reliability (synthetic map) | 1,770 | 5,070 | see validation.json | see validation.json | see validation.json |
+`max_reliability` takes 116 more hops than the others: any latency difference for it is confounded by route length, and by the synthetic map. XY and YX have
+identical hop histograms to the supplied file (448/420/309/333/153/107 migrations of 1–6 hops) because all are shortest paths; only the relay cores differ.
+
+### Run (started this session): 5 arms × {on-demand, dynamic} × 30 physics seeds
+Arms: `original` (supplied file, control: must reproduce 1.5256 / 2.5701 ms), `xy`, `yx`, `shortest_reliable`, `max_reliability`. Settings identical to
+the 30-seed run above (`tools/mapper_ace/run_routing_arms.sh`). Output: `results/routing_study_2026-10-25/runs/<arm>/`. Analysis:
+`tools/mapper_ace/compare_routing.py` (Welch intervals; seeds treated as independent because arms have different request sequences).
+Memory occupancy is not a column of `summary.csv`; it will be measured with `tools/diagnostics/occupancy.py` on a seed subset.
