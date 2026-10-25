@@ -3,10 +3,14 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from tools.golden_study.run_execution import build_command
+from tools.golden_study.run_execution import build_command, interpreter_path
 
 
 class ExecutionRunnerTests(unittest.TestCase):
+    def test_interpreter_path_does_not_resolve_venv_symlink(self):
+        path = interpreter_path(Path(".venv/bin/python"), Path("/repo"))
+        self.assertEqual(path, Path("/repo/.venv/bin/python"))
+
     def test_command_spells_out_optional_semantics(self):
         job = {
             "trace_path": "trace.txt", "config_path": "config.json", "topology": "mesh",

@@ -146,6 +146,12 @@ def git_sha(repository: Path) -> str:
     return subprocess.run(["git", "rev-parse", "HEAD"], cwd=repository, check=True, text=True, capture_output=True).stdout.strip()
 
 
+def interpreter_path(path: Path, cwd: Path) -> Path:
+    """Make an interpreter path absolute without dereferencing a venv symlink."""
+    expanded = path.expanduser()
+    return expanded if expanded.is_absolute() else (cwd / expanded).absolute()
+
+
 def tracked_tree_clean(repository: Path) -> bool:
     unstaged = subprocess.run(["git", "diff", "--quiet"], cwd=repository).returncode == 0
     staged = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=repository).returncode == 0
@@ -214,7 +220,7 @@ def main() -> int:
     root = args.root.resolve()
     spec = read_json(root / "execution_spec.json")
     repository = repository_root(root, spec)
-    python = args.python.resolve()
+    python = interpreter_path(args.python, Path.cwd())
     if not python.is_file():
         parser.error(f"Python interpreter does not exist: {python}")
     if not tracked_tree_clean(repository):
