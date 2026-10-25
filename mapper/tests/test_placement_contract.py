@@ -66,3 +66,24 @@ def test_npz_contract_uses_the_mappers_own_partition(tmp_path) -> None:
     assert payload["dimensions"] == [2, 2]
     assert payload["assignments"] == placements.tolist()
     assert payload["provenance"]["mapper_partition_exact"] is True
+
+
+def test_route_interventions_keep_every_declared_layer_and_all_endpoints(tmp_path, monkeypatch) -> None:
+    import sys
+
+    from tools.mapper_ace import route_interventions
+
+    source = tmp_path / "requests.txt"
+    source.write_text(LEGACY, encoding="utf-8")
+    payload = from_legacy(source, dimensions=(2, 2), qubits_per_core=2, seed=1,
+                          reliability_min=0.5, reliability_max=1.0, topology="mesh")
+    contract = tmp_path / "placement.json"
+    contract.write_text(json.dumps(payload), encoding="utf-8")
+    names = ["mix_p50_s1", "rand_shortest_s1", "o1turn_s1", "concentrate", "balance", "avoid_hot1"]
+    monkeypatch.setattr(sys, "argv", ["x", "--base", str(source), "--contract", str(contract), "--output", str(tmp_path / "out"), *names])
+    assert route_interventions.main() == 0
+    for name in names:
+        text = (tmp_path / "out" / name / "requests.txt").read_text(encoding="utf-8")
+        assert text.count("// Layer ") == 5, name                       # 0..4, the last two empty, as the base file declares
+        hops = [line for line in text.splitlines() if line.startswith("(") and line.count(",") == 2]   # (qubit, src, dst); placement lines have one comma
+        assert len(hops) == 3, name                                       # hop counts unchanged: 0->1->3 (2 hops) and 3->2 (1 hop)

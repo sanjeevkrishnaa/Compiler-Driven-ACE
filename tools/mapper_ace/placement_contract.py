@@ -115,15 +115,20 @@ def declared_layers(path: Path) -> int:
     return len(re.findall(r"^// Layer \d+", path.read_text(encoding="utf-8"), flags=re.M))
 
 
+def pad_to_declared(partition: Partition, path: Path) -> tuple[Partition, int]:
+    """Add static slices for the layers a legacy file declares but leaves empty after its last request (ACE spends a gap on each)."""
+    rows = [np.asarray(row, dtype=np.int32) for row in partition.assignments]
+    padded = max(0, declared_layers(path) - len(rows))
+    rows += [rows[-1].copy()] * padded
+    return Partition.from_sequence(rows, initial_assignment=partition.initial_assignment), padded
+
+
 def from_legacy(path: Path, *, dimensions: tuple[int, ...], qubits_per_core: int, seed: int,
                 reliability_min: float, reliability_max: float, topology: str) -> dict:
     architecture = build_architecture(dimensions, qubits_per_core, seed, reliability_min, reliability_max, topology)
     partition, records = import_legacy_request_file(path, architecture)
-    rows = [np.asarray(row, dtype=np.int32) for row in partition.assignments]
+    padded_partition, padded = pad_to_declared(partition, path)
     declared = declared_layers(path)
-    padded = max(0, declared - len(rows))
-    rows += [rows[-1].copy()] * padded                      # empty layers: nobody moves
-    padded_partition = Partition.from_sequence(rows, initial_assignment=partition.initial_assignment)
     return contract(
         padded_partition, dimensions=dimensions, qubits_per_core=qubits_per_core, seed=seed,
         reliability_min=reliability_min, reliability_max=reliability_max, topology=topology,

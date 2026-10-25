@@ -28,7 +28,7 @@ from pathlib import Path
 from qmap.metrics.distance import DistanceOracle
 
 from .adapter import import_legacy_request_file, validate_migration_records, write_adjacent_requests, write_migration_trace
-from .placement_contract import build_architecture
+from .placement_contract import build_architecture, pad_to_declared
 from .routing import route_path
 
 
@@ -138,6 +138,7 @@ def main() -> int:
                                       contract["reliability_min"], contract.get("reliability_max", 1.0), contract["topology"])
     oracle = DistanceOracle(architecture)
     partition, records = import_legacy_request_file(args.base, architecture)
+    partition, _ = pad_to_declared(partition, args.base)        # keep the empty trailing layers the base file declares
     summary = {}
     for name in args.names:
         new = build(records, architecture, oracle, name)
