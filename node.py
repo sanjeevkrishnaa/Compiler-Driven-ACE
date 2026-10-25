@@ -134,6 +134,8 @@ class QuantumRouterAdaptive(QuantumRouter):
                         f"{next_node_on_path} from {self.name}"
                     )
         else:
+            # a relayed message arrives from the last relay; protocols must see (and reply to) the original sender
+            src = getattr(msg, "src", src)
             if msg.receiver == "network_manager":
                 self.network_manager.received_message(src, msg)
             elif msg.receiver == "resource_manager":
