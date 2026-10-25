@@ -12,6 +12,11 @@ The implementation-level baseline mapping and its remaining fairness gates are i
 the explicit T-HQA/HQA mapping jobs, and the import/mapping tools are all under
 [`results/golden_study_2026-10-25`](../../../results/golden_study_2026-10-25).
 
+The first fresh mapper run and independent artifact audit are recorded in
+[Fresh mapper audit](01-fresh-mapping-audit.md). It validates 300 derived routes
+and establishes an important limitation: mapper seeds 42--44 did not create
+independent placement partitions.
+
 ## Research questions
 
 1. Which EPR policy—ODG, CGP, ACGP, or a compiler-driven Dynamic policy—has the

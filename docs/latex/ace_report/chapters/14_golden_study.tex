@@ -24,9 +24,24 @@ observations: fresh T-HQA placements (and the HQA control placements) are genera
 from this corpus into immutable placement contracts before route expansion. The
 mapping tool has no implicit workload, seed, topology, or routing default. It refuses
 execution when the declared QASM parser is absent rather than selecting another
-parser. The current environment is missing that optional parser dependency, so this
-chapter records the corpus and plan but deliberately contains no fresh mapping or
-scheduler observation.
+parser. At the time the contract scaffold was created, that parser dependency was
+absent, so no mapping result was recorded until the fresh mapper stage could run.
+
+The parser was subsequently installed in the project environment and the fresh
+mapping stage completed. The mapping audit validated all 300 derived route
+artifacts (placement hash, input hash, endpoints, adjacency, migration count and
+hop count). Table~\ref{tab:golden-mapping-control} is the mesh--XY mapper-only
+control; its exact machine-readable source is named in the caption. It does not
+imply an ACE latency result.
+
+\input{generated/golden_mapping_comparison}
+
+Across the ten frozen inputs, T-HQA produces 16,758 mesh--XY hops compared with
+HQA's 19,079, while producing 7,702 versus 7,587 logical migrations. This is a
+trade-off to evaluate with ACE, not a declaration of universal superiority.
+Crucially, the three mapper/reliability seeds yielded one unique placement for each
+workload/algorithm/topology; they must be treated as reliability-route checks, not
+independent placement replications.
 
 At report build time, this chapter contains no performance conclusion until the
 contract has been made run-ready and the corresponding registry rows, raw CSV files,
