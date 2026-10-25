@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=0.4913481710480769 ms fidelity=0.9418791241830604
+dynamic              seed=1 complete=100.00% latency=0.49423307712500003 ms fidelity=0.9416851440581226
+dynamic              seed=2 complete=100.00% latency=0.5298106396442308 ms fidelity=0.9415619789716551
+Wrote results/congestion_adaptive_generalisation_2026-10-25/vqe_real_amp_t30/summary.csv

@@ -1,0 +1,11 @@
+dynamic              seed=0 complete=100.00% latency=1.4080393242543399 ms fidelity=0.9439101883441622
+dynamic              seed=1 complete=100.00% latency=1.3857533868712153 ms fidelity=0.94383738085649
+dynamic              seed=2 complete=100.00% latency=1.416981719545216 ms fidelity=0.9438967915481676
+dynamic              seed=3 complete=100.00% latency=1.391143281284013 ms fidelity=0.9438460012812079
+dynamic              seed=4 complete=100.00% latency=1.4169006766507872 ms fidelity=0.943737716737315
+dynamic              seed=5 complete=100.00% latency=1.6062085703284217 ms fidelity=0.9444629597341544
+dynamic              seed=6 complete=100.00% latency=1.506285793296932 ms fidelity=0.9439683877926056
+dynamic              seed=7 complete=100.00% latency=1.5706191086574484 ms fidelity=0.9443058676558316
+dynamic              seed=8 complete=100.00% latency=1.4519425137278967 ms fidelity=0.9442956967498857
+dynamic              seed=9 complete=100.00% latency=1.4320408525999193 ms fidelity=0.9439855807447485
+Wrote results/congestion_threshold_sweep_2026-10-25/t999999/summary.csv
