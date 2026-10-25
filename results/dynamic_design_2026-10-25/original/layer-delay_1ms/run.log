@@ -1,0 +1,12 @@
+/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE/.venv/bin/python run_trace_comparison.py --trace /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/qft_requests.txt --seeds 0,1,2,3,4,5,6,7,8,9 --strategies dynamic --total-memories 4 --compiler-memories 3 --generation-capacity 3 --scheduler per-qubit --admission event --pregeneration-buffer-ms 0 --stop-after-workload --stop-time-s 200 --preparation-delay-ms 1 --output /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/dynamic_design_2026-10-25/original/layer-delay_1ms
+dynamic              seed=0 complete=100.00% latency=2.803071796395438 ms fidelity=0.9441769858117254
+dynamic              seed=1 complete=100.00% latency=2.5602463910004034 ms fidelity=0.9438787584968586
+dynamic              seed=2 complete=100.00% latency=2.4916324547547433 ms fidelity=0.9441614759674565
+dynamic              seed=3 complete=100.00% latency=2.532913848295317 ms fidelity=0.9439654802187815
+dynamic              seed=4 complete=100.00% latency=2.61620175791522 ms fidelity=0.943879398561679
+dynamic              seed=5 complete=100.00% latency=2.562264434539766 ms fidelity=0.9439135551460921
+dynamic              seed=6 complete=100.00% latency=2.8628117526517967 ms fidelity=0.9439244291090159
+dynamic              seed=7 complete=100.00% latency=2.553867114880501 ms fidelity=0.9444211161567058
+dynamic              seed=8 complete=100.00% latency=2.4534387399388375 ms fidelity=0.9447329937334276
+dynamic              seed=9 complete=100.00% latency=2.552696904463666 ms fidelity=0.9439883011660843
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/dynamic_design_2026-10-25/original/layer-delay_1ms/summary.csv

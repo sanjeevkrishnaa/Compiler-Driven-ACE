@@ -523,3 +523,21 @@ Also for ODG: XY/YX cut admission wait 0.200 → 0.018 ms and latency 1.526 → 
 Dynamic with XY: EPR hit rate 0.50 (control 0.445), cached-pair storage 6.1 ms (control 8.2), fidelity at use 0.9386 (control 0.9348), compiler EPR waste 0.49%.
 Mechanism (INFERRED, not yet tested): the supplied routes come from a shortest-hop search with a reliability tie-break and concentrate relay traffic (busiest relay core 9: 961 visits under shortest_reliable vs 424 under XY, same total 3,184 visits); XY spreads the load. The relay-load figures are from the exported traces, not from the ACE runs.
 Not established: that XY is the best routing; the O1TURN-style mix and an offline congestion-aware route are not run yet. The reliability map for QFT-96 is synthetic, so the two reliability arms say nothing about the mapper's real map.
+
+### Dynamic launch-rule screening (2026-10-25, 10 physics seeds, QFT-96, 4 memories / 3 compiler, routes: supplied and XY) — RESULT
+Code: launch triggers in `compiler_scheduler.py` (`--preparation-trigger`, `--preparation-delay-ms`, `--chain-hops-prepared`), default byte-identical (checked:
+seed-0 dynamic 2.599629674696205 ms / 4709.741776511 ms reproduced; 152 + 6 tests pass). Table: `results/dynamic_design_2026-10-25/variants.md`.
+| variant (XY route) | latency ms | vs baseline (95% CI) | latency / ODG | hit rate |
+|---|---|---|---|---|
+| baseline (launch at layer L−1) | 1.4586 | – | 1.088 | 0.509 |
+| layer-delay 1 / 2 / 3 / 4 / 6 ms | 1.566 / 1.812 / 2.016 / 2.215 / 2.004 | +0.11 / +0.35 / +0.56 / +0.76 / +0.55 | 1.17–1.65 | 0.455 → 0.136 |
+| predecessor-start | 2.295 | +0.84 ± 0.08 | 1.713 | 0.182 |
+| two hops, predecessor-start | 1.806 | +0.35 ± 0.09 | 1.348 | 0.194 |
+| **first-hop-only** | **1.1934 ± 0.0147** | **−0.265 ± 0.055** | **0.891** | 0.227 |
+| first-hop-only + delay 2 / 4 ms | 1.422 / 2.213 | −0.04 / +0.75 | 1.06 / 1.65 | 0.177 / 0.058 |
+On the supplied routes: baseline 2.5725, first-hop-only 1.4259 (−1.147 ± 0.077, 0.935 × ODG), others no better than baseline.
+First-hop-only on XY: p95 2.96 ms (ODG 3.19), wait 0.066 ms, makespan 4.126 s (ODG 4.244 s), fidelity at use 0.9423, delivered 0.9481 (ODG 0.9498).
+Reading (hypotheses from the data, NOT yet tested separately): delay and predecessor triggers fail because pairs are not ready when the request is released (hit rate collapses),
+while preparing every hop at L−1 makes later-hop pairs wait long and hold cards. Only first-hop pairs win both ways. The earlier hypothesis that delaying the launch would help was WRONG.
+Defect found in `tools/diagnostics/occupancy.py`: every record is labelled with the first strategy of the invocation (all entries say on-demand); strategies alternate by seed and
+can be told apart by latency / hit count. Not fixed here.
