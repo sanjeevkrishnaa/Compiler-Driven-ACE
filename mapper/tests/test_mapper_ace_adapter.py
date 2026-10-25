@@ -11,6 +11,7 @@ from qmap.partition import Partition
 from qmap.rng import SeedSequence
 from tools.mapper_ace.adapter import (
     build_migration_records,
+    import_legacy_request_file,
     write_adjacent_requests,
     write_migration_trace,
 )
@@ -91,3 +92,20 @@ def test_export_writes_manifest_and_is_rerunnable(tmp_path) -> None:
     assert (output / "migrations.jsonl").exists()
     assert (output / "requests.txt").exists()
     assert json.loads((output / "manifest.json").read_text())["input_sha256"]
+
+
+def test_legacy_import_reconstructs_a_logical_path(tmp_path) -> None:
+    request_file = tmp_path / "requests.txt"
+    request_file.write_text(
+        "\n".join([
+            "// Number of cores", "4", "// Number of qubit slots per core", "2",
+            "// Number of qubits", "2", "// Initial placement: (qubit, core)",
+            "(0, 0)", "(1, 1)", "// Inter-core communication requests: (qubit, src, dst)",
+            "// Layer 0", "(0, 0, 2)", "(0, 2, 3)", "",
+        ])
+    )
+    architecture = _architecture()
+    partition, records = import_legacy_request_file(request_file, architecture)
+    assert partition.n_slices == 1
+    assert records[0].path == (0, 2, 3)
+    assert records[0].route_policy == "mapper-imported"

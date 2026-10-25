@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import TextIO
 
+import numpy as np
+
 from qmap.architecture.architecture import MulticoreArchitecture
 from qmap.metrics.distance import DistanceOracle
 from qmap.partition import Partition
@@ -98,8 +100,12 @@ def validate_migration_records(
         actual[record.layer].append(
             (record.qubit, record.source_core, record.destination_core)
         )
-    if dict(actual) != expected:
-        raise ValueError(f"migration trace does not reproduce partition transitions: {actual!r} != {expected!r}")
+    normalized_actual = {layer: actual.get(layer, []) for layer in expected}
+    if normalized_actual != expected:
+        raise ValueError(
+            "migration trace does not reproduce partition transitions: "
+            f"{normalized_actual!r} != {expected!r}"
+        )
 
 
 def write_migration_trace(
@@ -113,6 +119,106 @@ def write_migration_trace(
         for record in records:
             handle.write(json.dumps(record.to_json(architecture), sort_keys=True) + "\n")
     return path, len(records)
+
+
+def import_legacy_request_file(
+    path: Path,
+    architecture: MulticoreArchitecture,
+) -> tuple[Partition, list[MigrationRecord]]:
+    """Import an existing ACE request file without changing its chosen paths.
+
+    Legacy files contain only adjacent `(qubit, source, destination)` requests.
+    Consecutive hops for the same qubit in a layer are joined into one logical
+    migration. The importer is intentionally conservative: a qubit may have
+    only one contiguous path per layer, and every hop must be physically
+    adjacent. The returned synthetic partition captures the placement replay;
+    it is useful for archival conversion, not as a replacement for the mapper's
+    original circuit placement artifact.
+    """
+    metadata: dict[str, int] = {}
+    initial: dict[int, int] = {}
+    layer_hops: dict[int, list[tuple[int, int, int]]] = defaultdict(list)
+    pending: str | None = None
+    section: str | None = None
+    layer: int | None = None
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        lower = line.lower()
+        if lower == "// number of cores":
+            pending, section = "core_count", None
+            continue
+        if lower == "// number of qubit slots per core":
+            pending, section = "qubit_slots_per_core", None
+            continue
+        if lower == "// number of qubits":
+            pending, section = "qubit_count", None
+            continue
+        if lower.startswith("// initial placement"):
+            section, pending = "placement", None
+            continue
+        if lower.startswith("// inter-core communication requests"):
+            section, pending = "requests", None
+            continue
+        if lower.startswith("// layer "):
+            layer = int(lower.split()[-1])
+            section = "requests"
+            continue
+        if lower.startswith("//"):
+            continue
+        values = tuple(int(value.strip()) for value in line.strip("()").split(","))
+        if pending is not None:
+            metadata[pending] = values[0] if len(values) == 1 else int(line)
+            pending = None
+        elif section == "placement":
+            if len(values) != 2:
+                raise ValueError(f"invalid placement tuple in {path}: {line}")
+            initial[values[0]] = values[1]
+        elif section == "requests" and layer is not None:
+            if len(values) != 3:
+                raise ValueError(f"invalid request tuple in {path}: {line}")
+            layer_hops[layer].append(values)
+        else:
+            raise ValueError(f"tuple outside a recognized section in {path}: {line}")
+    required = {"core_count", "qubit_slots_per_core", "qubit_count"}
+    if required - metadata.keys() or set(initial) != set(range(metadata.get("qubit_count", 0))):
+        raise ValueError(f"legacy request file lacks complete metadata/placement: {path}")
+    placement = dict(initial)
+    records: list[MigrationRecord] = []
+    migration_number = 0
+    assignments: list[list[int]] = []
+    for layer_index in range(max(layer_hops, default=-1) + 1):
+        grouped: dict[int, list[tuple[int, int]]] = defaultdict(list)
+        for qubit, source, destination in layer_hops.get(layer_index, []):
+            grouped[qubit].append((source, destination))
+        for qubit, hops in grouped.items():
+            if placement[qubit] != hops[0][0]:
+                raise ValueError(
+                    f"layer {layer_index} qubit {qubit} starts at {hops[0][0]}, "
+                    f"but replay placement is {placement[qubit]}"
+                )
+            path_cores = [hops[0][0]]
+            for source, destination in hops:
+                if source != path_cores[-1]:
+                    raise ValueError(f"non-contiguous legacy path for qubit {qubit}")
+                validate_path(architecture, (source, destination), source, destination)
+                path_cores.append(destination)
+            placement[qubit] = path_cores[-1]
+            records.append(MigrationRecord(
+                migration_id=f"m{migration_number:06d}", layer=layer_index,
+                qubit=qubit, source_core=path_cores[0],
+                destination_core=path_cores[-1], path=tuple(path_cores),
+                route_policy="mapper-imported", topology=architecture.label,
+            ))
+            migration_number += 1
+        assignments.append([placement[q] for q in range(metadata["qubit_count"])])
+    partition = Partition.from_sequence(
+        [np.asarray(row, dtype=np.int32) for row in (assignments or [list(initial)])],
+        initial_assignment=np.asarray([initial[q] for q in range(metadata["qubit_count"])], dtype=np.int32),
+    )
+    validate_migration_records(partition, architecture, records)
+    return partition, records
 
 
 def _write_request_header(handle: TextIO, partition: Partition, architecture: MulticoreArchitecture) -> None:
