@@ -66,7 +66,8 @@ def main() -> None:
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
-    parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
+    parser.add_argument("--pregeneration-buffer-ms", type=float, default=0,
+                        help="additional experiment delay before reservation start; default 0 (the RSVP channel guard is calculated from the topology)")
     parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
@@ -203,11 +204,11 @@ def main() -> None:
     (args.output / "runs.json").write_text(
         json.dumps({
             "created_at": datetime.now(timezone.utc).isoformat(),
-            "metric_version": 2,
-            "implementation_version": 3,
+            "metric_version": 3,
+            "implementation_version": 4,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py']},
+                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py']},
             "readiness_definition": "physical creation strictly before first application submission",
             "trace": str(args.trace.resolve()),
             "config": str(args.config.resolve()),

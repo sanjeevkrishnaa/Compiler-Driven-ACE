@@ -31,12 +31,15 @@ completes is a different matter and voids the result.
 
 | Column | Meaning |
 | --- | --- |
-| `average_request_latency_ms` | **the headline metric.** Mean time from a request being submitted to its entanglement being delivered |
+| `average_arrival_latency_ms` | **the cross-scheduler headline metric.** Mean time from arrival to entanglement delivery. Arrival is a layer activation for the first hop, or the preceding hop's completion for a same-qubit chain hop. It includes the 5.3 ms buffer and all waiting. |
+| `max_arrival_latency_ms` | worst arrival-to-delivery latency of any completed hop |
+| `average_eligible_latency_ms` / `max_eligible_latency_ms` | compatibility aliases for the arrival columns in metric version 3. In metric version 2, these instead subtracted the 5.3 ms buffer; do not mix the versions. |
+| `average_request_latency_ms` | manager-local first-submission-to-delivery metric. It agrees with arrival latency under the per-qubit scheduler, but not under the historical serialized scheduler; do not use it for that comparison. |
 | `end_to_end_latency_ms` | makespan — wall-clock time for the whole trace |
 | `avg_layer_latency_ms` | mean time to clear one circuit layer |
 | `max_layer_latency_ms` / `min_layer_latency_ms` | worst and best layer; the spread shows whether cost is uniform or concentrated in hot layers |
 
-Request latency and makespan answer different questions. Request latency is what a
+Arrival latency and makespan answer different questions. Arrival latency is what a
 single operation waits. Makespan is what the program takes. Pre-generation can cut
 request latency sharply while barely moving makespan, because the critical path is
 set by the scheduler rather than by any one request.

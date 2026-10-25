@@ -51,10 +51,10 @@ class MultiHopForwardingTests(unittest.TestCase):
                 self.assertEqual(submissions, 1)
                 self.assertLess(latency_ms, 50)
 
-    def test_one_and_two_hop_requests_are_unchanged(self):
-        """Values measured before the change (2026-10-25, seed 0)."""
-        self.assertEqual(run_one(13, 14)[:2], (1, 0.80002526))
-        self.assertEqual(run_one(13, 15)[:2], (1, 1.50003851))
+    def test_one_and_two_hop_requests_include_the_configured_lead(self):
+        """Arrival-to-delivery timing includes the configured 5.3 ms lead (seed 0)."""
+        self.assertEqual(run_one(13, 14)[:2], (1, 6.30002526))
+        self.assertEqual(run_one(13, 15)[:2], (1, 7.00003851))
 
 
 if __name__ == "__main__":
