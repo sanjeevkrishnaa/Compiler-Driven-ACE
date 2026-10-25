@@ -1,0 +1,24 @@
+{
+  "schema": "golden-study-mapping-jobs-v1",
+  "input_manifest": "inputs/manifest.json",
+  "workloads": ["ghz", "bv", "bmw_quark_cardinality", "vqe_real_amp", "cdkm_ripple_carry_adder", "graphstate", "draper_qft_adder", "qaoa", "qft", "randomcircuit"],
+  "mapping_algorithms": ["T-HQA", "HQA"],
+  "mapping_seeds": [42, 43, 44],
+  "architecture": {
+    "grid": "4x4",
+    "data_qubits_per_core": 4,
+    "reserved_ancilla": 1,
+    "initial_placement": "oee",
+    "reliability_min": 0.1,
+    "reliability_max": 1.0,
+    "seed_derivation": "mapper-cli-trial-v1"
+  },
+  "routing": {
+    "mesh": ["xy", "yx", "shortest_reliable", "max_reliability"],
+    "torus": ["dijkstra"]
+  },
+  "interpretation": {
+    "mapping_seed_note": "The three mapping seeds change the mapper architecture's generated reliability map. They are not claimed to be independent circuit instances unless a partition-difference audit confirms it.",
+    "memory_sweep_note": "The 2..64 ACE communication-memory sweep changes the simulator memory-bank capacity only. It reuses this fixed data-qubit placement, so it is an EPR-resource sensitivity experiment, not a hardware-area-balanced architecture comparison."
+  }
+}

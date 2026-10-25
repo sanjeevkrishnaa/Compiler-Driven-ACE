@@ -16,8 +16,9 @@ this directory defines the boundary used by ACE experiments:
 The `xy` and `yx` policies are dimension-order baselines for 2-D meshes. qmap
 numbers mesh cores lexicographically by coordinate, and the policy names refer
 to coordinate dimensions (dimension 0 first for `xy`), not core-number order.
-`shortest_reliable` and `max_reliability` delegate to qmap's deterministic
-shortest-hop and maximum-product-reliability paths respectively.
+`dijkstra` delegates to qmap's deterministic shortest-path model and is used
+for torus studies. `shortest_reliable` and `max_reliability` delegate to qmap's
+deterministic shortest-hop and maximum-product-reliability paths respectively.
 
 Every migration is validated for endpoint correctness and physical adjacency;
 the complete trace is also checked against the original partition transitions.

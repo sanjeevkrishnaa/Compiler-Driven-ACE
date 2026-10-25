@@ -11,6 +11,7 @@ from qmap.metrics.distance import DistanceOracle
 ROUTING_POLICIES = (
     "xy",
     "yx",
+    "dijkstra",
     "shortest_reliable",
     "max_reliability",
 )
@@ -63,10 +64,12 @@ def route_path(
 ) -> tuple[int, ...]:
     """Return a deterministic core path for a named research policy.
 
-    ``shortest_reliable`` and ``max_reliability`` are the two policies already
-    implemented by qmap's distance oracle.  ``xy`` and ``yx`` are explicit
-    dimension-order baselines for mesh experiments.  No policy silently falls
-    back to another policy.
+    ``dijkstra`` delegates to qmap's unambiguous shortest-path route model and
+    is the sole approved torus policy in the Golden-study contract.
+    ``shortest_reliable`` and ``max_reliability`` are the two reliability-aware
+    policies implemented by qmap's distance oracle.  ``xy`` and ``yx`` are
+    explicit dimension-order baselines for mesh experiments.  No policy
+    silently falls back to another policy.
     """
     if policy not in ROUTING_POLICIES:
         raise ValueError(f"unknown routing policy {policy!r}; expected one of {ROUTING_POLICIES}")
@@ -74,7 +77,7 @@ def route_path(
         return (source,)
     if policy in {"xy", "yx"}:
         path = _coordinate_path(architecture, source, target, policy)
-    elif policy == "shortest_reliable":
+    elif policy in {"dijkstra", "shortest_reliable"}:
         path = oracle.route_path(source, target, "shortest")
     else:
         path = oracle.route_path(source, target, "reliability")

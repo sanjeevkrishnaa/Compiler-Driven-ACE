@@ -18,6 +18,16 @@ architecture-scaling settings. Capacities greater than the current four-memory m
 are sensitivity points, not claims about the baseline hardware. The torus arm uses
 Dijkstra routing only. Mesh routing comparisons hold a placement contract fixed.
 
+The ten workload inputs are frozen QASM files recovered with SHA-256 provenance
+from the historical MQT study archive. They are input evidence, not recycled
+observations: fresh T-HQA placements (and the HQA control placements) are generated
+from this corpus into immutable placement contracts before route expansion. The
+mapping tool has no implicit workload, seed, topology, or routing default. It refuses
+execution when the declared QASM parser is absent rather than selecting another
+parser. The current environment is missing that optional parser dependency, so this
+chapter records the corpus and plan but deliberately contains no fresh mapping or
+scheduler observation.
+
 At report build time, this chapter contains no performance conclusion until the
 contract has been made run-ready and the corresponding registry rows, raw CSV files,
 and validation records exist.

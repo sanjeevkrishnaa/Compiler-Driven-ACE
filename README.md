@@ -18,11 +18,14 @@ $env:PYTHONPATH = 'C:/path/to/qnoc-stress-testing/SeQUeNCe'
 python run_compiler_pregeneration.py --trace C:/path/to/requests.txt --strategies on-demand,fixed,dynamic --seeds 0,1,2 --total-memories 4 --compiler-memories 3 --output output/compiler_study
 ```
 
-The repaired dynamic policy reduced mean request latency by 37.52% on the
-original QFT-96 trace (three matched seeds) and 55.70% on the small random
-trace (ten matched seeds), compared with the corrected ODG baseline. These
-are workload-specific results; storage still reduces EPR fidelity.
-See [validation and reproduction](docs/reports/compiler-repair-validation.md).
+Historical local/service-time claims are not the current headline metric. The
+correctness branch defines latency as request eligibility to EPR delivery,
+including admission wait, reservation, retries, and generation, while excluding
+cached-pair storage before eligibility. On the current QFT-96 per-qubit control,
+ODG is faster than the baseline Dynamic policy on that fair metric; Dynamic's
+research goal is to remove this admission-wait gap honestly, not to preserve an
+older number. See [the correctness audit](docs/research/ace-correctness-audit-2026-10-25.md)
+and the [golden study](docs/research/golden-study/README.md).
 
 ## Workload congestion study
 

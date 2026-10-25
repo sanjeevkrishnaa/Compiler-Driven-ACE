@@ -20,3 +20,21 @@ a preregistered adaptive-policy threshold, and ten workload traces with hashes.
 
 No runner has implicit workloads, seed ranges, memory capacities, or routing choices.
 Those values belong in the study contract and inventory, not in Python constants.
+
+## Fresh mapper inputs and trace generation
+
+`prepare_inputs.py` copies only the QASM members explicitly named in
+`mapping_inputs.json` from a declared archive. It records both source-member and
+extracted-file SHA-256 digests. `map_inputs.py` then generates fresh mapper
+`Partition` contracts and route-derived ACE traces from `mapping_jobs.json`.
+
+```bash
+PYTHONPATH=mapper:. python -m tools.golden_study.prepare_inputs \
+  --root results/golden_study_2026-10-25
+PYTHONPATH=mapper:. python -m tools.golden_study.map_inputs \
+  --root results/golden_study_2026-10-25 --plan
+```
+
+Use `--execute` only after installing the mapper's declared QASM parser
+dependency. It does not substitute a parser or silently choose a different
+mapping/route. Torus jobs are accepted only with the contract's `dijkstra` policy.

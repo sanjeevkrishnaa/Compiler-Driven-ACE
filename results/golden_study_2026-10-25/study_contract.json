@@ -12,6 +12,8 @@
   "workloads": {
     "required_count": 10,
     "inventory": "workload_inventory.json",
+    "mapping_inputs": "mapping_inputs.json",
+    "mapping_jobs": "mapping_jobs.json",
     "rule": "Every workload, placement, route, and trace must be explicitly registered with relative paths and SHA-256 digests before execution."
   },
   "seeds": {
@@ -26,7 +28,8 @@
     "classification": {
       "2,3,4": "constrained/current-model settings",
       "6,8,16,32,64": "architecture-scaling sensitivity settings; never report as the current physical hardware setting"
-    }
+    },
+    "causal_scope": "For the memory sweep, the logical placement and data-qubit capacity are held fixed. total_memories_per_core changes the ACE communication-memory bank only. This is not a fixed-total-hardware-area comparison."
   },
   "policy_definitions": {
     "ODG": {"runner_strategy": "on-demand", "kind": "baseline", "parameters": {}},

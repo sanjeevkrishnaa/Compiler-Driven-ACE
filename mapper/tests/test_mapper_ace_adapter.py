@@ -40,6 +40,10 @@ def test_routing_policies_are_explicit_and_adjacent() -> None:
         (0, 1, 3),
         (0, 2, 3),
     }
+    assert route_path(architecture, oracle, 0, 3, "dijkstra") in {
+        (0, 1, 3),
+        (0, 2, 3),
+    }
 
 
 def test_migration_trace_is_authoritative_and_hop_export_is_derived(tmp_path) -> None:

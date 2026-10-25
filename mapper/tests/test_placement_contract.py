@@ -50,7 +50,7 @@ def test_contract_round_trips_through_every_policy(tmp_path) -> None:
                           reliability_min=0.5, reliability_max=1.0, topology="mesh")
     contract = tmp_path / "placement.json"
     contract.write_text(json.dumps(payload), encoding="utf-8")
-    for policy in ("xy", "yx", "shortest_reliable", "max_reliability"):
+    for policy in ("xy", "yx", "dijkstra", "shortest_reliable", "max_reliability"):
         manifest = export(contract, tmp_path / policy, policy)
         assert manifest["placement"]["timeslices"] == 5
         assert manifest["placement"]["logical_migrations"] == 2
