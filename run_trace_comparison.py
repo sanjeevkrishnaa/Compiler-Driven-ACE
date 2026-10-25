@@ -28,7 +28,7 @@ from compiler_trace import (
     to_ace_layers,
     validate_neighbor_requests,
 )
-from latency_metrics import eligible_latencies_ms
+from latency_metrics import arrival_latencies_ms
 from sequence.constants import MILLISECOND
 from parallel_core import run_parallel_experiment
 
@@ -94,10 +94,10 @@ def _admission_waits(stats: dict) -> dict:
             "requests_that_waited_fraction": sum(w > WAIT_THRESHOLD_MS for w in waits) / len(waits)}
 
 
-def _eligible(result: dict, requests, reduce):
+def _arrival_latency(result: dict, requests, reduce):
     if requests is None:
         return None
-    values = list(eligible_latencies_ms(result["request_manager"], requests).values())
+    values = list(arrival_latencies_ms(result["request_manager"], requests).values())
     return reduce(values) if values else None
 
 
@@ -106,7 +106,7 @@ def _raw_latency_stats(result: dict, requests) -> dict:
     keys = ("request_latency_mean_ms", "request_latency_median_ms", "request_latency_p95_ms", "request_latency_max_ms")
     if requests is None:
         return dict.fromkeys(keys)
-    values = sorted(eligible_latencies_ms(result["request_manager"], requests, subtract_lead=False).values())
+    values = sorted(arrival_latencies_ms(result["request_manager"], requests).values())
     if not values:
         return dict.fromkeys(keys)
     return dict(zip(keys, (fmean(values), values[len(values) // 2], values[min(len(values) - 1, int(0.95 * len(values)))], values[-1])))
@@ -124,14 +124,19 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         "completion_rate": completed / request_count if request_count else 0,
         "average_request_latency_ms": stats.get("avg_request_latency_ms"),
         "end_to_end_latency_ms": stats["end_to_end_latency_ms"],
-        # the same definition under every scheduler (latency_metrics.py)
-        "average_eligible_latency_ms": _eligible(result, requests, fmean),
-        "max_eligible_latency_ms": _eligible(result, requests, max),
+        # the same arrival-to-completion definition under every scheduler
+        "average_arrival_latency_ms": _arrival_latency(result, requests, fmean),
+        "max_arrival_latency_ms": _arrival_latency(result, requests, max),
+        # Compatibility aliases for existing analysis tools.  In metric version
+        # 3 they have arrival-to-completion semantics, not the former
+        # buffer-subtracted semantics.
+        "average_eligible_latency_ms": _arrival_latency(result, requests, fmean),
+        "max_eligible_latency_ms": _arrival_latency(result, requests, max),
         **_raw_latency_stats(result, requests),
         "configured_lead_ms": result["request_manager"].pregeneration_time / MILLISECOND,
         # time requests spent waiting for a free memory before being admitted (per-qubit scheduler only)
         **_admission_waits(stats),
-                "metric_version": stats["metric_version"],
+        "metric_version": stats["metric_version"],
         "average_delivered_epr_fidelity": _mean_fidelity(result["fidelity_dict"]),
         "total_retries": stats.get("total_retries", 0),
         "requests_with_retries": stats.get("requests_with_retries", 0),
@@ -198,7 +203,8 @@ def main() -> None:
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
-    parser.add_argument("--pregeneration-buffer-ms", type=float, default=5.3)
+    parser.add_argument("--pregeneration-buffer-ms", type=float, default=0,
+                        help="additional experiment delay before reservation start; default 0 (the RSVP channel guard is calculated from the topology)")
     parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
@@ -294,11 +300,11 @@ def main() -> None:
     _write_csv(args.output / "summary.csv", summary)
     (args.output / "metadata.json").write_text(json.dumps({
         "created_at": datetime.now(timezone.utc).isoformat(),
-            "metric_version": 2,
-            "implementation_version": 3,
+            "metric_version": 3,
+            "implementation_version": 4,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py']},
+                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py']},
             "readiness_definition": "physical creation strictly before first application submission",
         "trace": str(args.trace.resolve()),
         "mesh": f"{rows}x{columns}",

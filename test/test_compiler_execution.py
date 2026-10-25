@@ -25,6 +25,7 @@ def load_definitions(filename, names, namespace):
 NS = load_definitions('parallel_core.py',
                       {'serialize_core_conflicts', 'ParallelLayerRequestManager'}, {
                           'MILLISECOND': 1,
+                          'RESERVATION_START_GRACE_PS': 1,
                           'Process': lambda *args: args,
                           'Event': lambda *args: args,
                       })
@@ -60,6 +61,20 @@ class ExecutionTests(unittest.TestCase):
                               set_completion_callback=lambda *args: None)
         return Manager(clock, {'a': app}, [[(0, 'a', 'b', 1, .01, 1)]], 5, 50)
 
+    def test_control_plane_guard_is_the_round_trip_channel_delay(self):
+        clock = SimpleNamespace(time=0, now=lambda: clock.time, schedule=lambda event: None)
+        channel = SimpleNamespace(delay=100)
+        app = SimpleNamespace(
+            node=SimpleNamespace(cchannels={'b': channel}),
+            start=lambda *args: None,
+            set_reservation_approval_callback=lambda *args: None,
+            set_reservation_rejection_callback=lambda *args: None,
+            set_completion_callback=lambda *args: None,
+        )
+        manager = Manager(clock, {'a': app}, [[(0, 'a', 'b', 1, .01, 1)]], 0, 50)
+        self.assertEqual(manager.control_plane_guard, 201)  # 2 x 100 ps + one-picosecond grace
+        self.assertEqual(manager._reservation_start_time(500), 701)
+
     def test_retry_keeps_first_submission_and_counts_failed_attempt(self):
         manager = self.manager()
         with redirect_stdout(StringIO()):
@@ -71,12 +86,13 @@ class ExecutionTests(unittest.TestCase):
         self.assertEqual(manager.request_attempt_submission_times[0], 55)
         manager.request_approval_times[0] = 57
         manager.request_end_times[0] = 62
-        self.assertEqual(manager.get_individual_latencies()[0], 57)
+        self.assertEqual(manager.get_individual_latencies()[0], 62)
         row = manager.get_individual_latencies_breakdown()[0]
         self.assertEqual(row['retry_wait_time_ms'], 55)
         self.assertEqual(row['reservation_setup_time_ms'], 0)
         self.assertEqual(row['entanglement_generation_time_ms'], 2)
-        self.assertEqual(row['total_time_ms'], 57)
+        self.assertEqual(row['initial_buffer_time_ms'], 5)
+        self.assertEqual(row['total_time_ms'], 62)
 
     def test_setup_beyond_buffer_is_counted_once(self):
         manager = self.manager()

@@ -18,6 +18,10 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 SECOND = int(1e12)
+# A reservation must start strictly after the RSVP control message reaches the
+# remote core.  One picosecond avoids relying on SeQUeNCe's unspecified order
+# for equal-time events.
+RESERVATION_START_GRACE_PS = 1
 
 # write the new functions here
 
@@ -52,7 +56,7 @@ class ParallelLayerRequestManager:
     Manages layered parallel requests where:
     - All requests in a layer are submitted simultaneously
     - Wait for ALL requests in current layer to complete before starting next layer
-    - Pre-generation time applied before each layer
+    - Reservation starts after the measured classical-control guard
     - Failed requests are retried in a new layer (treated as congestion)
     """
     
@@ -65,7 +69,8 @@ class ParallelLayerRequestManager:
             name_to_apps: Dictionary mapping node names to RequestApp instances
             layered_requests: List of layers, each layer is a list of requests
             recorder: optional execution_events recorder; None disables event emission
-            pregeneration_time_ms: Pre-generation buffer time in milliseconds
+            pregeneration_time_ms: optional experiment-specific extra delay in
+                milliseconds; zero is the physical default
             request_duration_ms: Maximum duration for each request window in milliseconds
         """
         self.timeline = timeline
@@ -81,6 +86,7 @@ class ParallelLayerRequestManager:
         self.compiler_controller = compiler_controller
         self.pregeneration_time = int(pregeneration_time_ms * MILLISECOND)
         self.request_duration = int(request_duration_ms * MILLISECOND)
+        self.control_plane_guard = self._control_plane_guard()
         
         self.current_layer_index = 0
         self.pending_requests = set()  # Tracks requests in current layer not yet completed
@@ -102,6 +108,30 @@ class ParallelLayerRequestManager:
         
         self.series_start_time = None
         self.series_end_time = None
+
+    def _control_plane_guard(self) -> int:
+        """Return the configured adjacent RSVP round-trip delay plus 1 ps.
+
+        ACE traces contain elementary adjacent hops.  A start time at ``now``
+        is invalid because the RSVP request must reach the neighbour and its
+        approval must return before the resource manager can schedule the
+        reservation.  The old 5.3 ms constant merely hid this protocol
+        requirement.  Read the round-trip delay from the built topology
+        instead, so a changed topology/configuration receives the right guard.
+        Lightweight unit-test apps need no guard.
+        """
+        delays = []
+        for app in self.name_to_apps.values():
+            node = getattr(app, "node", None)
+            for channel in getattr(node, "cchannels", {}).values():
+                delay = getattr(channel, "delay", None)
+                if delay is not None:
+                    delays.append(int(delay))
+        return 2 * max(delays, default=0) + (RESERVATION_START_GRACE_PS if delays else 0)
+
+    def _reservation_start_time(self, now: int) -> int:
+        """Earliest valid RSVP start, plus an explicitly requested extra delay."""
+        return now + self.control_plane_guard + self.pregeneration_time
         
     def start(self):
         """Start the layered request series"""
@@ -129,8 +159,7 @@ class ParallelLayerRequestManager:
         # Track when we actually submit this layer (includes reservation setup time)
         self.layer_start_times[self.current_layer_index] = current_time
         
-        # Apply pre-generation time
-        start_time = current_time + self.pregeneration_time
+        start_time = self._reservation_start_time(current_time)
         end_time = start_time + self.request_duration
         
         # Determine if this is a retry layer
@@ -138,11 +167,11 @@ class ParallelLayerRequestManager:
         
         print(f"\n--- Layer {self.current_layer_index} {'(RETRY due to congestion)' if is_retry_layer else ''} ---")
         print(f"Current time (reservation submission): {current_time / MILLISECOND:.2f} ms")
-        print(f"Pre-generation buffer: {self.pregeneration_time / MILLISECOND:.2f} ms (excluded from measurements)")
+        print(f"Classical RSVP guard: {self.control_plane_guard / MILLISECOND:.6f} ms")
+        print(f"Additional reservation delay: {self.pregeneration_time / MILLISECOND:.2f} ms")
         print(f"Entanglement generation start: {start_time / MILLISECOND:.2f} ms")
         print(f"Entanglement generation end (window): {end_time / MILLISECOND:.2f} ms")
         print(f"Number of parallel requests: {len(current_layer)}")
-        print(f"NOTE: Request latency includes retry waiting and excludes only the initial buffer")
         
         # Send all requests in this layer
         for request in current_layer:
@@ -186,7 +215,7 @@ class ParallelLayerRequestManager:
         self.current_layer_index += 1
     
     def _submit_request(self, request, current_time):
-        start_time = current_time + self.pregeneration_time
+        start_time = self._reservation_start_time(current_time)
         end_time = start_time + self.request_duration
         request_id, src_name, dst_name, memo_size, fidelity, entanglement_number = request
 
@@ -402,26 +431,28 @@ class ParallelLayerRequestManager:
     def get_individual_latencies(self) -> dict:
         """
         Returns latency for each request in milliseconds.
-        Latency = (completion_time - submission_time) - pre_generation_time
-        Includes failed attempts and retry buffers; excludes the initial buffer once.
+        Latency = completion_time - first manager submission.
+
+        This is the manager-local metric.  The configured pre-generation
+        buffer is real elapsed time after that submission, so it must not be
+        subtracted.  Failed attempts and retry waits are included too.  The
+        trace-level, cross-scheduler arrival metric is in
+        ``latency_metrics.arrival_latencies_ms``.
         """
         latencies = {}
         for req_id in self.request_submission_times:
             if req_id in self.request_end_times:
                 submission_time = self.request_submission_times[req_id]
                 completion_time = self.request_end_times[req_id]
-                # Subtract pre-generation time to get only setup + generation time
-                latency_with_pregen = completion_time - submission_time
-                latency_without_pregen = latency_with_pregen - self.pregeneration_time
-                latencies[req_id] = latency_without_pregen / MILLISECOND
+                latencies[req_id] = (completion_time - submission_time) / MILLISECOND
         return latencies
     
     def get_individual_latencies_breakdown(self) -> dict:
-        """Disjoint stages summing to retry-inclusive request latency.
+        """Disjoint stages summing to full first-submission-to-completion time.
 
-        Only the initial configured buffer is excluded. Retry waiting includes
-        failed attempts and subsequent buffers. Setup overlapping the initial
-        buffer is not counted a second time.
+        ``arrival_to_completion_time_ms`` is retained as a compatibility name
+        for the manager-local interval; the trace-level arrival metric is
+        calculated separately by ``latency_metrics``.
         """
         breakdown = {}
         for req_id, completion in self.request_end_times.items():
@@ -432,13 +463,21 @@ class ParallelLayerRequestManager:
             generation = self.request_generation_start_times[req_id]
             approval = self.request_approval_times[req_id]
             retry_wait = (attempt - first) / MILLISECOND
+            # The start delay is measured, not assumed: it contains the
+            # topology-derived RSVP guard and any explicitly requested extra
+            # delay after this attempt was submitted.
+            initial_buffer = (generation - attempt) / MILLISECOND
             setup = max(0, approval - generation) / MILLISECOND
             service = (completion - max(generation, approval)) / MILLISECOND
             breakdown[req_id] = {
+                'arrival_to_completion_time_ms': (completion - first) / MILLISECOND,
+                'reservation_start_delay_time_ms': initial_buffer,
+                # Compatibility name for metric-version-3 consumers.
+                'initial_buffer_time_ms': initial_buffer,
                 'retry_wait_time_ms': retry_wait,
                 'reservation_setup_time_ms': setup,
                 'entanglement_generation_time_ms': service,
-                'total_time_ms': retry_wait + setup + service,
+                'total_time_ms': initial_buffer + retry_wait + setup + service,
                 'retry_count': self.request_retry_count.get(req_id, 0),
             }
         return breakdown
@@ -452,8 +491,8 @@ class ParallelLayerRequestManager:
             'total_requests': sum(len(layer) for layer in self.original_layered_requests),
             'completed_requests': len(self.request_end_times),
             'end_to_end_latency_ms': self.get_end_to_end_latency(),
-            'metric_version': 2,
-            'request_latency_definition': 'first submission to completion, excluding initial buffer only; includes retries',
+            'metric_version': 3,
+            'request_latency_definition': 'first manager submission to completion; includes initial buffer and retries',
             'end_to_end_latency_definition': 'wall-clock makespan including buffers, idle layers and retries',
             'layer_latencies': self.get_layer_latencies(),
             'individual_latencies': self.get_individual_latencies(),
@@ -695,8 +734,9 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     print(f"{'='*80}")
     print(f"Configuration: {config_file}")
     print(f"Update probability: {update_prob_setting}")
-    print(f"Pre-generation buffer: {pregeneration_time_ms:.2f} ms (excluded from measurements)")
-    print(f"\nStatistics (request latency excludes initial buffer; makespan includes all elapsed time):")
+    print(f"Classical RSVP guard: {request_manager.control_plane_guard / MILLISECOND:.6f} ms")
+    print(f"Additional reservation delay: {pregeneration_time_ms:.2f} ms (included in request latency)")
+    print(f"\nStatistics (request latency and makespan include all elapsed time):")
     print(f"  Original layers: {stats['total_layers']}")
     print(f"  Retry layers (due to congestion): {stats['retry_layers']}")
     print(f"  Total layers processed: {stats['total_layers_with_retries']}")
