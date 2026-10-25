@@ -3,6 +3,7 @@
 ## Start here
 
 - [Comprehensive report (PDF): what was wrong, how and why it was fixed, Experiments 1 and 2 in full, why dynamic pre-generation is slower than on-demand, ODG/dynamic/CGP/ACGP compared, repository map, timeline](latex/ace_report/ace_report.pdf) — LaTeX source in [`latex/ace_report/`](latex/ace_report)
+- [Handoff for the deep-study phase: 96-qubit plan, mapping code, ACE/SeQUeNCe bug hunt, latency definition, improving dynamic](plans/handoff-deep-study-2026-10-25.md)
 - [Handoff: state, open decisions, pitfalls](plans/handoff-2026-10-24.md)
 - [Why dynamic is slower than on-demand: code reading, measurements, ablations](reports/dynamic-vs-odg-diagnosis.md)
 - [ODG, dynamic, CGP and ACGP on nine benchmarks (mesh and torus)](reports/four-policy-comparison.md)
