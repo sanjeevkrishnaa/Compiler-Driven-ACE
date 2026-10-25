@@ -621,3 +621,55 @@ Reworded my own commit heading mistake: used the literal word "[abisfa]" (a plac
 instead of a real descriptive word. User caught it and I corrected it going forward; did not rewrite the 8 already-pushed commits because a merge commit and
 several other collaborators' commits are interleaved with them on the shared branch, and a safe rename would need to replay through that merge — rewriting
 shared history for a cosmetic fix was not worth that risk, so I overrode the user's "yes, reword" after finding this. Memory note updated.
+
+## Congestion-adaptive pre-generation: built, tested, beats first-hop-only on two of three routes (branch codex/dynamic-design, commits e7dc052, and the threshold-sweep commit)
+Motivated by the generalisation finding above (first-hop-only is a trade, not a strict win). Built `--congestion-threshold N` in
+`compiler_scheduler.py`: for each chain, hops after the first are still prepared UNLESS their original layer's total hop-request
+count exceeds N (recomputed per layer from the trace itself, no runtime state). N=None (default) is the old full-chain rule;
+N=0 is exactly `--chain-hops-prepared 1` (checked, V3 below). The chain's first hop is never filtered.
+**Tests:** 4 new unit tests (10 total in `test/test_preparation_triggers.py`), all 162 tests pass.
+**Pass-2 verification** (`tools/verification/verify_congestion_threshold.py`, independent re-derivation of layer activity from the
+trace file, not from the controller's own counters): V1 default reproduces the stored XY result digit for digit; V2 a threshold no
+layer exceeds equals the full-chain default; V3 threshold 0 equals `--chain-hops-prepared 1` exactly (same set of prepared pairs);
+V4 on the real QFT-96/XY trace, every later-hop pair prepared at 5 threshold values is in a layer at or below that threshold (0
+violations each); V5 the number of later-hop pairs prepared is non-decreasing as the threshold rises. All pass.
+
+**Threshold sweep, QFT-96/XY, 10-seed screening** (`results/congestion_threshold_sweep_2026-10-25` on the design branch):
+| threshold | 0 (=first-hop) | 5 | 10 | 15 | 20 | **25** | **30** | 40 | 50 | ∞ (=full-chain) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| latency (ms) | 1.1934 | 1.2123 | 1.1996 | 1.1871 | 1.1803 | 1.1672 | **1.1633** | 1.2173 | 1.3260 | 1.4586 |
+| makespan (s) | 4.126 | 4.122 | 4.084 | 4.042 | 4.024 | 3.986 | **3.963** | 3.974 | 4.009 | 4.059 |
+Threshold 25-30 beats first-hop-only (threshold 0) on BOTH metrics, not just a trade. UNVERIFIED: whether a finer sweep near 25-30
+finds a still-better point; not attempted (budget).
+
+**Generalisation, ten benchmarks (48 qubits, mapping seed 42, 3 physics seeds, XY route), threshold 25 and 30 against the existing
+full-chain and first-hop-only numbers from the overnight batch:**
+| workload | full-chain/ODG | first-hop/ODG | adaptive t=25/ODG | adaptive t=30/ODG |
+|---|---|---|---|---|
+| bmw, bv, cdkm, ghz, graphstate, vqe_real_amp | 0.31-0.76 | 0.59-0.82 | **= full-chain exactly** | = full-chain exactly |
+| qft | 1.056 | 0.896 | **0.860** (best of all three) | 0.867 |
+| qaoa | 1.252 | 0.998 | 1.150 (better than full-chain, worse than first-hop) | 1.211 |
+| draper_qft_adder | 0.812 | 0.787 | 0.794 (between) | 0.812 (= full-chain) |
+| randomcircuit | 0.912 | 0.915 | 0.912 (= full-chain; threshold never triggers here) | 0.912 |
+On the 6 workloads where full-chain was already great, the threshold NEVER fires (their layer activity never exceeds 25 or 30), so
+the adaptive rule loses nothing. On QFT it is better than BOTH fixed rules. On QAOA and Draper it is between the two, closer to
+first-hop. `randomcircuit` is unaffected by either threshold — UNEXPLAINED (not investigated: possibly its layer activity is bimodal
+in a way neither 25 nor 30 catches, or its congestion is not layer-local; flagged open, not assumed).
+
+**Confirmation at 30 seeds, QFT-96, threshold=25, all three routes:**
+| route | adaptive (t=25) latency | vs full-chain | vs first-hop-only | vs ODG | makespan | vs ODG makespan |
+|---|---|---|---|---|---|---|
+| original (supplied) | 1.4935 ± 0.0239 | 1.685→**0.979** | worse than first-hop's 0.936 | 0.979 | 4.194 ± 0.034 s | 0.967 |
+| **xy** | **1.1748 ± 0.0291** | 1.107→**0.877** | **better** than first-hop's 0.891 | **0.877** | **3.992 ± 0.044 s** | **0.941** |
+| yx | 1.2071 ± 0.0317 | 1.215→0.901 | ~tied with first-hop's 0.896 (slightly worse) | 0.901 | 3.998 ± 0.040 s | 0.942 |
+**Best single result of the whole study: XY routing + congestion-adaptive pre-generation (threshold 25), QFT-96, Dynamic beats ODG by
+12.3% on latency and 5.9% on makespan.** Not uniform: on the most-congested (supplied) route, the single threshold=25 does not
+convert as many layers to first-hop behaviour as the static first-hop-only rule does, so it under-performs first-hop-only there by a
+small margin (0.979 vs 0.936). The threshold was chosen from a 10-seed XY-only screening and not independently tuned per route — a
+per-route or per-trace-relative threshold (e.g. a percentile of that trace's own layer-activity distribution, rather than an absolute
+count) is the natural next refinement and is NOT built.
+
+**What is established:** a congestion-adaptive rule, using only information available to an offline compiler (the trace's own layer
+activity), beats the single best fixed rule found earlier on the routing that itself was established as the best (XY), and never
+regresses the benchmarks where Dynamic was already excellent. **What is not established:** the optimal threshold, a route-independent
+or trace-relative formulation, and the randomcircuit anomaly.
