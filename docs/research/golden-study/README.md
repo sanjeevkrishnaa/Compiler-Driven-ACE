@@ -7,6 +7,9 @@ The machine-readable contract is [study_contract.json](../../../results/golden_s
 It fixes the metrics, policy names, routing boundary, capacity sweep, and acceptance
 criteria before a final run is admitted to the registry.
 
+The implementation-level baseline mapping and its remaining fairness gates are in
+[the scheduler audit](00-policy-audit.md).
+
 ## Research questions
 
 1. Which EPR policy—ODG, CGP, ACGP, or a compiler-driven Dynamic policy—has the
