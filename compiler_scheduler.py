@@ -40,7 +40,15 @@ class CompilerPreGenerationController:
         trigger: str = "layer-start",
         trigger_delay_ms: float = 0.0,
         chain_hops_prepared: int | None = None,
+        predecessor_distance: int = 1,
+        congestion_threshold: int | None = None,
     ):
+        if predecessor_distance < 1:
+            raise ValueError("predecessor distance must be at least 1")
+        if chain_hops_prepared is not None and chain_hops_prepared < 1:
+            raise ValueError("chain_hops_prepared must be at least 1 (use the on-demand strategy to prepare nothing)")
+        if congestion_threshold is not None and congestion_threshold < 0:
+            raise ValueError("congestion_threshold must be non-negative")
         if trigger not in TRIGGERS:
             raise ValueError(f"unknown preparation trigger {trigger!r}; expected one of {TRIGGERS}")
         self.timeline = timeline
@@ -67,6 +75,19 @@ class CompilerPreGenerationController:
                     self.chain_predecessor[request.request_id] = hops[index - 1].request_id
         if chain_hops_prepared is not None:
             schedule = tuple(item for item in schedule if self.chain_position[item.request_id] < chain_hops_prepared)
+        if congestion_threshold is not None:
+            # Local, trace-derived congestion proxy: how many hop-requests target the same original layer as this
+            # request.  A busy layer means many migrations contend for memory around the same time; preparing a
+            # later hop there holds a card other chains need, which is exactly the effect measured on QFT-96
+            # (docs/worklog/README.md, 2026-10-25).  A quiet layer has no such contention, so the full chain is
+            # prepared as usual.  The threshold is in requests per layer, swept empirically, not derived from a
+            # memory count, because the controller does not know the core count (only mesh ``columns``).
+            layer_activity: dict[int, int] = defaultdict(int)
+            for request in requests:
+                layer_activity[request.layer] += 1
+            schedule = tuple(item for item in schedule
+                             if self.chain_position[item.request_id] == 0
+                             or layer_activity[self.requests[item.request_id].layer] <= congestion_threshold)
         self.waiting_for_predecessor = defaultdict(list)
         self.schedule = {item.request_id: item.generation_layer for item in schedule}
         self.by_generation_layer = defaultdict(list)

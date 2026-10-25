@@ -652,6 +652,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             trigger=compiler_spec.get("trigger", "layer-start"),
             trigger_delay_ms=compiler_spec.get("trigger_delay_ms", 0.0),
             chain_hops_prepared=compiler_spec.get("chain_hops_prepared"),
+            predecessor_distance=compiler_spec.get("predecessor_distance", 1),
+            congestion_threshold=compiler_spec.get("congestion_threshold"),
         )
         compiler_controller.attach()
     

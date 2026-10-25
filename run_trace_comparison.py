@@ -79,6 +79,8 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         "trigger": getattr(args, "preparation_trigger", "layer-start"),
         "trigger_delay_ms": getattr(args, "preparation_delay_ms", 0.0),
         "chain_hops_prepared": getattr(args, "chain_hops_prepared", None),
+        "predecessor_distance": getattr(args, "predecessor_distance", 1),
+        "congestion_threshold": getattr(args, "congestion_threshold", None),
     }
 
 
@@ -209,6 +211,9 @@ def main() -> None:
                         help="launch delay after the planned generation layer activates (first hops under predecessor-start)")
     parser.add_argument("--chain-hops-prepared", type=int, default=None,
                         help="prepare only the first N hops of each qubit's chain (default: all)")
+    parser.add_argument("--congestion-threshold", type=int, default=None,
+                        help="prepare only the first hop of a chain whose original layer has more than this many "
+                             "hop-requests; other chains get the full chain (default: off, always full chain)")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
