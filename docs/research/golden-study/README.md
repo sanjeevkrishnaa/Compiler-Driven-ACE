@@ -17,6 +17,11 @@ The first fresh mapper run and independent artifact audit are recorded in
 and establishes an important limitation: mapper seeds 42--44 did not create
 independent placement partitions.
 
+The frozen, hash-checked base simulation matrix and its exact size are recorded in
+[Base execution plan](02-execution-plan.md). It contains 30,580 resumable jobs and
+1,808,400 policy-seed simulator evaluations. Adaptive-congestion tuning remains a
+separate training-only phase so evaluation results cannot choose its threshold.
+
 ## Research questions
 
 1. Which EPR policy—ODG, CGP, ACGP, or a compiler-driven Dynamic policy—has the
@@ -46,8 +51,8 @@ and a corresponding CSV table. A graph without its CSV and numeric table is reje
 
 ## Status
 
-The contract, source corpus, mapper-job manifest, and route-export code are in
-place. Fresh mappings are blocked only by the currently absent optional `pytket`
-QASM parser dependency. Workload inventory, final seed sets, exact physical
-configuration, and adaptive-policy parameter selection remain intentionally
-unfilled rather than guessed.
+The source corpus, mapper outputs, route audit, disjoint seed sets, explicit physical
+parameters, and base-evaluation manifest are frozen. The base runner is execution
+ready. Adaptive-congestion threshold selection and standardized endpoint-versus-
+relay occupancy diagnostics remain separate gates; neither is guessed from final
+evaluation data.

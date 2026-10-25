@@ -74,4 +74,7 @@ Research foundations:
 The consolidated ODG/CGP/ACGP/Dynamic study is intentionally separate from the
 historical result folders. Its contract blocks an experiment until its workload
 traces, hashes, seed sets, route policy, and configuration are explicit. Start at
-[the golden-study README](docs/research/golden-study/README.md).
+[the golden-study README](docs/research/golden-study/README.md). The frozen base
+manifest contains 110 distinct T-HQA request traces, 30 paired evaluation seeds,
+every registered memory allocation, and 1,808,400 policy-seed simulations. The
+congestion-adaptive threshold remains a separate training-only phase.

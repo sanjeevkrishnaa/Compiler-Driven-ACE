@@ -43,6 +43,18 @@ Crucially, the three mapper/reliability seeds yielded one unique placement for e
 workload/algorithm/topology; they must be treated as reliability-route checks, not
 independent placement replications.
 
-At report build time, this chapter contains no performance conclusion until the
-contract has been made run-ready and the corresponding registry rows, raw CSV files,
-and validation records exist.
+The base evaluation matrix is now frozen. Deterministic XY and YX routes are
+byte-identical across the three mapper/reliability seeds, whereas shortest-reliable,
+maximum-reliability, and weighted torus Dijkstra routes change with their seeded
+reliability maps. Exact trace-hash deduplication therefore leaves 110 distinct traces
+from 150 conceptual aliases. Table~\ref{tab:golden-execution-plan} records the full
+base workload after enumerating all registered memory allocations and 30 paired
+physics seeds.
+
+\input{generated/golden_execution_plan}
+
+The congestion-adaptive threshold remains a separate training-only decision. It
+will enumerate every behaviorally distinct observed layer-activity threshold using
+seeds 30--39, freeze one rule, and only then evaluate seeds 0--29. This chapter
+contains no performance conclusion until the corresponding raw CSV files and
+validation records exist.

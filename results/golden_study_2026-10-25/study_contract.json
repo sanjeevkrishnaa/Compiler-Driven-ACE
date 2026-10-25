@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "study_id": "golden-ace-2026-10-25",
-  "status": "design-locked-execution-blocked",
+  "status": "base-evaluation-ready-adaptive-training-pending",
   "purpose": "Fresh, traceable comparison of EPR scheduling policies. Historical result folders are inputs for audit only and are never silently reused as golden-study data.",
   "model_scope": {
     "request_model": "adjacent-hop ACE trace",
@@ -17,10 +17,10 @@
     "rule": "Every workload, placement, route, and trace must be explicitly registered with relative paths and SHA-256 digests before execution."
   },
   "seeds": {
-    "mapping": [],
-    "physics_training": [],
-    "physics_evaluation": [],
-    "rule": "Seed lists are intentionally empty until approved. A final run requires disjoint non-empty training and evaluation physics seed lists and a non-empty mapping seed list."
+    "mapping": [42, 43, 44],
+    "physics_training": [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    "physics_evaluation": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+    "rule": "Training and evaluation physics seeds are frozen and disjoint. Mapping seeds are hardware/reliability realisations; identical trace hashes are executed once with all aliases retained."
   },
   "memory_experiment": {
     "total_memories_per_core": [2, 3, 4, 6, 8, 16, 32, 64],

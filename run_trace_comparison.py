@@ -214,11 +214,17 @@ def main() -> None:
                         help="the planner tries the layer this many before the request first, then earlier ones (default 1: the layer before)")
     parser.add_argument("--predecessor-distance", type=int, default=1,
                         help="predecessor-start launches a hop when the hop this many positions earlier in its chain begins")
-    parser.add_argument("--chain-hops-prepared", type=int, default=None,
-                        help="prepare only the first N hops of each qubit's chain (default: all)")
-    parser.add_argument("--congestion-threshold", type=int, default=None,
-                        help="prepare only the first hop of a chain whose original layer has more than this many "
-                             "hop-requests; other chains get the full chain (default: off, always full chain)")
+    chain = parser.add_mutually_exclusive_group()
+    chain.add_argument("--chain-hops-prepared", type=int, default=None,
+                       help="prepare only the first N hops of each qubit's chain")
+    chain.add_argument("--all-chain-hops", action="store_const", const=None, dest="chain_hops_prepared",
+                       help="explicitly prepare all hops of each qubit's chain")
+    congestion = parser.add_mutually_exclusive_group()
+    congestion.add_argument("--congestion-threshold", type=int, default=None,
+                            help="prepare only the first hop of a chain whose original layer has more than this many "
+                                 "hop-requests; other chains get the full chain")
+    congestion.add_argument("--no-congestion-threshold", action="store_const", const=None,
+                            dest="congestion_threshold", help="explicitly disable congestion filtering")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
@@ -236,8 +242,16 @@ def main() -> None:
                         help="CGP/ACGP cache at most --compiler-memories pairs per core (default: the config file's fixed adaptive_max_memory)")
     parser.add_argument("--stop-after-workload", action="store_true",
                         help="end the simulation 1 ms after the last request completes (default: run to --stop-time-s); per-qubit only")
-    parser.add_argument("--no-starvation-guard", action="store_true", help="per-qubit event admission only")
-    parser.add_argument("--max-layers", type=int)
+    starvation = parser.add_mutually_exclusive_group()
+    starvation.add_argument("--starvation-guard", action="store_false", dest="no_starvation_guard",
+                            help="explicitly enable the per-qubit event-admission starvation guard")
+    starvation.add_argument("--no-starvation-guard", action="store_true", dest="no_starvation_guard",
+                            help="explicitly disable the per-qubit event-admission starvation guard")
+    parser.set_defaults(no_starvation_guard=False)
+    layers_group = parser.add_mutually_exclusive_group()
+    layers_group.add_argument("--max-layers", type=int)
+    layers_group.add_argument("--all-layers", action="store_const", const=None, dest="max_layers",
+                              help="explicitly execute the complete trace")
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
