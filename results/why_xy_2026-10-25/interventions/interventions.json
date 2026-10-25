@@ -1,0 +1,82 @@
+{
+ "mix_p25_s1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 199
+ },
+ "mix_p50_s1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 380
+ },
+ "mix_p50_s2": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 341
+ },
+ "mix_p50_s3": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 381
+ },
+ "mix_p75_s1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 556
+ },
+ "rand_shortest_s1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 799
+ },
+ "rand_shortest_s2": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 811
+ },
+ "rand_shortest_s3": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 763
+ },
+ "o1turn_s1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 749
+ },
+ "o1turn_s2": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 761
+ },
+ "o1turn_s3": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 769
+ },
+ "concentrate": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 584
+ },
+ "balance": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 618
+ },
+ "avoid_hot1": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 927
+ },
+ "avoid_hot2": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 919
+ },
+ "avoid_hot3": {
+  "migrations": 1770,
+  "hops": 4954,
+  "routes_changed": 1051
+ }
+}
