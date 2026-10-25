@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=0.9779039930961541 ms fidelity=0.9459582077345908
+dynamic              seed=1 complete=100.00% latency=0.9221330796346153 ms fidelity=0.9461028962343913
+dynamic              seed=2 complete=100.00% latency=0.9192487046346154 ms fidelity=0.946029996124169
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/vqe_real_amp/xy_dynamic-first-hop/summary.csv

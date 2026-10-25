@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.4204850117755725 ms fidelity=0.9440625627366664
+dynamic              seed=1 complete=100.00% latency=1.3712400284580153 ms fidelity=0.944259445856422
+dynamic              seed=2 complete=100.00% latency=1.44613413209542 ms fidelity=0.9447435495060987
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/draper_qft_adder/original_dynamic/summary.csv

@@ -28,7 +28,7 @@ METRICS = [
     ("request_latency_max_ms", "request latency, max (ms)"),
     ("average_admission_wait_ms", "admission wait (ms)"),
     ("avg_entanglement_generation_time_ms", "generation / service (ms)"),
-    ("end_to_end_latency_ms", "makespan (ms)"),
+    ("end_to_end_latency_ms", "makespan"),
     ("intended_request_hit_rate", "EPR hit rate (intended)"),
     ("pregenerated_success_rate", "pre-generated success rate"),
     ("compiler_waste_percentage", "compiler EPR waste (%)"),

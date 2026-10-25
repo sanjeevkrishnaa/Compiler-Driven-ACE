@@ -60,7 +60,7 @@ def run(args) -> int:
         chains = defaultdict(list)
         for request in plan:
             chains[(request.layer, request.qubit)].append(request)
-        n_cores = max(max(r.source_core, r.destination_core) for r in plan) + 1
+        n_cores = runner.parse_compiler_trace(args.trace).core_count        # from the trace header, not from the cores that happen to appear
         endpoint_touch, relay_touch = [0] * n_cores, [0] * n_cores
         endpoint_wait, relay_wait = [0.0] * n_cores, [0.0] * n_cores
         waited = [0] * n_cores

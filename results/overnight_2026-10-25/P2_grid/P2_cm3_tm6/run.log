@@ -1,0 +1,11 @@
+dynamic              seed=0 complete=100.00% latency=1.1199273194035122 ms fidelity=0.9481006796161375
+dynamic              seed=1 complete=100.00% latency=1.1274164870938637 ms fidelity=0.94814347093452
+dynamic              seed=2 complete=100.00% latency=1.1296167967947115 ms fidelity=0.9480971716752132
+dynamic              seed=3 complete=100.00% latency=1.1272550159105774 ms fidelity=0.948092772751631
+dynamic              seed=4 complete=100.00% latency=1.1417689635785222 ms fidelity=0.9481166683577399
+dynamic              seed=5 complete=100.00% latency=1.125599717566209 ms fidelity=0.9481013930390877
+dynamic              seed=6 complete=100.00% latency=1.1428993636069842 ms fidelity=0.9480718838012829
+dynamic              seed=7 complete=100.00% latency=1.1475623360542995 ms fidelity=0.9481106633530213
+dynamic              seed=8 complete=100.00% latency=1.14960110977392 ms fidelity=0.9480484113154214
+dynamic              seed=9 complete=100.00% latency=1.1177673796548244 ms fidelity=0.9481095212250755
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P2_grid/P2_cm3_tm6/summary.csv
