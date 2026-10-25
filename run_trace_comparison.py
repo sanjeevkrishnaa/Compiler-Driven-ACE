@@ -29,6 +29,7 @@ from compiler_trace import (
     validate_neighbor_requests,
 )
 from latency_metrics import eligible_latencies_ms
+from sequence.constants import MILLISECOND
 from parallel_core import run_parallel_experiment
 
 
@@ -100,6 +101,17 @@ def _eligible(result: dict, requests, reduce):
     return reduce(values) if values else None
 
 
+def _raw_latency_stats(result: dict, requests) -> dict:
+    """Headline latency: request arrival (eligibility) to EPR delivery, nothing subtracted."""
+    keys = ("request_latency_mean_ms", "request_latency_median_ms", "request_latency_p95_ms", "request_latency_max_ms")
+    if requests is None:
+        return dict.fromkeys(keys)
+    values = sorted(eligible_latencies_ms(result["request_manager"], requests, subtract_lead=False).values())
+    if not values:
+        return dict.fromkeys(keys)
+    return dict(zip(keys, (fmean(values), values[len(values) // 2], values[min(len(values) - 1, int(0.95 * len(values)))], values[-1])))
+
+
 def _row(strategy: str, seed: int, result: dict, request_count: int, requests=None) -> dict:
     stats = result["stats"]
     compiler = result["compiler_metrics"]
@@ -115,6 +127,8 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         # the same definition under every scheduler (latency_metrics.py)
         "average_eligible_latency_ms": _eligible(result, requests, fmean),
         "max_eligible_latency_ms": _eligible(result, requests, max),
+        **_raw_latency_stats(result, requests),
+        "configured_lead_ms": result["request_manager"].pregeneration_time / MILLISECOND,
         # time requests spent waiting for a free memory before being admitted (per-qubit scheduler only)
         **_admission_waits(stats),
                 "metric_version": stats["metric_version"],
@@ -155,7 +169,7 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         "generated_compiler_pairs", "utilized_compiler_pairs",
         "expired_compiler_pairs", "remaining_compiler_pairs",
         "compiler_expiry_percentage", "compiler_waste_percentage",
-        "average_fidelity_at_creation", "average_fidelity_at_utilization",
+        "average_fidelity_at_creation", "average_fidelity_at_utilization", "average_storage_time_ms",
     )
     row.update({
         name: (None if compiler is None else compiler.get(name))

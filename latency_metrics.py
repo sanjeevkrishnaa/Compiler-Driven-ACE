@@ -32,8 +32,12 @@ def layer_activation_times(layer_start_times: Mapping[int, int], working_layer_o
     return first
 
 
-def eligible_latencies_ms(manager, requests: Sequence) -> dict[int, float]:
-    """Latency of every completed request, from the moment it could first be asked for."""
+def eligible_latencies_ms(manager, requests: Sequence, subtract_lead: bool = True) -> dict[int, float]:
+    """Latency of every completed request, from the moment it could first be asked for.
+
+    ``subtract_lead=False`` is the headline definition (arrival to EPR delivery, queueing and reservation
+    control included).  ``True`` keeps the manager's older convention of excluding the configured lead once.
+    """
     activation = layer_activation_times(manager.layer_start_times, manager.working_layer_origins)
     chains: dict[tuple[int, int], list] = defaultdict(list)
     for r in requests:
@@ -55,5 +59,6 @@ def eligible_latencies_ms(manager, requests: Sequence) -> dict[int, float]:
             eligible = activation.get(r.layer)
         if eligible is None:
             continue
-        latencies[r.request_id] = (end - eligible - manager.pregeneration_time) / MILLISECOND
+        lead = manager.pregeneration_time if subtract_lead else 0
+        latencies[r.request_id] = (end - eligible - lead) / MILLISECOND
     return latencies
