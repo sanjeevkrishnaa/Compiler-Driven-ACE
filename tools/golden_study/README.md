@@ -55,6 +55,12 @@ python -m tools.golden_study.summarize_execution \
   --latex-output docs/latex/ace_report/generated/golden_execution_progress.tex
 ```
 
+A completed memory-sweep slice is accepted for plotting only after
+`analyze_memory_sweep.py` proves that ODG and every integer compiler allocation
+`C=0,...,M-1` are present with the declared seed count and 100% completion. The
+analysis writes both figures as PNG/PDF, plus the exact observed-minimum CSV and a
+LaTeX table. All selector values and output paths are explicit command arguments.
+
 ## Fresh mapper inputs and trace generation
 
 `prepare_inputs.py` copies only the QASM members explicitly named in

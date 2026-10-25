@@ -43,6 +43,47 @@ Dynamic also retains substantially higher fidelity than CGP/ACGP. This is not ye
 a general claim: congested workloads, other routes, and the remaining memory sweep
 must be completed before selecting a policy.
 
+## Complete GHZ / T-HQA / mesh-XY memory sweep
+
+The full registered slice is now complete: 278 runner jobs, 16,440 policy-seed
+evaluations, eight total-memory values (`M = 2, 3, 4, 6, 8, 16, 32, 64`), every
+integer compiler allocation `C = 0, ..., M-1`, five policy labels, and 30 paired
+physics seeds. Every simulator request completed. This is 0.9091% of the complete
+ten-workload, five-route base matrix.
+
+The complete 548-row aggregation is in
+[`base-evaluation-progress.csv`](../../../results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv).
+The 40-row descriptive envelope is in
+[`ghz_thqa_mesh_xy_memory_sweep_observed_minima.csv`](../../../results/golden_study_2026-10-25/summaries/ghz_thqa_mesh_xy_memory_sweep_observed_minima.csv).
+The envelope selects the lowest observed 30-seed mean latency for each `(M, policy)`
+and resolves an exact tie using the smallest `C`. It is descriptive; it does not use
+these evaluation seeds to train or freeze a new policy.
+
+| Total memories `M` | Lowest observed policy | Smallest tied `C` | Mean latency | Change vs ODG | Fidelity |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 2 | Dynamic full-chain | 1 | 0.68209 ms | −50.10% | 0.94372 |
+| 3 | Dynamic full-chain | 2 | 0.46320 ms | −66.11% | 0.94159 |
+| 4 | Dynamic full-chain | 2 | 0.46320 ms | −66.11% | 0.94159 |
+| 6 | Dynamic full-chain | 2 | 0.46320 ms | −66.11% | 0.94159 |
+| 8 | Dynamic full-chain | 2 | 0.46320 ms | −66.11% | 0.94159 |
+| 16 | CGP and ACGP (exact tie) | 14 | 0.46250 ms | −66.16% | 0.85274 |
+| 32 | CGP and ACGP (exact tie) | 17 | 0.46250 ms | −66.16% | 0.85396 |
+| 64 | CGP and ACGP (exact tie) | 13 | 0.46250 ms | −66.16% | 0.85229 |
+
+The high-capacity CGP/ACGP advantage over Dynamic full-chain is only 0.00069 ms
+(about 0.15%) in mean latency, while Dynamic full-chain delivers about 0.089 higher
+absolute mean fidelity and needs only `C=2`. Dynamic full-chain reaches 100%
+intended-request hit rate, zero on-demand fallback, and zero observed compiler or
+protocol waste at `C=2`. Dynamic first-hop saturates at `C=1`, but prepares only
+62.5% of requests and falls back on demand for 37.5%, so its mean latency remains
+0.78488 ms. CGP and ACGP are numerically identical on this sparse trace except for
+a small waste difference at `M=3,C=2`; this must not be generalized to congested
+workloads.
+
+![Observed latency-minimum envelope](../../../results/golden_study_2026-10-25/figures/ghz_thqa_mesh_xy_memory_sweep_envelope.png)
+
+![Every tested compiler-memory allocation with matched ODG baselines](../../../results/golden_study_2026-10-25/figures/ghz_thqa_mesh_xy_memory_sweep_all_allocations.png)
+
 ## Launcher incident retained
 
 The first attempt exposed a reproducibility bug: resolving the explicit virtualenv

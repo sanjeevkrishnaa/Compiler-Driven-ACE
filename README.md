@@ -77,4 +77,8 @@ traces, hashes, seed sets, route policy, and configuration are explicit. Start a
 [the golden-study README](docs/research/golden-study/README.md). The frozen base
 manifest contains 110 distinct T-HQA request traces, 30 paired evaluation seeds,
 every registered memory allocation, and 1,808,400 policy-seed simulations. The
-congestion-adaptive threshold remains a separate training-only phase.
+first complete slice---GHZ with T-HQA placement and mesh-XY routing---contains
+278 validated jobs and 16,440 policy-seed simulations across all registered memory
+allocations. Its tables and figures are in the
+[execution progress record](docs/research/golden-study/03-execution-progress.md).
+The congestion-adaptive threshold remains a separate training-only phase.

@@ -74,3 +74,26 @@ makespan; its mean latency is 50.10\% below ODG. First-hop Dynamic is 42.58\%
 below ODG, and CGP/ACGP are 21.66\% below ODG. This one cell is evidence that the
 implementations can benefit from pre-generation, but it is not a cross-workload
 or routing conclusion.
+
+The remainder of the GHZ mesh--XY capacity sweep is now complete for every total
+memory value and every legal compiler allocation. The analysis first validates the
+entire triangular $(M,C)$ grid and all 30 seeds, then reports the lowest observed
+mean-latency allocation for each policy and $M$. This is a descriptive envelope of
+the registered grid, not a claim that evaluation data have trained a universally
+optimal allocation. Figure~\ref{fig:golden-ghz-xy-all-allocations} retains all
+allocation points so that the envelope cannot hide an adverse region.
+
+\input{generated/golden_ghz_mesh_xy_memory_sweep}
+
+Dynamic full-chain reaches its latency floor with two compiler memories: from
+$M=3$ onward its mean request latency is 0.46320~ms, 66.11\% below ODG, with
+100\% intended-request hits, no on-demand fallback, and no observed compiler or
+protocol waste. Dynamic first-hop saturates with one compiler memory at
+0.78488~ms because its intended hit rate is 62.5\% and its fallback rate is
+37.5\%. At $M\geq16$, CGP and ACGP reach 0.46250~ms, only 0.00069~ms (about
+0.15\%) below Dynamic full-chain, but their delivered fidelity is approximately
+0.852--0.854 rather than 0.94159. They also require at least 13--17 compiler
+memories in these observed plateaus. Thus Dynamic full-chain is the strongest
+latency--capacity--fidelity trade-off in this sparse slice, while the high-capacity
+CGP/ACGP point has the absolute minimum latency. No cross-workload claim follows
+until the remaining registered slices are complete.
