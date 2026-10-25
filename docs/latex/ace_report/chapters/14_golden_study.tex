@@ -58,3 +58,12 @@ will enumerate every behaviorally distinct observed layer-activity threshold usi
 seeds 30--39, freeze one rule, and only then evaluate seeds 0--29. This chapter
 contains no performance conclusion until the corresponding raw CSV files and
 validation records exist.
+
+The first accepted matrix slice is the zero-cache boundary for GHZ on mesh--XY
+with two communication memories per core. Table~\ref{tab:golden-progress} is
+generated directly from the validated raw job directories. Its five policies are
+expected to match because no policy may retain a pre-generated pair when $C=0$;
+this is a boundary invariant, not evidence that the policies are equivalent at
+positive cache capacity.
+
+\input{generated/golden_execution_progress}

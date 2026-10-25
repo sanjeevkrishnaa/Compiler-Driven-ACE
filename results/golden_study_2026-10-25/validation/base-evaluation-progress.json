@@ -1,0 +1,10 @@
+{
+  "aggregate_rows": 5,
+  "completed_jobs": 3,
+  "completed_policy_seed_evaluations": 150,
+  "evaluation_completion_fraction": 8.294625082946251e-05,
+  "job_completion_fraction": 9.810333551340745e-05,
+  "schema": "golden-study-progress-v1",
+  "total_jobs": 30580,
+  "total_policy_seed_evaluations": 1808400
+}

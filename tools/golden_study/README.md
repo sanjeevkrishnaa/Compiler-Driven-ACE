@@ -42,6 +42,17 @@ python -m tools.golden_study.run_execution \
 Use `--limit N` for a bounded first batch. A result is reusable only when its full
 job/input hashes, expected rows, metadata, and completion rates validate.
 
+After any batch, rebuild the incremental source table and LaTeX progress table:
+
+```bash
+python -m tools.golden_study.summarize_execution \
+  --root results/golden_study_2026-10-25 \
+  --manifest results/golden_study_2026-10-25/manifests/base-evaluation_jobs.jsonl.gz \
+  --output results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv \
+  --status results/golden_study_2026-10-25/validation/base-evaluation-progress.json \
+  --latex-output docs/latex/ace_report/generated/golden_execution_progress.tex
+```
+
 ## Fresh mapper inputs and trace generation
 
 `prepare_inputs.py` copies only the QASM members explicitly named in
