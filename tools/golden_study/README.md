@@ -44,6 +44,13 @@ job/input hashes, expected rows, metadata, completion rates, ACE source lock, an
 SeQUeNCe Git revision validate. Filters such as `--workload ghz --topology mesh
 --route-policy xy` select a scientifically named resumable batch.
 
+Each completed job is stored as `raw/<phase>/<job-id>/` under the study root.
+That directory contains the raw summary and metadata, the exact command and
+source/interpreter identity in `execution.json`, and durable `stdout.log` and
+`stderr.log` files. Jobs are first written under `raw/.partial/` and atomically
+renamed only after validation. The study-root README documents the complete
+layout and the lookup path from an aggregate CSV row back to its raw evidence.
+
 After any batch, rebuild the incremental source table and LaTeX progress table:
 
 ```bash
