@@ -1,0 +1,11 @@
+topology,mapping_algorithm,workload,route_policy,mapping_seed_count,logical_migrations_values,physical_hops_values
+mesh,HQA,qpeexact,max_reliability,3,1022,2556;2684;2886
+mesh,HQA,qpeexact,shortest_reliable,3,1022,2310
+mesh,HQA,qpeexact,xy,3,1022,2310
+mesh,HQA,qpeexact,yx,3,1022,2310
+mesh,T-HQA,qpeexact,max_reliability,3,1163,2132;2212;2662
+mesh,T-HQA,qpeexact,shortest_reliable,3,1163,1830
+mesh,T-HQA,qpeexact,xy,3,1163,1830
+mesh,T-HQA,qpeexact,yx,3,1163,1830
+torus,HQA,qpeexact,dijkstra,3,1022,1884
+torus,T-HQA,qpeexact,dijkstra,3,1053,1403

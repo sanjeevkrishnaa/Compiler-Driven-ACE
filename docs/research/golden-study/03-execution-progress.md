@@ -125,3 +125,25 @@ package. The failure evidence is retained under
 [`validation/launcher_failures`](../../../results/golden_study_2026-10-25/validation/launcher_failures).
 The launcher now preserves virtualenv identity, and the same job completed and was
 subsequently accepted through the resume-validation path.
+
+## Registered extension: MQT Bench QPE exact
+
+The frozen ten-workload base matrix remains unchanged. A separately versioned
+eleventh-workload extension has now been registered at
+[`golden_study_qpe_extension_2026-10-26`](../../../results/golden_study_qpe_extension_2026-10-26).
+It uses MQT Bench's `qpeexact` factory at 48 logical qubits, rather than a
+handwritten QPE circuit. The extracted OpenQASM input is SHA-256 pinned as
+`27218fb934f74875d5a8499d1e2c84bd3741a96339c0fb4fecc6aecd9fdfcf53` and its
+provenance records the factory, Qiskit exporter, depth (143), and operation count
+(1,293).
+
+Fresh HQA and T-HQA partitions were generated for seeds 42--44 across mesh and
+torus, then the mapping audit validated all 30 route artifacts: every migration
+endpoint, adjacent physical hop, placement-input hash, and route/partition hash is
+checked. The QPE extension plan contains 15 conceptual T-HQA route aliases, 11
+distinct request traces after exact-hash deduplication, 3,058 runner jobs, and
+180,840 policy-seed simulations. Mesh includes XY, YX, shortest-reliable, and
+maximum-reliability; torus uses Dijkstra only. It is intentionally a separate
+execution manifest, so adding QPE cannot mutate the ten-workload denominator or
+invalidate already-running base results. `qpeinexact` is not silently folded into
+this workload; it remains a separately identifiable candidate for a later extension.

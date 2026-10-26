@@ -115,3 +115,21 @@ Table~\ref{tab:golden-bv-xy-envelope}, CGP/ACGP protocol waste spans
 58.36--71.79\%, while Dynamic full-chain has zero observed protocol and compiler
 waste. Unlike GHZ, CGP and ACGP differ at intermediate capacities, demonstrating
 why conclusions must be checked workload by workload.
+
+\section{Registered MQT Bench QPE extension}
+
+The frozen ten-workload base matrix is not mutated when a new benchmark is added.
+Instead, the separately versioned QPE extension uses MQT Bench's \texttt{qpeexact}
+factory at 48 logical qubits. Its generated OpenQASM has an immutable SHA-256
+digest, and records a circuit depth of 143 and 1,293 operations. Fresh HQA and
+T-HQA placements were generated for all three mapper seeds and both topologies;
+the mapping audit validated all 30 route artifacts for endpoint correctness,
+adjacency, input hash and partition provenance. Mesh evaluates XY, YX,
+shortest-reliable and maximum-reliability; torus uses Dijkstra only. The execution
+plan below has 15 conceptual aliases, 11 exact-hash-distinct traces, 3,058 runner
+jobs and 180,840 policy-seed simulations. It is a controlled extension, not a
+retroactive change to the base-study denominator. The distinct MQT Bench
+\texttt{qpeinexact} factory is deliberately not silently conflated with this exact
+QPE benchmark.
+
+\input{generated/golden_qpe_extension_execution_plan}

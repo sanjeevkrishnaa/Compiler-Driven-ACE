@@ -1,0 +1,5 @@
+topology,mapping_algorithm,workload,mapping_seed_count,distinct_partition_count,seed_to_partition_sha256
+mesh,HQA,qpeexact,3,1,"{""42"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9"", ""43"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9"", ""44"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9""}"
+mesh,T-HQA,qpeexact,3,1,"{""42"": ""fff72caa69dee20a48971993a986009498e730fedf0cecf867c23d4f49dadfd0"", ""43"": ""fff72caa69dee20a48971993a986009498e730fedf0cecf867c23d4f49dadfd0"", ""44"": ""fff72caa69dee20a48971993a986009498e730fedf0cecf867c23d4f49dadfd0""}"
+torus,HQA,qpeexact,3,1,"{""42"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9"", ""43"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9"", ""44"": ""07a2cd308253ebfe926590f46d764ff08a646bac141273746e9968b611c7cba9""}"
+torus,T-HQA,qpeexact,3,1,"{""42"": ""b6895c08b1421af655189c0eb4d62d1ec82cfe538f38bbd4ae73d77dcd5238d3"", ""43"": ""b6895c08b1421af655189c0eb4d62d1ec82cfe538f38bbd4ae73d77dcd5238d3"", ""44"": ""b6895c08b1421af655189c0eb4d62d1ec82cfe538f38bbd4ae73d77dcd5238d3""}"

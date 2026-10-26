@@ -1,0 +1,24 @@
+{
+  "schema": "golden-study-mapping-jobs-v1",
+  "input_manifest": "inputs/manifest.json",
+  "workloads": ["qpeexact"],
+  "mapping_algorithms": ["T-HQA", "HQA"],
+  "mapping_seeds": [42, 43, 44],
+  "architecture": {
+    "grid": "4x4",
+    "data_qubits_per_core": 4,
+    "reserved_ancilla": 1,
+    "initial_placement": "oee",
+    "reliability_min": 0.1,
+    "reliability_max": 1.0,
+    "seed_derivation": "mapper-cli-trial-v1"
+  },
+  "routing": {
+    "mesh": ["xy", "yx", "shortest_reliable", "max_reliability"],
+    "torus": ["dijkstra"]
+  },
+  "interpretation": {
+    "extension_rule": "QPE is an independently versioned extension to the frozen ten-workload base study. It does not alter the base input corpus, mapping audit, execution manifest, or conclusions.",
+    "memory_sweep_note": "The 2..64 ACE communication-memory sweep changes the simulator memory-bank capacity only and reuses fixed data-qubit placements."
+  }
+}
