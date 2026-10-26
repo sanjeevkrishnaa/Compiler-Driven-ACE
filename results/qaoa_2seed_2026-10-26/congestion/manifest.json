@@ -1,0 +1,24 @@
+{
+  "schema": "qft96-congestion-v1",
+  "capacities": [
+    2,
+    3,
+    4,
+    6,
+    8,
+    16,
+    32
+  ],
+  "variants": [
+    "hop",
+    "route"
+  ],
+  "trace_count": 15,
+  "summary_rows": 210,
+  "core_rows": 3360,
+  "definitions": {
+    "hop": "internal relay contributes two incident demands; endpoints one",
+    "route": "each core visited by a qubit route contributes one demand",
+    "relay_only": "total demand exceeds capacity while endpoint demand does not"
+  }
+}

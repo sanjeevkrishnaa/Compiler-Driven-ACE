@@ -1,0 +1,3 @@
+on-demand            seed=0 complete=100.00% latency=1.3367769827265863 ms fidelity=0.949813357734806
+on-demand            seed=1 complete=100.00% latency=1.3311876889199397 ms fidelity=0.949813357734806
+Wrote /home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/results/qaoa_2seed_2026-10-26/raw/.partial/65a903ba7a7a9cc8e2645fde.80u_hb0t/summary.csv

@@ -1,0 +1,7 @@
+continuous           seed=0 complete=100.00% latency=0.4595241749086737 ms fidelity=0.9135846105759857
+adaptive-continuous  seed=0 complete=100.00% latency=0.4558985416668197 ms fidelity=0.9126898088730696
+dynamic              seed=0 complete=100.00% latency=0.4781114648815971 ms fidelity=0.9433169241148784
+continuous           seed=1 complete=100.00% latency=0.4582390848669115 ms fidelity=0.9128819388288322
+adaptive-continuous  seed=1 complete=100.00% latency=0.4586981107884351 ms fidelity=0.9127884563073072
+dynamic              seed=1 complete=100.00% latency=0.4716862029453879 ms fidelity=0.9433439052922202
+Wrote /home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/results/qaoa_2seed_2026-10-26/raw/.partial/81a97e237048720255d2ff6f._yz8lt8c/summary.csv

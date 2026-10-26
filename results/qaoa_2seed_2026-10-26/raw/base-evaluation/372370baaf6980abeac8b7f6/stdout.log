@@ -1,0 +1,3 @@
+dynamic              seed=0 complete=100.00% latency=0.939708229266994 ms fidelity=0.9466897341954225
+dynamic              seed=1 complete=100.00% latency=0.9450331521321752 ms fidelity=0.9466703842055391
+Wrote /home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/results/qaoa_2seed_2026-10-26/raw/.partial/372370baaf6980abeac8b7f6.e38aiju3/summary.csv

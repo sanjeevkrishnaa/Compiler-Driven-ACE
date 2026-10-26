@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/run_trace_comparison.py", line 33, in <module>
+    from parallel_core import run_parallel_experiment
+  File "/home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/parallel_core.py", line 3, in <module>
+    from sequence.topology.router_net_topo import RouterNetTopo
+  File "/home/dhruv-pansuriya/Documents/BTP/SeQUeNCe-0.8.1/sequence/topology/router_net_topo.py", line 3, in <module>
+    from networkx import Graph, dijkstra_path, exception
+  File "/home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/.venv/lib/python3.13/site-packages/networkx/__init__.py", line 19, in <module>
+    from networkx import utils
+  File "/home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/.venv/lib/python3.13/site-packages/networkx/utils/__init__.py", line 2, in <module>
+    from networkx.utils.decorators import *
+  File "/home/dhruv-pansuriya/Documents/BTP/Compiler-Driven-ACE/.venv/lib/python3.13/site-packages/networkx/utils/decorators.py", line 1, in <module>
+    import bz2
+  File "/home/dhruv-pansuriya/Documents/BTP/.python-3.13-final/lib/python3.13/bz2.py", line 17, in <module>
+    from _bz2 import BZ2Compressor, BZ2Decompressor
+ModuleNotFoundError: No module named '_bz2'

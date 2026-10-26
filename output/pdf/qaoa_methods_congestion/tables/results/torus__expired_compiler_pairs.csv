@@ -1,0 +1,15 @@
+topology,route_policy,total_memories_per_core,policy,mean,sd_across_cells,observations,compiler_allocations,mapping_trace_groups,physics_seeds_per_cell
+torus,dijkstra,2,Dynamic-first-hop,1.8333333333333333,2.016597794967223,6,"0, 1",3,2
+torus,dijkstra,2,Dynamic-full-chain,2.0833333333333335,2.2894686428659963,6,"0, 1",3,2
+torus,dijkstra,3,Dynamic-first-hop,3.4444444444444446,2.9521649306530584,9,"0, 1, 2",3,2
+torus,dijkstra,3,Dynamic-full-chain,4.333333333333333,3.9210967853395307,9,"0, 1, 2",3,2
+torus,dijkstra,4,Dynamic-first-hop,4.916666666666667,3.642135570671624,12,"0, 1, 2, 3",3,2
+torus,dijkstra,4,Dynamic-full-chain,7.25,6.084630413815392,12,"0, 1, 2, 3",3,2
+torus,dijkstra,6,Dynamic-first-hop,6.805555555555555,4.155573468207872,18,"0, 1, 2, 3, 4, 5",3,2
+torus,dijkstra,6,Dynamic-full-chain,11.38888888888889,7.811295658805974,18,"0, 1, 2, 3, 4, 5",3,2
+torus,dijkstra,8,Dynamic-first-hop,7.791666666666667,4.21414973286599,24,"0, 1, 2, 3, 4, 5, 6, 7",3,2
+torus,dijkstra,8,Dynamic-full-chain,15.916666666666666,10.352133435513023,24,"0, 1, 2, 3, 4, 5, 6, 7",3,2
+torus,dijkstra,16,Dynamic-first-hop,8.739583333333334,3.4946609480526107,48,"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15",3,2
+torus,dijkstra,16,Dynamic-full-chain,15.0625,10.587841782772411,48,"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15",3,2
+torus,dijkstra,32,Dynamic-first-hop,9.203125,2.968765581676561,96,"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31",3,2
+torus,dijkstra,32,Dynamic-full-chain,7.666666666666667,9.523286326481019,96,"0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31",3,2
