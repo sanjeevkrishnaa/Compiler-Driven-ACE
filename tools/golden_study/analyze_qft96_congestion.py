@@ -13,7 +13,7 @@ Example::
     python -m tools.golden_study.analyze_qft96_congestion \
       --root results/qft96_2seed_2026-10-26 \
       --output results/qft96_2seed_2026-10-26/congestion \
-      --capacities 2,3,4,6,8,16,32,64
+      --capacities 2,3,4,6,8,16,32
 """
 from __future__ import annotations
 
@@ -163,7 +163,34 @@ def heatmaps(rows: list[dict[str, Any]], output: Path) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    for key in sorted({(r["topology"], r["route_policy"], r["mapping_seed"], r["capacity"], r["variant"]) for r in rows}):
+    output.mkdir(parents=True, exist_ok=True)
+    keys = sorted({(r["topology"], r["route_policy"], r["mapping_seed"], r["capacity"], r["variant"]) for r in rows})
+    expected = {
+        f"{topology}__{route}__seed{seed}__cap{capacity}__{variant}.png"
+        for topology, route, seed, capacity, variant in keys
+    }
+
+    # A scoped rerun must not leave heatmaps from an earlier, broader scope in
+    # the same directory.  Restrict deletion to this tool's exact filename
+    # shape, preserving any unrelated user files placed beside the figures.
+    stale = 0
+    for path in output.glob("*.png"):
+        parts = path.stem.split("__")
+        is_generated = (
+            len(parts) == 5
+            and parts[2].startswith("seed")
+            and parts[2][4:].isdigit()
+            and parts[3].startswith("cap")
+            and parts[3][3:].isdigit()
+            and parts[4] in VARIANTS
+        )
+        if is_generated and path.name not in expected:
+            path.unlink()
+            stale += 1
+    if stale:
+        print(f"removed {stale} stale scoped heatmap(s)")
+
+    for key in keys:
         topology, route, seed, capacity, variant = key
         subset = [r for r in rows if (r["topology"], r["route_policy"], r["mapping_seed"], r["capacity"], r["variant"]) == key]
         fields = [("overloaded_percent", "Total overload"), ("own_percent", "Source/destination"), ("relay_only_percent", "Relay-only")]
@@ -217,7 +244,7 @@ def main() -> int:
     args.output.mkdir(parents=True, exist_ok=True)
     write_csv(args.output / "trace_congestion_summary.csv", all_summary)
     write_csv(args.output / "per_core_congestion.csv", all_core)
-    heatmaps(all_core, args.output / "heatmaps") if (args.output / "heatmaps").mkdir(exist_ok=True) is None else None
+    heatmaps(all_core, args.output / "heatmaps")
     manifest = {"schema": "qft96-congestion-v1", "capacities": capacities, "variants": VARIANTS,
                 "trace_count": len(aliases), "summary_rows": len(all_summary), "core_rows": len(all_core),
                 "definitions": {"hop": "internal relay contributes two incident demands; endpoints one",
