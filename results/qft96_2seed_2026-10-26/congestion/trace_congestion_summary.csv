@@ -6,7 +6,6 @@ mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requ
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,8,766,226,3876,15,6.6371681415929205,17,36
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,2,766,226,3876,156,69.02654867256638,962,1579
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,3,766,226,3876,110,48.67256637168141,408,617
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,4,766,226,3876,64,28.31858407079646,149,209
@@ -14,7 +13,6 @@ mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requ
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,xy,traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,2,766,226,3876,163,72.12389380530973,1151,3120
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,3,766,226,3876,158,69.91150442477876,1023,1969
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,4,766,226,3876,112,49.557522123893804,382,946
@@ -22,7 +20,6 @@ mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requ
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,8,766,226,3876,10,4.424778761061947,17,30
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,2,766,226,3876,156,69.02654867256638,967,1560
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,3,766,226,3876,112,49.557522123893804,422,593
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,4,766,226,3876,64,28.31858407079646,134,171
@@ -30,7 +27,6 @@ mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requ
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,yx,traces/placements/mesh/T-HQA/qft96/seed_42/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,2,766,226,3876,165,73.00884955752213,965,3398
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,3,766,226,3876,165,73.00884955752213,916,2433
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,4,766,226,3876,146,64.60176991150442,484,1517
@@ -38,7 +34,6 @@ mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,8,766,226,3876,57,25.221238938053098,73,210
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,2,766,226,3876,159,70.35398230088495,894,1726
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,3,766,226,3876,144,63.716814159292035,500,832
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,4,766,226,3876,87,38.49557522123894,202,332
@@ -46,7 +41,6 @@ mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,42,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_42/routes/shortest_reliable/requests.txt,7c1122c0b4d57d7e5f84cdd062de57e97e444d4b4782e6beda027f12ec191ecb,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,2,766,226,4242,166,73.45132743362832,1120,4010
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,3,766,226,4242,166,73.45132743362832,1055,2890
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,4,766,226,4242,148,65.48672566371681,554,1835
@@ -54,7 +48,6 @@ mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/r
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,8,766,226,4242,70,30.97345132743363,118,330
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,16,766,226,4242,0,0.0,0,0
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,32,766,226,4242,0,0.0,0,0
-mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,hop,64,766,226,4242,0,0.0,0,0
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,2,766,226,4242,160,70.79646017699115,1022,2004
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,3,766,226,4242,145,64.15929203539822,553,982
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,4,766,226,4242,92,40.70796460176991,239,429
@@ -62,7 +55,6 @@ mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/r
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,8,766,226,4242,0,0.0,0,0
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,16,766,226,4242,0,0.0,0,0
 mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,32,766,226,4242,0,0.0,0,0
-mesh,T-HQA,qft96,42,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_42/routes/max_reliability/requests.txt,d8cbbc9e884517c8d84a8b4d65eb8f9162a9dd7325812d65926fcefb0110c66b,route,64,766,226,4242,0,0.0,0,0
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,2,766,226,3186,165,73.00884955752213,866,2124
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,3,766,226,3186,157,69.46902654867256,772,1258
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,4,766,226,3186,128,56.63716814159292,258,486
@@ -70,7 +62,6 @@ torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,8,766,226,3186,1,0.4424778761061947,1,2
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,hop,64,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,2,766,226,3186,149,65.929203539823,755,1075
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,3,766,226,3186,78,34.51327433628319,275,320
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,4,766,226,3186,30,13.274336283185841,41,45
@@ -78,7 +69,6 @@ torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,8,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,42,dijkstra,traces/placements/torus/T-HQA/qft96/seed_42/routes/dijkstra/requests.txt,6351726e8d99853483ac0de80d006335ff51900bed6e9526818901d3ce3cd3b5,route,64,766,226,3186,0,0.0,0,0
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,2,766,226,3876,158,69.91150442477876,1105,3124
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,3,766,226,3876,157,69.46902654867256,1008,2019
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,4,766,226,3876,109,48.230088495575224,390,1011
@@ -86,7 +76,6 @@ mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requ
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,8,766,226,3876,15,6.6371681415929205,17,36
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,2,766,226,3876,156,69.02654867256638,962,1579
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,3,766,226,3876,110,48.67256637168141,408,617
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,4,766,226,3876,64,28.31858407079646,149,209
@@ -94,7 +83,6 @@ mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requ
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,xy,traces/placements/mesh/T-HQA/qft96/seed_43/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,2,766,226,3876,163,72.12389380530973,1151,3120
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,3,766,226,3876,158,69.91150442477876,1023,1969
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,4,766,226,3876,112,49.557522123893804,382,946
@@ -102,7 +90,6 @@ mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requ
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,8,766,226,3876,10,4.424778761061947,17,30
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,2,766,226,3876,156,69.02654867256638,967,1560
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,3,766,226,3876,112,49.557522123893804,422,593
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,4,766,226,3876,64,28.31858407079646,134,171
@@ -110,7 +97,6 @@ mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requ
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,yx,traces/placements/mesh/T-HQA/qft96/seed_43/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,2,766,226,3876,159,70.35398230088495,995,3292
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,3,766,226,3876,159,70.35398230088495,936,2297
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,4,766,226,3876,108,47.78761061946903,423,1361
@@ -118,7 +104,6 @@ mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,8,766,226,3876,54,23.893805309734514,73,210
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,2,766,226,3876,153,67.69911504424779,911,1652
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,3,766,226,3876,108,47.78761061946903,443,741
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,4,766,226,3876,72,31.858407079646017,168,298
@@ -126,7 +111,6 @@ mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,8,766,226,3876,1,0.4424778761061947,1,1
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,43,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_43/routes/shortest_reliable/requests.txt,ede20acad72c0178135dbc89496e03a130cc4ed8ba219d0a2a7271de16233b6c,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,2,766,226,5396,173,76.54867256637168,1239,6096
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,3,766,226,5396,167,73.89380530973452,1161,4857
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,4,766,226,5396,155,68.58407079646018,799,3696
@@ -134,7 +118,6 @@ mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/r
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,8,766,226,5396,105,46.46017699115044,262,1013
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,16,766,226,5396,26,11.504424778761061,26,69
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,32,766,226,5396,0,0.0,0,0
-mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,hop,64,766,226,5396,0,0.0,0,0
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,2,766,226,5396,161,71.23893805309734,1116,2938
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,3,766,226,5396,152,67.2566371681416,834,1822
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,4,766,226,5396,140,61.94690265486726,471,988
@@ -142,7 +125,6 @@ mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/r
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,8,766,226,5396,45,19.911504424778762,48,95
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,16,766,226,5396,0,0.0,0,0
 mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,32,766,226,5396,0,0.0,0,0
-mesh,T-HQA,qft96,43,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_43/routes/max_reliability/requests.txt,ccad6a1e445597f6adf826c8c2599de21303da2efae06aced2027b1b9d49362a,route,64,766,226,5396,0,0.0,0,0
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,2,766,226,3186,169,74.77876106194691,812,2125
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,3,766,226,3186,162,71.68141592920354,722,1313
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,4,766,226,3186,109,48.230088495575224,231,591
@@ -150,7 +132,6 @@ torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,8,766,226,3186,13,5.752212389380531,13,38
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,hop,64,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,2,766,226,3186,157,69.46902654867256,740,1146
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,3,766,226,3186,90,39.823008849557525,268,406
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,4,766,226,3186,56,24.778761061946902,103,138
@@ -158,7 +139,6 @@ torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,8,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,43,dijkstra,traces/placements/torus/T-HQA/qft96/seed_43/routes/dijkstra/requests.txt,2c251a426690b1b66d61dbbeef51e149b229f8c815dfc444cf569430ff621f2d,route,64,766,226,3186,0,0.0,0,0
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,2,766,226,3876,158,69.91150442477876,1105,3124
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,3,766,226,3876,157,69.46902654867256,1008,2019
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,4,766,226,3876,109,48.230088495575224,390,1011
@@ -166,7 +146,6 @@ mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requ
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,8,766,226,3876,15,6.6371681415929205,17,36
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,2,766,226,3876,156,69.02654867256638,962,1579
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,3,766,226,3876,110,48.67256637168141,408,617
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,4,766,226,3876,64,28.31858407079646,149,209
@@ -174,7 +153,6 @@ mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requ
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,xy,traces/placements/mesh/T-HQA/qft96/seed_44/routes/xy/requests.txt,260e6fa69c9cbdb24904a09cf3abe2a4f37350ca4983b5f04dbb16e896276053,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,2,766,226,3876,163,72.12389380530973,1151,3120
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,3,766,226,3876,158,69.91150442477876,1023,1969
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,4,766,226,3876,112,49.557522123893804,382,946
@@ -182,7 +160,6 @@ mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requ
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,8,766,226,3876,10,4.424778761061947,17,30
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,2,766,226,3876,156,69.02654867256638,967,1560
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,3,766,226,3876,112,49.557522123893804,422,593
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,4,766,226,3876,64,28.31858407079646,134,171
@@ -190,7 +167,6 @@ mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requ
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,yx,traces/placements/mesh/T-HQA/qft96/seed_44/routes/yx/requests.txt,857d5877ee41ccdf07964dc6187503205d786c46689db99db6fc08d1a059f44d,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,2,766,226,3876,165,73.00884955752213,979,3444
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,3,766,226,3876,165,73.00884955752213,925,2465
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,4,766,226,3876,150,66.3716814159292,513,1540
@@ -198,7 +174,6 @@ mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,8,766,226,3876,46,20.353982300884955,57,125
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,hop,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,2,766,226,3876,161,71.23893805309734,881,1741
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,3,766,226,3876,150,66.3716814159292,537,860
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,4,766,226,3876,97,42.92035398230089,223,323
@@ -206,7 +181,6 @@ mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,8,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,16,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,32,766,226,3876,0,0.0,0,0
-mesh,T-HQA,qft96,44,shortest_reliable,traces/placements/mesh/T-HQA/qft96/seed_44/routes/shortest_reliable/requests.txt,c9b55ad2268437776afd327d2c71c8b5c6751f9d3c47c7443f89e1b5d51a4244,route,64,766,226,3876,0,0.0,0,0
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,2,766,226,4774,165,73.00884955752213,1074,5174
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,3,766,226,4774,165,73.00884955752213,1032,4100
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,4,766,226,4774,150,66.3716814159292,733,3068
@@ -214,7 +188,6 @@ mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/r
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,8,766,226,4774,84,37.16814159292036,212,641
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,16,766,226,4774,0,0.0,0,0
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,32,766,226,4774,0,0.0,0,0
-mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,hop,64,766,226,4774,0,0.0,0,0
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,2,766,226,4774,161,71.23893805309734,978,2600
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,3,766,226,4774,150,66.3716814159292,744,1622
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,4,766,226,4774,139,61.50442477876106,503,878
@@ -222,7 +195,6 @@ mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/r
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,8,766,226,4774,1,0.4424778761061947,1,1
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,16,766,226,4774,0,0.0,0,0
 mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,32,766,226,4774,0,0.0,0,0
-mesh,T-HQA,qft96,44,max_reliability,traces/placements/mesh/T-HQA/qft96/seed_44/routes/max_reliability/requests.txt,1bde1c7e6f88c84a718bdc880dc91153c91c2d29d6e6886e07cb244b65d1f333,route,64,766,226,4774,0,0.0,0,0
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,2,766,226,3186,168,74.33628318584071,810,2040
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,3,766,226,3186,159,70.35398230088495,701,1230
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,4,766,226,3186,74,32.743362831858406,202,529
@@ -230,7 +202,6 @@ torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,8,766,226,3186,10,4.424778761061947,11,25
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,hop,64,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,2,766,226,3186,140,61.94690265486726,676,1049
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,3,766,226,3186,78,34.51327433628319,276,373
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,4,766,226,3186,43,19.02654867256637,75,97
@@ -238,4 +209,3 @@ torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,8,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,16,766,226,3186,0,0.0,0,0
 torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,32,766,226,3186,0,0.0,0,0
-torus,T-HQA,qft96,44,dijkstra,traces/placements/torus/T-HQA/qft96/seed_44/routes/dijkstra/requests.txt,44e40fe8822fce1ef7a9a04801c586429f6eabce44d5ff10e35e2c9af099b127,route,64,766,226,3186,0,0.0,0,0
