@@ -82,6 +82,14 @@ def validate_spec(spec: dict[str, Any]) -> None:
     required_workloads = selector.get("required_workload_count")
     if not isinstance(required_workloads, int) or required_workloads < 1:
         raise ValueError("trace_selector.required_workload_count must be positive")
+    workloads = selector.get("workloads")
+    if workloads is not None:
+        if (not isinstance(workloads, list) or not workloads
+                or any(not isinstance(v, str) or not v for v in workloads)
+                or len(set(workloads)) != len(workloads)):
+            raise ValueError("trace_selector.workloads must be a unique non-empty list of names")
+        if len(workloads) != required_workloads:
+            raise ValueError("trace_selector.workloads must match required_workload_count")
     seeds = spec.get("physics_seeds")
     if not isinstance(seeds, dict):
         raise ValueError("physics_seeds must be an object")
@@ -128,12 +136,14 @@ def selected_traces(root: Path, spec: dict[str, Any]) -> list[dict[str, Any]]:
     selector = spec["trace_selector"]
     seeds = set(selector["mapping_seeds"])
     routes = selector["topology_routes"]
+    selected_workloads = set(selector.get("workloads", []))
     selected: list[dict[str, Any]] = []
     with audit_path.open(newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
             topology = row["topology"]
             if (row["mapping_algorithm"] != selector["mapping_algorithm"]
                     or int(row["mapping_seed"]) not in seeds
+                    or (selected_workloads and row["workload"] not in selected_workloads)
                     or row["route_policy"] not in routes.get(topology, ())):
                 continue
             fields = {
