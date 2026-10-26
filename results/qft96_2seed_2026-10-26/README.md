@@ -7,6 +7,7 @@ own dated study root; it never writes into another workload's directory.
 ```text
 qft96_2seed_2026-10-26/
 ├── execution_spec.json          # frozen factors and simulator parameters
+├── execution_scope.json         # explicit official scope and exclusions
 ├── mapping_contract.json        # mapper/export contract
 ├── manifests/                   # immutable job plans and source lock
 ├── traces/                      # placement, migrations, and ACE request traces
@@ -33,6 +34,15 @@ Jobs are written to `raw/.partial/<temporary-id>` first. The directory is
 atomically renamed to `raw/<phase>/<job-id>` only after hashes, expected seed
 rows, completion rate, and metadata validate. A partial directory is therefore
 an active or failed job, never a reportable result.
+
+## Official memory scope
+
+The official complete sweep uses total memories per core
+`2, 3, 4, 6, 8, 16, 32`. The original planned manifest containing `M=64` is
+retained for provenance. The launcher reads `execution_scope.json` and uses
+`manifests/base-evaluation_jobs_max-m32.jsonl.gz`, so completed `M=64` outputs
+remain archived under `raw/` but are excluded from summaries, plots, and final
+claims. This explicit revision was approved on 26 October 2026.
 
 ## How to find results quickly
 
@@ -66,7 +76,7 @@ already-started workers have stopped:
 bash tools/golden_study/run_qft96_all.sh \
   results/qft96_2seed_2026-10-26 \
   /Users/dhruvrpansuriya/Documents/IITG\ Acad/Sem\ 7/BTP/Compiler-Driven-ACE/.venv/bin/python \
-  2
+  6
 ```
 
 The final argument is the worker count. The launcher runs mesh and torus base

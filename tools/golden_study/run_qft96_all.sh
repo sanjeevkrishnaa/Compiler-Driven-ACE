@@ -27,9 +27,19 @@ if [[ "$ROOT_ARG" = /* ]]; then ROOT="$ROOT_ARG"; else ROOT="$REPO/$ROOT_ARG"; f
 if [[ "$ACE_PYTHON_ARG" = /* ]]; then ACE_PYTHON="$ACE_PYTHON_ARG"; else ACE_PYTHON="$REPO/$ACE_PYTHON_ARG"; fi
 ROOT="$(cd "$ROOT" && pwd)"
 
+SCOPE_FILE="$ROOT/execution_scope.json"
+if [[ -f "$SCOPE_FILE" ]]; then
+  BASE_MANIFEST_REL="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["base_manifest"])' "$SCOPE_FILE")"
+  CONGESTION_CAPACITIES="$(python3 -c 'import json,sys; print(",".join(map(str,json.load(open(sys.argv[1]))["included_total_memories_per_core"])))' "$SCOPE_FILE")"
+else
+  BASE_MANIFEST_REL="manifests/base-evaluation_jobs.jsonl.gz"
+  CONGESTION_CAPACITIES="2,3,4,6,8,16,32,64"
+fi
+BASE_MANIFEST="$ROOT/$BASE_MANIFEST_REL"
+
 [[ -x "$ACE_PYTHON" ]] || { echo "ACE interpreter is not executable: $ACE_PYTHON" >&2; exit 1; }
 [[ -f "$ROOT/execution_spec.json" ]] || { echo "missing execution_spec.json under $ROOT" >&2; exit 1; }
-[[ -f "$ROOT/manifests/base-evaluation_jobs.jsonl.gz" ]] || { echo "missing base manifest under $ROOT" >&2; exit 1; }
+[[ -f "$BASE_MANIFEST" ]] || { echo "missing scoped base manifest: $BASE_MANIFEST" >&2; exit 1; }
 
 LOCK="$ROOT/.qft96-pipeline.lock"
 if ! mkdir "$LOCK" 2>/dev/null; then
@@ -49,9 +59,11 @@ run_logged() {
 }
 
 cd "$REPO"
-BASE_MANIFEST="$ROOT/manifests/base-evaluation_jobs.jsonl.gz"
 BASE_SUMMARY="$ROOT/summaries/base-evaluation-progress.csv"
 BASE_STATUS="$ROOT/summaries/base-evaluation-status.json"
+
+echo "Official base manifest: $BASE_MANIFEST"
+echo "Official memory capacities: $CONGESTION_CAPACITIES"
 
 run_logged base-mesh python3 -m tools.golden_study.run_execution \
   --root "$ROOT" --manifest "$BASE_MANIFEST" --python "$ACE_PYTHON" \
@@ -68,7 +80,7 @@ run_logged base-summary python3 -m tools.golden_study.summarize_execution \
   --root "$ROOT" --manifest "$BASE_MANIFEST" --output "$BASE_SUMMARY" --status "$BASE_STATUS"
 
 run_logged congestion "$ACE_PYTHON" -m tools.golden_study.analyze_qft96_congestion \
-  --root "$ROOT" --output "$ROOT/congestion"
+  --root "$ROOT" --output "$ROOT/congestion" --capacities "$CONGESTION_CAPACITIES"
 
 run_logged base-metric-plots "$ACE_PYTHON" tools/golden_study/plot_qft96_metrics.py \
   --input "$BASE_SUMMARY" --output "$ROOT/figures/metrics"

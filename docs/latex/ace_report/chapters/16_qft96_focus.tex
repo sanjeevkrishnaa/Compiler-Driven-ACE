@@ -11,7 +11,7 @@ YX, shortest-reliable and maximum-reliability; torus uses Dijkstra only.
 The route exporter validated all 15 conceptual route artifacts for migration
 endpoints, adjacent-hop validity, trace hashes and replay to the placement.
 There are 11 byte-distinct traces after exact deduplication. The base ACE phase
-enumerates memories $M\in\{2,3,4,6,8,16,32,64\}$, every legal compiler
+enumerates memories $M\in\{2,3,4,6,8,16,32\}$, every legal compiler
 allocation $C=0,\ldots,M-1$, ODG, CGP, ACGP, Dynamic full-chain and Dynamic
 first-hop, with physics seeds 0 and 1. A separate Dynamic-policy phase fixes
 $M=4$, $C=3$ and evaluates the 13 launch-policy variants listed in the research
@@ -21,6 +21,14 @@ definitions and later multi-machine execution contract are in
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/research/qft96-experimental-design.md}{the QFT-96 experimental-design contract}.
 All timing uses the corrected arrival-to-completion simulator metric;
 the historical 5.3-ms subtraction is not used.
+
+The initially generated plan included $M=64$. On 26 October 2026, after 425
+of its 1,419 jobs had completed, the scope was explicitly revised to stop at
+$M=32$. The original manifest and raw $M=64$ outputs remain available for
+provenance, but the partial $M=64$ subset is excluded from aggregate tables,
+figures and conclusions. The official filtered base manifest contains 1,639
+jobs. This avoids presenting an execution-order-biased partial endpoint as a
+complete result.
 
 \section{Progress snapshot}
 
@@ -38,8 +46,8 @@ remain active; they must not be read as final results.
 Phase & Validated jobs & Planned jobs & Status and source artifacts \\
 \midrule
 Mapper and route audit & 15 & 15 & Complete; mapping audit CSV and route traces \\
-Base ACE matrix & 101 & 3,058 & Running; base-evaluation manifest and progress CSV \\
-Dynamic launch variants & 49 & 143 & Running; dynamic-variants manifest \\
+Base ACE matrix & 482 & 1,639 & Running; official $M\leq32$ manifest and progress CSV \\
+Dynamic launch variants & 143 & 143 & Complete; dynamic-variants manifest \\
 Four-memory matched checkpoint & 10 cells & 10 cells & Complete; checkpoint CSV and seed CSV \\
 \bottomrule
 \end{tabular}
@@ -47,8 +55,8 @@ Four-memory matched checkpoint & 10 cells & 10 cells & Complete; checkpoint CSV 
 
 The authoritative QFT-96 study root is
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26}{\texttt{results/qft96\_2seed\_2026-10-26}}.
-The base plan is in
-\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/manifests/base-evaluation\_jobs.jsonl.gz}{the base manifest}; the Dynamic-policy plan is in
+The official base plan is in
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/manifests/base-evaluation\_jobs\_max-m32.jsonl.gz}{the scoped base manifest}; the original 3,058-job plan remains archived. The Dynamic-policy plan is in
 \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/manifests/dynamic-variants\_jobs.json}{the variant manifest}.
 
 \section{Validated route structure}
@@ -62,7 +70,7 @@ latency, admission wait, makespan, fidelity or waste measurements.
 
 Congestion is analysed independently from physical timing so that the route
 effect is not confounded with simulator scheduling. The analysis covers all
-15 T-HQA mapping/routing cells, capacities $2,3,4,6,8,16,32,64$, and both
+15 T-HQA mapping/routing cells, capacities $2,3,4,6,8,16,32$, and both
 counting definitions. In hop counting, an internal relay contributes two
 incident demands (arrival and departure); in route counting, a qubit route
 contributes one demand at each core it visits. For every cell and capacity we
@@ -73,7 +81,7 @@ structural validation, rather than the mesh-only adjacency validator.
 The generated heatmaps contain three panels per trace: total overload,
 source/destination overload, and relay-only overload. Percentages are over the
 226 communication-active layers of the 766-layer QFT trace; idle layers are not
-silently counted as zero congestion. The complete CSVs and 240 route-specific
+silently counted as zero congestion. The complete CSVs and 210 route-specific
 heatmaps are linked below. The congestion pass is trace-level and therefore is
 valid before all ACE timing jobs finish.
 

@@ -1,0 +1,16 @@
+{
+  "schema": "qft96-execution-scope-v1",
+  "effective_date": "2026-10-26",
+  "reason": "User-approved exclusion of the 64-memory endpoint from the official complete QFT-96 sweep.",
+  "original_base_manifest": "manifests/base-evaluation_jobs.jsonl.gz",
+  "original_base_manifest_sha256": "7b426b1248dd34326604814b508da182d909287bef1543ba432935bcd2d12ecc",
+  "base_manifest": "manifests/base-evaluation_jobs_max-m32.jsonl.gz",
+  "base_manifest_sha256": "6b14c52c4746ce8469a01af101447e88f2d7d5923941039be8728c7d0bd74abf",
+  "included_total_memories_per_core": [2, 3, 4, 6, 8, 16, 32],
+  "excluded_total_memories_per_core": [64],
+  "original_job_count": 3058,
+  "official_job_count": 1639,
+  "excluded_job_count": 1419,
+  "completed_excluded_jobs_at_revision": 425,
+  "excluded_output_handling": "Retain completed M=64 raw outputs for provenance, but exclude them from official aggregation, plots, tables, and claims."
+}

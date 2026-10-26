@@ -14,7 +14,7 @@ Each result is identified by the following immutable factors:
 | Mesh routing | XY, YX, shortest-reliable, maximum-reliability |
 | Torus routing | Dijkstra only |
 | Topology | 4 x 4 mesh or 4 x 4 torus |
-| Total memories/core | 2, 3, 4, 6, 8, 16, 32, 64 |
+| Total memories/core | 2, 3, 4, 6, 8, 16, 32 |
 | Compiler memories/core | Every legal integer `C=0,...,M-1` |
 | Baseline policies | ODG, CGP, ACGP, Dynamic full-chain, Dynamic first-hop |
 | Dynamic structural policies | Layer-start, predecessor-start, chain depth `N=1`, `N=2`, and later `N=3,4,all` |
@@ -24,6 +24,17 @@ The current base matrix uses 11 byte-distinct traces after route deduplication,
 while the mapping audit retains all 15 conceptual mapping/routing cells. A
 trace hash, source lock, configuration hash, and seed list are mandatory for
 every result. No result is reusable merely because a `summary.csv` exists.
+
+### Scope revision on 26 October 2026
+
+The initially generated manifest also contained $M=64$. After 425 of those
+1,419 jobs had completed, the user approved removing $M=64$ from the official
+complete sweep to avoid spending approximately three additional hours on an
+extreme capacity beyond the retained $M=32$ endpoint. The original manifest
+and completed raw outputs remain archived. They are excluded from official
+aggregation because a partial $M=64$ subset would be execution-order biased.
+The machine-readable decision is `results/qft96_2seed_2026-10-26/execution_scope.json`;
+the official filtered manifest contains 1,639 jobs over $M=2$ through $32$.
 
 ## What congestion means
 
