@@ -5,6 +5,9 @@ validated QFT-96 mapping/routing cell in the 26 October study. It is separate
 from ACE timing: it measures demand implied by the route trace and therefore
 can be generated while the physical simulations are still running.
 
+The formal experiment factors and definitions are frozen in
+[`docs/research/qft96-experimental-design.md`](../../../docs/research/qft96-experimental-design.md).
+
 Coverage:
 
 - 15 mapping/routing cells: three T-HQA mapping seeds, mesh XY/YX/

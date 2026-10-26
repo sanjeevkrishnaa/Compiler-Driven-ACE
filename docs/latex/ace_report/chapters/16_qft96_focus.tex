@@ -15,7 +15,11 @@ enumerates memories $M\in\{2,3,4,6,8,16,32,64\}$, every legal compiler
 allocation $C=0,\ldots,M-1$, ODG, CGP, ACGP, Dynamic full-chain and Dynamic
 first-hop, with physics seeds 0 and 1. A separate Dynamic-policy phase fixes
 $M=4$, $C=3$ and evaluates the 13 launch-policy variants listed in the research
-ledger. All timing uses the corrected arrival-to-completion simulator metric;
+ledger. These variants are grouped into structural policies and auxiliary delay
+sensitivities; the latter are not treated as separate algorithms. The formal
+definitions and later multi-machine execution contract are in
+\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/research/qft96-experimental-design.md}{the QFT-96 experimental-design contract}.
+All timing uses the corrected arrival-to-completion simulator metric;
 the historical 5.3-ms subtraction is not used.
 
 \section{Progress snapshot}
