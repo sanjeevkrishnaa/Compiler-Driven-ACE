@@ -16,7 +16,7 @@ qft96_2seed_2026-10-26/
 │   └── dynamic-variants/<job-id>/
 ├── summaries/                   # validated progress and aggregate tables
 ├── congestion/                  # trace-level CSVs and heatmaps
-└── figures/                     # checked-in report figures
+└── figures/                     # checkpoint and incremental metric figures
 ```
 
 ## Per-job evidence
@@ -43,6 +43,13 @@ an active or failed job, never a reportable result.
 - Use `raw/<phase>/<job-id>/execution.json` to reproduce the exact command.
 - Use `congestion/trace_congestion_summary.csv` and
   `congestion/per_core_congestion.csv` for route demand and heatmaps.
+
+The metric plotting outputs are under `figures/metrics/` and
+`figures/dynamic-variants/`. They include latency, p95, makespan, admission
+wait, fidelity, protocol/compiler waste, hit/fallback rates, compiler-not-ready
+requests, and retries. They are explicitly incremental while the runners are
+active; after completion, rerun the plotting commands to produce the final
+figures from the complete validated summaries.
 
 The parent launcher currently prints progress to its terminal; the durable
 per-job logs above are the authoritative logs. When this study is distributed
