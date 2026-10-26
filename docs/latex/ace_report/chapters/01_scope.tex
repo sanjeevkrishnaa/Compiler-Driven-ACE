@@ -14,6 +14,33 @@ latency, fidelity and waiting of ten benchmarks across communication-memory budg
 core's congestion into its own endpoint demand and relay traffic (Experiment~2), a study of ACE's memory cut-off
 mechanisms, a study of whether offline routing can reduce congestion, and the same questions on a torus. Two further chapters ask why dynamic pre-generation is slower than on-demand generation on the congested benchmarks (Chapter~\ref{ch:why-dynamic}) and compare it with the autonomous protocols CGP and ACGP (Chapter~\ref{ch:four-policies}).
 
+\section{Methodology of the current Golden study}
+The current study is a preregistered, hash-addressed execution rather than a
+hand-selected collection of plots. First, a declared MQT/QASM input corpus is
+mapped independently of ACE. For each mapping seed, the mapper's complete
+partition is archived; routing then expands the same logical migration trace
+under the declared mesh policy (XY, YX, shortest-reliable or maximum-reliability)
+or torus Dijkstra policy. The route exporter validates every migration endpoint
+and every adjacent hop before ACE sees the trace. This separation means that a
+routing change cannot silently change placement.
+
+Second, the execution manifest enumerates every legal communication-memory
+capacity $M\in\{2,3,4,6,8,16,32,64\}$ and every compiler allocation
+$C=0,\ldots,M-1$ (ODG uses $C=0$), and runs ODG, CGP, ACGP, Dynamic full-chain
+and Dynamic first-hop with the same trace, physical configuration and 30 paired
+evaluation seeds. Training seeds for any adaptive congestion rule are disjoint
+from evaluation seeds. A job is accepted only when all expected policy/seed rows
+complete, the trace and configuration hashes match, the source lock matches,
+and the completion rate is 100\%.
+
+The primary latency is eligibility-to-EPR-delivery: admission and reservation
+waiting, retries and EPR generation are included; time before eligibility while
+a cached pair merely sits in memory is excluded. Whole-program makespan is
+reported separately. For every figure, the underlying complete numeric table and
+the repository CSV are required deliverables; a figure without both is not
+promoted into the report. Incomplete slices remain progress records and cannot
+support a policy ranking.
+
 \section{Ground rules followed}
 The following rules were fixed at the start and held throughout.
 \begin{itemize}

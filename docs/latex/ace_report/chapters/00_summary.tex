@@ -40,3 +40,12 @@ and fidelity result depends on that choice; the congestion results barely do. Th
 
 \paragraph{How to trust it.} Every result carries controls that must pass (a zero-congestion workload must not respond to the budget; 64 memories must equal 32; completion must be 100\%); the first run failed two of them for non-physical reasons, which were diagnosed
 and fixed (Section~\ref{sec:corrections}); every experiment folder records all parameters, the code commit, the machine and the run times. Section~\ref{sec:corrections} lists every mistake made on the way and how it was found.
+
+\paragraph{Status of the evidence.} The historical chapters preserve the earlier
+corrected-scheduler and four-policy results, but they are not silently mixed with
+the new Golden-study corpus. The Golden study is the current reproducibility
+baseline: its complete contract, trace hashes, source lock and acceptance rules
+are in Chapter~14. At this report build, the GHZ and BV mesh--XY slices are fully
+validated; the remaining base workloads and the separately registered MQT Bench
+QPE extension are still executing. The report therefore makes workload-specific
+observations, not a claim that compiler-driven Dynamic is universally superior.
