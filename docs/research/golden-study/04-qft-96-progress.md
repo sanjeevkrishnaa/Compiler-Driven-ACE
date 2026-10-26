@@ -1,13 +1,14 @@
 # QFT-96 focused execution
 
-The first reduced-seed run is now dedicated to QFT-96. It is isolated from the
-interrupted 30-seed ten-workload study so that the two evidence sets cannot be
-mixed.
+The first attempted reduced-seed run was stopped after validation found that the
+Golden `qft` input is a 48-qubit circuit, not QFT-96. Its partial outputs are
+not QFT-96 evidence and must not be aggregated.
 
 ## Frozen contract
 
-- Workload: `qft` (96 logical qubits).
-- Placement: T-HQA, mapping seeds 42, 43 and 44.
+- Required workload: the separate mapper-generated `qft_96` circuit (96 logical
+  qubits), not the 48-qubit Golden `qft` workload.
+- Required placement: T-HQA, mapping seeds 42, 43 and 44.
 - Mesh routes: XY, YX, shortest-reliable and maximum-reliability.
 - Torus route: Dijkstra only.
 - Communication memories: 2, 3, 4, 6, 8, 16, 32 and 64 per core.
@@ -16,12 +17,11 @@ mixed.
 - Evaluation seeds: exactly 0 and 1 for this focused run.
 - Source and route hashes are recorded in the generated manifest.
 
-The planner produced 15 conceptual route aliases, 11 distinct request-trace
-hashes, 3,058 jobs and 12,056 policy-seed evaluations. Results are written
-under `results/golden_study_2026-10-26_2seeds/`. No QFT ranking is reported
-until all jobs complete and the validation rate is 100%.
-
-The complete machine-readable plan is
-[`execution_spec.json`](../../../results/golden_study_2026-10-26_2seeds/execution_spec.json),
-and the generated job manifest is
-[`base-evaluation_jobs.jsonl.gz`](../../../results/golden_study_2026-10-26_2seeds/manifests/base-evaluation_jobs.jsonl.gz).
+The repository currently contains a complete routed QFT-96 trace set only for
+the existing reconstructed placement under
+`results/routing_study_2026-10-25/qft96/` (seed 42). The mapper comparison
+reports T-HQA summaries for seeds 42--44, but does not archive the corresponding
+per-layer partitions and route traces for seeds 43 and 44. Those partitions must
+be exported before a three-seed QFT-96 matrix can be generated. No QFT-96
+ranking is reported until the 96-qubit input, all selected placement seeds,
+route hashes and all jobs validate.
