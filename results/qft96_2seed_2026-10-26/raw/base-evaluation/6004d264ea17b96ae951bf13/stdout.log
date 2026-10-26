@@ -1,0 +1,3 @@
+dynamic              seed=0 complete=100.00% latency=1.1001502373918988 ms fidelity=0.9471655706000961
+dynamic              seed=1 complete=100.00% latency=1.1827884890794633 ms fidelity=0.9471652753705486
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/qft96_2seed_2026-10-26/raw/.partial/6004d264ea17b96ae951bf13.sx45mcml/summary.csv

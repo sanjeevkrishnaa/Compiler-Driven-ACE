@@ -1,0 +1,7 @@
+continuous           seed=0 complete=100.00% latency=2.057227252663842 ms fidelity=0.9311374032728923
+adaptive-continuous  seed=0 complete=100.00% latency=2.037963491165411 ms fidelity=0.931486765810562
+dynamic              seed=0 complete=100.00% latency=1.0486953137385437 ms fidelity=0.9439479207375729
+continuous           seed=1 complete=100.00% latency=2.065014996781858 ms fidelity=0.9310611926094049
+adaptive-continuous  seed=1 complete=100.00% latency=2.00473596528123 ms fidelity=0.9299464019067838
+dynamic              seed=1 complete=100.00% latency=1.1011138440627748 ms fidelity=0.9441110074422836
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/qft96_2seed_2026-10-26/raw/.partial/147d5be737cef8d4e7bac758.tsh4d8up/summary.csv

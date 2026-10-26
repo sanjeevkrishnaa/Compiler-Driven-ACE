@@ -134,6 +134,19 @@ the structural figure below.
 \input{generated/qft96_route_hops}
 \input{generated/qft96_2seed_execution_plan}
 
+\subsection{First validated four-memory checkpoint}
+
+The first matched simulator checkpoint fixes $M=4$ shared memories per core,
+$C=3$ for pre-generating policies, one T-HQA QFT-96 migration sequence and two
+physics seeds. It compares mesh XY against torus Dijkstra. Every source run
+completed all 3,186 torus or 3,876 mesh hop requests and passed the execution
+record, input-hash and seed-row checks. This is a deliberately small checkpoint:
+two physics seeds describe only simulator variability, and the entire route,
+capacity and compiler-allocation sweep remains in progress. It does not
+establish an overall best topology or policy.
+
+\input{generated/qft96_m4_checkpoint}
+
 \section{Registered MQT Bench QPE extension}
 
 The frozen ten-workload base matrix is not mutated when a new benchmark is added.

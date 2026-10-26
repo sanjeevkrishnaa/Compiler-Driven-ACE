@@ -33,3 +33,28 @@ and 12,056 policy-seed evaluations. Two physics seeds are an exploratory sample;
 their standard deviation is descriptive, not strong inferential evidence.
 No QFT-96 latency ranking is reported until matched policy cells complete and
 validate.
+
+## First validated checkpoint
+
+The first complete paired cell fixes four shared memories per core, three
+compiler-eligible memories for pre-generating policies, mapping seed 42,
+physics seeds 0 and 1, and identical logical migrations for mesh XY and torus
+Dijkstra. ODG uses no compiler memories. All ten policy/topology cells and
+twenty policy-seed rows passed the execution-record and 100%-completion checks.
+The [aggregate CSV](../../../results/qft96_2seed_2026-10-26/summaries/qft96_m4_checkpoint.csv)
+and [individual seed rows](../../../results/qft96_2seed_2026-10-26/summaries/qft96_m4_seed_rows.csv)
+contain the exact values and source job IDs; the PDF places the corresponding
+table immediately after the figure.
+
+| Policy | Mesh XY mean hop latency (ms) | Torus Dijkstra mean hop latency (ms) |
+| --- | ---: | ---: |
+| ODG | 1.327 | 1.320 |
+| CGP | 1.803 | 2.061 |
+| ACGP | 1.908 | 2.021 |
+| Dynamic full-chain | 1.335 | 1.075 |
+| Dynamic first-hop | 1.141 | 1.046 |
+
+This is an exploratory two-physics-seed checkpoint, not the full-sweep result
+or a general claim of superiority. Route counts alone did not predict the
+policy ordering. The source rows report p95 latency, admission wait, makespan,
+readiness, waste and fidelity as well as the mean above.
