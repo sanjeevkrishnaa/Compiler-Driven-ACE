@@ -57,3 +57,23 @@ across machines, each worker must write only its assigned job IDs into this
 same schema. Aggregation then copies validated rows into `summaries/`; it does
 not merge arbitrary terminal text or unverified CSVs.
 
+## One-command local run
+
+From the repository root, run the resumable end-to-end launcher after any
+already-started workers have stopped:
+
+```bash
+bash tools/golden_study/run_qft96_all.sh \
+  results/qft96_2seed_2026-10-26 \
+  /Users/dhruvrpansuriya/Documents/IITG\ Acad/Sem\ 7/BTP/Compiler-Driven-ACE/.venv/bin/python \
+  2
+```
+
+The final argument is the worker count. The launcher runs mesh and torus base
+jobs, all registered Dynamic policy variants, summary aggregation, congestion
+CSV/heatmap generation, metric plots, and LaTeX report compilation. It is safe
+to rerun after interruption: completed jobs are accepted only when their job,
+trace, configuration, source, and seed records validate. Stage logs are saved
+under `logs/` in this study root. Do not start two launchers for the same root;
+the lock directory prevents that case.
+
