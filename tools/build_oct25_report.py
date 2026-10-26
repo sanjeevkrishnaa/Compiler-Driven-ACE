@@ -260,7 +260,7 @@ def build():
     write_csv("routing_mechanism",mechanism)
     rho,rho_p=spearmanr([r["excess_C4"] for r in mechanism],[r["dynamic_wait_ms"] for r in mechanism])
     plt.figure(figsize=(8,4.1))
-    offsets={"original":(-70,18),"shortest_reliable":(-110,-10),"max_reliability":(-45,16),"concentrate":(-30,-30),"xy":(-10,8),"yx":(-16,8),"balance":(7,9),"avoid_hot2":(8,-3)}
+    offsets={"original":(-80,-10),"shortest_reliable":(-95,-25),"max_reliability":(-15,-30),"concentrate":(-50,8),"xy":(-10,8),"yx":(-16,8),"balance":(7,9),"avoid_hot2":(8,-3)}
     for r in mechanism:
         plt.scatter(r["excess_C4"],r["dynamic_wait_ms"],s=35)
         if r["arm"] in ROUTES+["balance","concentrate","avoid_hot2"]:
