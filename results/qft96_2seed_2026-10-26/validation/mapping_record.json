@@ -1,0 +1,12 @@
+{
+  "all_valid": true,
+  "circuit_sha256": "8672b9e2f74bc25255090b97bdf63730bb49a3e34a2641f19222e1da5e0fae66",
+  "mapping_audit_sha256": "a90818bec0e7923544f34eea95717b03dfe3ab3d4998164a221b3fa473b12032",
+  "mapping_seeds": [
+    42,
+    43,
+    44
+  ],
+  "route_count": 15,
+  "schema": "qft96-mapping-audit-v1"
+}

@@ -116,6 +116,24 @@ Table~\ref{tab:golden-bv-xy-envelope}, CGP/ACGP protocol waste spans
 waste. Unlike GHZ, CGP and ACGP differ at intermediate capacities, demonstrating
 why conclusions must be checked workload by workload.
 
+\section{QFT-96 focused mesh and torus study}
+
+QFT-96 is a separate 96-qubit mapper-generated circuit; the ten-workload Golden
+corpus contains a different 48-qubit QFT input. The QFT-96 study uses T-HQA
+placement with mapper seeds 42--44. Each placement is held fixed when exporting
+mesh XY, YX, shortest-reliable and maximum-reliability routes and torus
+Dijkstra routes. This makes the topology comparison a change in routing and
+physical connectivity on the same logical migrations. The QFT-96 route audit
+checks all 15 exports, including endpoint correctness, adjacency, trace hashes
+and replay to the original placement. The two-seed ACE execution plan includes
+all eight declared memory capacities, every legal compiler allocation, ODG,
+CGP, ACGP, Dynamic full-chain and Dynamic first-hop. Its simulator results are
+reported only as each matched cell validates; no scheduler ranking follows from
+the structural figure below.
+
+\input{generated/qft96_route_hops}
+\input{generated/qft96_2seed_execution_plan}
+
 \section{Registered MQT Bench QPE extension}
 
 The frozen ten-workload base matrix is not mutated when a new benchmark is added.

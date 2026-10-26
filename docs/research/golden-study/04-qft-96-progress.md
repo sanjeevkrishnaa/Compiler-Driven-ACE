@@ -17,11 +17,19 @@ not QFT-96 evidence and must not be aggregated.
 - Evaluation seeds: exactly 0 and 1 for this focused run.
 - Source and route hashes are recorded in the generated manifest.
 
-The repository currently contains a complete routed QFT-96 trace set only for
-the existing reconstructed placement under
-`results/routing_study_2026-10-25/qft96/` (seed 42). The mapper comparison
-reports T-HQA summaries for seeds 42--44, but does not archive the corresponding
-per-layer partitions and route traces for seeds 43 and 44. Those partitions must
-be exported before a three-seed QFT-96 matrix can be generated. No QFT-96
-ranking is reported until the 96-qubit input, all selected placement seeds,
-route hashes and all jobs validate.
+The mapper-generated QFT-96 T-HQA placements have now been exported for all
+three mapping seeds. The seed-42 mapper output reproduces the earlier QFT-96
+summary exactly: 96 qubits, 766 layers, 1,965 logical migrations and 3,876
+shortest-route hops. The placement is held fixed between mesh and torus for each
+seed. The exporter validates that all 15 adjacent-hop traces replay to their
+corresponding placement. The complete route audit is in
+[`mapping_audit.csv`](../../../results/qft96_2seed_2026-10-26/validation/mapping_audit.csv),
+and the grouped route visual and complete table are in the PDF report.
+
+The [execution specification](../../../results/qft96_2seed_2026-10-26/execution_spec.json)
+and [job manifest](../../../results/qft96_2seed_2026-10-26/manifests/base-evaluation_jobs.jsonl.gz)
+declare 15 conceptual route aliases, 11 distinct request traces, 3,058 jobs
+and 12,056 policy-seed evaluations. Two physics seeds are an exploratory sample;
+their standard deviation is descriptive, not strong inferential evidence.
+No QFT-96 latency ranking is reported until matched policy cells complete and
+validate.
