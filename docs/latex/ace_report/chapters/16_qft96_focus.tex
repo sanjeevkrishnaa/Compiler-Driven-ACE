@@ -34,8 +34,8 @@ remain active; they must not be read as final results.
 Phase & Validated jobs & Planned jobs & Status and source artifacts \\
 \midrule
 Mapper and route audit & 15 & 15 & Complete; mapping audit CSV and route traces \\
-Base ACE matrix & 71 & 3,058 & Running; base-evaluation manifest and progress CSV \\
-Dynamic launch variants & 10 & 143 & Running; dynamic-variants manifest \\
+Base ACE matrix & 101 & 3,058 & Running; base-evaluation manifest and progress CSV \\
+Dynamic launch variants & 49 & 143 & Running; dynamic-variants manifest \\
 Four-memory matched checkpoint & 10 cells & 10 cells & Complete; checkpoint CSV and seed CSV \\
 \bottomrule
 \end{tabular}
@@ -53,6 +53,32 @@ The base plan is in
 
 The route-count figure is structural only. It does not replace simulator
 latency, admission wait, makespan, fidelity or waste measurements.
+
+\section{QFT-96 congestion and route heatmaps}
+
+Congestion is analysed independently from physical timing so that the route
+effect is not confounded with simulator scheduling. The analysis covers all
+15 T-HQA mapping/routing cells, capacities $2,3,4,6,8,16,32,64$, and both
+counting definitions. In hop counting, an internal relay contributes two
+incident demands (arrival and departure); in route counting, a qubit route
+contributes one demand at each core it visits. For every cell and capacity we
+record total overload, source/destination overload, relay-only overload, excess
+demand, and per-core relay share. Torus traces are parsed with wraparound-aware
+structural validation, rather than the mesh-only adjacency validator.
+
+The generated heatmaps contain three panels per trace: total overload,
+source/destination overload, and relay-only overload. Percentages are over the
+226 communication-active layers of the 766-layer QFT trace; idle layers are not
+silently counted as zero congestion. The complete CSVs and 240 route-specific
+heatmaps are linked below. The congestion pass is trace-level and therefore is
+valid before all ACE timing jobs finish.
+
+\begin{itemize}
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/tree/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/congestion}{QFT-96 congestion directory and heatmaps};
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/congestion/trace_congestion_summary.csv}{aggregate congestion CSV};
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/congestion/per_core_congestion.csv}{per-core own/relay CSV};
+\item \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/tools/golden_study/analyze_qft96_congestion.py}{reproducible congestion generator}.
+\end{itemize}
 
 \section{Validated four-memory checkpoint}
 
