@@ -1,0 +1,17 @@
+{
+  "distinct_request_trace_hashes": 11,
+  "historical_results_reused": false,
+  "mapping_algorithm": "T-HQA",
+  "mapping_audit_sha256": "1a0d6893ee7092b2700c13c2893a1410584ae2f5b43e0b77ee3e33353b4bf118",
+  "mapping_seeds": [
+    42,
+    43,
+    44
+  ],
+  "qasm_sha256": "dbb27d15d80cac7adc6a3da8b70ffe1770583458022870bddcdaac5718136710",
+  "route_aliases": 15,
+  "schema": "qaoa-mapping-audit-v1",
+  "source_mapping_audit_sha256": "ebc843e6f01afecff42961389a1e240690f843fba6271b4cd6d9a95e4eb4816e",
+  "source_study": "results/golden_study_2026-10-25",
+  "workload": "qaoa"
+}
