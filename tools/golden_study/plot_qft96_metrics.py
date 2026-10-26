@@ -64,7 +64,7 @@ def aggregate(rows: list[dict[str, str]], keys: tuple[str, ...]) -> list[dict[st
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
     if not rows: return
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0])); writer.writeheader(); writer.writerows(rows)
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n"); writer.writeheader(); writer.writerows(rows)
 
 
 def plot_metric_grid(rows: list[dict[str, object]], output: Path, *, title: str, x_key: str,
@@ -117,7 +117,7 @@ def plot_matched(rows: list[dict[str, object]], output: Path, m: int, c: int) ->
         ax.set_title(label); ax.set_xticks(range(len(groups)), ["/".join(g) for g in groups], rotation=35, ha="right")
         ax.grid(alpha=.25); ax.set_ylabel(unit)
     axes[0, 0].legend(fontsize=7)
-    fig.suptitle(f"QFT-96 matched memory cell: M={m}, compiler C={c}")
+    fig.suptitle(f"QFT-96 matched memory cell: M={m}; cached policies C={c}, ODG C=0")
     fig.savefig(output / f"matched_m{m}_c{c}_metrics.png", dpi=180); fig.savefig(output / f"matched_m{m}_c{c}_metrics.pdf")
     plt.close(fig)
 
@@ -131,8 +131,13 @@ def main() -> int:
     args = parser.parse_args(); args.output.mkdir(parents=True, exist_ok=True)
     rows = read_rows(args.input)
     memory = aggregate(rows, ("topology", "route_policy", "total_memories_per_core", "policy"))
+    # ODG has no compiler-reserved memory.  A fair fixed-total-memory comparison
+    # therefore uses C=0 for ODG and the requested C for every cached policy.
+    # Filtering every policy to C=args.matched_c accidentally removed ODG from
+    # the headline comparison even though it is the required baseline.
     matched = aggregate([r for r in rows if int(r["total_memories_per_core"]) == args.matched_m
-                         and int(r["compiler_memories_per_core"]) == args.matched_c],
+                         and ((r["policy"] == "ODG" and int(r["compiler_memories_per_core"]) == 0)
+                              or (r["policy"] != "ODG" and int(r["compiler_memories_per_core"]) == args.matched_c))],
                         ("topology", "route_policy", "policy"))
     write_csv(args.output / "metrics_by_route_memory_policy.csv", memory)
     write_csv(args.output / f"metrics_matched_m{args.matched_m}_c{args.matched_c}.csv", matched)
@@ -144,7 +149,8 @@ def main() -> int:
     plot_matched(matched, args.output, args.matched_m, args.matched_c)
     (args.output / "README.md").write_text(
         "# QFT-96 metric plots\n\nGenerated only from validated rows in `" + str(args.input) + "`. "
-        "Memory curves average over all legal compiler allocations; matched plots use the exact M/C cell. "
+        "Memory curves average over all legal compiler allocations; matched plots use the exact M/C cell "
+        "for cached policies and C=0 for ODG, which has no compiler cache. "
         "Metrics include latency, p95, makespan, admission wait, fidelity, protocol/compiler waste, hit/fallback rates, "
         "compiler-not-ready requests, and retries. Empty/incomplete cells are omitted.\n", encoding="utf-8")
     print(f"validated input rows: {len(rows)}; memory groups: {len(memory)}; matched groups: {len(matched)}")
