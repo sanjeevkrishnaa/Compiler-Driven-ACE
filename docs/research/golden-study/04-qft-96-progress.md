@@ -58,3 +58,29 @@ This is an exploratory two-physics-seed checkpoint, not the full-sweep result
 or a general claim of superiority. Route counts alone did not predict the
 policy ordering. The source rows report p95 latency, admission wait, makespan,
 readiness, waste and fidelity as well as the mean above.
+
+## Dynamic launch-policy phase
+
+The earlier Dynamic-design work contains more than the two base policies
+(`Dynamic-full-chain` and `Dynamic-first-hop`). Those variants are now
+registered against the corrected QFT-96 corpus in
+[`dynamic-variants_jobs.json`](../../../results/qft96_2seed_2026-10-26/manifests/dynamic-variants_jobs.json).
+The old launcher was not reused because it hard-coded older route files,
+settings and 30 seeds.
+
+The registered variants are:
+
+`baseline-layer-start`, `layer-delay-1ms`, `layer-delay-2ms`,
+`layer-delay-3ms`, `layer-delay-4ms`, `layer-delay-6ms`,
+`predecessor-start`, `predecessor-start-first-delay-2ms`,
+`predecessor-start-first-delay-4ms`, `first-hop-only`,
+`first-hop-only-delay-2ms`, `first-hop-only-delay-4ms`, and
+`two-hops-predecessor-start`.
+
+Each variant uses the same per-qubit event admission, M=4, C=3, generation
+capacity 3, topology configuration, route trace and evaluation seeds 0 and 1.
+The phase contains 143 jobs: 13 variants over 11 byte-distinct traces
+(four mesh route families across three mapping seeds plus torus Dijkstra
+across three mapping seeds). It is running separately from the frozen base
+matrix. No variant ranking will be reported until every selected job passes
+the same 100%-completion and provenance checks.
