@@ -1,61 +1,105 @@
 # Compiler-Driven ACE project structure
 
-This guide is the short map of the repository. The current QFT-96 study is
-driven by the `tools/golden_study/` pipeline; the root-level historical
-runners are not part of that pipeline.
+This is the study map for the current repository. Read the QFT-96 study root
+first, then follow the execution path from mapper input to ACE output.
 
-## Start here
-
-1. `README.md` - repository entry point and high-level status.
-2. `docs/research/qft96-experimental-design.md` - QFT-96 factors, metrics,
-   routing, memory scope, and reproducibility rules.
-3. `results/qft96_2seed_2026-10-26/README.md` - the dated experiment ledger,
-   manifests, logs, raw outputs, summaries, figures, and report links.
-4. `docs/latex/ace_report/` - the compiled research report and its chapter
-   sources.
-
-## Current simulation path
+## QFT-96 study artifact tree
 
 ```text
-mapper/                         T-HQA placement and route/export validation
-traces/                         versioned request traces and placement data
-config/final_config/             mesh and torus ACE simulator configurations
-run_trace_comparison.py          one trace, policy, allocation, and seed cell
-tools/golden_study/              planning, execution, validation, summaries,
-                                 congestion analysis, plots, and tests
-results/qft96_2seed_2026-10-26/  immutable manifests plus dated run artifacts
-docs/latex/ace_report/            report source and compiled PDF
+qft96_2seed_2026-10-26/
+├── README.md                         # inspect, resume, and validate this study
+├── execution_spec.json               # frozen experimental factors and physical parameters
+├── execution_scope.json              # official M<=32 scope and archived M64 exclusion
+├── mapping_contract.json             # placement/migration/route-trace input contract
+├── manifests/
+│   ├── base-evaluation_jobs_max-m32.jsonl.gz  # official immutable base-job manifest
+│   ├── base-evaluation_jobs.jsonl.gz          # original manifest, including archived M64 jobs
+│   ├── base-evaluation_plan.json              # human-readable planning metadata
+│   ├── base-evaluation_source-lock.json       # hashes of source inputs used by the run
+│   └── dynamic-variants_jobs.json             # 13 Dynamic-policy variant jobs
+├── traces/
+│   └── placements/                   # T-HQA placements, migrations, and routed ACE hop traces
+├── validation/
+│   ├── mapping_audit.csv             # route/migration validation evidence
+│   └── mapping_record.json           # audited mapper/export metadata
+├── raw/
+│   ├── .partial/                     # active or interrupted jobs; never report these
+│   ├── base-evaluation/<job-id>/     # validated base cell: metadata, logs, seed CSVs, summary
+│   └── dynamic-variants/<job-id>/    # validated Dynamic-policy variant cell
+├── summaries/
+│   ├── base-evaluation-progress.csv  # live completion ledger
+│   ├── base-evaluation-status.json   # machine-readable live status
+│   ├── qft96_m4_checkpoint.csv       # matched M=4, C=3 policy checkpoint
+│   └── qft96_m4_seed_rows.csv        # checkpoint seed-level measurements
+├── congestion/
+│   ├── per_core_congestion.csv       # layer/core demand measurements
+│   ├── trace_congestion_summary.csv  # trace-level congestion aggregation
+│   ├── heatmaps/                     # total, source/destination, and relay heatmaps
+│   └── manifest.json                 # congestion-analysis provenance
+├── figures/
+│   ├── metrics/                      # base ACE metric plots, generated after completion
+│   ├── dynamic-variants/             # Dynamic-policy plots and tables
+│   └── qft96_*.{png,pdf}             # checkpoint and route-structure figures
+└── logs/
+    ├── combined-launcher.log         # end-to-end launcher log
+    ├── base-mesh.log                 # mesh execution phase log
+    └── base-torus.log                # torus phase log, created after mesh finishes
 ```
 
-The official QFT-96 runner is:
+`raw/base-evaluation/<job-id>/` is trustworthy only after its hash, metadata,
+expected two physics-seed rows, and completion have been validated. An item in
+`raw/.partial/` is still executing or interrupted and must not appear in a
+table or graph.
+
+## Important source files
+
+| Path | What it does | When to read it |
+|---|---|---|
+| `README.md` | Repository entry point and project-level usage notes. | First. |
+| `docs/research/qft96-experimental-design.md` | Formal QFT-96 matrix, timing metric, routes, congestion definition, and scope decision. | Before interpreting results. |
+| `results/qft96_2seed_2026-10-26/README.md` | Reproducibility guide for the dated study root. | Before running or resuming QFT-96. |
+| `tools/golden_study/run_qft96_all.sh` | Resumable QFT-96 launcher: mesh, torus, variants, summaries, figures, report. | When running the experiment. |
+| `tools/golden_study/plan_execution.py` | Builds immutable job manifests from the experiment specification. | To understand scheduled combinations. |
+| `tools/golden_study/run_execution.py` | Validates, launches, resumes, and atomically promotes base jobs. | To understand job safety/resume behavior. |
+| `tools/golden_study/summarize_execution.py` | Converts validated raw base jobs into policy-level result rows. | Before trusting aggregate CSVs. |
+| `tools/golden_study/run_qft96_dynamic_variants.py` | Runs the 13 additional Dynamic preparation policies at fixed `M=4, C=3`. | For Dynamic-policy experiments. |
+| `tools/golden_study/summarize_qft96_variants.py` | Produces Dynamic-variant tables and figures. | After variant runs. |
+| `tools/golden_study/analyze_qft96_congestion.py` | Measures per-layer/per-core route demand and emits relay/source-destination heatmaps. | For congestion analysis. |
+| `tools/golden_study/plot_qft96_metrics.py` | Plots latency, readiness, waste, fidelity, and related base metrics. | For final QFT figures. |
+| `run_trace_comparison.py` | Simulator-facing runner for one trace, policy/allocation, and seed cell. | Core experiment execution path. |
+| `compiler_scheduler.py` | Compiler-driven EPR scheduling, preparation triggers, lookahead, and allocation logic. | Main Dynamic algorithm study. |
+| `compiler_trace.py` | Parses compiler migration/hop traces and exposes layer/request structure. | To understand scheduler input. |
+| `request_scheduler.py` | Per-qubit eligibility, ordering, and admission timing. | To understand corrected latency. |
+| `resource_manager.py` | Memory/resource admission and reservation management. | To study queueing and contention. |
+| `reservation.py` | Reservation lifecycle and resource accounting. | To study allocation correctness. |
+| `node.py` | Quantum-network node/core construction and attached managers. | To understand simulator core objects. |
+| `generation.py` | EPR-generation behaviour and physical-generation events. | To study EPR time/fidelity parameters. |
+| `traffic.py` | Legacy traffic-generation/helper logic. | Historical context; not the trace-driven QFT path. |
+| `mapper/` | External/dependent mapper code, including HQA/T-HQA placement workflow. | Before changing placement. |
+| `tools/mapper_ace/export.py` | Converts mapper placement/migrations into ACE trace contracts and routing alternatives. | To change routing or trace export. |
+| `mapper/verification/verify_mapper.py` | Validates mapper output and placement/routing invariants. | Before accepting mapper data. |
+| `config/final_config/` | Mesh and torus physical simulator configurations. | Before changing assumptions. |
+| `traces/` | Versioned reusable traffic and migration traces outside dated result roots. | When selecting a workload. |
+| `docs/latex/ace_report/` | LaTeX sources, generated tables/figures, and compiled research PDF. | When writing the report. |
+
+## Current execution flow
 
 ```text
-tools/golden_study/run_qft96_all.sh
+T-HQA placement
+  -> tools/mapper_ace/export.py
+  -> placement/migrations/routed adjacent-hop trace
+  -> run_trace_comparison.py
+  -> compiler_scheduler.py + ACE resource/scheduler modules
+  -> raw/<phase>/<job-id>/ validated result
+  -> summarize/plot/congestion tools
+  -> CSV tables + figures + LaTeX report
 ```
 
-It reads `execution_scope.json`, so the official current sweep uses total
-memories `2, 3, 4, 6, 8, 16, 32`. The original M64 manifest and raw outputs
-remain archived for provenance but are excluded from official aggregation.
+## Removed versus retained historical root files
 
-## Root files that were deliberately retained
-
-The root simulator modules (`node.py`, `resource_manager.py`,
-`reservation.py`, `request_scheduler.py`, `compiler_trace.py`, and related
-modules) are implementation dependencies and require a separate dependency
-audit before removal. `parallel_*.py`, PIR runners, and old traffic/config
-tools are historical experiment entry points; they are documented candidates,
-not silently deleted files.
-
-## Removed historical entry points
-
-The unused root `main.py`, `main2.py`, `main3.py`, `main4.py`, `main5.py`,
-`main_dynamic.py`, `main_parallel.py`, `main_test.py`, and `hello.py` files
-were deleted after checking that current tools and tests do not import them.
-Their history remains recoverable through Git.
-
-## How to study a result
-
-For any result, start with its manifest, then inspect the job's `execution.json`,
-`summary.csv`, and `stdout/stderr` log under the corresponding `raw/` folder.
-Do not treat a directory as reportable unless its execution record, hashes,
-both physics-seed rows, and completion validation are present.
+The unused root `main*.py` runners and `hello.py` were removed in commit
+`5d62f6e` after confirming that current tools and tests do not import them.
+Their Git history remains recoverable. `parallel_*.py`, PIR runners, legacy
+traffic/configuration helpers, and root simulator modules remain until a
+separate dependency audit classifies them; they were not removed by this
+cleanup.
