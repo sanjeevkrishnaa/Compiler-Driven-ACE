@@ -1,0 +1,59 @@
+\clearpage
+\begin{center}\includegraphics[width=\linewidth,height=0.37\textheight,keepaspectratio]{figures/routing_request_latency_mean_ms.pdf}\captionof{figure}{Mean request latency (ms). Error bars are sample SD across 30 physics seeds; starred routes use a reconstructed reliability map.}\end{center}
+
+\begin{center}\small
+\begin{longtable}{lrr}
+\caption{Mean request latency (ms); 30 seeds per cell.}\\
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endfirsthead
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endhead
+Supplied & $1.526 \pm 0.016$ & $2.570 \pm 0.096$ \\
+XY & $1.340 \pm 0.013$ & $1.484 \pm 0.086$ \\
+YX & $1.340 \pm 0.012$ & $1.628 \pm 0.101$ \\
+Shortest reliable & $1.538 \pm 0.016$ & $2.518 \pm 0.080$ \\
+Max reliability & $1.564 \pm 0.012$ & $2.597 \pm 0.092$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/routing.csv}{Complete CSV: routing}. }
+
+\clearpage
+\begin{center}\includegraphics[width=\linewidth,height=0.37\textheight,keepaspectratio]{figures/routing_end_to_end_latency_ms.pdf}\captionof{figure}{Communication makespan (s). Error bars are sample SD across 30 physics seeds; starred routes use a reconstructed reliability map.}\end{center}
+
+\begin{center}\small
+\begin{longtable}{lrr}
+\caption{Communication makespan (s); 30 seeds per cell.}\\
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endfirsthead
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endhead
+Supplied & $4.337 \pm 0.026$ & $4.694 \pm 0.086$ \\
+XY & $4.244 \pm 0.031$ & $4.076 \pm 0.070$ \\
+YX & $4.247 \pm 0.026$ & $4.136 \pm 0.082$ \\
+Shortest reliable & $4.345 \pm 0.024$ & $4.716 \pm 0.061$ \\
+Max reliability & $4.387 \pm 0.029$ & $4.781 \pm 0.066$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/routing.csv}{Complete CSV: routing}. }
+
+\clearpage
+\begin{center}\includegraphics[width=\linewidth,height=0.37\textheight,keepaspectratio]{figures/routing_average_admission_wait_ms.pdf}\captionof{figure}{Admission wait (ms). Error bars are sample SD across 30 physics seeds; starred routes use a reconstructed reliability map.}\end{center}
+
+\begin{center}\small
+\begin{longtable}{lrr}
+\caption{Admission wait (ms); 30 seeds per cell.}\\
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endfirsthead
+\toprule
+Route & ODG & Full-chain \\
+\midrule\endhead
+Supplied & $0.200 \pm 0.012$ & $1.638 \pm 0.083$ \\
+XY & $0.018 \pm 0.002$ & $0.603 \pm 0.062$ \\
+YX & $0.017 \pm 0.002$ & $0.759 \pm 0.077$ \\
+Shortest reliable & $0.212 \pm 0.009$ & $1.574 \pm 0.073$ \\
+Max reliability & $0.238 \pm 0.007$ & $1.640 \pm 0.086$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/routing.csv}{Complete CSV: routing}. }

@@ -61,6 +61,10 @@ dependencies. The characterization unit tests use the Python standard library.
 
 ## Documentation
 
+The [October 25 pre-golden-study report](docs/latex/oct25_pre_golden/README.md)
+collects routing and Dynamic preparation experiments in a separate LaTeX/PDF
+report, with source-linked graphs, tables, seed data and validation evidence.
+
 See the [documentation index](docs/README.md) for current results, research
 notes and protocol reference. Generated
 simulation output, logs and caches are ignored; curated results live in `results/`.
