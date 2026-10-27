@@ -4,7 +4,7 @@ The approximately 0.6-ms historical Dynamic result and the corrected request
 latency measure different intervals. The timing matrix records 0.691 +/-
 0.008 ms using legacy serialized release and a 5.3-ms subtraction. Current
 latency is completion minus eligibility, including admission and retries.
-See [the historical timing matrix](qft96-timing-model-matrix-2026-10-25.md).
+See [the historical timing matrix](../../reports/qft96-timing-model-matrix-2026-10-25.md).
 
 ## Allocation is the immediate fix
 
@@ -22,7 +22,7 @@ the first-hop filter or change request timing or physical hardware.
 | Mesh / maximum reliability | 1.362280 | 1.693036 | 1.324231 |
 | Torus / Dijkstra | 1.325973 | 1.113481 | 0.999233 |
 
-Source: [all allocations CSV](../latex/qft96_final/data/all_allocations_all_metrics.csv),
+Source: [all allocations CSV](../../latex/qft96_final/data/all_allocations_all_metrics.csv),
 physics seeds 0 and 1. XY/YX have one distinct trace each; the reliability
 routes and torus have three distinct traces each. These are means of run means,
 not a pooled request distribution. C=2 is a retrospective configuration
@@ -44,7 +44,7 @@ still uses any unoccupied shared memory; there is no fixed bank partition.
 
 ## Explicit reproduction preset
 
-The initial `tools/run_full_chain_latency.py` preset pins M=4, C=2, generation capacity=2,
+The initial `tools/compiler_study/run_full_chain_latency.py` preset pins M=4, C=2, generation capacity=2,
 full-chain eligibility, layer-start triggering, lookahead=8, planner coherence=10,
 zero artificial lead, per-qubit release, event admission, and starvation guard.
 ODG uses the same four physical memories, trace and seeds. The existing runner
@@ -58,7 +58,7 @@ From the repository root, with the study's compatible SeQUeNCe 0.8.1 revision
 `cf5283cdfd6692a82a090d15fb09fbc01bd322fc` on PYTHONPATH:
 
 ```text
-python tools/run_full_chain_latency.py --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 0,1 --output output/full_chain_m4_c2_recheck
+python tools/compiler_study/run_full_chain_latency.py --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 0,1 --output output/full_chain_m4_c2_recheck
 ```
 
 Use an independent seed set before making a new performance claim. A broader

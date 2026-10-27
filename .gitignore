@@ -1,5 +1,5 @@
 .vscode/
-*tmp*
+tmp/
 log/
 config/*.json
 config/*.png
@@ -15,3 +15,10 @@ output/
 
 .codex/
 .tmp/
+
+# Rebuildable LaTeX intermediates; reports, source and result logs stay visible.
+*.aux
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz

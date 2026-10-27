@@ -1,7 +1,21 @@
 # Compiler-Driven ACE project structure
 
-This is the study map for the current repository. Read the QFT-96 study root
-first, then follow the execution path from mapper input to ACE output.
+This is the source and study map for the repository. Current compiler work is
+organized under `tools/compiler_study/` and
+`docs/research/compiler-pregeneration/`. The dated QFT-96 campaign below remains
+the frozen historical input/evidence tree, not the current handoff implementation.
+
+## Current compiler entry points
+
+| Location | Purpose |
+| --- | --- |
+| `run_trace_comparison.py` | Simulator-facing entry point; module locations remain unchanged. |
+| [tools/compiler_study/](../tools/compiler_study/README.md) | Full-chain comparison, controlled sweeps and audited aggregation. |
+| [Compiler research index](research/compiler-pregeneration/README.md) | Current handoff correction and chronological historical studies. |
+| `docs/research/compiler-pregeneration/data/` | Derived seed rows, aggregate metrics and audit outcomes. |
+| [Handoff evidence](../results/compiler_memory_handoff_2026-10-28/README.md) | Committed raw-record archive, original commands and source snapshots. |
+| [examples/](../examples/README.md) | Small request-format samples. |
+| [test/](../test/README.md) | Active tests and existing fixture paths. |
 
 ## QFT-96 study artifact tree
 
@@ -79,7 +93,7 @@ table or graph.
 | `tools/mapper_ace/export.py` | Converts mapper placement/migrations into ACE trace contracts and routing alternatives. | To change routing or trace export. |
 | `mapper/verification/verify_mapper.py` | Validates mapper output and placement/routing invariants. | Before accepting mapper data. |
 | `config/final_config/` | Mesh and torus physical simulator configurations. | Before changing assumptions. |
-| `traces/` | Versioned reusable traffic and migration traces outside dated result roots. | When selecting a workload. |
+| `data/tracegen/` and dated `results/*/traces/` | Versioned reusable and campaign-specific compiler traces. | When selecting a workload. |
 | `docs/latex/ace_report/` | LaTeX sources, generated tables/figures, and compiled research PDF. | When writing the report. |
 
 ## Current execution flow
@@ -96,6 +110,18 @@ T-HQA placement
 ```
 
 ## Removed versus retained historical root files
+
+The October 28 directory cleanup groups the compiler CLI tools under
+`tools/compiler_study/` and their reports/data under
+`docs/research/compiler-pregeneration/`. Root simulator modules are unchanged.
+The former `sample.json` is retained at `examples/requests/sample.json`, and
+`dummy.txt` is retained as `docs/reference/historical-experiment-notes.txt`.
+Unreferenced console dumps (`dummy`, `filter.txt`, `temp.txt`, `tt.txt`), the
+empty `test_event_driven.py`, and the one-off `temp.py`/`my_circuit.jpg` drawing
+were removed after reference checks. Their old contents remain in Git history.
+Versioned result logs, mapper sources, historical study inputs, and request
+fixture paths remain intact. The verified handoff evidence is committed under
+`results/compiler_memory_handoff_2026-10-28/`.
 
 The unused root `main*.py` runners and `hello.py` were removed in commit
 `5d62f6e` after confirming that current tools and tests do not import them.

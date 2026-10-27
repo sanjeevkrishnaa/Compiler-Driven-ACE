@@ -107,13 +107,13 @@ a different metric and is not a target for this study.
 
 ## Implementation and verification
 
-`tools/run_full_chain_latency.py` is the recommended reproduction preset. Its
+`tools/compiler_study/run_full_chain_latency.py` is the recommended reproduction preset. Its
 minimum lead now defaults to two; pass `--planner-lead-layers 1` for the initial
 C=2 baseline. Existing frozen campaign defaults/results remain unchanged.
 
-`tools/study_full_chain_latency.py` runs the full-chain alternatives and retains
+`tools/compiler_study/study_full_chain_latency.py` runs the full-chain alternatives and retains
 exact commands, per-job metadata/source hashes, per-request timing, pair records,
-and physical audit results. `tools/summarize_full_chain_latency.py` requires
+and physical audit results. `tools/compiler_study/summarize_full_chain_latency.py` requires
 100% completion and a clean audit before including a row. `--audit-events` checks
 memory ownership, credits/completions, per-qubit hop order, and layer barriers.
 

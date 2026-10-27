@@ -9,7 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 VARIANTS = {
     "handoff-c1-l2": ["--compiler-pair-consumption", "handoff", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "1", "--generation-capacity", "1"],
     "handoff-c2-l2": ["--compiler-pair-consumption", "handoff", "--admission-priority", "ready-first", "--planner-lead-layers", "2"],

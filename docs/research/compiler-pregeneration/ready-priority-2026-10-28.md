@@ -85,7 +85,7 @@ to 0.937614. C=3 retains lower fidelity than C=2 due to additional stored pairs.
   records which fitting ready requests were bypassed and rejects such bypasses
   under ready-first. Quiet logging streams to the null sink rather than keeping
   all diagnostics in memory.
-- `tools/run_full_chain_latency.py`: explicitly selects ready-first. The research
+- `tools/compiler_study/run_full_chain_latency.py`: explicitly selects ready-first. The research
   comparison tool explicitly defaults old variants to FIFO and overrides it for
   the new ready variants, preserving historical reproduction.
 
