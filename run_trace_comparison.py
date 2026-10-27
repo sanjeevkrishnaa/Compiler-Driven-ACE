@@ -13,10 +13,10 @@ import argparse
 import hashlib
 import csv
 import json
+import os
 from contextlib import redirect_stdout
 from dataclasses import replace
 from datetime import datetime, timezone
-from io import StringIO
 from pathlib import Path
 from statistics import fmean
 
@@ -66,6 +66,7 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         delta_layers=args.delta_layers,
         dynamic_lookahead_layers=args.dynamic_lookahead_layers,
         lead_layers=getattr(args, "planner_lead_layers", 1),
+        planning_mode=getattr(args, "planning_mode", "offline"),
     )
     return {
         "requests": trace.requests,
@@ -82,6 +83,10 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         "chain_hops_prepared": getattr(args, "chain_hops_prepared", None),
         "predecessor_distance": getattr(args, "predecessor_distance", 1),
         "congestion_threshold": getattr(args, "congestion_threshold", None),
+        "refill_on_release": getattr(args, "refill_on_release", False),
+        "demand_first": getattr(args, "demand_first", False),
+        "borrow_compiler_pairs": getattr(args, "borrow_compiler_pairs", False),
+        "reuse_compiler_memory": getattr(args, "compiler_pair_consumption", "handoff") == "handoff",
     }
 
 
@@ -169,6 +174,7 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
     # Compiler-only fields.  Every one of these is None for a strategy with no
     # compiler controller, which is a meaningful absence rather than a zero.
     compiler_fields = (
+        "compiler_progress_yields",
         "scheduled_preparations", "planner_blocked_preparations",
         "planner_peak_compiler_memory_per_core", "runtime_admission_attempts",
         "runtime_launched_preparations", "runtime_accepted_preparations",
@@ -204,6 +210,15 @@ def main() -> None:
     parser.add_argument("--seeds", default="0")
     parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--compiler-memories", type=int, default=3)
+    parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
+                        help="handoff reuses the pair's booked slot; swap reproduces the historical extra-slot path")
+    parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
+                        help="runtime queues all full-chain candidates; physical quotas/timecards enforce capacity")
+    parser.add_argument("--refill-on-release", action="store_true")
+    parser.add_argument("--borrow-compiler-pairs", action="store_true",
+                        help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
+    parser.add_argument("--demand-first", action="store_true",
+                        help="defer speculative admission when eligible demand needs either endpoint")
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
@@ -238,6 +253,7 @@ def main() -> None:
                              "different qubits concurrent (docs/plans/ace-request-scheduler-design.md)")
     parser.add_argument("--admission", choices=("poll", "event"), default="event",
                         help="per-qubit scheduler only")
+    parser.add_argument("--admission-priority", choices=("fifo", "ready-first"), default="ready-first")
     parser.add_argument("--autonomous-cache-follows-compiler-memories", action="store_true",
                         help="CGP/ACGP cache at most --compiler-memories pairs per core (default: the config file's fixed adaptive_max_memory)")
     parser.add_argument("--stop-after-workload", action="store_true",
@@ -254,7 +270,13 @@ def main() -> None:
                               help="explicitly execute the complete trace")
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--audit-events", action="store_true",
+                        help="check physical ownership and hop/layer ordering; save per-request timing")
+    parser.add_argument("--allow-incomplete-audit", action="store_true",
+                        help="diagnostic runs: report incomplete workloads while still enforcing physical/order invariants")
     args = parser.parse_args()
+    if (args.demand_first or args.refill_on_release) and args.scheduler != "per-qubit":
+        parser.error("demand-first/refill-on-release require the per-qubit scheduler")
 
     strategies = _csv_values(args.strategies)
     invalid = set(strategies) - ALL_STRATEGIES
@@ -280,13 +302,18 @@ def main() -> None:
     if declared != args.topology:
         parser.error(f"--topology {args.topology} needs a {args.topology} topology file, but {args.config} is a {declared}")
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
-    scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard}
+    scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard,
+                          "admission_priority": args.admission_priority}
                          if args.scheduler == "per-qubit" else None)
     args.output.mkdir(parents=True, exist_ok=True)
 
     summary: list[dict] = []
     for seed in seeds:
         for strategy in strategies:
+            recorder = None
+            if args.audit_events:
+                from execution_events import ListRecorder
+                recorder = ListRecorder()
             compiler_spec = (
                 _compiler_spec(args, trace, columns, strategy)
                 if strategy in COMPILER_STRATEGIES else None
@@ -308,9 +335,12 @@ def main() -> None:
                     serialize_conflicts=True,
                     scheduler=args.scheduler, request_plan=trace.requests,
                     scheduler_options=scheduler_options,
+                    recorder=recorder,
                 )
             else:
-                with redirect_stdout(StringIO()):
+                # Quiet physical runs emit many diagnostics. Discard them as a
+                # stream rather than retaining an unbounded in-memory StringIO.
+                with open(os.devnull, "w", encoding="utf-8") as sink, redirect_stdout(sink):
                     result = run(
                         str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                         args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
@@ -321,7 +351,33 @@ def main() -> None:
                         serialize_conflicts=True,
                         scheduler=args.scheduler, request_plan=trace.requests,
                         scheduler_options=scheduler_options,
+                        recorder=recorder,
                     )
+            if recorder is not None:
+                from dataclasses import asdict
+                from invariants import RequestInfo, check_events
+                info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order)
+                        for r in trace.requests}
+                violations = check_events(recorder.events, info, require_completion=not args.allow_incomplete_audit,
+                                          submission_after_predecessor=args.scheduler == "per-qubit")
+                (args.output / f"audit_{strategy}_{seed}.json").write_text(
+                    json.dumps({"events": len(recorder.events),
+                                "completion_required": not args.allow_incomplete_audit,
+                                "completed_requests": result["stats"]["completed_requests"],
+                                "total_requests": len(trace.requests),
+                                "violations": [asdict(v) for v in violations]}, indent=2))
+                if violations:
+                    raise RuntimeError(f"physical audit failed: {violations[:3]}")
+                decisions = result["request_manager"].admission_decisions
+                (args.output / f"admission_{strategy}_{seed}.json").write_text(json.dumps(decisions))
+                if args.admission_priority == "ready-first" and any(d["bypassed_ready_ids"] for d in decisions):
+                    raise RuntimeError("ODG bypassed a ready request that could be admitted")
+                _write_csv(args.output / f"timing_{strategy}_{seed}.csv",
+                           [{"request_id": rid, **parts} for rid, parts in
+                            result["stats"]["timing_breakdown"].items()])
+                if result["compiler_metrics"] is not None:
+                    _write_csv(args.output / f"pairs_{strategy}_{seed}.csv",
+                               result["compiler_metrics"]["epr_utilization_trace"])
             row = _row(strategy, seed, result, len(trace.requests), trace.requests)
             summary.append(row)
             print(
@@ -337,7 +393,7 @@ def main() -> None:
             "implementation_version": 4,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py']},
+                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py']},
             "readiness_definition": "physical creation strictly before first application submission",
         "trace": str(args.trace.resolve()),
         "mesh": f"{rows}x{columns}",

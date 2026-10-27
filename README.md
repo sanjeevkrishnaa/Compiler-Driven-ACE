@@ -27,6 +27,32 @@ research goal is to remove this admission-wait gap honestly, not to preserve an
 older number. See [the correctness audit](docs/research/ace-correctness-audit-2026-10-25.md)
 and the [golden study](docs/research/golden-study/README.md).
 
+For QFT-96 with four memories per core, the final allocation sweep shows that
+full-chain Dynamic at C=2 beats ODG in aggregate mean latency across all five
+route/topology groups; C=3 over-allocates compiler capacity on mesh. Use the
+explicit `tools/run_full_chain_latency.py` preset for a matched recheck. See
+the [latency diagnosis](docs/research/dynamic-latency-diagnosis-2026-10-27.md)
+for values, fidelity tradeoffs, and the historical 0.691-ms metric distinction.
+The follow-up [full-chain optimization study](docs/research/full-chain-optimization-2026-10-27.md)
+tests 17 configurations and confirms a two-layer minimum lead at C=2 on
+separate XY/YX physics seeds. The launcher now defaults to that lead; use
+`--planner-lead-layers 1` to reproduce the earlier C=2 baseline.
+The [ready-pair priority correction](docs/research/ready-priority-2026-10-28.md)
+changes current event admission to serve eligible ready-pair requests before
+ODG, then admit concurrent ODG into remaining capacity. Reproduce historical
+FIFO comparisons with `--admission-priority fifo`; the current preset explicitly
+selects `ready-first`.
+The [C=1 through C=4 ready-first sweep](docs/research/ready-allocation-2026-10-28.md)
+compares complete matched-seed runs, including C=4's reservation-induced stalls
+and expiry. All four allocations complete, but C=4 is substantially slower.
+Those C=4 results used the historical extra-slot consumption path. The
+[compiler-memory handoff correction](docs/research/compiler-memory-handoff-2026-10-28.md)
+lets an application consume a pair in its existing communication slot, keeping
+native RSVP and consumption timing. C=4 now averages about 0.657 ms on the same
+XY seeds, with 100% completion and zero expiry. The reproduction launcher accepts
+`--compiler-memories 4`; use `--compiler-pair-consumption swap` only to reproduce
+the older path.
+
 ## Workload congestion study
 
 `tools/congestion_study` runs actual MQT Bench circuits or supplied QASM through

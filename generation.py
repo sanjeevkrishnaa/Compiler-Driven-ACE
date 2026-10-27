@@ -317,6 +317,10 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
             return
 
         log.logger.info(f'{self.owner.name} Swap memory between {occupied_memory_name} and {entangled_memory_name}')
+        if occupied_memory_name == entangled_memory_name:
+            self.get_memory_manager().update(self.memory, MemoryInfo.ENTANGLED)
+            self.update_resource_manager_swap_memory(self, self.memory)
+            return
         self.owner.resource_manager.swap_two_memory(occupied_memory_name, entangled_memory_name) # the memory_array is updated, but more needs to update
 
         memory_manager = self.get_memory_manager()
@@ -837,6 +841,10 @@ class ShEntanglementGenerationAadaptive(EntanglementProtocol):
             mem_info.fidelity = entangled_memory.fidelity = entangled_memory.get_bds_fidelity()
 
         # the swapping of attributes in memory and mem_info object
+        if occupied_memory_name == entangled_memory_name:
+            memory_manager.update(self.memory, MemoryInfo.ENTANGLED)
+            self.update_resource_manager_swap_memory(self, self.memory)
+            return
         self.owner.resource_manager.swap_two_memory(occupied_memory_name, entangled_memory_name) # the memory_array is updated, but more needs to update
 
         # update self.memory (the current entangled memory)

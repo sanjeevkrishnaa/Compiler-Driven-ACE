@@ -1,0 +1,26 @@
+{
+  "benchmark": "QFT-96 mesh/XY",
+  "total_memories": 4,
+  "seeds": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "minimum_lead_layers": 2,
+  "admission_priority": "ready-first",
+  "chain_filter": null,
+  "completion": 1.0,
+  "config_sha256": "0253d7453d829b1a7444d08187c746d7172c8e7cef5b1a78cb21a8a00eb83fe5",
+  "trace_sha256": "9c81c3f179e784384c590a86cdb6d08cb7d20375d61a163db92e1c05553b2d24",
+  "sequence_revision": "cf5283cdfd6692a82a090d15fb09fbc01bd322fc",
+  "source_paths": [
+    "output\\capacity_ready_c1_xy_6_9",
+    "output\\capacity_ready_c4_xy_6_9",
+    "output\\ready_priority_xy_6_7\\ready-c2-l2",
+    "output\\ready_priority_xy_6_7\\ready-c3-l2",
+    "output\\ready_priority_xy_8_9\\ready-c2-l2",
+    "output\\ready_priority_xy_8_9_serial\\ready-c3-l2"
+  ],
+  "compiler_tests_passed": 152
+}

@@ -631,6 +631,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
         }
         compiler_limit = compiler_spec["compiler_memories_per_core"]
         for router in routers.values():
+            router.network_manager.protocol_stack[-1].compiler_handoff = compiler_spec.get("reuse_compiler_memory", True)
+        for router in routers.values():
             total_memories = len(router.resource_manager.memory_manager)
             if not 0 <= compiler_limit <= total_memories:
                 raise ValueError(
@@ -654,6 +656,10 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             chain_hops_prepared=compiler_spec.get("chain_hops_prepared"),
             predecessor_distance=compiler_spec.get("predecessor_distance", 1),
             congestion_threshold=compiler_spec.get("congestion_threshold"),
+            refill_on_release=compiler_spec.get("refill_on_release", False),
+            demand_first=compiler_spec.get("demand_first", False),
+            borrow_compiler_pairs=compiler_spec.get("borrow_compiler_pairs", False),
+            reuse_compiler_memory=compiler_spec.get("reuse_compiler_memory", True),
         )
         compiler_controller.attach()
     

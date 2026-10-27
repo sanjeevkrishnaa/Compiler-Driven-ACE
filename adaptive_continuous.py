@@ -488,6 +488,28 @@ class AdaptiveContinuousProtocol(Protocol):
             log.logger.warning(f'{self.owner.name} EP {entanglement_pair} already exist')
 
 
+    def has_ready_compiler_pair(self, remote_node_name: str, request_id: int,
+                                fidelity_threshold: float) -> bool:
+        """Non-consuming readiness check; both endpoints must still cache this pair.
+
+        Reading fidelity applies the same elapsed-time decoherence as matching.
+        It does not select, remove, or credit an EPR pair.
+        """
+        remote = self.owner.timeline.get_entity_by_name(remote_node_name).adaptive_continuous
+        for pair in sorted(self.generated_entanglement_pairs):
+            if pair[0][0] != self.owner.name or pair[1][0] != remote_node_name:
+                continue
+            if self.generated_pair_metadata.get(pair, {}).get("target_request_id") != request_id:
+                continue
+            reverse = (pair[1], pair[0])
+            if reverse not in remote.generated_entanglement_pairs:
+                continue
+            if remote.generated_pair_metadata.get(reverse, {}).get("target_request_id") != request_id:
+                continue
+            if self.get_fidelity(pair) >= fidelity_threshold:
+                return True
+        return False
+
     def match_generated_entanglement_pair(self, this_node_name: str, remote_node_name: str,
                                           request_id: int | None = None) -> Optional[tuple]:
         '''match (this_node_name, remote_node_name) to an existing entanglement pair
@@ -518,7 +540,13 @@ class AdaptiveContinuousProtocol(Protocol):
                 pair for pair in entanglement_pairs
                 if pair not in self.generated_pair_metadata
             ]
-            entanglement_pairs = targeted or generic
+            borrowed = []
+            if self.compiler_observer is not None:
+                borrowed = [pair for pair in entanglement_pairs
+                            if pair in self.generated_pair_metadata
+                            and self.compiler_observer.can_borrow_pair(
+                                self.generated_pair_metadata[pair]["target_request_id"], request_id)]
+            entanglement_pairs = targeted or generic or borrowed
             if not entanglement_pairs:
                 return None
 

@@ -99,6 +99,19 @@ def eg_rule_condition_one_shot(memory_info: "MemoryInfo", manager, args: Argumen
     return eg_rule_condition(memory_info, manager, args)
 
 
+def eg_rule_condition_request(memory_info: "MemoryInfo", manager, args: Arguments):
+    """Start the normal application protocol on an adopted, already-entangled slot."""
+    if (args.get("compiler_handoff") and not args.get("handoff_started")
+            and memory_info.index in args["memory_indices"]
+            and memory_info.state == MemoryInfo.ENTANGLED):
+        args["handoff_started"] = True
+        return [memory_info]
+    result = eg_rule_condition(memory_info, manager, args)
+    if result and args.get("compiler_handoff"):
+        args["handoff_started"] = True
+    return result
+
+
 # 2. entanglement purification #
 
 def ep_rule_action1_adaptive(memories_info: List["MemoryInfo"], args: Arguments) -> Tuple[BBPSSWCircuit | BBPSSW_bds, List[str], List["ep_req_func1_adaptive"], List[Dict]]:
@@ -388,6 +401,83 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         self.timecards = [ObservedTimeCard(card.memory_index, owner) for card in self.timecards]
         # Local ownership: the reservation object can be shared by endpoints.
         self._reservation_leases = {}
+        self.compiler_handoff = True
+
+    def _handoff_candidate(self, reservation):
+        if (not self.compiler_handoff or not isinstance(reservation, ApplicationReservation)
+                or reservation.memory_size != 1):
+            return None
+        pair = getattr(reservation, "compiler_handoff_pair", None)
+        adaptive = self.owner.adaptive_continuous
+        if pair is None:
+            neighbor = reservation.responder if self.owner.name == reservation.initiator else reservation.initiator
+            if not adaptive.has_ready_compiler_pair(neighbor, reservation.identity, reservation.fidelity):
+                return None
+            pair = next(p for p in sorted(adaptive.generated_entanglement_pairs)
+                        if p[1][0] == neighbor and
+                        adaptive.generated_pair_metadata.get(p, {}).get("target_request_id") == reservation.identity)
+        memory_name = next((memo for node, memo in pair if node == self.owner.name), None)
+        for lease in self._reservation_leases.values():
+            if not lease["compiler"] or lease["released"]:
+                continue
+            if lease["reservation"].compiler_target_request_id != reservation.identity:
+                continue
+            if not any(m.name == memory_name for m in lease["memories"]):
+                continue
+            local_pair = pair if pair[0][0] == self.owner.name else (pair[1], pair[0])
+            if local_pair not in adaptive.generated_entanglement_pairs:
+                return None
+            if adaptive.get_fidelity(local_pair) < reservation.fidelity:
+                return None
+            memory = lease["memories"][0]
+            info = self.owner.resource_manager.memory_manager.get_info_by_memory(memory)
+            if info.state != MemoryInfo.ENTANGLED:
+                return None
+            card = self.timecards[info.index]
+            if any(r is not lease["reservation"] and
+                   max(r.start_time, reservation.start_time) <= min(r.end_time, reservation.end_time)
+                   for r in card.reservations):
+                return None
+            rules = [rule for rule in self.owner.resource_manager.rule_manager.rules
+                     if rule.reservation is lease["reservation"]]
+            if any(rule.protocols for rule in rules):
+                return None
+            return pair, lease, card, rules
+        return None
+
+    def schedule(self, reservation):
+        candidate = self._handoff_candidate(reservation)
+        if candidate is None:
+            # If the peer already claimed a particular pair, do not substitute
+            # another memory after expiry; reject and let normal request retry run.
+            if getattr(reservation, "compiler_handoff_pair", None) is not None:
+                # A pair may disappear during RSVP flight. Do not leave its
+                # now-useless compiler booking blocking fallback until timeout.
+                for lease in tuple(getattr(self, "_reservation_leases", {}).values()):
+                    if (lease["compiler"] and not lease["released"] and
+                            lease["reservation"].compiler_target_request_id == reservation.identity):
+                        self.release_reservation(lease["reservation"], "handoff_unavailable")
+                return False
+            return super().schedule(reservation)
+        pair, old, card, rules = candidate
+        reservation.compiler_handoff_pair = pair
+        old["released"] = True
+        for event in old["events"]:
+            self.owner.timeline.remove_event(event)
+        for rule in rules:
+            self.owner.resource_manager.expire(rule)
+        # Transfer booking ownership only. Preserve quantum state, generation
+        # timestamp, noise, and the original physical memory-expiration event.
+        assert card.remove(old["reservation"])
+        assert card.add(reservation)
+        adaptive = self.owner.adaptive_continuous
+        assert adaptive.adaptive_memory_used > 0
+        adaptive.adaptive_memory_used -= 1
+        self._reservation_leases[id(reservation)] = dict(
+            reservation=reservation, memories=old["memories"], events=[],
+            compiler=False, released=False, handoff=True)
+        # RSVP still performs its real request/approval exchange at both nodes.
+        return True
 
     def push(self, responder: str, start_time: int, end_time: int, memory_size: int, target_fidelity: float,
              entanglement_number: int = 1, identity: int = 0):
@@ -415,8 +505,10 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
     def _load_owned_rules(self, rules, reservation, compiler=False):
         memories = [self.memo_arr[card.memory_index] for card in self.timecards
                     if any(item is reservation for item in card.reservations)]
-        lease = {"reservation": reservation, "memories": memories,
-                 "events": [], "compiler": compiler, "released": False}
+        lease = self._reservation_leases.get(id(reservation))
+        if lease is None or lease["released"]:
+            lease = {"reservation": reservation, "memories": memories,
+                     "events": [], "compiler": compiler, "released": False}
         self._reservation_leases[id(reservation)] = lease
         self.accepted_reservations.append(reservation)
         for rule in rules:
@@ -606,24 +698,26 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         priority = 10
         # 1. create rules for entanglement generation
         if index > 0:                  # non initiator
-            condition_args = {"memory_indices": memory_indices[:reservation.memory_size]}
+            condition_args = {"memory_indices": memory_indices[:reservation.memory_size],
+                              "compiler_handoff": getattr(reservation, "compiler_handoff_pair", None) is not None}
             action_args = {"mid": self.owner.map_to_middle_node[path[index - 1]],
                            "path": path, "index": index, "from_app_request": True,
                            "encoding_type": "single_heralded", "raw_epr_errors": [1/3, 1/3, 1/3]}  # TODO: make 1/3 an input
-            rule = Rule(priority, eg_rule_action1_adaptive, eg_rule_condition, action_args, condition_args)
+            rule = Rule(priority, eg_rule_action1_adaptive, eg_rule_condition_request, action_args, condition_args)
             rules.append(rule)
             priority += 1
 
         if index < len(path) - 1:      # non responder
             if index == 0:
-                condition_args = {"memory_indices": memory_indices[:reservation.memory_size]}
+                condition_args = {"memory_indices": memory_indices[:reservation.memory_size],
+                                  "compiler_handoff": getattr(reservation, "compiler_handoff_pair", None) is not None}
             else:
                 condition_args = {"memory_indices": memory_indices[reservation.memory_size:]}  # the second half
 
             action_args = {"mid": self.owner.map_to_middle_node[path[index + 1]],
                            "path": path, "index": index, "name": self.owner.name, "reservation": reservation, "from_app_request": True,
                            "encoding_type": "single_heralded", "raw_epr_errors": [1/3, 1/3, 1/3]}
-            rule = Rule(priority, eg_rule_action2_adaptive, eg_rule_condition, action_args, condition_args)
+            rule = Rule(priority, eg_rule_action2_adaptive, eg_rule_condition_request, action_args, condition_args)
             rules.append(rule)
             priority += 1
 
@@ -728,8 +822,9 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
                 new_msg = ResourceReservationMessage(RSVPMsgType.REJECT, self.name, msg.reservation, path=path)
                 self._push(dst=None, msg=new_msg, next_hop=src)
         elif msg.msg_type == RSVPMsgType.REJECT:
-            for card in self.timecards:
-                card.remove(msg.reservation)
+            if not self.release_reservation(msg.reservation, "rejected"):
+                for card in self.timecards:
+                    card.remove(msg.reservation)
             if msg.reservation.initiator == self.owner.name:
                 self._pop(msg=msg)
             else:
