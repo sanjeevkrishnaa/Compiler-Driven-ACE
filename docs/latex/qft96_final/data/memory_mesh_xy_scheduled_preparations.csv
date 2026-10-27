@@ -1,0 +1,8 @@
+M,unit,ODG_mean,ODG_sd,ODG_n,CGP_mean,CGP_sd,CGP_n,ACGP_mean,ACGP_sd,ACGP_n,Dynamic-full-chain_mean,Dynamic-full-chain_sd,Dynamic-full-chain_n,Dynamic-first-hop_mean,Dynamic-first-hop_sd,Dynamic-first-hop_n
+2,count,,,0,,,0,,,0,1101.0,0.0,2,663.0,0.0,2
+3,count,,,0,,,0,,,0,2059.0,0.0,2,1063.0,0.0,2
+4,count,,,0,,,0,,,0,2704.0,0.0,2,1423.0,0.0,2
+6,count,,,0,,,0,,,0,3474.0,0.0,2,1807.0,0.0,2
+8,count,,,0,,,0,,,0,3771.0,0.0,2,1925.0,0.0,2
+16,count,,,0,,,0,,,0,3876.0,0.0,2,1965.0,0.0,2
+32,count,,,0,,,0,,,0,3876.0,0.0,2,1965.0,0.0,2

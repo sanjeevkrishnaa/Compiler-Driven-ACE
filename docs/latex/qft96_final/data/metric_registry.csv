@@ -1,0 +1,48 @@
+field,title,native_unit,display_unit,display_scale,policies,main_route_memory_figures,variant_figures
+request_latency_mean_ms,Mean request latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+request_latency_median_ms,Median request latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+request_latency_p95_ms,p95 request latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+request_latency_max_ms,Maximum request latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+end_to_end_latency_ms,Communication makespan,ms,s,0.001,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+average_admission_wait_ms,Mean admission wait,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+average_delivered_epr_fidelity,Delivered EPR fidelity,,,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+pregenerated_success_rate,Compiler readiness fraction,fraction,fraction,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+intended_request_hit_rate,Intended compiler-hit fraction,fraction,fraction,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+on_demand_fallback_rate,Compiler fallback fraction,fraction,fraction,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+compiler_waste_percentage,Compiler-cache waste,%,%,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+protocol_waste_percentage,Native-protocol waste,%,%,1,CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+compiler_expiry_percentage,Compiler-pair expiry,%,%,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+average_storage_time_ms,Used compiler-pair storage time,ms,ms,1,Dynamic-full-chain;Dynamic-first-hop,5,5
+hop_throughput_s,Delivered-hop throughput,hops/s,hops/s,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+completion_rate,Completion fraction,fraction,fraction,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,5
+max_admission_wait_ms,Maximum admission wait,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+requests_that_waited_fraction,Requests with admission wait,fraction,fraction,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+avg_reservation_setup_time_ms,Recorded reservation-setup counter,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+avg_entanglement_generation_time_ms,Mean generation/service time,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+avg_retry_wait_time_ms,Recorded retry-wait time,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+total_retries,Request retries,count,count,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+requests_with_retries,Requests with retries,count,count,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+protocol_generated_pairs,Native-protocol generated-pair counter,count,count,1,CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+protocol_used_pairs,Native-protocol used-pair counter,count,count,1,CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+protocol_unused_pairs,Native-protocol unused-pair counter,count,count,1,CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+scheduled_preparations,Scheduled compiler preparations,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+planner_blocked_preparations,Planner-blocked preparations,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+planner_peak_compiler_memory_per_core,Planner peak compiler memory,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+runtime_admission_attempts,Compiler preparation admission attempts,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+runtime_launched_preparations,Launched compiler preparations,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+runtime_accepted_preparations,Accepted compiler preparations,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+runtime_rejected_preparations,Rejected compiler preparations,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+pregenerated_hits,Compiler-ready request count,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+intended_request_hits,Intended compiler-hit count,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+compiler_not_ready_requests,Compiler-not-ready request count,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+late_compiler_pair_uses,Late compiler-pair uses,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+on_demand_fallbacks,Compiler fallback count,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+generated_compiler_pairs,Generated compiler pairs,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+utilized_compiler_pairs,Used compiler pairs,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+expired_compiler_pairs,Expired compiler pairs,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+remaining_compiler_pairs,Remaining compiler pairs,count,count,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+average_fidelity_at_creation,Compiler fidelity at creation,,,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+average_fidelity_at_utilization,Compiler fidelity at use,,,1,Dynamic-full-chain;Dynamic-first-hop,5,0
+avg_layer_latency_ms,Mean layer latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+max_layer_latency_ms,Maximum layer latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0
+min_layer_latency_ms,Minimum layer latency,ms,ms,1,ODG;CGP;ACGP;Dynamic-full-chain;Dynamic-first-hop,5,0

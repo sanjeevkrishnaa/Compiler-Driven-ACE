@@ -4,6 +4,12 @@ This directory is the authoritative, self-contained output root for the
 26-October QFT-96 study. A later benchmark receives the same layout under its
 own dated study root; it never writes into another workload's directory.
 
+The [standalone final QFT-96 report](../../docs/latex/qft96_final/README.md)
+contains the methodology, all verified congestion heatmaps and complete
+route-by-route memory/policy metric figures with tables. Its committed per-seed
+exports cover all 6,688 base and variant observations, including local raw job
+directories that are not themselves versioned.
+
 ```text
 qft96_2seed_2026-10-26/
 ├── execution_spec.json          # frozen factors and simulator parameters

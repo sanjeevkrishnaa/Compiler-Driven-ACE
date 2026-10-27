@@ -61,6 +61,10 @@ dependencies. The characterization unit tests use the Python standard library.
 
 ## Documentation
 
+The [standalone QFT-96 final report](docs/latex/qft96_final/README.md) presents
+the complete mesh/torus results, verified congestion atlas, policy/memory curves,
+allocation and launch-policy experiments, with tables and committed CSV sources.
+
 The [October 25 pre-golden-study report](docs/latex/oct25_pre_golden/README.md)
 collects routing and Dynamic preparation experiments in a separate LaTeX/PDF
 report, with source-linked graphs, tables, seed data and validation evidence.
