@@ -7,10 +7,14 @@ The current compiler path uses full-chain preparation, ready-first event
 admission, and ownership handoff of a prepared pair's existing communication
 memory. Latency is completion minus eligibility, including admission, control
 and retries; no preparation window is subtracted.
+These metrics measure EPR delivery. Data-qubit teleportation gates, destination
+data-memory occupancy, and local reset/transfer costs are not simulated.
 
 ## Start here
 
 - [Current compiler implementation and results](docs/research/compiler-pregeneration/compiler-memory-handoff-2026-10-28.md)
+- [Source-backed pair consumption, memory lifecycle and metric scope](docs/research/compiler-pregeneration/pair-consumption-research-2026-10-28.md)
+- [Seven-route QFT/Draper/QAOA comparison and congestion heatmaps](docs/research/routing/heavy-workloads-2026-10-28/README.md)
 - [Compiler study history and metric changes](docs/research/compiler-pregeneration/README.md)
 - [Documentation index](docs/README.md)
 - [Project structure](docs/project-structure.md)
@@ -41,6 +45,7 @@ path remains available through `--compiler-pair-consumption swap`.
 | --- | --- |
 | Root Python modules | Simulator protocols, memory/reservation ownership, request scheduling and existing runners. |
 | [tools/compiler_study/](tools/compiler_study/README.md) | Full-chain comparison, policy experiments and audited summaries. |
+| [tools/routing_research/](tools/routing_research/README.md) | Fixed-placement routing experiments, analysis and annotated congestion heatmaps. |
 | tools/ | Other mapping, congestion, verification and frozen-study workflows, grouped by purpose. |
 | [docs/](docs/README.md) | Current guides, research, historical reports and LaTeX sources. |
 | config/final_config/ | Physical mesh and torus configurations. |
@@ -48,7 +53,7 @@ path remains available through `--compiler-pair-consumption swap`.
 | [examples/](examples/README.md) | Small request-format examples. |
 | [test/](test/README.md) | Regression tests and compatibility-preserved request fixtures. |
 | mapper/ | Vendored mapper and its provenance; see [mapper/PROVENANCE.md](mapper/PROVENANCE.md). |
-| results/ | Versioned experiment evidence, manifests, validated results and reports. |
+| [results/](results/README.md) | Versioned experiment evidence, manifests, validated results and reports. |
 | output/ | Ignored local simulations, diagnostics and temporary files. |
 
 Simulator modules and fixture paths retain their established locations. Frozen

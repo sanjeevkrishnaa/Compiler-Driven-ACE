@@ -1,0 +1,29 @@
+[
+  {
+    "workload": "qft",
+    "mapping_seed": 42,
+    "qubits": 96,
+    "layers": 766,
+    "migrations": 2106,
+    "source": "output\\heavy-routing-2026-10-28\\inputs96\\qft\\seed_42",
+    "sha256": "47333c7e2f097c4d00ffdf8d7cb26bda6af0c92778d3a99eec2ede23c97eb1c6"
+  },
+  {
+    "workload": "draper_qft_adder",
+    "mapping_seed": 42,
+    "qubits": 96,
+    "layers": 950,
+    "migrations": 1466,
+    "source": "output\\heavy-routing-2026-10-28\\inputs96\\draper_qft_adder\\seed_42",
+    "sha256": "f7ef1293f5f9ee1a6b155f0a38036fe28ac356cbaefdc1a95ca3a1c7c72b2d96"
+  },
+  {
+    "workload": "qaoa",
+    "mapping_seed": 42,
+    "qubits": 96,
+    "layers": 733,
+    "migrations": 3848,
+    "source": "output\\heavy-routing-2026-10-28\\inputs96\\qaoa\\seed_42",
+    "sha256": "dee3f5efee87e9134df7d289b24c9564bf5238e72313bfaf032fca1e519192d1"
+  }
+]

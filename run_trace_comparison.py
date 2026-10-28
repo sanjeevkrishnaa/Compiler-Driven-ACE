@@ -5,6 +5,10 @@ ACE physical simulator, mesh, request manager, memory count, request window,
 and random seeds.  ``continuous`` and ``adaptive-continuous`` are ACE's
 autonomous cache protocols; ``fixed`` and ``dynamic`` are compiler-directed
 one-shot preparation policies.
+
+Requests deliver entangled memory pairs to a terminal benchmark consumer.
+They do not simulate data-qubit teleportation, its local gates, destination
+data-memory occupancy, or reset latency. Reported times are EPR delivery times.
 """
 
 from __future__ import annotations
@@ -129,6 +133,7 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
     completed = stats["completed_requests"]
     row = {
         "strategy": strategy,
+        "latency_scope": "entanglement_delivery",
         "seed": seed,
         "requests": request_count,
         "completed_requests": completed,
@@ -211,7 +216,7 @@ def main() -> None:
     parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--compiler-memories", type=int, default=3)
     parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
-                        help="handoff reuses the pair's booked slot; swap reproduces the historical extra-slot path")
+                        help="handoff delivers the existing pair in place (default); swap explicitly models a separate application communication slot")
     parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
                         help="runtime queues all full-chain candidates; physical quotas/timecards enforce capacity")
     parser.add_argument("--refill-on-release", action="store_true")
@@ -390,7 +395,12 @@ def main() -> None:
     (args.output / "metadata.json").write_text(json.dumps({
         "created_at": datetime.now(timezone.utc).isoformat(),
             "metric_version": 3,
-            "implementation_version": 4,
+            "implementation_version": 5,
+            "latency_scope": "entanglement_delivery",
+            "application_model": "terminal_entanglement_consumer",
+            "data_teleportation_simulated": False,
+            "data_memory_occupancy_simulated": False,
+            "data_teleportation_gate_and_reset_times_modeled": False,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
                               for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py']},

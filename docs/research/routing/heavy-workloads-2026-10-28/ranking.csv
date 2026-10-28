@@ -1,0 +1,15 @@
+strategy,algorithm,geometric_mean_makespan_relative_to_xy
+dynamic,greedy,0.9809185892614931
+dynamic,minhop,0.9826513947088683
+dynamic,yx,0.9898425104010007
+dynamic,detour2,0.9914203164163764
+dynamic,history,0.9951274227346725
+dynamic,minexcess,0.9992661487248774
+dynamic,xy,1.0
+on-demand,greedy,0.9962139534456195
+on-demand,minhop,0.9980220821492315
+on-demand,minexcess,0.998320202884808
+on-demand,history,0.999318163260079
+on-demand,xy,1.0
+on-demand,yx,1.0010336813935938
+on-demand,detour2,1.0048496713205537

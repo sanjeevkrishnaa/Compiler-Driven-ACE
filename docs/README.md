@@ -2,7 +2,10 @@
 
 ## Start here
 
-- [Current compiler-memory handoff correction and C=1..4 results](research/compiler-pregeneration/compiler-memory-handoff-2026-10-28.md)
+- [Heavy-workload routing comparison: QFT, Draper and QAOA, with congestion heatmaps](research/routing/heavy-workloads-2026-10-28/README.md)
+- [Current source-backed pair-delivery model and physical-memory ownership](research/compiler-pregeneration/pair-consumption-research-2026-10-28.md)
+- [Extra-memory experiment and revert comparison](research/compiler-pregeneration/extra-memory-revert-2026-10-28.md)
+- [Compiler-memory handoff results](research/compiler-pregeneration/compiler-memory-handoff-2026-10-28.md)
 - [Compiler pre-generation study index: current versus historical results](research/compiler-pregeneration/README.md)
 - [Compiler experiment tools and reproduction commands](../tools/compiler_study/README.md)
 - [Committed full-trace handoff evidence](../results/compiler_memory_handoff_2026-10-28/README.md)

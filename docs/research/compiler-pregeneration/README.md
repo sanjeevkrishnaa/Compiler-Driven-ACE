@@ -1,11 +1,18 @@
 # Compiler pre-generation studies
 
+**Current default:** in-place ownership handoff for EPR delivery, restored after
+the user's requested online research. See the [source-backed memory lifecycle
+and metric scope](pair-consumption-research-2026-10-28.md). The temporary
+[extra-memory comparison](extra-memory-revert-2026-10-28.md) remains available
+as a distinct model. These latencies measure entanglement delivery, not full
+data teleportation.
+
 Read the current implementation report first. Earlier studies remain available
 to explain the timing, allocation and admission issues that led to the fix.
 
 | Order | Study | Status |
 | --- | --- | --- |
-| 1 | [Compiler memory handoff correction](compiler-memory-handoff-2026-10-28.md) | Current ownership fix and C=1..4 comparison. |
+| 1 | [Compiler memory handoff correction](compiler-memory-handoff-2026-10-28.md) | Earlier opt-in ownership handoff and C=1..4 comparison. |
 | 2 | [Ready-pair admission priority](ready-priority-2026-10-28.md) | Verified FIFO issue and ready-first scheduling. Its measurements precede handoff. |
 | 3 | [C=1..4 allocation sweep](ready-allocation-2026-10-28.md) | Historical extra-slot consumption; records the C=4 stall before the fix. |
 | 4 | [Full-chain policy experiments](full-chain-optimization-2026-10-27.md) | Historical selection/confirmation experiments. |

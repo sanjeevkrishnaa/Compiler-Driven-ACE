@@ -1,5 +1,11 @@
 # Compiler memory handoff correction — 28 October 2026
 
+**Current interpretation:** after a temporary requested extra-memory revert,
+online research supports in-place ownership handoff at the EPR-delivery boundary.
+It is again the default. These times do not include a data-teleportation circuit.
+See the [source-backed lifecycle](pair-consumption-research-2026-10-28.md) and
+the preserved [extra-slot comparison](extra-memory-revert-2026-10-28.md).
+
 ## Root cause
 
 The old cached-pair path reserved a new application communication memory before
@@ -114,5 +120,5 @@ runs. [Every seed row](data/compiler-handoff-2026-10-28/all_seeds.csv),
 Reproduce from the repository root with the pinned SeQUeNCe 0.8.1 dependency:
 
 ```text
-python tools/compiler_study/run_full_chain_latency.py --compiler-memories 4 --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
+python tools/compiler_study/run_full_chain_latency.py --compiler-memories 4 --compiler-pair-consumption handoff --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
 ```

@@ -28,7 +28,9 @@ class HandoffTests(unittest.TestCase):
         spec = dict(requests=requests, schedule=schedule, strategy="dynamic", columns=4,
                     planner_blocked=blocked, planner_peak_memory=peak,
                     compiler_memories_per_core=memories, fidelity=.01,
-                    reservation_duration_ms=1000, reuse_compiler_memory=reuse)
+                    reservation_duration_ms=1000)
+        if reuse is not None:
+            spec['reuse_compiler_memory'] = reuse
         recorder = ListRecorder()
         with redirect_stdout(StringIO()):
             result = run_parallel_experiment(
@@ -56,6 +58,44 @@ class HandoffTests(unittest.TestCase):
         reference, _ = self.run_full_pool(3, False)
         self.assertEqual(parts['entanglement_generation_time_ms'],
                          reference['stats']['timing_breakdown'][0]['entanglement_generation_time_ms'])
+
+    def test_default_delivery_uses_the_only_existing_pair_memory(self):
+        result, events = self.run_full_pool(1, None)
+        self.assertEqual(result['stats']['completed_requests'], 1)
+        self.assertEqual(result['compiler_metrics']['pregenerated_hits'], 1)
+        self.assertLess(result['stats']['end_to_end_latency_ms'], 10)
+        bookings = [e for e in events if isinstance(e, Booked) and e.node == 'router_1_1']
+        self.assertEqual([e.memory_index for e in bookings], [0, 0])
+
+    def test_physical_handoff_preserves_pair_state_key_age_and_expiry_at_both_endpoints(self):
+        import numpy as np
+        schedule = ResourceReservationProtocolAdaptive.schedule
+        observed = []
+
+        def inspect_transfer(protocol, reservation):
+            candidate = protocol._handoff_candidate(reservation)
+            if candidate is None:
+                return schedule(protocol, reservation)
+            _, lease, _, _ = candidate
+            memory = lease['memories'][0]
+            memory.bds_decohere()
+            qm = protocol.owner.timeline.quantum_manager
+            before = np.array(qm.get(memory.qstate_key).state, copy=True)
+            key, created, expiry = memory.qstate_key, memory.generation_time, memory.expiration_event
+            accepted = schedule(protocol, reservation)
+            self.assertTrue(accepted)
+            self.assertIs(protocol._reservation_leases[id(reservation)]['memories'][0], memory)
+            self.assertEqual(memory.qstate_key, key)
+            self.assertEqual(memory.generation_time, created)
+            self.assertIs(memory.expiration_event, expiry)
+            np.testing.assert_allclose(qm.get(key).state, before, rtol=0, atol=0)
+            observed.append(protocol.owner.name)
+            return accepted
+
+        with patch.object(ResourceReservationProtocolAdaptive, 'schedule', inspect_transfer):
+            result, _ = self.run_full_pool(1, None)
+        self.assertEqual(result['stats']['completed_requests'], 1)
+        self.assertEqual(set(observed), {'router_1_1', 'router_2_1'})
 
     def test_two_ready_requests_share_a_full_core_concurrently(self):
         result, _ = self.run_full_pool(2, True)

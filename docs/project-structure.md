@@ -14,10 +14,20 @@ the frozen historical input/evidence tree, not the current handoff implementatio
 | [Compiler research index](research/compiler-pregeneration/README.md) | Current handoff correction and chronological historical studies. |
 | `docs/research/compiler-pregeneration/data/` | Derived seed rows, aggregate metrics and audit outcomes. |
 | [Handoff evidence](../results/compiler_memory_handoff_2026-10-28/README.md) | Committed raw-record archive, original commands and source snapshots. |
+| [Pair-consumption research](research/compiler-pregeneration/pair-consumption-research-2026-10-28.md) | Primary sources, current EPR-delivery interpretation and physical-state regressions. |
+| [tools/routing_research/](../tools/routing_research/README.md) | Seven routing algorithms, reproducible simulation, summaries and heatmap export. |
+| [Routing research](research/routing/README.md) | Dated routing reports, per-seed/aggregate tables and figures; annotated percentages live under `figures/congested-layers/`. |
+| [Evidence index](../results/README.md) | Dated immutable archives and checksums for current and historical configurations. |
 | [examples/](../examples/README.md) | Small request-format samples. |
 | [test/](../test/README.md) | Active tests and existing fixture paths. |
 
 ## QFT-96 study artifact tree
+
+Current studies keep tools under `tools/`, interpretation/tables/figures under
+`docs/research/`, and compressed raw records with source snapshots/checksums under
+`results/<dated-study>/`. `output/` is ignored scratch space. Verified archived
+duplicates and rebuildable Python caches can be removed; unarchived research
+records and frozen source inputs must be preserved.
 
 ```text
 qft96_2seed_2026-10-26/

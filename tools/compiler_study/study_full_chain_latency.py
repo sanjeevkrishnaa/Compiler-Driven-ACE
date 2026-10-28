@@ -11,6 +11,10 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 VARIANTS = {
+    "swap-c1-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "1", "--generation-capacity", "1"],
+    "swap-c2-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2"],
+    "swap-c3-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "3", "--generation-capacity", "3"],
+    "swap-c4-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "4", "--generation-capacity", "4"],
     "handoff-c1-l2": ["--compiler-pair-consumption", "handoff", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "1", "--generation-capacity", "1"],
     "handoff-c2-l2": ["--compiler-pair-consumption", "handoff", "--admission-priority", "ready-first", "--planner-lead-layers", "2"],
     "handoff-c3-l2": ["--compiler-pair-consumption", "handoff", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "3", "--generation-capacity", "3"],
