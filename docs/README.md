@@ -10,6 +10,7 @@
 - [Compiler experiment tools and reproduction commands](../tools/compiler_study/README.md)
 - [Committed full-trace handoff evidence](../results/compiler_memory_handoff_2026-10-28/README.md)
 - [Repository structure and dated study map](project-structure.md)
+- [Legacy runner archive: historical buffers and paths](../legacy/README.md)
 
 ## Historical reports and prior handoffs
 

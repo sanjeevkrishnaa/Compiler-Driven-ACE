@@ -65,6 +65,7 @@ Earlier workload-specific measurements remain in the
 | Root Python modules | Simulator protocols, memory/reservation ownership, request scheduling and existing runners. |
 | [tools/compiler_study/](tools/compiler_study/README.md) | Full-chain comparison, policy experiments and audited summaries. |
 | [tools/routing_research/](tools/routing_research/README.md) | Fixed-placement routing experiments, analysis and annotated congestion heatmaps. |
+| [legacy/](legacy/README.md) | Historical standalone runners with fixed buffers/paths; excluded from current experiment guidance. |
 | tools/ | Other mapping, congestion, verification and frozen-study workflows, grouped by purpose. |
 | [docs/](docs/README.md) | Current guides, research, historical reports and LaTeX sources. |
 | config/final_config/ | Physical mesh and torus configurations. |
@@ -78,6 +79,9 @@ Earlier workload-specific measurements remain in the
 Simulator modules and fixture paths retain their established locations. Frozen
 result logs and reports are evidence and remain versioned; scratch console dumps
 and rebuildable caches are not part of the maintained source tree.
+The older `parallel_real`, `parallel_random`, earlier real-workload sweep, and
+waste-analysis scripts live under `legacy/runners/`. Start current work with
+`run_trace_comparison.py` or the compiler/routing tools linked above.
 
 ## Verify
 

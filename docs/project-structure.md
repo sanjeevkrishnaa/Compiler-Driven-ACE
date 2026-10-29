@@ -20,6 +20,7 @@ the frozen historical input/evidence tree, not the current handoff implementatio
 | [Evidence index](../results/README.md) | Dated immutable archives and checksums for current and historical configurations. |
 | [examples/](../examples/README.md) | Small request-format samples. |
 | [test/](../test/README.md) | Active tests and existing fixture paths. |
+| [legacy/runners/](../legacy/README.md) | Archived standalone real/random/grid/waste runners; original code/settings preserved, not current presets. |
 
 ## QFT-96 study artifact tree
 
