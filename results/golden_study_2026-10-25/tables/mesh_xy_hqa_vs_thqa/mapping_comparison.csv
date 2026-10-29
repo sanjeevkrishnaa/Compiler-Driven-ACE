@@ -1,0 +1,11 @@
+workload,HQA_logical_migrations,T-HQA_logical_migrations,logical_migrations_delta_second_minus_first,HQA_physical_hops,T-HQA_physical_hops,physical_hops_delta_second_minus_first,physical_hops_percent_change_second_vs_first
+bmw_quark_cardinality,90,90,0,144,144,0,0.0
+bv,16,16,0,25,25,0,0.0
+cdkm_ripple_carry_adder,167,189,22,468,402,-66,-14.102564102564102
+draper_qft_adder,574,592,18,1227,1126,-101,-8.231458842705786
+ghz,15,15,0,24,24,0,0.0
+graphstate,28,31,3,76,75,-1,-1.3157894736842106
+qaoa,1175,1207,32,3010,2648,-362,-12.0265780730897
+qft,1016,1007,-9,2336,1874,-462,-19.777397260273972
+randomcircuit,4457,4506,49,11665,10336,-1329,-11.393056150878698
+vqe_real_amp,49,49,0,104,104,0,0.0

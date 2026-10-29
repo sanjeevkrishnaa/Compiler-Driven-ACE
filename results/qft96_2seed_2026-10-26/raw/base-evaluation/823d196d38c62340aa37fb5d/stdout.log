@@ -1,0 +1,3 @@
+on-demand            seed=0 complete=100.00% latency=1.3222193982868937 ms fidelity=0.949813357734806
+on-demand            seed=1 complete=100.00% latency=1.3309398736480909 ms fidelity=0.949813357734806
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/qft96_2seed_2026-10-26/raw/.partial/823d196d38c62340aa37fb5d.weppl_4f/summary.csv

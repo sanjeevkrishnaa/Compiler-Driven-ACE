@@ -1,0 +1,37 @@
+{
+  "conceptual_trace_aliases": 15,
+  "distinct_trace_hashes": 11,
+  "execution_spec_sha256": "76f9edcf968ead91093074feeab8ab9403155c4e6a249dafdca118c371d398b1",
+  "job_manifest": "manifests/base-evaluation_jobs.jsonl.gz",
+  "job_manifest_sha256": "7b426b1248dd34326604814b508da182d909287bef1543ba432935bcd2d12ecc",
+  "mapping_audit_sha256": "a90818bec0e7923544f34eea95717b03dfe3ab3d4998164a221b3fa473b12032",
+  "phase": "base-evaluation",
+  "physics_seed_count": 2,
+  "plan_sha256": "88f0eaf7d0ac5e5b8ebab4463432f40566f5ff8119fba3f68d744cf05535a5c5",
+  "route_trace_counts": {
+    "mesh:max_reliability": {
+      "conceptual_aliases": 3,
+      "distinct_trace_hashes": 3
+    },
+    "mesh:shortest_reliable": {
+      "conceptual_aliases": 3,
+      "distinct_trace_hashes": 3
+    },
+    "mesh:xy": {
+      "conceptual_aliases": 3,
+      "distinct_trace_hashes": 1
+    },
+    "mesh:yx": {
+      "conceptual_aliases": 3,
+      "distinct_trace_hashes": 1
+    },
+    "torus:dijkstra": {
+      "conceptual_aliases": 3,
+      "distinct_trace_hashes": 3
+    }
+  },
+  "runner_jobs": 3058,
+  "schema": "golden-study-execution-plan-v1",
+  "simulator_policy_seed_evaluations": 12056,
+  "study_id": "qft96-mesh-torus-2026-10-26-two-evaluation-seeds"
+}

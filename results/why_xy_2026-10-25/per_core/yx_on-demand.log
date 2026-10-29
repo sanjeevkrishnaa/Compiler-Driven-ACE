@@ -1,0 +1,6 @@
+on-demand            seed=0 complete=100.00% latency=1.3277870029794103 ms fidelity=0.949813357734806
+on-demand            seed=1 complete=100.00% latency=1.3341860971457409 ms fidelity=0.949813357734806
+on-demand            seed=2 complete=100.00% latency=1.345571159721437 ms fidelity=0.949813357734806
+on-demand            seed=3 complete=100.00% latency=1.3332372931489704 ms fidelity=0.949813357734806
+on-demand            seed=4 complete=100.00% latency=1.3527775787767462 ms fidelity=0.949813357734806
+Wrote results/why_xy_2026-10-25/per_core/yx_on-demand_run/summary.csv

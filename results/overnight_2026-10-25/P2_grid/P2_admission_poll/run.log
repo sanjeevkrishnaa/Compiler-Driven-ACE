@@ -1,0 +1,11 @@
+dynamic              seed=0 complete=100.00% latency=1.2635890048072262 ms fidelity=0.9479881801481843
+dynamic              seed=1 complete=100.00% latency=1.2668185374590228 ms fidelity=0.9479952017504822
+dynamic              seed=2 complete=100.00% latency=1.2540814340583366 ms fidelity=0.9479998780806519
+dynamic              seed=3 complete=100.00% latency=2.1662136544840536 ms fidelity=0.9475177275558477
+dynamic              seed=4 complete=100.00% latency=1.6949382031306015 ms fidelity=0.9477380920913976
+dynamic              seed=5 complete=100.00% latency=1.2467541377826 ms fidelity=0.9480195218752473
+dynamic              seed=6 complete=100.00% latency=1.8368638049184498 ms fidelity=0.947681991414719
+dynamic              seed=7 complete=100.00% latency=1.3499035488645539 ms fidelity=0.947907019873875
+dynamic              seed=8 complete=100.00% latency=1.2698269601473557 ms fidelity=0.9479701498855498
+dynamic              seed=9 complete=100.00% latency=1.2415055246404927 ms fidelity=0.9479825592321672
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P2_grid/P2_admission_poll/summary.csv

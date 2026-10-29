@@ -1,0 +1,4 @@
+on-demand            seed=0 complete=100.00% latency=1.313617721255989 ms fidelity=0.9498133577348061
+on-demand            seed=1 complete=100.00% latency=1.3061825259702258 ms fidelity=0.9498133577348061
+on-demand            seed=2 complete=100.00% latency=1.316278634158111 ms fidelity=0.9498133577348061
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/randomcircuit/xy_on-demand/summary.csv

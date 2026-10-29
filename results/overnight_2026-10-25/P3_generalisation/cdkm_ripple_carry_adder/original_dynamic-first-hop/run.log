@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.0631794151732457 ms fidelity=0.9474030809439667
+dynamic              seed=1 complete=100.00% latency=1.0478280993837719 ms fidelity=0.947460122129337
+dynamic              seed=2 complete=100.00% latency=1.02765224960307 ms fidelity=0.947377850378248
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/cdkm_ripple_carry_adder/original_dynamic-first-hop/summary.csv

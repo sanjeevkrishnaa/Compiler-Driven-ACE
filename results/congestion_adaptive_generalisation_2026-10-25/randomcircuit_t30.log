@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.1990731167441822 ms fidelity=0.9468903030337109
+dynamic              seed=1 complete=100.00% latency=1.1897033612640315 ms fidelity=0.9468334318948737
+dynamic              seed=2 complete=100.00% latency=1.1993117783337612 ms fidelity=0.9467971618914389
+Wrote results/congestion_adaptive_generalisation_2026-10-25/randomcircuit_t30/summary.csv

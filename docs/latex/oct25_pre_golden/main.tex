@@ -1,0 +1,303 @@
+\documentclass[11pt,a4paper,oneside]{report}
+\usepackage[margin=22mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,longtable,array,graphicx,xcolor,caption}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,bookmarksnumbered]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\bfseries}{\large\chaptertitlename\ \thechapter}{8pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small ACE: October 25 research record}\fancyhead[R]{\small Pre-golden study}\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
+\setlength{\emergencystretch}{1em}
+\setlength{\LTpre}{5pt}\setlength{\LTpost}{5pt}
+\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.15}
+\hypersetup{pdftitle={ACE routing and Dynamic preparation: October 25 pre-golden-study report},pdfauthor={Compiler-Driven-ACE project}}
+\newcommand{\repo}{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE}
+\newcommand{\snap}{4aa334542e9b9c8fe7a5f9cc8fe48ee2e4d2fa55}
+\newcommand{\src}[2]{\href{\repo/blob/\snap/#1}{#2}}
+\newcommand{\commit}[1]{\href{\repo/commit/#1}{\texttt{#1}}}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\centering\vspace*{25mm}
+{\Large Compiler-Driven ACE\par}\vspace{12mm}
+{\Huge\bfseries Routing, congestion and Dynamic EPR preparation\par}
+\vspace{12mm}{\LARGE Research record for 25 October 2026\par}
+\vspace{8mm}{\large A fresh retrospective of the experiments before the golden study\par}
+\vfill
+\begin{minipage}{.88\textwidth}
+This report reconstructs the archived experimental evidence from a fixed Git snapshot. It explains the model, timing corrections, routing alternatives, preparation rules, successful results and unsuccessful trials. Every research figure is followed by its numerical table and a CSV link. The October 26 golden-study results are outside this report's scope.
+
+Evidence boundary: \commit{4aa3345}, immediately before the first golden-study commit \commit{44fa139}. Prepared on 26 October 2026 (IST).
+\end{minipage}\vspace{18mm}
+\end{titlepage}
+\hypersetup{pageanchor=true}\pagenumbering{roman}\tableofcontents\clearpage\pagenumbering{arabic}
+
+\chapter{Purpose, scope and the principal result}
+The question studied on October 25 was why compiler-driven pre-generation could lose to on-demand generation (ODG), and whether changing routes or the choice of hops to prepare could recover the benefit. The evidence supports a conditional answer: early EPR generation saves service time, but cached pairs occupy shared communication memories. Contention can cost more time than pre-generation saves. Changing routing and reducing unnecessary later-hop preparation can reduce that cost.
+
+The corrected reference uses the supplied QFT-96 trace on a $4\times4$ mesh, four shared communication memories per core, at most three compiler-held memories per core, and 30 physics seeds. Full-chain Dynamic has mean request latency $2.570$ ms versus ODG's $1.526$ ms. Replacing the supplied routes with XY reduces full-chain Dynamic to $1.484$ ms, while ODG itself improves to $1.340$ ms. Thus routing alone helps substantially but does not make full-chain Dynamic beat the same-route ODG on mean latency.
+
+First-hop-only preparation on XY reaches $1.194$ ms. A congestion-adaptive rule selected using a layer-activity screen reaches $1.175$ ms in the 30-seed confirmation. Against XY's own ODG reference, that is approximately $12.3\%$ lower latency and $5.9\%$ shorter communication makespan. These results apply to this archived model and workload. The threshold was selected on QFT-96; the 30-seed confirmation repeats the screening seeds and adds further seeds, so it is not a wholly held-out confirmation.
+
+The ten-workload tests also show why a universal victory claim would be wrong. They use \emph{48-qubit} circuits and only three physics seeds per cell. Full-chain Dynamic is already strong on several sparse workloads. First-hop-only can sacrifice that advantage. The adaptive threshold retains full-chain behaviour on many of them, but does not outperform every alternative on every workload.
+
+\section{How to read this report}
+Chapters 2--3 establish the model and historical timing context. Chapters 4--8 follow the routing and preparation experiments in their logical order. Chapter 9 records the generalisation tests. Chapter 10 explains the separate HQA/T-HQA comparison and newly implemented controls. The appendices give commit links, reproducibility instructions and the data index.
+
+\section{Evidence boundary}
+The snapshot is \texttt{4aa3345}, the parent of \texttt{44fa139}, where the golden-study contract begins. A Git boundary is more reliable than sorting author timestamps: merged work and rewritten messages do not necessarily appear in timestamp order. Tables are regenerated by reading files directly from this Git revision; later modifications to working-tree result files cannot alter this retrospective.
+
+The detailed routing, launch-policy, intervention, first-hop, parameter and adaptive experiments are included. Earlier October 24 experiments appear only as historical motivation. The later golden study, new T-HQA campaign, October 26 QFT chapter, QPE extension and exhaustive topology/memory matrix are excluded. CGP/ACGP results from those later campaigns must not be inserted into the October 25 two-policy comparisons.
+
+\input{generated/inventory}
+
+\chapter{What the implementation actually measures}
+\section{The simulation pipeline}
+The mapper assigns qubits to cores over layers. A logical migration is $(\ell,q,s,d)$: a layer, a qubit, its source core and its destination core. A routing policy expands the migration into a physical core path. That path is expanded into adjacent-hop EPR requests, which ACE serves using the selected EPR generation policy and SeQUeNCe's discrete-event simulation.
+
+For example, $(q,0,2)$ may become the path $0\to1\to2$, then two requests. The per-qubit scheduler preserves their order: the second hop becomes eligible after the first finishes. Different qubits in an active layer may request EPR pairs concurrently. The work studied here compares adjacent-hop EPR \emph{delivery}, not a complete physical simulation of every gate and teleported data state.
+
+The project uses SeQUeNCe as the event engine and physical-protocol dependency; it does not execute the quantum algorithm on local quantum hardware. Time is represented internally in picoseconds. Reporting a result in milliseconds is a unit conversion, not evidence of millisecond event resolution. The magnitude of the result follows the chosen model parameters, including control delays and generation times.
+
+\section{Memories and reservations}
+Four shared communication memories per core are the reference capacity $M=4$. The compiler may occupy at most $C=3$ for prepared pairs. These are not seven separate slots. A prepared EPR half occupies a communication memory until it is used, expires or is released. The remaining capacity protects demand service, but does not guarantee that every request immediately finds a free reservation slot.
+
+In this ACE path a request still needs admission even if a cached pair exists. The implementation transfers a usable cached pair into a request's reservation resource. Consequently, a ready pair can coexist with a waiting request. This is why readiness and latency must both be measured.
+
+\section{The latency contract}
+For a completed hop request $i$, let $a_i$ be eligibility and $c_i$ delivery:
+\[
+ L_i=c_i-a_i,\qquad \overline L=\frac{1}{N}\sum_{i=1}^N L_i.
+\]
+The first hop's eligibility is layer activation; a later hop's eligibility is predecessor completion. The interval includes shared-memory admission waiting, required control exchange, retries and EPR generation. A pair's storage before request eligibility is not added to that request's latency. It can still affect latency indirectly by blocking memories and can reduce fidelity.
+
+Parallelism changes the set of eligibility times, not this definition. Adding the latencies of parallel requests does not yield elapsed trace time. Communication makespan is the simulated workload interval to final delivery, and includes layer progression and configured gaps. It is not the wall-clock runtime of the Python process, nor the full QFT algorithm execution time including unmodelled gates.
+
+\section{Other metrics and their denominators}
+\begin{longtable}{p{.27\linewidth}p{.65\linewidth}}
+\toprule Metric & Definition and interpretation\\\midrule\endhead
+Mean, median, p95, maximum & Distribution of eligible-to-delivery hop latency within each run. Reported means of per-run p95 values are not the pooled percentile of all seeds.\\
+Admission wait & Time spent in the event scheduler's explicit waiting state before admission. The polling path has a different accounting mechanism; a reported zero is not proof of zero waiting.\\
+Generation/service & The runner's entanglement-generation/service timing after admission. Keep this separate from queueing and control overhead; not every aggregate subcounter is an exact latency decomposition.\\
+Readiness fraction & \texttt{pregenerated\_success\_rate}: distinct completed requests served by a pair physically created before first application submission, divided by all requests. This boundary is application submission, not eligibility.\\
+Intended-hit rate & Requests served by the pair planned for that request, divided by all requests. It can include late use, so it is not identical to readiness.\\
+Fallback fraction & Requests not served by a compiler pair divided by all requests. A compiler pair can be late without being a fallback.\\
+Compiler waste & $100\,(N_{expired}+N_{remaining})/N_{generated}$, using the compiler's pair records at workload stop. Unused remaining pairs may be reusable beyond the observed horizon.\\
+Compiler expiry & $100\,N_{expired}/N_{generated}$. A component of waste, not the same quantity.\\
+Protocol waste & A separate native-protocol counter with different accounting. It must not replace compiler waste; the two counters are not additive.\\
+Storage time & Mean generation-to-utilisation interval among used compiler pairs only. Excludes unused/expired pairs, so is conditional on use.\\
+Delivered fidelity & The runner's mean fidelity of delivered EPR pairs across completed requests. This is not final QFT output-state fidelity or algorithm success probability.\\
+Fidelity at use & Fidelity among utilised compiler pairs, with a different population from all delivered pairs.\\
+Completion & Completed adjacent-hop requests divided by requested adjacent-hop requests. All result cells included here must pass completion validation.\\
+\bottomrule
+\end{longtable}
+Definitions are checked against \src{compiler\_scheduler.py}{the compiler controller}, \src{run\_trace\_comparison.py}{the comparison runner}, and \src{parallel\_core.py}{the parallel engine} at the frozen snapshot. The unified per-seed CSV preserves all recorded counters, including metrics not plotted in the main text.
+
+\section{Statistics and limits of the seeds}
+Each table uses the arithmetic mean and sample SD of run-level measurements. The statistical unit is a physics-seed run, not an individual hop. These seed distributions quantify stochastic variation conditional on a fixed trace; they do not quantify variation over independent circuits or placements. The same seed number across different routes need not correspond to identical random physical events, so the archived comparison uses independent-sample Welch comparisons. The supplementary CSV retains exploratory unadjusted Welch $p$-values; many hypotheses and thresholds were tried, so these are not multiplicity-corrected confirmatory tests.
+
+\chapter{Why the earlier midterm and corrected timings differ}
+\section{The two independent changes}
+The timing matrix crosses the old core/batch release scheduler with the corrected per-qubit release scheduler, and crosses a fixed 5.3 ms reservation lead with derived physical timing. These changes must be distinguished. The old local/service latency starts only when the serialized manager submits a request. It omits earlier waiting for the batch. The corrected headline starts when that request becomes eligible.
+
+The original ACE import \commit{c29d5e6} contained the fixed \texttt{pregeneration\_time\_ms = 5.3} setting. It was an experimental pre-generation buffer, not a value derived from light travel, coherence or a physical paper constant. The historical path added it before reservation windows and removed it in the local reported number. Corrected headline runs use zero artificial lead and retain the RSVP control guard derived from configured classical delay, approximately 0.2 ms in the reference case.
+
+\begin{center}\small
+\begin{tabular}{p{.31\linewidth}rrr}
+\toprule Model and metric & ODG ms & Dynamic ms & ODG/Dynamic s\\\midrule
+Legacy, 5.3 ms lead; historical local & $1.110\pm.011$ & $.691\pm.008$ & $32.900/30.932$\\
+Legacy, corrected timing; local & $1.310\pm.011$ & $.917\pm.013$ & $8.950/7.106$\\
+Per-qubit, 5.3 ms lead; fair & $7.704\pm.021$ & $15.660\pm.052$ & $10.259/14.405$\\
+Per-qubit, corrected timing; fair & $1.526\pm.016$ & $2.570\pm.096$ & $4.337/4.694$\\
+\bottomrule
+\end{tabular}\captionof{table}{Historical timing-model matrix, QFT-96, 30 seeds. Makespans are shown as means in seconds. The first two latency rows use local metrics and must not be ranked against the fair-latency rows.}
+\end{center}
+Source: \src{docs/reports/qft96-timing-model-matrix-2026-10-25.md}{the versioned timing-model record}. The record states that raw per-seed outputs for the full four-model matrix lived in ignored output directories. Therefore those historical matrix cells are reproduced here as \emph{documented aggregate evidence}; this report does not claim independently recomputed SDs for all four models. The corrected per-qubit reference is independently recomputed from committed seed CSVs.
+
+\section{Why the performance sign changed}
+Serialization suppresses competition for memory by releasing less independent work together. A local metric can then look small while the trace takes much longer. Per-qubit concurrency reduces overall trace time but exposes admission pressure created by cached pairs. Full-chain Dynamic generates some requests faster while holding enough memory to delay others. The October 25 research optimises this corrected concurrent setting, rather than restoring the historical serialization or subtracting the 5.3 ms lead.
+
+\chapter{Placement recovery and the five-route experiment}
+\section{What could be reconstructed exactly}
+The original \texttt{mapping.npz} for QFT-96 was not archived. Its complete hop trace records initial placement and ordered movements; replay reconstructs the sequence of placement states and every migration endpoint. The adapter recovered 1,770 logical migrations and 4,954 adjacent hops over 766 declared layers, including two trailing empty layers. The exported route alternatives replay to the same placement contract. The original placer used to produce this supplied QFT-96 trace is unverified; it must not be labelled HQA or T-HQA solely because a later mapper run has a matching hop count.
+
+For the archived 48-qubit workloads, the experiment record identifies HQA with OEE initial placement (\src{docs/reports/mqt-congestion-study.md}{archived corpus provenance}). The original mapper partition was present in \texttt{mapping.npz}. The archived verification found trace replay matched those partitions. A logical placement contract and a physical route trace are therefore different artefacts, and changing the route does not require changing the endpoints of this controlled experiment.
+
+The missing QFT-96 information is the \emph{original reliability map and original generation provenance}, not the HQA source code. The mapper and its distance oracle are present. Recovering endpoints cannot reconstruct hidden random link weights. Reliability-aware alternatives consequently use a documented reconstructed map (seed 42, band 0.1--1.0). They are controlled alternatives, not proof of byte-for-byte reproduction of the historical mapper route choices.
+
+\section{Routing definitions}
+\begin{longtable}{p{.25\linewidth}p{.67\linewidth}}
+\toprule Arm & Path-selection rule\\\midrule\endhead
+Supplied/control & Preserve the supplied historical routes exactly. A control, not a newly generated algorithm. Their presumed historical reliability tie-break is not independently recoverable from this file alone.\\
+XY & Dimension 0 fully first, then dimension 1. In this repository's core coordinates, dimension 0 is the row. Do not infer a conventional x/column naming from the label.\\
+YX & Dimension 1 first, then dimension 0. Same minimum hop count, different relays.\\
+Shortest reliable & Minimise hop count, then minimise $\sum_e-\log p_e$, equivalently maximise the product of link reliabilities among shortest paths. The oracle includes further deterministic/proxy tie-breaks.\\
+Maximum reliability & Minimise $\sum_e-\log p_e$ over paths first, with hop count as a secondary criterion. It may choose longer paths.\\
+\bottomrule
+\end{longtable}
+The first four arms have 4,954 hops. Maximum reliability has 5,070, adding 116 requests. Its difference therefore includes a change in hop count. The synthetic reliability values select routes; these experiments do not establish that those values were applied as heterogeneous physical ACE generation probabilities.
+
+\section{Common ACE settings}
+The archived metadata fixes $M=4$, compiler cap $C=3$, generation capacity 3, dynamic lookahead 8 layers, planner coherence window 10 layers, delta 6, 1000 ms compiler reservation window, 50 ms request duration, corrected per-qubit scheduler, event admission, zero artificial lead and seeds 0--29. Delta is a fixed-strategy parameter and should not be interpreted as a tuned Dynamic lead. Planner coherence in layers is distinct from physical memory coherence in seconds.
+
+Each arm runs both ODG and full-chain Dynamic. The supplied route reproduces the committed corrected reference \emph{exactly by seed} for latency and makespan; this is the first regression gate in the report generator. All cells complete every request. Per-arm metadata records implementation version, metric version, source hashes, seed algorithm and flags.
+
+\input{generated/routing}
+
+\section{Interpretation}
+XY and YX reduce Dynamic admission wait and whole-trace makespan relative to supplied routing. With XY, full-chain Dynamic's makespan improves to about 4.076 s against ODG's 4.244 s, even while its mean hop latency remains higher. This is a concrete example of latency and makespan ranking policies differently. The reliability-aware arms do not establish a comparable improvement under the prewritten wait/gap/makespan decision rule.
+
+\chapter{Testing the congestion explanation}
+\section{A static proxy, with an explicit definition}
+For layer $\ell$ and core $c$, define hop-touch demand
+\[
+ D_{\ell c}=E_{\ell c}+2R_{\ell c},\qquad
+ X_M=\sum_{\ell,c}\max(0,D_{\ell c}-M).
+\]
+$E$ counts source/destination appearances in migration paths; $R$ counts relay visits. A relay is counted twice because one adjacent hop arrives and another leaves. $X_M$ measures excess static demand. It is \emph{not} a measured simultaneous occupancy, a queued-time total or a proof that these touches must all reserve memory at once. The sequential same-qubit hops and actual booking durations matter in the simulator.
+
+There are also two distinct useful counters: overloaded core-layers count how often demand exceeds $M$, while excess sums the amount of exceedance. XY has lower excess but can have \emph{more} overloaded core-layers than supplied routing. The result supports less concentrated severe overload, not improvement in every possible congestion statistic.
+
+\section{The intervention design}
+Sixteen further arms keep every migration's qubit, layer, endpoints and minimum hop count fixed. They mix supplied routing with XY, choose random shortest paths, choose XY/YX with a seeded coin (O1TURN-style), greedily concentrate or balance per-layer load, or reroute migrations touching the hottest one, two or three relay cores. Each arm is evaluated with 30 physics seeds for ODG and full-chain Dynamic.
+
+The \texttt{balance} policy is a greedy rule in migration order, not a proof of a global optimum. The \texttt{concentrate} policy intentionally maximises a local load objective. The seeded XY/YX choice is an offline routing analogue; the experiment does not claim to implement every detail of a hardware O1TURN router.
+
+\input{generated/mechanism}
+
+The association between excess demand and Dynamic waiting is strong, and deliberate route changes support the load-balancing explanation. However, these 21 arms share a workload and placement and are not independent circuit samples. The concentrate arm has greater excess but its Dynamic/ODG latency \emph{ratio} does not exceed the original ratio: ODG also slows down. This failed part of the original prediction is retained. Ratios alone cannot establish the mechanism.
+
+\section{Where waiting occurs}
+\input{generated/percore}
+The supplied route's wait is strongly concentrated in a few cores, particularly 5 and 9. Rerouting around two hotspots captures much of the improvement. Endpoint and relay values here are attribution by hop touch; they are not mutually exclusive causal contributions to elapsed time. The same hop's waiting can be attributed to both touched cores.
+
+The original occupancy diagnostic had a documented strategy-label defect when multiple strategies were invoked together. This report therefore uses the correctly identified per-core JSON diagnostics and does not derive numerical occupancy conclusions from those mislabeled files. A source-based explanation is stronger than reusing an attractive but ambiguous plot.
+
+\chapter{Dynamic preparation rules and the launch-policy screen}
+\section{What each rule changes}
+The Dynamic planner selects candidate preparations subject to memory and generation constraints. Runtime controls change when those preparations launch or filter the set of prepared hops. They do not change the placement or route.
+
+\begin{longtable}{p{.31\linewidth}p{.61\linewidth}}
+\toprule Rule & Implemented meaning\\\midrule\endhead
+Layer-start & Launch on activation of the planned generation layer. The baseline planner commonly chooses the preceding layer; do not assume every request is always planned exactly one layer early.\\
+Preparation delay & Add the chosen delay after the layer trigger for layer-start launches. This differs from the obsolete fixed 5.3 ms lead before demand reservations.\\
+Predecessor-start & Register a later-hop preparation to launch when its predecessor hop starts. First hops use the generation-layer rule. A shorter storage interval can come at the cost of the pair being unready.\\
+Chain depth $N$ & Keep only preparations for the first $N$ hop positions of each $(\ell,q)$ chain. Other hops remain requests served through fallback. $N=1$ is first-hop-only, not one hop per core or one hop per layer.\\
+Combined rules & Chain filtering and trigger changes can be applied together; the 13 named screen variants include delay combinations and two-hop predecessor-start.\\
+\bottomrule
+\end{longtable}
+
+\section{Ten-seed screening on supplied and XY routes}
+All 13 variants are included for each route. The dashed ODG line uses the existing 30-seed reference; therefore the graph is a screen, not a matched-size confirmation. The subsequent confirmation uses 30 seeds for the selected first-hop and adaptive policies too.
+\input{generated/launch}
+
+\section{What the unsuccessful trials teach}
+Simple delay and predecessor-start variants generally reduce readiness and can increase waste or latency. Waiting until a predecessor starts can be too late to avoid generation on the critical path. First-hop-only lowers readiness relative to full-chain but sharply reduces later-hop memory retention, making the remaining cache more useful. A larger hit rate is therefore not by itself an optimisation objective.
+
+\chapter{From first-hop-only to congestion-adaptive preparation}
+\section{Thirty-seed confirmation of the selected rules}
+The confirmation compares four policies under identical routes: ODG, full-chain Dynamic, first-hop-only Dynamic and threshold-25 Dynamic. Each row compares against ODG on the \emph{same route}. Comparing XY Dynamic only with supplied-route ODG would combine the effects of two interventions.
+
+The adaptive rule computes the target layer's total number of adjacent-hop requests $A_\ell$. It retains a first-hop preparation regardless of $A_\ell$, and retains a later-hop preparation only when $A_\ell\le T$. This is an offline trace-activity proxy, not an online free-memory measurement. Threshold zero equals first-hop-only for layers containing requests; a sufficiently large threshold equals the baseline full-chain rule. The rule filters an existing planner schedule; it does not redistribute freed planner capacity by replanning.
+
+\input{generated/confirmation}
+
+\section{What the comparisons establish}
+On XY, threshold-25 Dynamic improves mean latency relative to the same-route ODG baseline and has a shorter makespan. First-hop-only also improves both. On supplied routing, first-hop-only gives a lower mean latency than threshold 25. On YX, the two are close, with first-hop-only slightly better in mean latency. A single absolute threshold is therefore not the best preparation rule for every route.
+
+Pre-generation's fidelity remains below ODG's fresh-pair fidelity in the principal comparison. The reduced latency is a measured benefit under the chosen fidelity acceptance and coherence settings; it is not a claim of simultaneous improvement in every metric. Compiler-waste percentages depend on the workload-stop accounting horizon and cannot be interpreted as total system energy waste.
+
+\section{How the threshold was selected}
+\input{generated/threshold}
+The 10-seed XY screen suggests the region around 25--30. The later 30-seed runs test threshold 25 on three routes. They do not prove an optimal threshold, independence from workload size, or robustness to a changed physical coherence model. Thresholds 25 and 30 are empirically selected settings, not physical constants. A scale-aware or per-core predictor is future research, not a result of this study.
+
+\chapter{Memory allocation and admission screens}
+\input{generated/grid}
+These runs all use first-hop-only on XY. Increasing the compiler cap from one to three while keeping total memory at four improves this particular policy, whereas the earlier full-chain diagnosis favoured restricting long-lived cache occupancy. The two observations are compatible: the value of cache capacity depends on which preparations are allowed to hold it.
+
+Total memories six and eight are capacity sensitivity cases relative to the four-memory reference. They should not be described as the same physical hardware. Event versus poll admission changes scheduling behaviour, not just an output label. Polling's wait counter is not comparable; its zero is shown as n/a here. Removing the starvation guard has little effect in this screen, but that is not evidence that starvation protection is unnecessary for every trace and policy.
+
+\chapter{Generalisation to ten archived workloads}
+These tests use the archived 48-qubit corpus produced with HQA and OEE initial placement, mapping/reliability seed 42 and physics seeds 0--2. The QFT in this chapter is QFT-48, not QFT-96. Both supplied and XY routes were run with ODG, full-chain Dynamic and first-hop-only. Thresholds 25 and 30 were tested on XY only. There is no evidence here for an all-route adaptive generalisation matrix or a QPE result.
+
+The charts report ratios of means and the tables preserve absolute latency, makespan, fidelity, readiness and waste. A ratio near one under only three seeds should not be described as a universal win. The per-seed CSV also retains p95, fallback, expiry and storage metrics.
+\input{generated/generalisation}
+
+\section{The generalisation lesson}
+Sparse workloads can exploit full-chain pre-generation with little contention; first-hop-only discards useful opportunities. Dense or locally busy workloads can benefit from filtering later hops. Total migration count alone is not a sufficient classifier: graphstate is an explicit reminder that a small total count can still contain concentrated activity. Earlier worklog prose that grouped graphstate among high-volume workloads is inconsistent with its recorded 28 migrations and is not carried into this report.
+
+Thresholds 25--30 retain full-chain outcomes on several sparse workloads and improve QFT-48. On QAOA they remain worse than first-hop-only. The random-circuit result is not improved by these thresholds. The data supports conditional adaptation as a promising direction, rather than one fixed rule being best everywhere. The mechanism should be checked per workload before turning this observation into a general law.
+
+\chapter{Mapping comparison, extra controls and implementation status}
+\section{HQA versus T-HQA is a separate experiment}
+The main QFT-96 routing study holds the \emph{historical reconstructed placement} fixed. It was not retroactively rerun with the newly selected T-HQA placement. A separate mapper-only comparison used QFT-96, OEE initial placement, eight mapper qubit slots per core, two initially reserved slots per core, a $4\times4$ mesh and reliability seeds 42--44.
+\input{generated/mapper}
+T-HQA produces 3,876 exported hops versus HQA's 4,954, a reduction of 1,078 or $21.76\%$. Its reliability-weighted cost is not uniformly better across seeds. Mapper cost, path-quality sum and EPR-latency proxy are mapper objectives, not measured ACE arrival-to-delivery latency. No claim that T-HQA has already reduced physical ACE latency follows from this table alone.
+
+\section{Controls implemented before the boundary}
+The last included commit \commit{4aa3345} adds planner lead, predecessor distance and a chain-depth interface. The predecessor-distance control generalises a trigger from the immediate previous hop to an earlier hop in the chain. Planner lead changes how far before the target layer planning starts searching. These controls expand the available design space, but this snapshot has no separately archived result matrix demonstrating their sweep. They are documented as implemented, not reported as validated performance gains.
+
+\section{Code and verification provenance}
+The mapper implementation is a dependency; the adapter, placement contract, explicit routing exporters and comparison tools are project work. The relevant modified ACE integration points are \texttt{compiler\_trace.py}, \texttt{compiler\_scheduler.py}, \texttt{parallel\_core.py}, \texttt{request\_scheduler.py} and \texttt{run\_trace\_comparison.py}. The source ledger identifies exact Git blobs for all consumed evidence.
+
+Historical verification scripts independently parsed routes, checked endpoints and adjacency, rederived touch loads and checked statistics. The adaptive verification tested full-chain/default equivalence, large-threshold equivalence, threshold-zero/first-hop equivalence and allowed later-hop preparations. Those historical checks support the implementation record; this report's new validation specifically checks the stored observations and control regression. It does not claim to rerun every simulator test or every experiment.
+
+\chapter{Conclusions, limitations and next research questions}
+The strongest supported result is that changing the pattern of shared-memory use matters as much as reducing EPR generation time. At four memories per core, full-chain Dynamic can lose on fair request latency. XY/YX routing lowers concentrated relay demand. First-hop-only reduces later-hop occupancy. A layer-activity filter combines full-chain preparation in quiet layers with conservative preparation in busy ones and produces the lowest mean latency among the four policies in the 30-seed XY confirmation.
+
+The result is $1.175$ ms for threshold-25 Dynamic against $1.340$ ms for XY ODG, with makespans approximately $3.992$ s and $4.244$ s. The gain is conditional on the fixed placement, routing, memory budget, physical model and evaluation protocol. Fidelity, waste and the sparse-workload trade-offs remain part of the result, not footnotes to discard.
+
+Three limitations should guide interpretation. First, QFT-96's original reliability map is absent, so reliability-aware alternatives are reconstructed-map experiments. Second, the ten-workload generalisation corpus is 48-qubit and uses only three physics seeds. Third, adjacent-hop EPR delivery omits data-qubit relay occupancy, full teleportation/gate execution and final algorithm fidelity. These omissions limit claims about full distributed QFT runtime and hardware feasibility.
+
+The immediate research questions are whether an adaptive signal can be scaled by capacity and local demand, whether freed planner resources should be replanned, and whether the improvement survives physical coherence/control-delay changes and independent placements. The golden study was started to systematise such questions. Its results belong in a separate report and do not retroactively strengthen the October 25 evidence.
+
+\appendix
+\chapter{Commit-by-commit research record}
+The following commits are ancestors of the pre-golden snapshot after the handoff \texttt{1cc7eb6}. Links resolve to immutable commits. The list follows Git ancestry order; author timestamps need not follow the logical sequence.
+\input{generated/commits}
+
+\chapter{Data, source links and reproduction}
+\section{Evidence package}
+\begin{longtable}{p{.37\linewidth}p{.55\linewidth}}
+\toprule File & Role\\\midrule\endhead
+\texttt{data/per\_seed\_results.csv} & Complete imported observations, with family, cell, original source path and every archived runner column.\\
+\texttt{data/all\_metrics.csv} & Mean/sample SD of the documented key metrics for every policy cell.\\
+\texttt{data/source\_ledger.csv} & Git snapshot, Git blob and SHA-256 for each consumed evidence file.\\
+\texttt{data/validation.json} & Result checks, row counts and recomputed mechanism correlation.\\
+\texttt{data/routing.csv} & Five-route two-policy summary.\\
+\texttt{data/launch\_screen.csv} & All 26 route/launch screen cells.\\
+\texttt{data/routing\_mechanism.csv} & Static excess, waits and means for all 21 route arms.\\
+\texttt{data/per\_core\_wait.csv} & Core-level endpoint/relay attribution used in the diagnostic figure.\\
+\texttt{data/confirmation.csv} & Four-policy confirmation on supplied, XY and YX.\\
+{\scriptsize\texttt{data/confirmation\_comparisons.csv}} & Ratios and exploratory unadjusted Welch comparisons to same-route ODG.\\
+\texttt{data/threshold.csv} & Ten threshold settings and all documented key metrics.\\
+\texttt{data/parameter\_grid.csv} & Eleven memory/admission screens.\\
+\texttt{data/generalisation.csv} & All ten-workload, three-seed result cells.\\
+\texttt{data/mapper.csv} & Six HQA/T-HQA mapper observations.\\
+\texttt{data/commits.csv} & Immutable commit identifiers and recorded subjects.\\
+\bottomrule
+\end{longtable}
+\href{\repo/tree/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data}{Browse the complete report data directory}. Derived report CSVs are committed with this report. Original result and metadata links resolve to the frozen snapshot, allowing every row to be traced to the historical evidence.
+
+\section{Rebuild the report without rerunning experiments}
+From the repository root, use a Python environment with NumPy, SciPy and Matplotlib:
+\begin{verbatim}
+python tools/build_oct25_report.py
+cd docs/latex/oct25_pre_golden
+tectonic main.tex
+\end{verbatim}
+The script reads Git objects, validates stored seeds/completion/control results, regenerates tables/figures and records hashes. It does not invoke ACE, mutate archived experiments or reuse golden-study data. It requires the historical snapshot to be available locally.
+
+\section{Rerun an experiment deliberately}
+To reproduce physical runs, use the archived experiment metadata and command record with matching source hashes and the matching SeQUeNCe dependency. A historical shell wrapper alone is insufficient: some wrappers embed the environment path of a sibling checkout, or skip an existing summary without checking its configuration. These risks affect a future rerun; they do not justify altering the historical observations.
+
+\src{results/routing\_study\_2026-10-25/runs/xy/metadata.json}{Example: complete XY routing metadata};
+\src{results/overnight\_2026-10-25/P2\_grid/P2\_cm3\_tm4/command.txt}{Example: exact first-hop parameter command};
+\src{results/congestion\_adaptive\_confirm\_2026-10-25/xy/metadata.json}{Example: adaptive confirmation metadata}.
+
+\section{Validation interpretation}
+The new report validates unique strategy/seed observations, consistency with each file's metadata, metric version 3, complete requests and exact supplied-route control latency/makespan against the separately archived physical reference. An independent text parser also checks all 21 routed traces for adjacency, contiguous chains, placement replay, common endpoints, declared layers and expected hop counts; it rederives static excess at capacities 2, 3, 4, 6 and 8. The report recomputes every plotted mean and SD from the frozen per-seed rows. These checks establish internal traceability and arithmetic correctness of this retrospective. They do not establish 100\% physical correctness of ACE or remove the model limitations above.
+\end{document}

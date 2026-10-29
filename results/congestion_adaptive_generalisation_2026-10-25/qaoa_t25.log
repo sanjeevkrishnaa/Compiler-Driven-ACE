@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.5926613048950455 ms fidelity=0.946787297344074
+dynamic              seed=1 complete=100.00% latency=1.4016903234126468 ms fidelity=0.9463690404970603
+dynamic              seed=2 complete=100.00% latency=1.6438092914563232 ms fidelity=0.9470698879924666
+Wrote results/congestion_adaptive_generalisation_2026-10-25/qaoa_t25/summary.csv

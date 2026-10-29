@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.330336169266684 ms fidelity=0.9470893520158133
+dynamic              seed=1 complete=100.00% latency=1.3310739486957561 ms fidelity=0.9472767375429345
+dynamic              seed=2 complete=100.00% latency=1.3512312712495724 ms fidelity=0.9472441975079492
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/randomcircuit/original_dynamic/summary.csv

@@ -1,0 +1,57 @@
+\chapter{Conclusion and next validated steps}
+
+This work establishes a corrected experimental foundation for ACE, not a final
+universal ranking of schedulers. The legacy per-core serialization was not a
+valid congestion model: it hid simultaneous requests and made the memory budget
+unable to bind. The corrected implementation gives each qubit an ordered chain
+of hops while allowing unrelated qubits to request EPR pairs concurrently,
+uses distinct reservation identities, admits requests event-by-event, and checks
+the resulting event trace with explicit invariants. The common latency definition
+now includes the waiting that a request actually experiences after it becomes
+eligible, while makespan remains a separate parallel-work metric.
+
+The completed Golden slices already provide two precise observations. On GHZ and
+BV with T-HQA placement and mesh--XY routing, Dynamic full-chain reaches its
+best observed latency with two compiler memories and zero observed compiler or
+protocol waste. CGP and ACGP can approach or tie the latency only at much larger
+compiler allocations on some capacities, and their delivered fidelity and waste
+must be reported alongside latency. These are validated workload-specific
+results; they do not justify saying that Dynamic wins on every workload or every
+memory budget. The remaining base slices, routing arms, torus arm and MQT Bench
+QPE extension must complete before a cross-workload conclusion is written.
+
+The QPE extension is deliberately independent of the ten-workload denominator.
+It uses MQT Bench's factory-generated \texttt{qpeexact} circuit, fresh HQA and
+T-HQA placement contracts, the same route-policy set, the same memory grid and
+the same paired physics seeds. Its execution is resumable and source-locked;
+interim rows are evidence of progress, not a completed QPE comparison.
+
+\section{Figure, table and data-file rule}
+The report's existing Golden figures obey the following audit trail. Each row
+below names the visual family, its corresponding complete numeric table and the
+machine-readable source. The same rule will be applied to every future workload.
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}p{0.24\linewidth}p{0.32\linewidth}p{0.34\linewidth}@{}}
+\toprule
+Visual family & Corresponding table & Repository data source \\ \midrule
+GHZ mesh--XY envelope & Table~\ref{tab:golden-ghz-xy-envelope} & \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/ghz_thqa_mesh_xy_memory_sweep_observed_minima.csv}{GHZ CSV} \\
+GHZ all allocations & Table~\ref{tab:golden-ghz-xy-envelope} & \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv}{progress CSV} \\
+BV mesh--XY envelope & Table~\ref{tab:golden-bv-xy-envelope} & \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/bv_thqa_mesh_xy_memory_sweep_observed_minima.csv}{BV CSV} \\
+BV all allocations & Table~\ref{tab:golden-bv-xy-envelope} & \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/results/golden_study_2026-10-25/summaries/base-evaluation-progress.csv}{progress CSV} \\
+\bottomrule
+\end{tabular}
+\caption{Figure-to-table-to-CSV audit registry. A future figure must add a row here before it is treated as a result.}
+\label{tab:figure-data-registry}
+\end{table}
+
+\section{What comes next}
+The next scientifically valid step is completion and validation of the frozen
+matrix, followed by generated cross-workload tables and figures for request
+latency, p95 latency, makespan, admission wait, readiness/hit rate, pair waste,
+fidelity, retries and memory occupancy. Only after those artifacts pass the same
+acceptance checks should adaptive congestion thresholds, alternative routing
+heuristics, or additional QPE variants be compared. Any change to physical
+parameters or scheduler semantics creates a new study identifier and a new
+source lock; it must not overwrite the current evidence.

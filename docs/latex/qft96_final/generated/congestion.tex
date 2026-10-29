@@ -1,0 +1,1895 @@
+\section{Mesh / xy}
+\clearpage\subsection*{Mesh xy; M=2; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 2.212 & 0.442 & 1.770 & 2.212 & 0.442 & 1.770 & 2.212 & 0.442 & 1.770 \\
+1 & 49.558 & 10.177 & 39.381 & 49.558 & 10.177 & 39.381 & 49.558 & 10.177 & 39.381 \\
+2 & 48.673 & 7.080 & 41.593 & 48.673 & 7.080 & 41.593 & 48.673 & 7.080 & 41.593 \\
+3 & 3.097 & 1.770 & 1.327 & 3.097 & 1.770 & 1.327 & 3.097 & 1.770 & 1.327 \\
+4 & 32.301 & 6.195 & 26.106 & 32.301 & 6.195 & 26.106 & 32.301 & 6.195 & 26.106 \\
+5 & 47.788 & 9.292 & 38.496 & 47.788 & 9.292 & 38.496 & 47.788 & 9.292 & 38.496 \\
+6 & 48.230 & 6.637 & 41.593 & 48.230 & 6.637 & 41.593 & 48.230 & 6.637 & 41.593 \\
+7 & 21.681 & 0.000 & 21.681 & 21.681 & 0.000 & 21.681 & 21.681 & 0.000 & 21.681 \\
+8 & 22.124 & 6.195 & 15.929 & 22.124 & 6.195 & 15.929 & 22.124 & 6.195 & 15.929 \\
+9 & 43.805 & 1.327 & 42.478 & 43.805 & 1.327 & 42.478 & 43.805 & 1.327 & 42.478 \\
+10 & 29.204 & 3.982 & 25.221 & 29.204 & 3.982 & 25.221 & 29.204 & 3.982 & 25.221 \\
+11 & 19.027 & 4.425 & 14.602 & 19.027 & 4.425 & 14.602 & 19.027 & 4.425 & 14.602 \\
+12 & 6.637 & 5.310 & 1.327 & 6.637 & 5.310 & 1.327 & 6.637 & 5.310 & 1.327 \\
+13 & 36.283 & 3.097 & 33.186 & 36.283 & 3.097 & 33.186 & 36.283 & 3.097 & 33.186 \\
+14 & 10.619 & 3.540 & 7.080 & 10.619 & 3.540 & 7.080 & 10.619 & 3.540 & 7.080 \\
+15 & 4.425 & 1.770 & 2.655 & 4.425 & 1.770 & 2.655 & 4.425 & 1.770 & 2.655 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=3; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 22.566 & 7.965 & 14.602 & 22.566 & 7.965 & 14.602 & 22.566 & 7.965 & 14.602 \\
+2 & 23.009 & 5.752 & 17.257 & 23.009 & 5.752 & 17.257 & 23.009 & 5.752 & 17.257 \\
+3 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+4 & 12.389 & 4.867 & 7.522 & 12.389 & 4.867 & 7.522 & 12.389 & 4.867 & 7.522 \\
+5 & 27.876 & 7.965 & 19.912 & 27.876 & 7.965 & 19.912 & 27.876 & 7.965 & 19.912 \\
+6 & 23.451 & 5.310 & 18.142 & 23.451 & 5.310 & 18.142 & 23.451 & 5.310 & 18.142 \\
+7 & 8.407 & 0.000 & 8.407 & 8.407 & 0.000 & 8.407 & 8.407 & 0.000 & 8.407 \\
+8 & 10.619 & 4.867 & 5.752 & 10.619 & 4.867 & 5.752 & 10.619 & 4.867 & 5.752 \\
+9 & 20.354 & 0.000 & 20.354 & 20.354 & 0.000 & 20.354 & 20.354 & 0.000 & 20.354 \\
+10 & 14.159 & 2.655 & 11.504 & 14.159 & 2.655 & 11.504 & 14.159 & 2.655 & 11.504 \\
+11 & 5.752 & 3.097 & 2.655 & 5.752 & 3.097 & 2.655 & 5.752 & 3.097 & 2.655 \\
+12 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+13 & 5.310 & 1.770 & 3.540 & 5.310 & 1.770 & 3.540 & 5.310 & 1.770 & 3.540 \\
+14 & 2.655 & 2.212 & 0.442 & 2.655 & 2.212 & 0.442 & 2.655 & 2.212 & 0.442 \\
+15 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=4; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 7.965 & 0.442 & 7.522 & 7.965 & 0.442 & 7.522 & 7.965 & 0.442 & 7.522 \\
+2 & 8.850 & 0.000 & 8.850 & 8.850 & 0.000 & 8.850 & 8.850 & 0.000 & 8.850 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 \\
+5 & 18.142 & 0.000 & 18.142 & 18.142 & 0.000 & 18.142 & 18.142 & 0.000 & 18.142 \\
+6 & 10.619 & 0.442 & 10.177 & 10.619 & 0.442 & 10.177 & 10.619 & 0.442 & 10.177 \\
+7 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+8 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 \\
+9 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 \\
+10 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 \\
+11 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+14 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=6; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 \\
+6 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=8; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=16; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=32; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_route_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_route_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=2; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 21.681 & 0.442 & 21.239 & 21.681 & 0.442 & 21.239 & 21.681 & 0.442 & 21.239 \\
+1 & 51.327 & 10.177 & 41.150 & 51.327 & 10.177 & 41.150 & 51.327 & 10.177 & 41.150 \\
+2 & 49.558 & 7.080 & 42.478 & 49.558 & 7.080 & 42.478 & 49.558 & 7.080 & 42.478 \\
+3 & 3.097 & 1.770 & 1.327 & 3.097 & 1.770 & 1.327 & 3.097 & 1.770 & 1.327 \\
+4 & 33.628 & 6.195 & 27.434 & 33.628 & 6.195 & 27.434 & 33.628 & 6.195 & 27.434 \\
+5 & 53.540 & 9.292 & 44.248 & 53.540 & 9.292 & 44.248 & 53.540 & 9.292 & 44.248 \\
+6 & 53.097 & 6.637 & 46.460 & 53.097 & 6.637 & 46.460 & 53.097 & 6.637 & 46.460 \\
+7 & 30.531 & 0.000 & 30.531 & 30.531 & 0.000 & 30.531 & 30.531 & 0.000 & 30.531 \\
+8 & 26.549 & 6.195 & 20.354 & 26.549 & 6.195 & 20.354 & 26.549 & 6.195 & 20.354 \\
+9 & 53.540 & 1.327 & 52.212 & 53.540 & 1.327 & 52.212 & 53.540 & 1.327 & 52.212 \\
+10 & 31.858 & 3.982 & 27.876 & 31.858 & 3.982 & 27.876 & 31.858 & 3.982 & 27.876 \\
+11 & 19.469 & 4.425 & 15.044 & 19.469 & 4.425 & 15.044 & 19.469 & 4.425 & 15.044 \\
+12 & 6.637 & 5.310 & 1.327 & 6.637 & 5.310 & 1.327 & 6.637 & 5.310 & 1.327 \\
+13 & 37.168 & 3.097 & 34.071 & 37.168 & 3.097 & 34.071 & 37.168 & 3.097 & 34.071 \\
+14 & 11.504 & 3.540 & 7.965 & 11.504 & 3.540 & 7.965 & 11.504 & 3.540 & 7.965 \\
+15 & 5.752 & 1.770 & 3.982 & 5.752 & 1.770 & 3.982 & 5.752 & 1.770 & 3.982 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=3; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+1 & 50.442 & 7.965 & 42.478 & 50.442 & 7.965 & 42.478 & 50.442 & 7.965 & 42.478 \\
+2 & 48.673 & 5.752 & 42.920 & 48.673 & 5.752 & 42.920 & 48.673 & 5.752 & 42.920 \\
+3 & 1.770 & 0.442 & 1.327 & 1.770 & 0.442 & 1.327 & 1.770 & 0.442 & 1.327 \\
+4 & 32.301 & 4.867 & 27.434 & 32.301 & 4.867 & 27.434 & 32.301 & 4.867 & 27.434 \\
+5 & 52.655 & 7.965 & 44.690 & 52.655 & 7.965 & 44.690 & 52.655 & 7.965 & 44.690 \\
+6 & 52.655 & 5.310 & 47.345 & 52.655 & 5.310 & 47.345 & 52.655 & 5.310 & 47.345 \\
+7 & 27.876 & 0.000 & 27.876 & 27.876 & 0.000 & 27.876 & 27.876 & 0.000 & 27.876 \\
+8 & 26.106 & 4.867 & 21.239 & 26.106 & 4.867 & 21.239 & 26.106 & 4.867 & 21.239 \\
+9 & 49.558 & 0.000 & 49.558 & 49.558 & 0.000 & 49.558 & 49.558 & 0.000 & 49.558 \\
+10 & 30.531 & 2.655 & 27.876 & 30.531 & 2.655 & 27.876 & 30.531 & 2.655 & 27.876 \\
+11 & 19.027 & 3.097 & 15.929 & 19.027 & 3.097 & 15.929 & 19.027 & 3.097 & 15.929 \\
+12 & 3.540 & 2.212 & 1.327 & 3.540 & 2.212 & 1.327 & 3.540 & 2.212 & 1.327 \\
+13 & 34.956 & 1.770 & 33.186 & 34.956 & 1.770 & 33.186 & 34.956 & 1.770 & 33.186 \\
+14 & 10.177 & 2.212 & 7.965 & 10.177 & 2.212 & 7.965 & 10.177 & 2.212 & 7.965 \\
+15 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=4; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+1 & 21.681 & 0.442 & 21.239 & 21.681 & 0.442 & 21.239 & 21.681 & 0.442 & 21.239 \\
+2 & 21.239 & 0.000 & 21.239 & 21.239 & 0.000 & 21.239 & 21.239 & 0.000 & 21.239 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 9.735 & 0.000 & 9.735 & 9.735 & 0.000 & 9.735 & 9.735 & 0.000 & 9.735 \\
+5 & 27.876 & 0.000 & 27.876 & 27.876 & 0.000 & 27.876 & 27.876 & 0.000 & 27.876 \\
+6 & 25.221 & 0.442 & 24.779 & 25.221 & 0.442 & 24.779 & 25.221 & 0.442 & 24.779 \\
+7 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 \\
+8 & 9.292 & 0.000 & 9.292 & 9.292 & 0.000 & 9.292 & 9.292 & 0.000 & 9.292 \\
+9 & 20.796 & 0.000 & 20.796 & 20.796 & 0.000 & 20.796 & 20.796 & 0.000 & 20.796 \\
+10 & 12.832 & 0.000 & 12.832 & 12.832 & 0.000 & 12.832 & 12.832 & 0.000 & 12.832 \\
+11 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 4.425 & 0.000 & 4.425 & 4.425 & 0.000 & 4.425 & 4.425 & 0.000 & 4.425 \\
+14 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+15 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=6; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 & 5.310 \\
+2 & 7.522 & 0.000 & 7.522 & 7.522 & 0.000 & 7.522 & 7.522 & 0.000 & 7.522 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+5 & 15.929 & 0.000 & 15.929 & 15.929 & 0.000 & 15.929 & 15.929 & 0.000 & 15.929 \\
+6 & 10.619 & 0.000 & 10.619 & 10.619 & 0.000 & 10.619 & 10.619 & 0.000 & 10.619 \\
+7 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+8 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+9 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 \\
+10 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 \\
+11 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=8; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 3.097 & 0.000 & 3.097 & 3.097 & 0.000 & 3.097 & 3.097 & 0.000 & 3.097 \\
+6 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+10 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=16; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh xy; M=32; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_xy_hop_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_xy_hop_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section{Mesh / yx}
+\clearpage\subsection*{Mesh yx; M=2; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 1.770 & 0.442 & 1.327 & 1.770 & 0.442 & 1.327 & 1.770 & 0.442 & 1.327 \\
+1 & 46.903 & 10.177 & 36.726 & 46.903 & 10.177 & 36.726 & 46.903 & 10.177 & 36.726 \\
+2 & 43.363 & 7.080 & 36.283 & 43.363 & 7.080 & 36.283 & 43.363 & 7.080 & 36.283 \\
+3 & 3.982 & 1.770 & 2.212 & 3.982 & 1.770 & 2.212 & 3.982 & 1.770 & 2.212 \\
+4 & 28.761 & 6.195 & 22.566 & 28.761 & 6.195 & 22.566 & 28.761 & 6.195 & 22.566 \\
+5 & 43.363 & 9.292 & 34.071 & 43.363 & 9.292 & 34.071 & 43.363 & 9.292 & 34.071 \\
+6 & 42.920 & 6.637 & 36.283 & 42.920 & 6.637 & 36.283 & 42.920 & 6.637 & 36.283 \\
+7 & 25.221 & 0.000 & 25.221 & 25.221 & 0.000 & 25.221 & 25.221 & 0.000 & 25.221 \\
+8 & 25.221 & 6.195 & 19.027 & 25.221 & 6.195 & 19.027 & 25.221 & 6.195 & 19.027 \\
+9 & 45.133 & 1.327 & 43.805 & 45.133 & 1.327 & 43.805 & 45.133 & 1.327 & 43.805 \\
+10 & 34.513 & 3.982 & 30.531 & 34.513 & 3.982 & 30.531 & 34.513 & 3.982 & 30.531 \\
+11 & 30.088 & 4.425 & 25.664 & 30.088 & 4.425 & 25.664 & 30.088 & 4.425 & 25.664 \\
+12 & 5.310 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 \\
+13 & 37.168 & 3.097 & 34.071 & 37.168 & 3.097 & 34.071 & 37.168 & 3.097 & 34.071 \\
+14 & 9.735 & 3.540 & 6.195 & 9.735 & 3.540 & 6.195 & 9.735 & 3.540 & 6.195 \\
+15 & 4.425 & 1.770 & 2.655 & 4.425 & 1.770 & 2.655 & 4.425 & 1.770 & 2.655 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=3; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+1 & 23.894 & 7.965 & 15.929 & 23.894 & 7.965 & 15.929 & 23.894 & 7.965 & 15.929 \\
+2 & 25.221 & 5.752 & 19.469 & 25.221 & 5.752 & 19.469 & 25.221 & 5.752 & 19.469 \\
+3 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+4 & 9.292 & 4.867 & 4.425 & 9.292 & 4.867 & 4.425 & 9.292 & 4.867 & 4.425 \\
+5 & 21.239 & 7.965 & 13.274 & 21.239 & 7.965 & 13.274 & 21.239 & 7.965 & 13.274 \\
+6 & 15.929 & 5.310 & 10.619 & 15.929 & 5.310 & 10.619 & 15.929 & 5.310 & 10.619 \\
+7 & 12.389 & 0.000 & 12.389 & 12.389 & 0.000 & 12.389 & 12.389 & 0.000 & 12.389 \\
+8 & 10.177 & 4.867 & 5.310 & 10.177 & 4.867 & 5.310 & 10.177 & 4.867 & 5.310 \\
+9 & 25.221 & 0.000 & 25.221 & 25.221 & 0.000 & 25.221 & 25.221 & 0.000 & 25.221 \\
+10 & 15.929 & 2.655 & 13.274 & 15.929 & 2.655 & 13.274 & 15.929 & 2.655 & 13.274 \\
+11 & 12.389 & 3.097 & 9.292 & 12.389 & 3.097 & 9.292 & 12.389 & 3.097 & 9.292 \\
+12 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+13 & 7.080 & 1.770 & 5.310 & 7.080 & 1.770 & 5.310 & 7.080 & 1.770 & 5.310 \\
+14 & 3.540 & 2.212 & 1.327 & 3.540 & 2.212 & 1.327 & 3.540 & 2.212 & 1.327 \\
+15 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=4; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 6.637 & 0.442 & 6.195 & 6.637 & 0.442 & 6.195 & 6.637 & 0.442 & 6.195 \\
+2 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 & 7.965 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+5 & 10.619 & 0.000 & 10.619 & 10.619 & 0.000 & 10.619 & 10.619 & 0.000 & 10.619 \\
+6 & 7.080 & 0.442 & 6.637 & 7.080 & 0.442 & 6.637 & 7.080 & 0.442 & 6.637 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 3.097 & 0.000 & 3.097 & 3.097 & 0.000 & 3.097 & 3.097 & 0.000 & 3.097 \\
+9 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 \\
+10 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 & 6.195 \\
+11 & 4.425 & 0.000 & 4.425 & 4.425 & 0.000 & 4.425 & 4.425 & 0.000 & 4.425 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+14 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=6; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=8; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=16; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=32; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_route_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_route_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=2; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 31.858 & 0.442 & 31.416 & 31.858 & 0.442 & 31.416 & 31.858 & 0.442 & 31.416 \\
+1 & 51.770 & 10.177 & 41.593 & 51.770 & 10.177 & 41.593 & 51.770 & 10.177 & 41.593 \\
+2 & 43.805 & 7.080 & 36.726 & 43.805 & 7.080 & 36.726 & 43.805 & 7.080 & 36.726 \\
+3 & 3.982 & 1.770 & 2.212 & 3.982 & 1.770 & 2.212 & 3.982 & 1.770 & 2.212 \\
+4 & 30.088 & 6.195 & 23.894 & 30.088 & 6.195 & 23.894 & 30.088 & 6.195 & 23.894 \\
+5 & 47.788 & 9.292 & 38.496 & 47.788 & 9.292 & 38.496 & 47.788 & 9.292 & 38.496 \\
+6 & 46.460 & 6.637 & 39.823 & 46.460 & 6.637 & 39.823 & 46.460 & 6.637 & 39.823 \\
+7 & 34.956 & 0.000 & 34.956 & 34.956 & 0.000 & 34.956 & 34.956 & 0.000 & 34.956 \\
+8 & 30.531 & 6.195 & 24.336 & 30.531 & 6.195 & 24.336 & 30.531 & 6.195 & 24.336 \\
+9 & 54.867 & 1.327 & 53.540 & 54.867 & 1.327 & 53.540 & 54.867 & 1.327 & 53.540 \\
+10 & 37.611 & 3.982 & 33.628 & 37.611 & 3.982 & 33.628 & 37.611 & 3.982 & 33.628 \\
+11 & 30.531 & 4.425 & 26.106 & 30.531 & 4.425 & 26.106 & 30.531 & 4.425 & 26.106 \\
+12 & 5.310 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 & 5.310 & 5.310 & 0.000 \\
+13 & 39.823 & 3.097 & 36.726 & 39.823 & 3.097 & 36.726 & 39.823 & 3.097 & 36.726 \\
+14 & 14.159 & 3.540 & 10.619 & 14.159 & 3.540 & 10.619 & 14.159 & 3.540 & 10.619 \\
+15 & 5.752 & 1.770 & 3.982 & 5.752 & 1.770 & 3.982 & 5.752 & 1.770 & 3.982 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=3; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+1 & 50.000 & 7.965 & 42.035 & 50.000 & 7.965 & 42.035 & 50.000 & 7.965 & 42.035 \\
+2 & 42.920 & 5.752 & 37.168 & 42.920 & 5.752 & 37.168 & 42.920 & 5.752 & 37.168 \\
+3 & 2.655 & 0.442 & 2.212 & 2.655 & 0.442 & 2.212 & 2.655 & 0.442 & 2.212 \\
+4 & 28.761 & 4.867 & 23.894 & 28.761 & 4.867 & 23.894 & 28.761 & 4.867 & 23.894 \\
+5 & 46.460 & 7.965 & 38.496 & 46.460 & 7.965 & 38.496 & 46.460 & 7.965 & 38.496 \\
+6 & 45.575 & 5.310 & 40.265 & 45.575 & 5.310 & 40.265 & 45.575 & 5.310 & 40.265 \\
+7 & 31.858 & 0.000 & 31.858 & 31.858 & 0.000 & 31.858 & 31.858 & 0.000 & 31.858 \\
+8 & 29.204 & 4.867 & 24.336 & 29.204 & 4.867 & 24.336 & 29.204 & 4.867 & 24.336 \\
+9 & 50.885 & 0.000 & 50.885 & 50.885 & 0.000 & 50.885 & 50.885 & 0.000 & 50.885 \\
+10 & 36.283 & 2.655 & 33.628 & 36.283 & 2.655 & 33.628 & 36.283 & 2.655 & 33.628 \\
+11 & 30.088 & 3.097 & 26.991 & 30.088 & 3.097 & 26.991 & 30.088 & 3.097 & 26.991 \\
+12 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+13 & 37.168 & 1.770 & 35.398 & 37.168 & 1.770 & 35.398 & 37.168 & 1.770 & 35.398 \\
+14 & 12.832 & 2.212 & 10.619 & 12.832 & 2.212 & 10.619 & 12.832 & 2.212 & 10.619 \\
+15 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 & 3.982 & 0.000 & 3.982 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=4; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+1 & 22.566 & 0.442 & 22.124 & 22.566 & 0.442 & 22.124 & 22.566 & 0.442 & 22.124 \\
+2 & 23.009 & 0.000 & 23.009 & 23.009 & 0.000 & 23.009 & 23.009 & 0.000 & 23.009 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 \\
+5 & 16.814 & 0.000 & 16.814 & 16.814 & 0.000 & 16.814 & 16.814 & 0.000 & 16.814 \\
+6 & 16.372 & 0.442 & 15.929 & 16.372 & 0.442 & 15.929 & 16.372 & 0.442 & 15.929 \\
+7 & 13.274 & 0.000 & 13.274 & 13.274 & 0.000 & 13.274 & 13.274 & 0.000 & 13.274 \\
+8 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 & 7.965 \\
+9 & 25.664 & 0.000 & 25.664 & 25.664 & 0.000 & 25.664 & 25.664 & 0.000 & 25.664 \\
+10 & 14.159 & 0.000 & 14.159 & 14.159 & 0.000 & 14.159 & 14.159 & 0.000 & 14.159 \\
+11 & 11.947 & 0.000 & 11.947 & 11.947 & 0.000 & 11.947 & 11.947 & 0.000 & 11.947 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 \\
+14 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 \\
+15 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=6; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+2 & 6.637 & 0.000 & 6.637 & 6.637 & 0.000 & 6.637 & 6.637 & 0.000 & 6.637 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+5 & 8.850 & 0.000 & 8.850 & 8.850 & 0.000 & 8.850 & 8.850 & 0.000 & 8.850 \\
+6 & 4.867 & 0.000 & 4.867 & 4.867 & 0.000 & 4.867 & 4.867 & 0.000 & 4.867 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+9 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 & 10.177 & 0.000 & 10.177 \\
+10 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 & 5.752 & 0.000 & 5.752 \\
+11 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=8; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+2 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+6 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 & 2.655 & 0.000 & 2.655 \\
+10 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 & 1.327 & 0.000 & 1.327 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=16; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh yx; M=32; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_yx_hop_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_yx_hop_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section{Mesh / shortest\_reliable}
+\clearpage\subsection*{Mesh shortest\_reliable; M=2; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+1 & 50.000 & 10.177 & 39.823 & 46.460 & 10.177 & 36.283 & 51.327 & 10.177 & 41.150 \\
+2 & 52.655 & 7.080 & 45.575 & 33.186 & 7.080 & 26.106 & 54.425 & 7.080 & 47.345 \\
+3 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 \\
+4 & 8.407 & 6.195 & 2.212 & 26.549 & 6.195 & 20.354 & 6.195 & 6.195 & 0.000 \\
+5 & 59.735 & 9.292 & 50.442 & 63.274 & 9.292 & 53.982 & 57.522 & 9.292 & 48.230 \\
+6 & 29.204 & 6.637 & 22.566 & 55.752 & 6.637 & 49.115 & 33.186 & 6.637 & 26.549 \\
+7 & 18.584 & 0.000 & 18.584 & 35.398 & 0.000 & 35.398 & 12.832 & 0.000 & 12.832 \\
+8 & 35.841 & 6.195 & 29.646 & 7.080 & 6.195 & 0.885 & 7.080 & 6.195 & 0.885 \\
+9 & 55.752 & 1.327 & 54.425 & 55.310 & 1.327 & 53.982 & 50.885 & 1.327 & 49.558 \\
+10 & 24.336 & 3.982 & 20.354 & 9.292 & 3.982 & 5.310 & 33.628 & 3.982 & 29.646 \\
+11 & 11.947 & 4.425 & 7.522 & 11.062 & 4.425 & 6.637 & 29.204 & 4.425 & 24.779 \\
+12 & 5.310 & 5.310 & 0.000 & 6.195 & 5.310 & 0.885 & 5.310 & 5.310 & 0.000 \\
+13 & 31.416 & 3.097 & 28.319 & 41.593 & 3.097 & 38.496 & 39.823 & 3.097 & 36.726 \\
+14 & 7.522 & 3.540 & 3.982 & 7.080 & 3.540 & 3.540 & 3.540 & 3.540 & 0.000 \\
+15 & 2.655 & 1.770 & 0.885 & 2.655 & 1.770 & 0.885 & 2.655 & 1.770 & 0.885 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=3; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 45.575 & 7.965 & 37.611 & 13.717 & 7.965 & 5.752 & 47.345 & 7.965 & 39.381 \\
+2 & 33.628 & 5.752 & 27.876 & 5.752 & 5.752 & 0.000 & 39.381 & 5.752 & 33.628 \\
+3 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+4 & 5.310 & 4.867 & 0.442 & 15.487 & 4.867 & 10.619 & 4.867 & 4.867 & 0.000 \\
+5 & 39.381 & 7.965 & 31.416 & 45.575 & 7.965 & 37.611 & 30.088 & 7.965 & 22.124 \\
+6 & 9.735 & 5.310 & 4.425 & 29.204 & 5.310 & 23.894 & 18.142 & 5.310 & 12.832 \\
+7 & 0.442 & 0.000 & 0.442 & 18.584 & 0.000 & 18.584 & 0.442 & 0.000 & 0.442 \\
+8 & 26.106 & 4.867 & 21.239 & 4.867 & 4.867 & 0.000 & 4.867 & 4.867 & 0.000 \\
+9 & 38.496 & 0.000 & 38.496 & 34.071 & 0.000 & 34.071 & 31.858 & 0.000 & 31.858 \\
+10 & 10.177 & 2.655 & 7.522 & 4.425 & 2.655 & 1.770 & 26.106 & 2.655 & 23.451 \\
+11 & 4.425 & 3.097 & 1.327 & 4.425 & 3.097 & 1.327 & 17.257 & 3.097 & 14.159 \\
+12 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+13 & 3.097 & 1.770 & 1.327 & 15.044 & 1.770 & 13.274 & 12.389 & 1.770 & 10.619 \\
+14 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=4; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 12.389 & 0.442 & 11.947 & 5.310 & 0.442 & 4.867 & 13.274 & 0.442 & 12.832 \\
+2 & 5.752 & 0.000 & 5.752 & 0.442 & 0.000 & 0.442 & 18.584 & 0.000 & 18.584 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.442 & 0.000 & 0.442 & 3.540 & 0.000 & 3.540 & 0.000 & 0.000 & 0.000 \\
+5 & 25.221 & 0.000 & 25.221 & 30.973 & 0.000 & 30.973 & 13.274 & 0.000 & 13.274 \\
+6 & 5.752 & 0.442 & 5.310 & 10.177 & 0.442 & 9.735 & 14.602 & 0.442 & 14.159 \\
+7 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 & 0.000 & 0.000 & 0.000 \\
+8 & 7.965 & 0.000 & 7.965 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 30.088 & 0.000 & 30.088 & 15.487 & 0.000 & 15.487 & 14.159 & 0.000 & 14.159 \\
+10 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 18.142 & 0.000 & 18.142 \\
+11 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 5.310 & 0.000 & 5.310 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.442 & 0.000 & 0.442 & 4.425 & 0.000 & 4.425 & 1.327 & 0.000 & 1.327 \\
+14 & 0.442 & 0.000 & 0.442 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=6; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 0.885 & 0.000 & 0.885 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 1.327 & 0.000 & 1.327 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 2.212 & 0.000 & 2.212 & 15.044 & 0.000 & 15.044 & 0.000 & 0.000 & 0.000 \\
+6 & 0.442 & 0.000 & 0.442 & 1.327 & 0.000 & 1.327 & 0.442 & 0.000 & 0.442 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 11.504 & 0.000 & 11.504 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=8; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=16; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=32; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_route_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_route_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=2; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+1 & 55.310 & 10.177 & 45.133 & 46.460 & 10.177 & 36.283 & 58.850 & 10.177 & 48.673 \\
+2 & 52.655 & 7.080 & 45.575 & 33.186 & 7.080 & 26.106 & 57.080 & 7.080 & 50.000 \\
+3 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 \\
+4 & 9.292 & 6.195 & 3.097 & 27.434 & 6.195 & 21.239 & 6.195 & 6.195 & 0.000 \\
+5 & 65.044 & 9.292 & 55.752 & 67.257 & 9.292 & 57.965 & 60.177 & 9.292 & 50.885 \\
+6 & 29.204 & 6.637 & 22.566 & 61.504 & 6.637 & 54.867 & 38.938 & 6.637 & 32.301 \\
+7 & 21.239 & 0.000 & 21.239 & 43.363 & 0.000 & 43.363 & 15.487 & 0.000 & 15.487 \\
+8 & 39.823 & 6.195 & 33.628 & 7.965 & 6.195 & 1.770 & 7.965 & 6.195 & 1.770 \\
+9 & 61.947 & 1.327 & 60.619 & 61.947 & 1.327 & 60.619 & 58.407 & 1.327 & 57.080 \\
+10 & 25.664 & 3.982 & 21.681 & 9.292 & 3.982 & 5.310 & 39.381 & 3.982 & 35.398 \\
+11 & 11.947 & 4.425 & 7.522 & 11.062 & 4.425 & 6.637 & 29.204 & 4.425 & 24.779 \\
+12 & 5.310 & 5.310 & 0.000 & 6.195 & 5.310 & 0.885 & 5.310 & 5.310 & 0.000 \\
+13 & 33.628 & 3.097 & 30.531 & 49.115 & 3.097 & 46.018 & 45.133 & 3.097 & 42.035 \\
+14 & 8.407 & 3.540 & 4.867 & 7.965 & 3.540 & 4.425 & 3.540 & 3.540 & 0.000 \\
+15 & 5.310 & 1.770 & 3.540 & 5.310 & 1.770 & 3.540 & 5.310 & 1.770 & 3.540 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=3; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 55.310 & 7.965 & 47.345 & 45.133 & 7.965 & 37.168 & 57.522 & 7.965 & 49.558 \\
+2 & 52.655 & 5.752 & 46.903 & 31.858 & 5.752 & 26.106 & 57.080 & 5.752 & 51.327 \\
+3 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+4 & 7.965 & 4.867 & 3.097 & 27.434 & 4.867 & 22.566 & 4.867 & 4.867 & 0.000 \\
+5 & 65.044 & 7.965 & 57.080 & 67.257 & 7.965 & 59.292 & 60.177 & 7.965 & 52.212 \\
+6 & 29.204 & 5.310 & 23.894 & 61.062 & 5.310 & 55.752 & 38.938 & 5.310 & 33.628 \\
+7 & 18.584 & 0.000 & 18.584 & 40.265 & 0.000 & 40.265 & 12.832 & 0.000 & 12.832 \\
+8 & 39.823 & 4.867 & 34.956 & 5.752 & 4.867 & 0.885 & 5.752 & 4.867 & 0.885 \\
+9 & 58.850 & 0.000 & 58.850 & 58.850 & 0.000 & 58.850 & 55.310 & 0.000 & 55.310 \\
+10 & 24.336 & 2.655 & 21.681 & 7.965 & 2.655 & 5.310 & 38.053 & 2.655 & 35.398 \\
+11 & 11.947 & 3.097 & 8.850 & 11.062 & 3.097 & 7.965 & 29.204 & 3.097 & 26.106 \\
+12 & 2.212 & 2.212 & 0.000 & 3.097 & 2.212 & 0.885 & 2.212 & 2.212 & 0.000 \\
+13 & 31.858 & 1.770 & 30.088 & 47.345 & 1.770 & 45.575 & 43.805 & 1.770 & 42.035 \\
+14 & 6.195 & 2.212 & 3.982 & 5.752 & 2.212 & 3.540 & 2.212 & 2.212 & 0.000 \\
+15 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=4; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 45.575 & 0.442 & 45.133 & 11.062 & 0.442 & 10.619 & 47.345 & 0.442 & 46.903 \\
+2 & 33.628 & 0.000 & 33.628 & 0.442 & 0.000 & 0.442 & 40.265 & 0.000 & 40.265 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.885 & 0.000 & 0.885 & 12.389 & 0.000 & 12.389 & 0.000 & 0.000 & 0.000 \\
+5 & 40.708 & 0.000 & 40.708 & 47.788 & 0.000 & 47.788 & 28.761 & 0.000 & 28.761 \\
+6 & 9.735 & 0.442 & 9.292 & 30.088 & 0.442 & 29.646 & 20.354 & 0.442 & 19.912 \\
+7 & 0.442 & 0.000 & 0.442 & 26.549 & 0.000 & 26.549 & 0.442 & 0.000 & 0.442 \\
+8 & 28.319 & 0.000 & 28.319 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 42.035 & 0.000 & 42.035 & 38.496 & 0.000 & 38.496 & 35.398 & 0.000 & 35.398 \\
+10 & 7.965 & 0.000 & 7.965 & 2.212 & 0.000 & 2.212 & 25.221 & 0.000 & 25.221 \\
+11 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 & 17.257 & 0.000 & 17.257 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 2.655 & 0.000 & 2.655 & 15.487 & 0.000 & 15.487 & 11.947 & 0.000 & 11.947 \\
+14 & 0.442 & 0.000 & 0.442 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=6; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 9.735 & 0.000 & 9.735 & 0.000 & 0.000 & 0.000 & 11.062 & 0.000 & 11.062 \\
+2 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 17.257 & 0.000 & 17.257 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 & 0.000 & 0.000 & 0.000 \\
+5 & 26.549 & 0.000 & 26.549 & 34.071 & 0.000 & 34.071 & 12.389 & 0.000 & 12.389 \\
+6 & 1.770 & 0.000 & 1.770 & 10.177 & 0.000 & 10.177 & 13.274 & 0.000 & 13.274 \\
+7 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 & 0.000 & 0.000 & 0.000 \\
+8 & 8.407 & 0.000 & 8.407 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 34.513 & 0.000 & 34.513 & 20.354 & 0.000 & 20.354 & 16.814 & 0.000 & 16.814 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 18.142 & 0.000 & 18.142 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 3.540 & 0.000 & 3.540 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=8; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 5.752 & 0.000 & 5.752 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 7.522 & 0.000 & 7.522 & 23.451 & 0.000 & 23.451 & 4.867 & 0.000 & 4.867 \\
+6 & 0.000 & 0.000 & 0.000 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 & 1.770 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 23.894 & 0.000 & 23.894 & 7.080 & 0.000 & 7.080 & 1.327 & 0.000 & 1.327 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 11.062 & 0.000 & 11.062 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=16; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh shortest\_reliable; M=32; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_shortest_reliable_hop_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_shortest_reliable_hop_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section{Mesh / max\_reliability}
+\clearpage\subsection*{Mesh max\_reliability; M=2; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+1 & 50.442 & 10.177 & 40.265 & 10.177 & 10.177 & 0.000 & 65.487 & 10.177 & 55.310 \\
+2 & 52.655 & 7.080 & 45.575 & 7.080 & 7.080 & 0.000 & 68.584 & 7.080 & 61.504 \\
+3 & 1.770 & 1.770 & 0.000 & 66.814 & 1.770 & 65.044 & 1.770 & 1.770 & 0.000 \\
+4 & 56.637 & 6.195 & 50.442 & 56.637 & 6.195 & 50.442 & 6.195 & 6.195 & 0.000 \\
+5 & 64.159 & 9.292 & 54.867 & 65.929 & 9.292 & 56.637 & 59.735 & 9.292 & 50.442 \\
+6 & 29.204 & 6.637 & 22.566 & 64.159 & 6.637 & 57.522 & 33.186 & 6.637 & 26.549 \\
+7 & 18.584 & 0.000 & 18.584 & 64.159 & 0.000 & 64.159 & 12.832 & 0.000 & 12.832 \\
+8 & 35.841 & 6.195 & 29.646 & 6.195 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 \\
+9 & 56.195 & 1.327 & 54.867 & 55.752 & 1.327 & 54.425 & 53.982 & 1.327 & 52.655 \\
+10 & 23.451 & 3.982 & 19.469 & 6.637 & 3.982 & 2.655 & 42.920 & 3.982 & 38.938 \\
+11 & 14.602 & 4.425 & 10.177 & 4.425 & 4.425 & 0.000 & 30.088 & 4.425 & 25.664 \\
+12 & 5.310 & 5.310 & 0.000 & 24.779 & 5.310 & 19.469 & 5.310 & 5.310 & 0.000 \\
+13 & 32.301 & 3.097 & 29.204 & 43.363 & 3.097 & 40.265 & 39.823 & 3.097 & 36.726 \\
+14 & 7.522 & 3.540 & 3.982 & 14.602 & 3.540 & 11.062 & 3.540 & 3.540 & 0.000 \\
+15 & 3.097 & 1.770 & 1.327 & 2.655 & 1.770 & 0.885 & 2.655 & 1.770 & 0.885 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=3; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 45.575 & 7.965 & 37.611 & 7.965 & 7.965 & 0.000 & 63.717 & 7.965 & 55.752 \\
+2 & 33.628 & 5.752 & 27.876 & 5.752 & 5.752 & 0.000 & 61.504 & 5.752 & 55.752 \\
+3 & 0.442 & 0.442 & 0.000 & 48.230 & 0.442 & 47.788 & 0.442 & 0.442 & 0.000 \\
+4 & 6.637 & 4.867 & 1.770 & 26.549 & 4.867 & 21.681 & 4.867 & 4.867 & 0.000 \\
+5 & 58.850 & 7.965 & 50.885 & 64.602 & 7.965 & 56.637 & 54.867 & 7.965 & 46.903 \\
+6 & 8.850 & 5.310 & 3.540 & 61.062 & 5.310 & 55.752 & 18.142 & 5.310 & 12.832 \\
+7 & 0.442 & 0.000 & 0.442 & 61.947 & 0.000 & 61.947 & 0.442 & 0.000 & 0.442 \\
+8 & 26.106 & 4.867 & 21.239 & 4.867 & 4.867 & 0.000 & 4.867 & 4.867 & 0.000 \\
+9 & 38.496 & 0.000 & 38.496 & 37.611 & 0.000 & 37.611 & 48.230 & 0.000 & 48.230 \\
+10 & 9.735 & 2.655 & 7.080 & 3.540 & 2.655 & 0.885 & 30.088 & 2.655 & 27.434 \\
+11 & 5.752 & 3.097 & 2.655 & 3.097 & 3.097 & 0.000 & 18.142 & 3.097 & 15.044 \\
+12 & 2.212 & 2.212 & 0.000 & 5.310 & 2.212 & 3.097 & 2.212 & 2.212 & 0.000 \\
+13 & 3.982 & 1.770 & 2.212 & 36.283 & 1.770 & 34.513 & 19.469 & 1.770 & 17.699 \\
+14 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+15 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=4; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 12.389 & 0.442 & 11.947 & 0.442 & 0.442 & 0.000 & 54.867 & 0.442 & 54.425 \\
+2 & 5.752 & 0.000 & 5.752 & 0.000 & 0.000 & 0.000 & 56.637 & 0.000 & 56.637 \\
+3 & 0.000 & 0.000 & 0.000 & 7.522 & 0.000 & 7.522 & 0.000 & 0.000 & 0.000 \\
+4 & 2.655 & 0.000 & 2.655 & 11.062 & 0.000 & 11.062 & 0.000 & 0.000 & 0.000 \\
+5 & 37.611 & 0.000 & 37.611 & 60.177 & 0.000 & 60.177 & 29.646 & 0.000 & 29.646 \\
+6 & 5.752 & 0.442 & 5.310 & 52.655 & 0.442 & 52.212 & 14.602 & 0.442 & 14.159 \\
+7 & 0.000 & 0.000 & 0.000 & 34.956 & 0.000 & 34.956 & 0.000 & 0.000 & 0.000 \\
+8 & 7.965 & 0.000 & 7.965 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 30.973 & 0.000 & 30.973 & 25.664 & 0.000 & 25.664 & 38.053 & 0.000 & 38.053 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 20.796 & 0.000 & 20.796 \\
+11 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 & 5.310 & 0.000 & 5.310 \\
+12 & 0.000 & 0.000 & 0.000 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 \\
+13 & 0.885 & 0.000 & 0.885 & 13.274 & 0.000 & 13.274 & 2.655 & 0.000 & 2.655 \\
+14 & 0.442 & 0.000 & 0.442 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=6; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 15.487 & 0.000 & 15.487 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 12.832 & 0.000 & 12.832 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 \\
+5 & 9.735 & 0.000 & 9.735 & 30.973 & 0.000 & 30.973 & 4.425 & 0.000 & 4.425 \\
+6 & 0.442 & 0.000 & 0.442 & 8.407 & 0.000 & 8.407 & 0.442 & 0.000 & 0.442 \\
+7 & 0.000 & 0.000 & 0.000 & 3.097 & 0.000 & 3.097 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 11.504 & 0.000 & 11.504 & 3.097 & 0.000 & 3.097 & 10.619 & 0.000 & 10.619 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=8; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 19.912 & 0.000 & 19.912 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=16; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=32; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_route_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_route_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=2; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+1 & 56.195 & 10.177 & 46.018 & 10.177 & 10.177 & 0.000 & 73.009 & 10.177 & 62.832 \\
+2 & 52.655 & 7.080 & 45.575 & 7.080 & 7.080 & 0.000 & 71.239 & 7.080 & 64.159 \\
+3 & 1.770 & 1.770 & 0.000 & 71.681 & 1.770 & 69.912 & 1.770 & 1.770 & 0.000 \\
+4 & 65.929 & 6.195 & 59.735 & 65.929 & 6.195 & 59.735 & 6.195 & 6.195 & 0.000 \\
+5 & 70.796 & 9.292 & 61.504 & 73.451 & 9.292 & 64.159 & 62.389 & 9.292 & 53.097 \\
+6 & 29.204 & 6.637 & 22.566 & 69.027 & 6.637 & 62.389 & 38.938 & 6.637 & 32.301 \\
+7 & 21.239 & 0.000 & 21.239 & 69.027 & 0.000 & 69.027 & 15.487 & 0.000 & 15.487 \\
+8 & 39.823 & 6.195 & 33.628 & 6.195 & 6.195 & 0.000 & 6.195 & 6.195 & 0.000 \\
+9 & 62.389 & 1.327 & 61.062 & 62.389 & 1.327 & 61.062 & 58.850 & 1.327 & 57.522 \\
+10 & 24.779 & 3.982 & 20.796 & 6.637 & 3.982 & 2.655 & 48.673 & 3.982 & 44.690 \\
+11 & 15.487 & 4.425 & 11.062 & 4.425 & 4.425 & 0.000 & 30.088 & 4.425 & 25.664 \\
+12 & 5.310 & 5.310 & 0.000 & 26.106 & 5.310 & 20.796 & 5.310 & 5.310 & 0.000 \\
+13 & 34.513 & 3.097 & 31.416 & 54.867 & 3.097 & 51.770 & 47.788 & 3.097 & 44.690 \\
+14 & 8.407 & 3.540 & 4.867 & 15.487 & 3.540 & 11.947 & 3.540 & 3.540 & 0.000 \\
+15 & 6.637 & 1.770 & 4.867 & 5.310 & 1.770 & 3.540 & 5.310 & 1.770 & 3.540 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=3; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 55.752 & 7.965 & 47.788 & 7.965 & 7.965 & 0.000 & 71.681 & 7.965 & 63.717 \\
+2 & 52.655 & 5.752 & 46.903 & 5.752 & 5.752 & 0.000 & 71.239 & 5.752 & 65.487 \\
+3 & 0.442 & 0.442 & 0.000 & 69.027 & 0.442 & 68.584 & 0.442 & 0.442 & 0.000 \\
+4 & 57.522 & 4.867 & 52.655 & 57.522 & 4.867 & 52.655 & 4.867 & 4.867 & 0.000 \\
+5 & 70.796 & 7.965 & 62.832 & 73.451 & 7.965 & 65.487 & 62.389 & 7.965 & 54.425 \\
+6 & 29.204 & 5.310 & 23.894 & 69.027 & 5.310 & 63.717 & 38.938 & 5.310 & 33.628 \\
+7 & 18.584 & 0.000 & 18.584 & 69.027 & 0.000 & 69.027 & 12.832 & 0.000 & 12.832 \\
+8 & 39.823 & 4.867 & 34.956 & 4.867 & 4.867 & 0.000 & 4.867 & 4.867 & 0.000 \\
+9 & 59.292 & 0.000 & 59.292 & 59.292 & 0.000 & 59.292 & 58.850 & 0.000 & 58.850 \\
+10 & 23.451 & 2.655 & 20.796 & 5.310 & 2.655 & 2.655 & 47.345 & 2.655 & 44.690 \\
+11 & 14.602 & 3.097 & 11.504 & 3.097 & 3.097 & 0.000 & 30.088 & 3.097 & 26.991 \\
+12 & 2.212 & 2.212 & 0.000 & 24.779 & 2.212 & 22.566 & 2.212 & 2.212 & 0.000 \\
+13 & 33.186 & 1.770 & 31.416 & 50.442 & 1.770 & 48.673 & 47.788 & 1.770 & 46.018 \\
+14 & 6.195 & 2.212 & 3.982 & 13.274 & 2.212 & 11.062 & 2.212 & 2.212 & 0.000 \\
+15 & 3.097 & 0.000 & 3.097 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=4; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 45.575 & 0.442 & 45.133 & 0.442 & 0.442 & 0.000 & 63.717 & 0.442 & 63.274 \\
+2 & 33.628 & 0.000 & 33.628 & 0.000 & 0.000 & 0.000 & 62.389 & 0.000 & 62.389 \\
+3 & 0.000 & 0.000 & 0.000 & 49.558 & 0.000 & 49.558 & 0.000 & 0.000 & 0.000 \\
+4 & 3.982 & 0.000 & 3.982 & 23.894 & 0.000 & 23.894 & 0.000 & 0.000 & 0.000 \\
+5 & 64.159 & 0.000 & 64.159 & 65.929 & 0.000 & 65.929 & 55.752 & 0.000 & 55.752 \\
+6 & 8.850 & 0.442 & 8.407 & 64.159 & 0.442 & 63.717 & 20.354 & 0.442 & 19.912 \\
+7 & 0.442 & 0.000 & 0.442 & 64.159 & 0.000 & 64.159 & 0.442 & 0.000 & 0.442 \\
+8 & 28.319 & 0.000 & 28.319 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 42.478 & 0.000 & 42.478 & 41.593 & 0.000 & 41.593 & 53.982 & 0.000 & 53.982 \\
+10 & 7.080 & 0.000 & 7.080 & 0.885 & 0.000 & 0.885 & 30.088 & 0.000 & 30.088 \\
+11 & 3.982 & 0.000 & 3.982 & 0.000 & 0.000 & 0.000 & 18.142 & 0.000 & 18.142 \\
+12 & 0.000 & 0.000 & 0.000 & 4.867 & 0.000 & 4.867 & 0.000 & 0.000 & 0.000 \\
+13 & 4.425 & 0.000 & 4.425 & 37.168 & 0.000 & 37.168 & 19.469 & 0.000 & 19.469 \\
+14 & 0.442 & 0.000 & 0.442 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 \\
+15 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=6; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 11.062 & 0.000 & 11.062 & 0.000 & 0.000 & 0.000 & 53.540 & 0.000 & 53.540 \\
+2 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 56.637 & 0.000 & 56.637 \\
+3 & 0.000 & 0.000 & 0.000 & 7.080 & 0.000 & 7.080 & 0.000 & 0.000 & 0.000 \\
+4 & 0.885 & 0.000 & 0.885 & 10.619 & 0.000 & 10.619 & 0.000 & 0.000 & 0.000 \\
+5 & 37.611 & 0.000 & 37.611 & 64.159 & 0.000 & 64.159 & 28.761 & 0.000 & 28.761 \\
+6 & 0.885 & 0.000 & 0.885 & 57.965 & 0.000 & 57.965 & 13.274 & 0.000 & 13.274 \\
+7 & 0.000 & 0.000 & 0.000 & 61.062 & 0.000 & 61.062 & 0.000 & 0.000 & 0.000 \\
+8 & 8.407 & 0.000 & 8.407 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 35.398 & 0.000 & 35.398 & 31.416 & 0.000 & 31.416 & 41.593 & 0.000 & 41.593 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 19.912 & 0.000 & 19.912 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 12.832 & 0.000 & 12.832 & 2.212 & 0.000 & 2.212 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=8; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 23.451 & 0.000 & 23.451 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 26.549 & 0.000 & 26.549 \\
+3 & 0.000 & 0.000 & 0.000 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 & 0.000 & 0.000 & 0.000 \\
+5 & 26.106 & 0.000 & 26.106 & 43.363 & 0.000 & 43.363 & 17.699 & 0.000 & 17.699 \\
+6 & 0.000 & 0.000 & 0.000 & 22.124 & 0.000 & 22.124 & 1.770 & 0.000 & 1.770 \\
+7 & 0.000 & 0.000 & 0.000 & 25.221 & 0.000 & 25.221 & 0.000 & 0.000 & 0.000 \\
+8 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 24.779 & 0.000 & 24.779 & 15.487 & 0.000 & 15.487 & 17.257 & 0.000 & 17.257 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 7.080 & 0.000 & 7.080 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 5.752 & 0.000 & 5.752 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=16; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 11.504 & 0.000 & 11.504 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Mesh max\_reliability; M=32; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/mesh_max_reliability_hop_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_mesh_max_reliability_hop_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section{Torus / dijkstra}
+\clearpage\subsection*{Torus dijkstra; M=2; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 19.912 & 0.442 & 19.469 & 11.062 & 0.442 & 10.619 & 6.637 & 0.442 & 6.195 \\
+1 & 10.177 & 10.177 & 0.000 & 15.487 & 10.177 & 5.310 & 11.062 & 10.177 & 0.885 \\
+2 & 18.142 & 7.080 & 11.062 & 43.805 & 7.080 & 36.726 & 34.071 & 7.080 & 26.991 \\
+3 & 49.115 & 1.770 & 47.345 & 54.867 & 1.770 & 53.097 & 37.168 & 1.770 & 35.398 \\
+4 & 22.566 & 6.195 & 16.372 & 7.965 & 6.195 & 1.770 & 35.398 & 6.195 & 29.204 \\
+5 & 11.504 & 9.292 & 2.212 & 26.991 & 9.292 & 17.699 & 30.531 & 9.292 & 21.239 \\
+6 & 34.956 & 6.637 & 28.319 & 24.336 & 6.637 & 17.699 & 26.549 & 6.637 & 19.912 \\
+7 & 15.929 & 0.000 & 15.929 & 3.097 & 0.000 & 3.097 & 31.416 & 0.000 & 31.416 \\
+8 & 24.336 & 6.195 & 18.142 & 16.814 & 6.195 & 10.619 & 17.699 & 6.195 & 11.504 \\
+9 & 44.690 & 1.327 & 43.363 & 20.796 & 1.327 & 19.469 & 3.982 & 1.327 & 2.655 \\
+10 & 21.681 & 3.982 & 17.699 & 14.159 & 3.982 & 10.177 & 5.752 & 3.982 & 1.770 \\
+11 & 5.310 & 4.425 & 0.885 & 33.186 & 4.425 & 28.761 & 24.779 & 4.425 & 20.354 \\
+12 & 7.965 & 5.310 & 2.655 & 7.965 & 5.310 & 2.655 & 8.850 & 5.310 & 3.540 \\
+13 & 11.062 & 3.097 & 7.965 & 32.301 & 3.097 & 29.204 & 5.310 & 3.097 & 2.212 \\
+14 & 9.735 & 3.540 & 6.195 & 3.540 & 3.540 & 0.000 & 6.195 & 3.540 & 2.655 \\
+15 & 26.991 & 1.770 & 25.221 & 11.062 & 1.770 & 9.292 & 13.717 & 1.770 & 11.947 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=3; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.442 & 0.000 & 0.442 & 0.885 & 0.000 & 0.885 & 3.540 & 0.000 & 3.540 \\
+1 & 7.965 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 & 7.965 & 7.965 & 0.000 \\
+2 & 6.195 & 5.752 & 0.442 & 22.566 & 5.752 & 16.814 & 5.752 & 5.752 & 0.000 \\
+3 & 9.292 & 0.442 & 8.850 & 8.850 & 0.442 & 8.407 & 0.442 & 0.442 & 0.000 \\
+4 & 7.965 & 4.867 & 3.097 & 4.867 & 4.867 & 0.000 & 30.531 & 4.867 & 25.664 \\
+5 & 8.407 & 7.965 & 0.442 & 16.814 & 7.965 & 8.850 & 13.274 & 7.965 & 5.310 \\
+6 & 9.292 & 5.310 & 3.982 & 9.735 & 5.310 & 4.425 & 15.487 & 5.310 & 10.177 \\
+7 & 6.195 & 0.000 & 6.195 & 0.442 & 0.000 & 0.442 & 23.009 & 0.000 & 23.009 \\
+8 & 15.487 & 4.867 & 10.619 & 6.195 & 4.867 & 1.327 & 6.195 & 4.867 & 1.327 \\
+9 & 11.062 & 0.000 & 11.062 & 11.947 & 0.000 & 11.947 & 0.885 & 0.000 & 0.885 \\
+10 & 13.274 & 2.655 & 10.619 & 5.752 & 2.655 & 3.097 & 3.097 & 2.655 & 0.442 \\
+11 & 3.097 & 3.097 & 0.000 & 15.487 & 3.097 & 12.389 & 4.425 & 3.097 & 1.327 \\
+12 & 2.212 & 2.212 & 0.000 & 2.655 & 2.212 & 0.442 & 2.212 & 2.212 & 0.000 \\
+13 & 6.195 & 1.770 & 4.425 & 1.770 & 1.770 & 0.000 & 1.770 & 1.770 & 0.000 \\
+14 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 & 2.212 & 2.212 & 0.000 \\
+15 & 12.389 & 0.000 & 12.389 & 0.442 & 0.000 & 0.442 & 1.327 & 0.000 & 1.327 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=4; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+2 & 3.097 & 0.000 & 3.097 & 15.044 & 0.000 & 15.044 & 0.442 & 0.000 & 0.442 \\
+3 & 0.442 & 0.000 & 0.442 & 4.425 & 0.000 & 4.425 & 0.000 & 0.000 & 0.000 \\
+4 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 11.947 & 0.000 & 11.947 \\
+5 & 0.442 & 0.000 & 0.442 & 7.965 & 0.000 & 7.965 & 2.212 & 0.000 & 2.212 \\
+6 & 4.425 & 0.442 & 3.982 & 3.982 & 0.442 & 3.540 & 3.540 & 0.442 & 3.097 \\
+7 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 12.389 & 0.000 & 12.389 \\
+8 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 1.327 & 0.000 & 1.327 & 5.752 & 0.000 & 5.752 & 0.000 & 0.000 & 0.000 \\
+10 & 3.097 & 0.000 & 3.097 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 4.425 & 0.000 & 4.425 & 1.327 & 0.000 & 1.327 \\
+12 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.000 & 0.000 & 0.000 \\
+13 & 0.885 & 0.000 & 0.885 & 0.885 & 0.000 & 0.885 & 0.442 & 0.000 & 0.442 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+15 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=6; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 1.327 & 0.000 & 1.327 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=8; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=16; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=32; route counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_route_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_route_m32.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=2; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m2.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 35.398 & 0.442 & 34.956 & 25.664 & 0.442 & 25.221 & 24.336 & 0.442 & 23.894 \\
+1 & 10.177 & 10.177 & 0.000 & 15.487 & 10.177 & 5.310 & 11.062 & 10.177 & 0.885 \\
+2 & 18.142 & 7.080 & 11.062 & 45.575 & 7.080 & 38.496 & 34.071 & 7.080 & 26.991 \\
+3 & 52.655 & 1.770 & 50.885 & 58.850 & 1.770 & 57.080 & 39.823 & 1.770 & 38.053 \\
+4 & 22.566 & 6.195 & 16.372 & 7.965 & 6.195 & 1.770 & 35.841 & 6.195 & 29.646 \\
+5 & 11.504 & 9.292 & 2.212 & 28.319 & 9.292 & 19.027 & 30.531 & 9.292 & 21.239 \\
+6 & 36.283 & 6.637 & 29.646 & 24.336 & 6.637 & 17.699 & 29.646 & 6.637 & 23.009 \\
+7 & 19.027 & 0.000 & 19.027 & 4.425 & 0.000 & 4.425 & 45.575 & 0.000 & 45.575 \\
+8 & 27.876 & 6.195 & 21.681 & 17.257 & 6.195 & 11.062 & 19.027 & 6.195 & 12.832 \\
+9 & 49.115 & 1.327 & 47.788 & 23.009 & 1.327 & 21.681 & 3.982 & 1.327 & 2.655 \\
+10 & 22.124 & 3.982 & 18.142 & 14.602 & 3.982 & 10.619 & 5.752 & 3.982 & 1.770 \\
+11 & 5.310 & 4.425 & 0.885 & 36.283 & 4.425 & 31.858 & 27.876 & 4.425 & 23.451 \\
+12 & 7.965 & 5.310 & 2.655 & 7.965 & 5.310 & 2.655 & 9.735 & 5.310 & 4.425 \\
+13 & 11.947 & 3.097 & 8.850 & 32.301 & 3.097 & 29.204 & 6.195 & 3.097 & 3.097 \\
+14 & 14.159 & 3.540 & 10.619 & 3.540 & 3.540 & 0.000 & 10.619 & 3.540 & 7.080 \\
+15 & 38.938 & 1.770 & 37.168 & 13.717 & 1.770 & 11.947 & 24.336 & 1.770 & 22.566 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m2.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=3; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m3.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 19.912 & 0.000 & 19.912 & 11.062 & 0.000 & 11.062 & 6.637 & 0.000 & 6.637 \\
+1 & 7.965 & 7.965 & 0.000 & 13.274 & 7.965 & 5.310 & 8.850 & 7.965 & 0.885 \\
+2 & 16.814 & 5.752 & 11.062 & 45.575 & 5.752 & 39.823 & 32.743 & 5.752 & 26.991 \\
+3 & 49.558 & 0.442 & 49.115 & 54.425 & 0.442 & 53.982 & 35.841 & 0.442 & 35.398 \\
+4 & 22.566 & 4.867 & 17.699 & 6.637 & 4.867 & 1.770 & 35.398 & 4.867 & 30.531 \\
+5 & 10.177 & 7.965 & 2.212 & 26.991 & 7.965 & 19.027 & 29.204 & 7.965 & 21.239 \\
+6 & 34.956 & 5.310 & 29.646 & 23.894 & 5.310 & 18.584 & 29.204 & 5.310 & 23.894 \\
+7 & 15.929 & 0.000 & 15.929 & 3.097 & 0.000 & 3.097 & 43.805 & 0.000 & 43.805 \\
+8 & 27.876 & 4.867 & 23.009 & 16.814 & 4.867 & 11.947 & 17.699 & 4.867 & 12.832 \\
+9 & 44.690 & 0.000 & 44.690 & 23.009 & 0.000 & 23.009 & 2.655 & 0.000 & 2.655 \\
+10 & 21.681 & 2.655 & 19.027 & 14.159 & 2.655 & 11.504 & 4.425 & 2.655 & 1.770 \\
+11 & 3.982 & 3.097 & 0.885 & 33.186 & 3.097 & 30.088 & 24.779 & 3.097 & 21.681 \\
+12 & 4.867 & 2.212 & 2.655 & 4.867 & 2.212 & 2.655 & 6.637 & 2.212 & 4.425 \\
+13 & 9.735 & 1.770 & 7.965 & 30.973 & 1.770 & 29.204 & 3.982 & 1.770 & 2.212 \\
+14 & 12.832 & 2.212 & 10.619 & 2.212 & 2.212 & 0.000 & 9.292 & 2.212 & 7.080 \\
+15 & 38.053 & 0.000 & 38.053 & 9.292 & 0.000 & 9.292 & 19.027 & 0.000 & 19.027 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=4; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m4.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 18.584 & 0.000 & 18.584 & 10.177 & 0.000 & 10.177 & 5.752 & 0.000 & 5.752 \\
+1 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 & 0.442 & 0.442 & 0.000 \\
+2 & 3.540 & 0.000 & 3.540 & 23.451 & 0.000 & 23.451 & 0.442 & 0.000 & 0.442 \\
+3 & 8.850 & 0.000 & 8.850 & 8.407 & 0.000 & 8.407 & 0.000 & 0.000 & 0.000 \\
+4 & 3.540 & 0.000 & 3.540 & 0.000 & 0.000 & 0.000 & 30.531 & 0.000 & 30.531 \\
+5 & 0.885 & 0.000 & 0.885 & 14.159 & 0.000 & 14.159 & 7.080 & 0.000 & 7.080 \\
+6 & 8.407 & 0.442 & 7.965 & 8.407 & 0.442 & 7.965 & 13.274 & 0.442 & 12.832 \\
+7 & 6.195 & 0.000 & 6.195 & 0.442 & 0.000 & 0.442 & 24.336 & 0.000 & 24.336 \\
+8 & 11.062 & 0.000 & 11.062 & 2.212 & 0.000 & 2.212 & 1.327 & 0.000 & 1.327 \\
+9 & 11.062 & 0.000 & 11.062 & 13.274 & 0.000 & 13.274 & 0.885 & 0.000 & 0.885 \\
+10 & 10.619 & 0.000 & 10.619 & 3.097 & 0.000 & 3.097 & 0.442 & 0.000 & 0.442 \\
+11 & 0.000 & 0.000 & 0.000 & 15.487 & 0.000 & 15.487 & 2.655 & 0.000 & 2.655 \\
+12 & 0.885 & 0.000 & 0.885 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 \\
+13 & 5.310 & 0.000 & 5.310 & 0.885 & 0.000 & 0.885 & 0.442 & 0.000 & 0.442 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.442 & 0.000 & 0.442 \\
+15 & 24.779 & 0.000 & 24.779 & 0.442 & 0.000 & 0.442 & 1.327 & 0.000 & 1.327 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m4.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=6; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m6.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 13.717 & 0.000 & 13.717 & 0.000 & 0.000 & 0.000 \\
+3 & 0.442 & 0.000 & 0.442 & 4.425 & 0.000 & 4.425 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 9.735 & 0.000 & 9.735 \\
+5 & 0.000 & 0.000 & 0.000 & 4.425 & 0.000 & 4.425 & 0.442 & 0.000 & 0.442 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 1.770 & 0.000 & 1.770 \\
+7 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 15.044 & 0.000 & 15.044 \\
+8 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 1.327 & 0.000 & 1.327 & 5.752 & 0.000 & 5.752 & 0.000 & 0.000 & 0.000 \\
+10 & 3.097 & 0.000 & 3.097 & 1.770 & 0.000 & 1.770 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 1.327 & 0.000 & 1.327 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m6.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=8; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m8.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 5.752 & 0.000 & 5.752 & 0.000 & 0.000 & 0.000 \\
+3 & 0.442 & 0.000 & 0.442 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.212 & 0.000 & 2.212 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 2.655 & 0.000 & 2.655 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m8.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=16; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m16.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m16.csv}{Exact CSV values and sample counts}}
+\end{center}
+\clearpage\subsection*{Torus dijkstra; M=32; hop counting}
+\begin{center}\includegraphics[width=.94\linewidth,height=.48\textheight,keepaspectratio]{figures/atlas/torus_dijkstra_hop_m32.pdf}\captionof{figure}{All three conceptual mapping seeds; common 0--100 percent colour scale.}\end{center}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Core & 42 Tot & 42 Own & 42 Rel & 43 Tot & 43 Own & 43 Rel & 44 Tot & 44 Own & 44 Rel \\
+\midrule
+0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+1 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+2 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+3 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+4 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+6 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+7 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+8 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+9 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+10 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+11 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+12 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+13 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+14 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+15 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+\bottomrule\end{tabular}}
+\captionof{table}{Exact heatmap percentages, with Tot = Own + Rel. Unrounded values are in the CSV.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/heatmap_torus_dijkstra_hop_m32.csv}{Exact CSV values and sample counts}}
+\end{center}

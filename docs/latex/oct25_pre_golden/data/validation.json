@@ -1,0 +1,3581 @@
+{
+  "snapshot": "4aa334542e9b9c8fe7a5f9cc8fe48ee2e4d2fa55",
+  "first_excluded_commit": "44fa139",
+  "source_files": 351,
+  "summary_files": 155,
+  "per_seed_rows": 2210,
+  "aggregate_cells": 177,
+  "validation_checks": 713,
+  "all_passed": true,
+  "spearman_excess_dynamic_wait": {
+    "rho": 0.9090909090909091,
+    "p_exploratory": 1.1711620946369767e-08
+  },
+  "checks": [
+    {
+      "check": "unique policy/seed: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "routing seeds 0-29: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "routing seeds 0-29: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "routing seeds 0-29: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "routing seeds 0-29: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "routing seeds 0-29: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: historical-control",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: historical-control",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: historical-control",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "control exact reproduction: on-demand",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "control exact reproduction: dynamic",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: baseline_layer-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only+delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only+delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: first-hop-only",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_1ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_3ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: layer-delay_6ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start+first-delay_2ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start+first-delay_4ms",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "screen ten seeds: two-hops+predecessor-start",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "five routes + sixteen interventions",
+      "passed": true,
+      "detail": "21"
+    },
+    {
+      "check": "frozen QFT-96 trace dimensions",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: original",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: xy",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: yx",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: shortest_reliable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: max_reliability",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: mix_p25_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: mix_p50_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: mix_p50_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: mix_p50_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: mix_p75_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: rand_shortest_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: rand_shortest_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: rand_shortest_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: o1turn_s1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: o1turn_s2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: o1turn_s3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: concentrate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: avoid_hot1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: avoid_hot2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "same placement endpoints/layers: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "hop count: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=2: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=3: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=4: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=6: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "independent excess M=8: avoid_hot3",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: originalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: original/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: original/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: original/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: originalAdaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: xyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: xy/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: xy/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: xy/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: xyAdaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: yx/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: yx/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: yx/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: yxFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: yx/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: yx/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: yx/Adaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "confirmation thirty seeds: yxAdaptive-25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 0",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 10",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 10",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 10",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 15",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 15",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 15",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 20",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 20",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 20",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 40",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 40",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 40",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 5",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 5",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 5",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 50",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 50",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 50",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: 999999",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: 999999",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: 999999",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_admission_poll",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_admission_poll",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_admission_poll",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm1_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm1_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm1_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm1_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm1_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm1_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm1_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm1_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm1_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm2_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm2_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm2_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm2_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm2_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm2_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm2_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm2_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm2_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm3_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm3_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm3_tm4",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm3_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm3_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm3_tm6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_cm3_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_cm3_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_cm3_tm8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: P2_no_starvation_guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: P2_no_starvation_guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: P2_no_starvation_guard",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: ghzxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: ghz/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: ghz/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: ghz/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bvxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bv/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bv/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bv/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: bmw_quark_cardinalityxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: bmw_quark_cardinality/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: bmw_quark_cardinality/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: bmw_quark_cardinality/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_amporiginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_amporiginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_amporiginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_ampxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_ampxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: vqe_real_ampxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: vqe_real_amp/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: vqe_real_amp/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: vqe_real_amp/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: cdkm_ripple_carry_adderxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: cdkm_ripple_carry_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: cdkm_ripple_carry_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: cdkm_ripple_carry_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstateoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstateoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstateoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstatexyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstatexyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: graphstatexyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: graphstate/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: graphstate/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: graphstate/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: draper_qft_adderxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: draper_qft_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: draper_qft_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: draper_qft_adder/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qftxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qft/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qft/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qft/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: qaoaxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: qaoa/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: qaoa/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: qaoa/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/original/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitoriginalODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/original/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitoriginalFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/original/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitoriginalFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/xy/ODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitxyODG",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/xy/Full-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitxyFull-chain",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/xy/First-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "generalisation three seeds: randomcircuitxyFirst-hop",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/25",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "unique policy/seed: randomcircuit/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "metadata seeds: randomcircuit/30",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "complete + metric v3: randomcircuit/30",
+      "passed": true,
+      "detail": ""
+    }
+  ]
+}

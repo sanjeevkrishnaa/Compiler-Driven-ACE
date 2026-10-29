@@ -1,0 +1,42 @@
+{
+  "qmap_version": "1.0.0",
+  "timestamp_utc": "2026-10-25T13:14:19.547345+00:00",
+  "seed": 42,
+  "seed_path": "42",
+  "command": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/mapper/qmap/__main__.py run --benchmark qft --width 96 --grid 4x4 --topology mesh --qubits-per-core 8 --reserved-ancilla 2 --reliability-min 0.1 --seed 42 --initial-placement oee --placers HQA,T-HQA --hop-count --output results/hqa-vs-thqa-qft96-2026-10-25 --stem qft96",
+  "python": "3.14.0",
+  "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+  "packages": {
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "networkx": "3.6.1",
+    "pytket": "not installed",
+    "qiskit": "2.5.2",
+    "matplotlib": "not installed"
+  },
+  "configuration": {
+    "command": "run",
+    "grid": "4x4",
+    "benchmark": "qft",
+    "qasm": null,
+    "placers": [
+      "HQA",
+      "T-HQA"
+    ],
+    "reliability_min": 0.1,
+    "qubits_per_core": 8,
+    "reserved_ancilla": 2,
+    "topology": "mesh",
+    "placer_config": {
+      "initial_placement": "oee",
+      "lookahead": 8,
+      "lookahead_weight": 1.0,
+      "normalization": "none",
+      "lambda_scaling": "fixed",
+      "allow_eviction": true,
+      "strict": false,
+      "max_rounds": 4
+    },
+    "hop_count": true
+  }
+}

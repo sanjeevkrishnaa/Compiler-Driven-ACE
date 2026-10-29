@@ -1,0 +1,60 @@
+{
+  "on-demand": {
+    "request_latency_mean_ms": {
+      "mean": 1.3388865478934469,
+      "sd": 0.01451732275652997
+    },
+    "request_latency_p95_ms": {
+      "mean": 3.100084375,
+      "sd": 0.11545922863315214
+    },
+    "end_to_end_latency_ms": {
+      "mean": 4056.957903385,
+      "sd": 13.83083381837841
+    },
+    "average_admission_wait_ms": {
+      "mean": 0.008456112168408152,
+      "sd": 0.0012463489798803277
+    },
+    "average_delivered_epr_fidelity": {
+      "mean": 0.949813357734806,
+      "sd": 0.0
+    },
+    "completion_rate": {
+      "mean": 1.0,
+      "sd": 0.0
+    }
+  },
+  "dynamic": {
+    "request_latency_mean_ms": {
+      "mean": 1.080225493427696,
+      "sd": 0.02725286183830336
+    },
+    "request_latency_p95_ms": {
+      "mean": 2.925075,
+      "sd": 0.09575576679761885
+    },
+    "end_to_end_latency_ms": {
+      "mean": 3782.5733668232497,
+      "sd": 14.687562326200045
+    },
+    "average_admission_wait_ms": {
+      "mean": 0.14728738685197368,
+      "sd": 0.00917034042725512
+    },
+    "average_delivered_epr_fidelity": {
+      "mean": 0.9458098595260027,
+      "sd": 0.00026279644677555886
+    },
+    "completion_rate": {
+      "mean": 1.0,
+      "sd": 0.0
+    }
+  },
+  "paired_latency_reductions_percent": [
+    20.342593471469048,
+    16.823867440894514,
+    18.50118437113259,
+    21.591081999245976
+  ]
+}

@@ -1,0 +1,222 @@
+\documentclass[10pt,a4paper,oneside]{report}
+\usepackage[margin=19mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,booktabs,array,longtable,graphicx,caption,xcolor,titlesec,fancyhdr}
+\usepackage[unicode,colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,bookmarksnumbered]{hyperref}
+\titleformat{\chapter}[display]{\normalfont\bfseries}{\large\chaptertitlename\ \thechapter}{7pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{0pt}{15pt}
+\titlespacing*{\section}{0pt}{8pt}{5pt}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}\setlength{\emergencystretch}{2em}
+\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.12}
+\captionsetup{font=small,skip=4pt}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small QFT-96: final experimental results}\fancyhead[R]{\small Compiler-Driven ACE}\fancyfoot[C]{\thepage}\setlength{\headheight}{14pt}
+\newcommand{\repo}{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE}
+\newcommand{\study}{results/qft96_2seed_2026-10-26}
+\newcommand{\dataurl}{\repo/tree/codex/ace-scheduler-correctness/docs/latex/qft96_final/data}
+\newcommand{\datablob}{\repo/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data}
+\hypersetup{pdftitle={QFT-96: complete mesh and torus ACE experiment report},pdfauthor={Compiler-Driven-ACE project}}
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}\centering\vspace*{30mm}
+{\Large Compiler-Driven ACE\par}\vspace{10mm}
+{\Huge\bfseries QFT-96\par}\vspace{6mm}
+{\LARGE Complete mesh and torus experiment report\par}\vspace{8mm}
+{\large Mapping, routing, congestion, shared-memory allocation\par}
+{\large and EPR generation policies\par}\vfill
+\begin{minipage}{.9\linewidth}
+Final measured results for T-HQA QFT-96, five base EPR policies, four mesh routes, torus Dijkstra, seven total-memory capacities, every legal cache allocation and thirteen Dynamic launch variants. The report includes all 210 verified congestion heatmaps, grouped at a readable scale, and graphs with numerical tables and committed CSV links.
+
+Prepared 26 October 2026 (IST). This document presents the completed campaign as one experiment; it is not a chronological account of previous result revisions.
+\end{minipage}\vspace{20mm}\end{titlepage}
+\hypersetup{pageanchor=true}\pagenumbering{roman}\tableofcontents\clearpage\pagenumbering{arabic}
+
+\chapter{Study design, pipeline and methodology}
+\section{Research question and completed experiments}
+This study measures how routing, communication-memory capacity and EPR pre-generation policies affect a 96-qubit QFT workload in a multicore quantum-network simulator. The principal outcomes are request latency, communication makespan and delivered EPR fidelity. Readiness, memory admission waiting, pair utilisation, waste and retries explain the trade-offs.
+
+The completed base campaign contains 1,639 validated jobs and 6,402 policy/physics-seed evaluations. The separate Dynamic launch phase contains 143 validated jobs and 286 evaluations. All included runs complete every requested hop. The complete factor coverage is:
+\begin{center}\small
+\begin{tabular}{p{.25\linewidth}p{.65\linewidth}}\toprule
+Factor & Evaluated levels\\\midrule
+Circuit and mapping & QFT-96; 766 declared layers; T-HQA and OEE initial placement; seed labels 42, 43, 44\\
+Physical architecture & $4\times4$ mesh; $4\times4$ torus\\
+Mesh routing & XY, YX, shortest-reliable, maximum-reliability\\
+Torus routing & Dijkstra only\\
+Total communication memory & $M\in\{2,3,4,6,8,16,32\}$ per core\\
+Cache allowance & Every integer $C=0,\ldots,M-1$; ODG only needs $C=0$\\
+Base EPR policies & ODG, CGP, ACGP, Dynamic full-chain, Dynamic first-hop\\
+Physics seeds & 0 and 1 for each byte-distinct trace/policy cell\\
+Dynamic launch phase & Thirteen registered variants, all routes, $M=4$, $C=3$\\
+Congestion & Fifteen conceptual route artefacts, both counting rules, seven capacities, all sixteen cores\\\bottomrule
+\end{tabular}\captionof{table}{The completed QFT-96 design. No other benchmark is pooled into these results.}\end{center}
+
+\section{Pipeline}
+The pipeline is: QFT circuit $\to$ layer decomposition $\to$ T-HQA placement $\to$ logical $(\ell,q,src,dst)$ migrations $\to$ explicit physical routes $\to$ adjacent-hop request trace $\to$ ACE EPR policies on SeQUeNCe $\to$ validated per-seed records $\to$ tables and figures. The audited placement signature is identical across all fifteen artefacts, including torus: this campaign reuses the mesh-derived T-HQA partition. Logical endpoints therefore stay fixed across both topology and routing choices. Mesh--torus comparisons change the physical graph, route and network configuration together under this common placement.
+
+A qubit's successive hops remain ordered; independent qubits can request pairs concurrently in an active layer. The measured event is EPR delivery for a hop. Computation gates, data-qubit relay-slot occupancy and the final QFT state are not fully simulated by these traces. Consequently, communication makespan is not a full hardware QFT runtime and delivered EPR fidelity is not QFT output-state fidelity.
+
+Fifteen conceptual topology/route/seed artefacts reduce to eleven byte-distinct request traces. Identical XY aliases, for example, are simulated once per physics seed and never counted three times. The record retains conceptual aliases for tracing provenance. Seeds that generate the same placement or route are not independent placement samples.
+
+\clearpage
+\section{Memory, policies and fixed parameters}
+$M$ is the \emph{shared total} number of communication memories per core. It is not a per-neighbour allocation and is distinct from mapper data-qubit slots. $C$ limits cached/prepared EPR occupancy within this total. The autonomous-cache cap follows $C$ in CGP and ACGP; Dynamic uses it for compiler preparation. The generation-capacity setting is $G=\max(1,C)$.
+
+The main memory curves use ODG at $C=0$ and all cached methods at $C=M-1$. Thus both cache allowance and $G$ change with $M$: these curves compare the declared policy configurations, not a pure memory-only intervention. The all-allocation chapter includes every $C$ at fixed $M$ and the complete metric CSVs, so a result cannot be mistaken for a globally optimal allocation.
+
+\begin{center}\small
+\begin{tabular}{p{.22\linewidth}p{.68\linewidth}}\toprule
+Policy & Evaluated behaviour\\\midrule
+ODG & Generate after an eligible request needs an EPR pair; no compiler/autonomous preparation allowance.\\
+CGP & Continuous autonomous neighbour-pair generation with the configured fixed neighbour-selection behaviour.\\
+ACGP & Continuous generation with request-informed adaptive neighbour selection.\\
+Dynamic full-chain & Compiler-directed preparations for the eligible planned chain hops, using the layer-based preparation schedule.\\
+Dynamic first-hop & Keep preparations only for the first hop of each same-qubit, same-layer chain; later hops use physical demand fallback.\\\bottomrule
+\end{tabular}\captionof{table}{The five base policies share the same workload and physical model within each comparison.}\end{center}
+
+\begin{center}\small
+\begin{tabular}{ll}\toprule
+Parameter & Fixed value or rule\\\midrule
+Mapper data slots; initially reserved slots & 8 per core; 2 initially reserved per core\\
+Mapper link-reliability range & 0.1--1.0, derived seeded maps\\
+Preparation trigger; delay & Layer-start; 0 ms in the base phase\\
+Planner lead; Dynamic lookahead & 1 layer; 8 layers\\
+Planner coherence window & 10 layers\\
+Delta setting & 6 layers; fixed-strategy control, not a swept Dynamic objective\\
+Scheduler and admission & Per-qubit; event-driven; starvation guard enabled\\
+Artificial reservation lead & 0 ms; required control guard retained\\
+Compiler reservation; demand window & 1000 ms; 50 ms\\
+Requested fidelity threshold & 0.01\\
+Configured memory fidelity; coherence & 0.95; 1 second\\
+Simulation stop & Stop at workload completion; 200-second safety horizon\\\bottomrule
+\end{tabular}\captionof{table}{Parameters from the frozen execution contract and topology configuration. Planner layers and physical seconds are different quantities.}\end{center}
+
+Internal event time is in picoseconds. Tables convert elapsed durations into milliseconds or seconds. The simulated delay magnitude follows the configured physical/control model; it does not imply that the on-chip hardware or decoherence constants have been independently calibrated. Configured reservation-window lengths are upper booking windows, not automatically the duration for which each resource remains occupied.
+
+\clearpage
+\section{Outcome definitions, aggregation and validation}
+For hop $i$, request latency is $L_i=c_i-a_i$, where eligibility $a_i$ is layer activation for its first hop, or predecessor completion for a later hop, and $c_i$ is EPR delivery. It includes admission waiting, control exchange, retries and generation after eligibility. It excludes storage that happened before eligibility. Parallel request latencies must not be summed to obtain makespan.
+
+\begin{center}\small
+\begin{tabular}{p{.27\linewidth}p{.63\linewidth}}\toprule
+Metric & Definition used in this report\\\midrule
+Mean/median/p95/max & Request distribution within each run; tables then summarise those run-level values. Mean run-p95 is not a pooled percentile across all seeds.\\
+Makespan; throughput & Simulated workload interval through final delivery; completed hop requests divided by this interval. Different routes can have different hop counts.\\
+Admission wait & The event scheduler's explicit pre-admission waiting interval. Generation/service and retry-wait counters are separately recorded and need not form an exact additive decomposition.\\
+Compiler readiness & Fraction of all requests served by a pair physically created before first application submission. Submission and eligibility are different boundaries.\\
+Intended hit; fallback & Intended planned-pair use divided by all requests; fraction not served by a compiler pair. Late compiler use can be an intended hit without being ready.\\
+Compiler waste; expiry & $100(N_{expired}+N_{remaining})/N_{generated}$; expiry is $100N_{expired}/N_{generated}$. Remaining pairs are counted at workload stop.\\
+Protocol waste & The native protocol's separate unused/generated counter. Its accounting population differs from compiler records; the two percentages cannot be added.\\
+Storage; fidelity & Storage among used compiler pairs only; delivered fidelity across delivered EPR pairs; fidelity-at-use among utilised compiler pairs.\\
+Completion & Completed hop requests divided by requested hop requests. All included evaluations have completion fraction one.\\\bottomrule
+\end{tabular}\captionof{table}{Important metric denominators. Counter diagnostics are retained even when constant; n/a denotes absent or inapplicable instrumentation.}\end{center}
+
+Tables report an equally weighted mean and sample SD across distinct trace/physics runs, recomputed directly from per-seed rows. XY and YX have two observations per primary cell; routes with three distinct traces have six. The SD describes this observed mixture, not an independent-circuit population or a 95\% confidence interval. Two physics seeds provide limited statistical precision. Repeated values rounded to zero SD are available unrounded in the linked CSV.
+
+The audit checks the official manifest hash, expected seed rows, full completion, runtime parameters, configuration and trace hashes, each recorded SeQUeNCe identity, metadata source hashes and frozen simulator files at the execution commits. It independently recomputes the saved aggregates. A separate parser verifies trace adjacency, placement replay and each heatmap percentage. The committed per-seed export contains every observation, including results whose original raw job directories are retained only locally.
+
+\chapter{Congestion definitions, verification and grouped heatmaps}
+Congestion here is a \emph{structural trace-demand proxy}, separate from measured temporal occupancy. For each communication-active layer and core, route counting assigns one demand per traversing qubit route; hop counting assigns one per adjacent-hop incidence, so an internal relay is counted twice. Endpoints count once under either definition. Neither proxy is a measured simultaneous-residency trace or a proof of a physical occupancy bound.
+
+For total demand $D$, endpoint demand $E$ and capacity $M$, total overload is $D>M$, own/source--destination overload is $E>M$, and relay-only overload is $E\le M<D$. Own and relay-only are disjoint and exactly partition total overload. Percentages divide by the number of \emph{communication-active layers}, not all 766 declared circuit layers. Zero overload means the selected structural proxy fits the capacity; it does not guarantee zero ACE queueing from cached pairs.
+
+All 210 original heatmap cells were checked against independently parsed request traces: 15 conceptual route artefacts $\times$ 7 capacities $\times$ 2 definitions. Every one of the 3,360 core rows, containing three overload percentages, matches the stored data. Each trace has 226 communication-active layers, which supply the percentage denominator. The following atlas regenerates these verified values as readable groups of three seeds, rather than shrinking 21 original images into a single page. Every group has its exact 16-core table and CSV link. A common 0--100\% colour scale makes pages comparable.
+
+The six overview graphs report overloaded active-layer percentage, overloaded core-layer count and summed excess demand, for both definitions. Their seed SDs refer to three \emph{conceptual reliability seed labels}; repeated XY/YX aliases do not become independent mappings. The atlas retains all aliases for completeness.
+\begin{center}\small\begin{tabular}{llrr}\toprule
+Topology / route & Seed labels & Migrations & Adjacent hops\\\midrule
+Mesh / XY & 42, 43, 44 & 1965 & 3876\\
+Mesh / YX & 42, 43, 44 & 1965 & 3876\\
+Mesh / shortest-reliable & 42, 43, 44 & 1965 & 3876\\
+Mesh / maximum-reliability & 42 & 1965 & 4242\\
+Mesh / maximum-reliability & 43 & 1965 & 5396\\
+Mesh / maximum-reliability & 44 & 1965 & 4774\\
+Torus / Dijkstra & 42, 43, 44 & 1965 & 3186\\\bottomrule
+\end{tabular}\captionof{table}{Validated trace structure. Every conceptual artefact has 766 declared and 226 communication-active layers, with the same T-HQA placement signature. \href{\datablob/trace_structure.csv}{Exact source CSV}.}\end{center}
+\input{generated/congestion_overview}
+\input{generated/congestion}
+
+\chapter{Mesh: routing-specific memory and policy results}
+This chapter begins with latency and follows the same metric order for XY, YX, shortest-reliable and maximum-reliability. Each graph uses total communication memories per core on the horizontal axis and includes all instrumented base policies. Its immediate table provides the exact values and a committed CSV link. All 47 registered outcomes and diagnostic metrics are retained.
+
+XY changes dimension 0 first (row first in the repository's coordinate convention); YX changes dimension 1 first. Shortest-reliable minimises hops and then maximises path reliability. Maximum-reliability maximises the product of link reliabilities, with hop count as a secondary criterion, so it can generate extra hops. Mapper reliability selects paths; these comparisons do not establish a calibrated heterogeneous physical link-success model.
+
+All curves use ODG $C=0$ and cached methods $C=M-1$, with $G=\max(1,C)$. Compiler-specific readiness or waste is n/a for ODG/CGP/ACGP rather than being portrayed as a measured autonomous-cache hit statistic. The native protocol measurements are shown separately. Figure error bars are sample SD, with exact observation counts in each CSV.
+\input{generated/mesh_metrics}
+
+\chapter{Torus: Dijkstra memory and policy results}
+Torus results follow the same metric order, memory slice and policy colours as mesh. Dijkstra is the sole evaluated torus route. The route oracle uses shortest-hop distance with its documented reliability tie-break; the three seeded request traces can therefore differ even when shortest-hop lengths agree.
+
+Torus wraparound adjacency is explicitly checked, including edges absent from a mesh. The placement is held fixed, while the graph, topology configuration and routes change. Torus Dijkstra produces 3,186 adjacent-hop requests; shortest mesh routes produce 3,876. An observed latency or makespan difference therefore includes this changed hop workload and the configured network effects, rather than a single isolated link effect.
+\input{generated/torus_metrics}
+
+\chapter{Every cache allocation at fixed total memory}
+The main memory curves specify a single declared allocation rule. This chapter exposes the full allocation experiment: $C=0,\ldots,M-1$ for all seven $M$ values, every route and all cached policies. ODG is shown as the fixed $C=0$ reference. Its horizontal line is repeated for visual comparison, not independent ODG experiments at fictitious cache allocations.
+
+Each allocation graph and table shows fair mean latency. Its linked CSV includes \emph{all 47 outcomes and diagnostics} for every policy and allocation, including p95, makespan, fidelity, readiness and waste. The complete allocation cube is also available in \href{\datablob/all_allocations_all_metrics.csv}{the full metric CSV}. No allocation is selected after observing the evaluation seeds and presented as an independently validated optimum.
+\input{generated/allocations}
+
+\chapter{Dynamic structural policies and launch sensitivities}
+This experiment fixes $M=4$, $C=3$ and generation capacity 3 and evaluates thirteen registered variants on every distinct route. It changes trigger timing and chain filtering; placement, routing and physical timing are otherwise the same. There are 143 jobs and 286 physics runs. Tables pool exact distinct trace/physics observations using the same rule as the base comparisons.
+
+Layer-start launches preparations on activation of their planned generation layer. Predecessor-start launches a later-hop preparation when its preceding request begins; first hops follow the layer rule. First-hop-only retains just hop position zero of each same-qubit/same-layer chain. Two-hops predecessor-start retains the first two hop positions. Delay settings are timing sensitivities, not independent algorithm families.
+
+\begin{center}\small\begin{tabular}{p{.49\linewidth}p{.41\linewidth}}\toprule
+Variant & Setting\\\midrule
+baseline-layer-start & Full planned chain; layer trigger; no delay\\
+layer-delay-1/2/3/4/6ms & Five separate full-chain layer-delay sensitivities\\
+predecessor-start & Full planned chain; predecessor trigger\\
+predecessor-start-first-delay-2/4ms & Two predecessor-trigger delay sensitivities\\
+first-hop-only & Only the first hop prepared; zero delay\\
+first-hop-only-delay-2/4ms & Two first-hop delay sensitivities\\
+two-hops-predecessor-start & First two hops; predecessor trigger\\\bottomrule
+\end{tabular}\captionof{table}{Thirteen evaluated launch configurations. The table groups delay values for readability; each appears separately in every result table.}\end{center}
+
+The next pages plot sixteen principal performance and quality metrics, including all thirteen variants, with full tables. The linked complete variant CSV retains every recorded metric, including the additional planner/runtime diagnostics shown for base policies. Deeper chain caps $N=3,4$ and a separately trained congestion-threshold policy are not part of this completed campaign and are not presented as measured QFT-96 results.
+\input{generated/variants}
+
+\chapter{Final measured comparison and interpretation}
+The following fixed-budget comparison gives the final $M=4$ results, with cached methods at $C=3$ and ODG at $C=0$. It reports latency and tail latency together with makespan and fidelity. These are directly measured means and sample SDs, not an optimum selected from the all-allocation grid.
+\input{generated/matched}
+
+The first-hop Dynamic policy has lower mean latency than ODG in each listed fixed-budget routing cell, under this workload and physical model. The full-chain policy can have a shorter makespan while retaining higher mean hop latency. This is possible because eligibility-based request intervals and the elapsed completion of parallel chains are different observables. Routing and policy decisions should therefore be judged jointly on latency, makespan, fidelity and resource waste.
+
+More cache use or a higher readiness count is not automatically a better result. Cached EPR pairs can increase admission contention; storage changes delivered fidelity; route length changes the number of hop requests. The detailed memory and allocation curves preserve these trade-offs. The launch sensitivities should be read as an ablation of trigger and preparation choices, rather than as thirteen unrelated algorithms.
+
+The experiment establishes a reproducible QFT-96 comparison. It does not prove universal superiority over ODG, establish optimal parameters for other workloads, or measure a complete distributed-QFT algorithm execution. In particular, the physical parameters are a simulation model, and data-qubit relay occupancy and final algorithm fidelity require additional modelling. The small physics-seed count also limits inference about rare failures and tails. These boundaries are part of the methodology, not missing results to be filled by assumptions.
+
+\appendix
+\chapter{Metric coverage and instrumentation notes}
+The machine-readable \href{\datablob/metric_registry.csv}{metric registry} enumerates all 47 report metrics, units, applicability and figure coverage. The per-seed exports retain all original runner columns as well as derived delivered-hop throughput. Mean latency aliases (arrival/eligible/average-request fields) are retained in the raw export but not plotted repeatedly under different names.
+
+The report includes latency mean, median, p95 and maximum; makespan; mean/max admission wait and waiting fraction; service, retry-wait and reservation counters; completion and throughput; delivered fidelity; generation/use/expiry/remaining counters; compiler readiness, intended use, fallback and late use; waste; storage; planner/runtime preparation diagnostics; and mean/max/min layer latency. Constant-zero diagnostics are preserved as counters, not interpreted as proof that all control operations are instantaneous.
+
+Compiler counters are reported only for Dynamic policies. Native-protocol counters use their own record population and may include protocol-side bookkeeping rather than one logical migration per count. No attempt is made to add native and compiler counts or infer uninstrumented total CGP readiness. Storage and compiler fidelity-at-use are conditional on successful compiler utilisation. The total number of layers is a trace property, not a stochastic performance metric.
+
+Some requested quantities require instrumentation beyond these saved summaries: an isolated aggregate RSVP/start-guard duration, p99 latency, a physical time-series memory-occupancy distribution, and a dedicated starvation-event count are not available as separate verified outcome columns. The reservation-setup counter does not substitute for the complete control guard. Full completion is reported directly; it is not converted into an invented starvation statistic. Empty communication layers can also produce zero minimum layer latency. The complete raw exports preserve the measured fields without fabricating these missing quantities.
+
+The run's safety horizon is not a measured latency. The fidelity acceptance threshold is not the average delivered fidelity. Planner coherence in layers is not physical memory coherence in seconds. Likewise, static congestion capacity is a structural threshold; it does not record transient memory bookings inside ACE. These distinctions prevent the most common misreadings of the graphs.
+
+\chapter{Evidence, files and reproducibility}
+The report's \href{\dataurl}{committed data directory} contains:
+\begin{itemize}
+\item \texttt{per\_seed\_base.csv}: all 6,402 base observations and original runner columns.
+\item \texttt{per\_seed\_variants.csv}: all 286 launch observations.
+\item \texttt{all\_allocations\_all\_metrics.csv}: 1,455 route/memory/allocation/policy aggregates after exact trace deduplication.
+\item \texttt{all\_variants\_all\_metrics.csv}: all 65 route/variant aggregates.
+\item \texttt{congestion\_verified.csv}, \texttt{heatmap\_inventory.csv} and \texttt{trace\_structure.csv}: independent congestion values, original image hashes and input structure.
+\item \texttt{job\_provenance.csv}, \texttt{source\_ledger.csv} and \texttt{validation.json}: execution identities, hashes and validation checks.
+\item A separate numerical CSV for every metric graph and grouped heatmap table.
+\end{itemize}
+The source study is \href{\repo/tree/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26}{the QFT-96 results root}. Its \href{\repo/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/execution_spec.json}{execution contract}, \href{\repo/blob/codex/ace-scheduler-correctness/results/qft96_2seed_2026-10-26/mapping_contract.json}{mapping contract}, manifests, configurations and source lock define the experiment. The report includes only the declared complete memory set through 32; it makes no claim for an uncompleted capacity or policy phase.
+
+The local raw-job directories are keyed by job ID in the base-evaluation and Dynamic-variant subdirectories beneath \texttt{raw/}. Each contains the summary, metadata, command/execution record and logs. Not every raw directory is versioned. The report's committed per-seed exports provide all numerical evidence without depending on a link to an untracked file.
+
+Rebuild from the repository root with the study data available locally:
+\begin{verbatim}
+python -m tools.golden_study.build_qft96_final_report
+cd docs/latex/qft96_final
+tectonic main.tex
+\end{verbatim}
+Use \texttt{--verify-only} for the audit without regenerating figures. The report builder validates records and generates derivative artefacts; it does not run ACE or modify simulator assumptions. It also independently checks dimension-order XY/YX routes and minimum hop counts for shortest-reliable and torus Dijkstra. Maximum-reliability optimality is not independently re-solved by this report audit. The recorded ACE source hashes and clean SeQUeNCe revision identify the simulation implementation. Reproducing physical runs additionally requires that declared environment and the exact job commands.
+\end{document}

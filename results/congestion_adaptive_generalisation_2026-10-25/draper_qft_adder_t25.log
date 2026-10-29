@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.0504745123770993 ms fidelity=0.9439252850237355
+dynamic              seed=1 complete=100.00% latency=1.0127634691717557 ms fidelity=0.9437221479756921
+dynamic              seed=2 complete=100.00% latency=1.1338364976061068 ms fidelity=0.9447407925086125
+Wrote results/congestion_adaptive_generalisation_2026-10-25/draper_qft_adder_t25/summary.csv

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 550" role="img" aria-label="Physical-hop comparison">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="24" y="34" font-family="sans-serif" font-size="22" font-weight="bold">Fresh mapper comparison: T-HQA vs HQA</text>
+<text x="24" y="60" font-family="sans-serif" font-size="14">Topology: mesh; route: xy. Exact values: mapping_comparison.csv.</text>
+<rect x="240" y="76" width="14" height="14" fill="#4C78A8"/><text x="260" y="88" font-family="sans-serif" font-size="13">HQA</text>
+<rect x="370" y="76" width="14" height="14" fill="#F58518"/><text x="390" y="88" font-family="sans-serif" font-size="13">T-HQA</text>
+<text x="228" y="128" text-anchor="end" font-family="sans-serif" font-size="12">bmw_quark_cardinality</text>
+<rect x="240" y="112" width="10.00" height="14" fill="#4C78A8"/><text x="255.00" y="124" font-family="sans-serif" font-size="11">144</text>
+<rect x="240" y="129" width="10.00" height="14" fill="#F58518"/><text x="255.00" y="141" font-family="sans-serif" font-size="11">144</text>
+<text x="228" y="170" text-anchor="end" font-family="sans-serif" font-size="12">bv</text>
+<rect x="240" y="154" width="1.74" height="14" fill="#4C78A8"/><text x="246.74" y="166" font-family="sans-serif" font-size="11">25</text>
+<rect x="240" y="171" width="1.74" height="14" fill="#F58518"/><text x="246.74" y="183" font-family="sans-serif" font-size="11">25</text>
+<text x="228" y="212" text-anchor="end" font-family="sans-serif" font-size="12">cdkm_ripple_carry_adder</text>
+<rect x="240" y="196" width="32.50" height="14" fill="#4C78A8"/><text x="277.50" y="208" font-family="sans-serif" font-size="11">468</text>
+<rect x="240" y="213" width="27.91" height="14" fill="#F58518"/><text x="272.91" y="225" font-family="sans-serif" font-size="11">402</text>
+<text x="228" y="254" text-anchor="end" font-family="sans-serif" font-size="12">draper_qft_adder</text>
+<rect x="240" y="238" width="85.20" height="14" fill="#4C78A8"/><text x="330.20" y="250" font-family="sans-serif" font-size="11">1227</text>
+<rect x="240" y="255" width="78.19" height="14" fill="#F58518"/><text x="323.19" y="267" font-family="sans-serif" font-size="11">1126</text>
+<text x="228" y="296" text-anchor="end" font-family="sans-serif" font-size="12">ghz</text>
+<rect x="240" y="280" width="1.67" height="14" fill="#4C78A8"/><text x="246.67" y="292" font-family="sans-serif" font-size="11">24</text>
+<rect x="240" y="297" width="1.67" height="14" fill="#F58518"/><text x="246.67" y="309" font-family="sans-serif" font-size="11">24</text>
+<text x="228" y="338" text-anchor="end" font-family="sans-serif" font-size="12">graphstate</text>
+<rect x="240" y="322" width="5.28" height="14" fill="#4C78A8"/><text x="250.28" y="334" font-family="sans-serif" font-size="11">76</text>
+<rect x="240" y="339" width="5.21" height="14" fill="#F58518"/><text x="250.21" y="351" font-family="sans-serif" font-size="11">75</text>
+<text x="228" y="380" text-anchor="end" font-family="sans-serif" font-size="12">qaoa</text>
+<rect x="240" y="364" width="209.01" height="14" fill="#4C78A8"/><text x="454.01" y="376" font-family="sans-serif" font-size="11">3010</text>
+<rect x="240" y="381" width="183.87" height="14" fill="#F58518"/><text x="428.87" y="393" font-family="sans-serif" font-size="11">2648</text>
+<text x="228" y="422" text-anchor="end" font-family="sans-serif" font-size="12">qft</text>
+<rect x="240" y="406" width="162.21" height="14" fill="#4C78A8"/><text x="407.21" y="418" font-family="sans-serif" font-size="11">2336</text>
+<rect x="240" y="423" width="130.13" height="14" fill="#F58518"/><text x="375.13" y="435" font-family="sans-serif" font-size="11">1874</text>
+<text x="228" y="464" text-anchor="end" font-family="sans-serif" font-size="12">randomcircuit</text>
+<rect x="240" y="448" width="810.00" height="14" fill="#4C78A8"/><text x="1055.00" y="460" font-family="sans-serif" font-size="11">11665</text>
+<rect x="240" y="465" width="717.72" height="14" fill="#F58518"/><text x="962.72" y="477" font-family="sans-serif" font-size="11">10336</text>
+<text x="228" y="506" text-anchor="end" font-family="sans-serif" font-size="12">vqe_real_amp</text>
+<rect x="240" y="490" width="7.22" height="14" fill="#4C78A8"/><text x="252.22" y="502" font-family="sans-serif" font-size="11">104</text>
+<rect x="240" y="507" width="7.22" height="14" fill="#F58518"/><text x="252.22" y="519" font-family="sans-serif" font-size="11">104</text>
+</svg>

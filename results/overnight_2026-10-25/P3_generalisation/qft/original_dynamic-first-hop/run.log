@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=1.3032942532916334 ms fidelity=0.9481329217727488
+dynamic              seed=1 complete=100.00% latency=1.2603054187270917 ms fidelity=0.9480743430863365
+dynamic              seed=2 complete=100.00% latency=1.2836127399446216 ms fidelity=0.9481011894343258
+Wrote /Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/results/overnight_2026-10-25/P3_generalisation/qft/original_dynamic-first-hop/summary.csv

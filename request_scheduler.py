@@ -19,7 +19,9 @@ two modes.
            period for ever: a livelock, measured in test/test_compiler_scheduler_admission.py.
 ``event``  A request is submitted only when both of its cores have a memory free for its whole
            window, counting the requests already admitted but not yet booked, and the oldest
-           request that fits is admitted first.  A core releasing a booking is what triggers the
+           request that fits is admitted first within each priority class. Ready compiler pairs
+           have priority over non-ready demand by default. A booking release or a pair becoming
+           ready triggers the
            next admission.  Nothing waits holding a memory while it waits for another, so there is
            no hold-and-wait, hence no deadlock; with ``starvation_guard`` a request that cannot
            be admitted yet keeps the free memory it would need, so younger requests cannot take
@@ -31,6 +33,10 @@ table without delay.  That is an assumption about the system, not a measurement.
 Event order within one simulation instant is not defined by SeQUeNCe (its event list is a heap
 ordered by time and priority only), so nothing here relies on one same-instant event running
 before another: whatever must come after is scheduled one picosecond later.
+
+Ready-first is an admission order, not a batch barrier: admit all ready requests that fit,
+then as many ODG requests as the remaining endpoint capacity supports in the same pass.
+An ineligible successor never jumps its predecessor, and admitted work is not preempted.
 
 See docs/plans/ace-request-scheduler-design.md.
 """
@@ -72,9 +78,15 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
     def __init__(self, timeline, name_to_apps: dict, layered_requests: list,
                  pregeneration_time_ms: float, request_duration_ms: float,
                  compiler_controller=None, recorder=None, *, requests: Sequence,
-                 admission: str = "event", starvation_guard: bool = True):
+                 admission: str = "event", starvation_guard: bool = True,
+                 admission_priority: str = "ready-first"):
         if admission not in ADMISSION_MODES:
             raise ValueError(f"admission must be one of {ADMISSION_MODES}, got {admission!r}")
+        if admission_priority not in ("fifo", "ready-first"):
+            raise ValueError("admission_priority must be fifo or ready-first")
+        if admission == "poll" and admission_priority == "ready-first":
+            # Polling submits immediately and cannot order a shared wait queue.
+            admission_priority = "fifo"
         super().__init__(timeline, name_to_apps, layered_requests, pregeneration_time_ms,
                          request_duration_ms, compiler_controller, recorder)
         # The base class has just split the layers into per-core batches when a compiler
@@ -83,6 +95,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.working_layer_origins = list(range(len(layered_requests)))
         self.admission = admission
         self.starvation_guard = starvation_guard
+        self.admission_priority = admission_priority
+        self.admission_decisions = []
 
         self.tuple_by_id = {tuple_[0]: tuple_ for layer in layered_requests for tuple_ in layer}
         self.layer_of, self.predecessor, self.successor = self._plan_chains(requests, layered_requests)
@@ -94,12 +108,17 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
 
         self.waiting: dict[int, int] = {}      # released, not admitted: request id -> time it became eligible
         self.in_flight: set[int] = set()       # admitted, not completed
+        self.handoff_in_flight = set()
         self._admission_scheduled = False
         self._admitting = False
+        if compiler_controller is not None and getattr(compiler_controller, "demand_first", False):
+            compiler_controller.admission_guard = self._can_prepare
         if admission == "event":
             self._require_the_hardware_can_ever_serve(requests)
             for app in name_to_apps.values():
                 app.node.release_observer = self._on_release
+            if compiler_controller is not None:
+                compiler_controller.readiness_observer = self._on_pair_ready
 
     # ------------------------------------------------------------------ planning
     @staticmethod
@@ -189,6 +208,13 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
 
     def _submit_and_arm(self, request, now: int):
         request_id = request[0]
+        self.handoff_in_flight.discard(request_id)
+        if (self.compiler_controller is not None and
+                getattr(self.compiler_controller, "reuse_compiler_memory", False) and
+                self.compiler_controller.request_can_handoff(
+                    request_id, self._reservation_start_time(now),
+                    self._reservation_start_time(now) + self.request_duration)):
+            self.handoff_in_flight.add(request_id)
         self._submit_request(request, now)
         attempt = self.request_retry_count[request_id]
         deadline = self.request_generation_start_times[request_id] + self.request_duration
@@ -215,7 +241,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         """
         free = sum(1 for card in self._cards(name) if not self._overlaps(card, start, end))
         promised = sum(1 for rid in self.in_flight
-                       if name in self.tuple_by_id[rid][1:3] and not self._booked_here(name, rid))
+                       if rid not in self.handoff_in_flight
+                       and name in self.tuple_by_id[rid][1:3] and not self._booked_here(name, rid))
         return free - promised
 
     def _schedule_admission(self, delay_ps: int):
@@ -228,9 +255,25 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         """A core released a booking: some waiting request may now fit."""
         if self.waiting and not self._admitting:
             self._schedule_admission(GRACE_PS)
+        if self.compiler_controller is not None:
+            self.compiler_controller.on_resource_release()
+
+    def _on_pair_ready(self):
+        if self.waiting:
+            self._schedule_admission(GRACE_PS)
+
+    def _can_prepare(self, request) -> bool:
+        """Do not speculate ahead of eligible demand or its unbooked promises."""
+        endpoints = {self.compiler_controller._router_name(request.source_core),
+                     self.compiler_controller._router_name(request.destination_core)}
+        if any(endpoints.intersection(self.tuple_by_id[rid][1:3]) for rid in self.waiting):
+            return False
+        start = self._reservation_start_time(self.timeline.now())
+        return all(self._free_memories(name, start, start + self.request_duration) >= 1
+                   for name in endpoints)
 
     def _try_admit(self):
-        """Admit, oldest first, every waiting request whose two cores each have a memory free."""
+        """Admit eligible ready-pair requests first, then concurrent demand that fits."""
         self._admission_scheduled = False
         if not self.waiting:
             return
@@ -244,21 +287,55 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
                 free[name] = self._free_memories(name, start, end)
             return free[name]
 
+        ready = {rid: (self.compiler_controller is not None and
+                       self.compiler_controller.request_has_ready_pair(rid)) for rid in self.waiting}
+        ordered = sorted(self.waiting, key=lambda rid: (
+            0 if self.admission_priority == "fifo" or ready[rid] else 1,
+            self.waiting[rid], self.position[rid]))
+
         self._admitting = True
         try:
-            for request_id in sorted(self.waiting, key=lambda r: (self.waiting[r], self.position[r])):
+            for request_id in ordered:
                 _, source, destination, need, *_ = self.tuple_by_id[request_id]
-                if available(source) >= need and available(destination) >= need:
-                    free[source] -= need
-                    free[destination] -= need
+                handoff = (ready[request_id] and
+                           getattr(self.compiler_controller, "reuse_compiler_memory", False) and need == 1 and
+                           self.compiler_controller.request_can_handoff(request_id, start, end))
+                if handoff or (available(source) >= need and available(destination) >= need):
+                    bypassed = []
+                    if not ready[request_id]:
+                        for other in self.waiting:
+                            if not ready[other]:
+                                continue
+                            _, a, b, amount, *_ = self.tuple_by_id[other]
+                            if ({source, destination}.intersection((a, b)) and
+                                    available(a) >= amount and available(b) >= amount):
+                                bypassed.append(other)
+                    self.admission_decisions.append(dict(
+                        time_ps=now, request_id=request_id, ready_pair=bool(ready[request_id]),
+                        compiler_handoff=bool(handoff),
+                        bypassed_ready_ids=bypassed))
+                    if not handoff:
+                        free[source] -= need
+                        free[destination] -= need
                     self._admit(request_id, now)
-                elif self.starvation_guard:
+                elif self.starvation_guard or (self.admission_priority == "ready-first" and ready[request_id]):
                     for name in (source, destination):          # keep what it would need
                         if available(name) >= need:
                             free[name] -= need
         finally:
             self._admitting = False
         if self.waiting and not self.in_flight:
+            if (self.compiler_controller is not None and
+                    getattr(self.compiler_controller, "reuse_compiler_memory", False)):
+                blocked = set()
+                for rid in self.waiting:
+                    _, source, destination, need, *_ = self.tuple_by_id[rid]
+                    blocked.update(name for name in (source, destination)
+                                   if self._free_memories(name, start, end) < need)
+                if self.compiler_controller.yield_future_pair_for_progress(
+                        sorted(blocked), self.request_eligible_times):
+                    self._schedule_admission(GRACE_PS)
+                    return
             # Nothing is running whose end could wake the waiters: a booking that blocks them
             # can only end with time, which no event reports.
             self._schedule_admission(RETRY_PERIOD)
@@ -274,6 +351,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.pending_requests.discard(request_id)
         self.pending_request_data.pop(request_id, None)
         self.in_flight.discard(request_id)
+        self.handoff_in_flight.discard(request_id)
 
         following = self.successor[request_id]
         if following is not None:
@@ -306,6 +384,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
             self.recorder.record(RequestRejected(rejected_at, request_id))
         self.in_flight.discard(request_id)
         self.waiting[request_id] = self.request_eligible_times[request_id]
+        self.handoff_in_flight.discard(request_id)
         self._schedule_admission(RETRY_PERIOD)
 
     def _retry_rejected_request(self, request_id: int, attempt: int):

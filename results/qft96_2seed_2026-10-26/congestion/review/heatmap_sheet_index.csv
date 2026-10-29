@@ -1,0 +1,11 @@
+topology,route_policy,variant,mapping_seeds,capacities,heatmaps_per_sheet,sheet
+mesh,xy,route,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__xy__route.png
+mesh,xy,hop,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__xy__hop.png
+mesh,yx,route,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__yx__route.png
+mesh,yx,hop,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__yx__hop.png
+mesh,shortest_reliable,route,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__shortest_reliable__route.png
+mesh,shortest_reliable,hop,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__shortest_reliable__hop.png
+mesh,max_reliability,route,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__max_reliability__route.png
+mesh,max_reliability,hop,42;43;44,2;3;4;6;8;16;32,21,sheet_mesh__max_reliability__hop.png
+torus,dijkstra,route,42;43;44,2;3;4;6;8;16;32,21,sheet_torus__dijkstra__route.png
+torus,dijkstra,hop,42;43;44,2;3;4;6;8;16;32,21,sheet_torus__dijkstra__hop.png

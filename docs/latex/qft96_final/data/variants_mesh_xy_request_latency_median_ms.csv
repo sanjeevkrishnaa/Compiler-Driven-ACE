@@ -1,0 +1,14 @@
+variant,unit,mean,sd,n
+baseline-layer-start,ms,0.900002253,0.0,2
+first-hop-only,ms,0.8000073765,0.14141411051412267,2
+first-hop-only-delay-2ms,ms,1.000025,0.0,2
+first-hop-only-delay-4ms,ms,1.7500437500000001,0.07071951695341946,2
+layer-delay-1ms,ms,1.150018375,0.07071721602795356,2
+layer-delay-2ms,ms,1.200025,0.0,2
+layer-delay-3ms,ms,1.400025375,1.714733944381546e-05,2
+layer-delay-4ms,ms,1.7000375,0.0,2
+layer-delay-6ms,ms,1.350031,0.07071916340002898,2
+predecessor-start,ms,1.550031876,0.0707186316557295,2
+predecessor-start-first-delay-2ms,ms,1.700036999,7.085209948077619e-07,2
+predecessor-start-first-delay-4ms,ms,1.900019251,9.547355759461997e-06,2
+two-hops-predecessor-start,ms,1.250025,0.07071067811865482,2

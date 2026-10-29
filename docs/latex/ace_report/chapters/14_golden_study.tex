@@ -1,0 +1,144 @@
+\chapter{Fresh Golden Study: Contract and Execution Record}
+
+This chapter is the living record for the consolidated experiment program. It is
+kept separate from historical ACE results so that a result cannot be promoted merely
+because it exists in an older output directory. Every accepted observation must have
+an immutable trace hash, a configuration manifest, paired seeds, complete requests,
+and a source CSV listed in the study registry.
+
+The cross-policy headline metric is request eligibility-to-EPR-delivery latency. It
+includes admission wait, reservation, retry, and generation time. It excludes time
+before eligibility during which a cached pair was merely stored. Whole-program cost
+is reported separately as makespan.
+
+\input{generated/golden_study_contract}
+
+The planned capacity study includes constrained settings and deliberately labelled
+architecture-scaling settings. Capacities greater than the current four-memory model
+are sensitivity points, not claims about the baseline hardware. The torus arm uses
+Dijkstra routing only. Mesh routing comparisons hold a placement contract fixed.
+
+The ten workload inputs are frozen QASM files recovered with SHA-256 provenance
+from the historical MQT study archive. They are input evidence, not recycled
+observations: fresh T-HQA placements (and the HQA control placements) are generated
+from this corpus into immutable placement contracts before route expansion. The
+mapping tool has no implicit workload, seed, topology, or routing default. It refuses
+execution when the declared QASM parser is absent rather than selecting another
+parser. At the time the contract scaffold was created, that parser dependency was
+absent, so no mapping result was recorded until the fresh mapper stage could run.
+
+The parser was subsequently installed in the project environment and the fresh
+mapping stage completed. The mapping audit validated all 300 derived route
+artifacts (placement hash, input hash, endpoints, adjacency, migration count and
+hop count). Table~\ref{tab:golden-mapping-control} is the mesh--XY mapper-only
+control; its exact machine-readable source is named in the caption. It does not
+imply an ACE latency result.
+
+\input{generated/golden_mapping_comparison}
+
+Across the ten frozen inputs, T-HQA produces 16,758 mesh--XY hops compared with
+HQA's 19,079, while producing 7,702 versus 7,587 logical migrations. This is a
+trade-off to evaluate with ACE, not a declaration of universal superiority.
+Crucially, the three mapper/reliability seeds yielded one unique placement for each
+workload/algorithm/topology; they must be treated as reliability-route checks, not
+independent placement replications.
+
+The base evaluation matrix is now frozen. Deterministic XY and YX routes are
+byte-identical across the three mapper/reliability seeds, whereas shortest-reliable,
+maximum-reliability, and weighted torus Dijkstra routes change with their seeded
+reliability maps. Exact trace-hash deduplication therefore leaves 110 distinct traces
+from 150 conceptual aliases. Table~\ref{tab:golden-execution-plan} records the full
+base workload after enumerating all registered memory allocations and 30 paired
+physics seeds.
+
+\input{generated/golden_execution_plan}
+
+The congestion-adaptive threshold remains a separate training-only decision. It
+will enumerate every behaviorally distinct observed layer-activity threshold using
+seeds 30--39, freeze one rule, and only then evaluate seeds 0--29. This chapter
+contains no performance conclusion until the corresponding raw CSV files and
+validation records exist.
+
+The first accepted matrix slice is the zero-cache boundary for GHZ on mesh--XY
+with two communication memories per core. Table~\ref{tab:golden-progress-zero} is
+generated directly from the validated raw job directories. Its five policies are
+expected to match because no policy may retain a pre-generated pair when $C=0$;
+this is a boundary invariant, not evidence that the policies are equivalent at
+positive cache capacity.
+
+\input{generated/golden_execution_progress}
+
+Table~\ref{tab:golden-progress-positive} is the first positive-cache comparison.
+On this sparse GHZ trace, full-chain Dynamic has the lowest mean latency and
+makespan; its mean latency is 50.10\% below ODG. First-hop Dynamic is 42.58\%
+below ODG, and CGP/ACGP are 21.66\% below ODG. This one cell is evidence that the
+implementations can benefit from pre-generation, but it is not a cross-workload
+or routing conclusion.
+
+The remainder of the GHZ mesh--XY capacity sweep is now complete for every total
+memory value and every legal compiler allocation. The analysis first validates the
+entire triangular $(M,C)$ grid and all 30 seeds, then reports the lowest observed
+mean-latency allocation for each policy and $M$. This is a descriptive envelope of
+the registered grid, not a claim that evaluation data have trained a universally
+optimal allocation. Figure~\ref{fig:golden-ghz-xy-all-allocations} retains all
+allocation points so that the envelope cannot hide an adverse region.
+
+\input{generated/golden_ghz_mesh_xy_memory_sweep}
+
+Dynamic full-chain reaches its latency floor with two compiler memories: from
+$M=3$ onward its mean request latency is 0.46320~ms, 66.11\% below ODG, with
+100\% intended-request hits, no on-demand fallback, and no observed compiler or
+protocol waste. Dynamic first-hop saturates with one compiler memory at
+0.78488~ms because its intended hit rate is 62.5\% and its fallback rate is
+37.5\%. At $M\geq16$, CGP and ACGP reach 0.46250~ms, only 0.00069~ms (about
+0.15\%) below Dynamic full-chain, but their delivered fidelity is approximately
+0.852--0.854 rather than 0.94159. They also require at least 13--17 compiler
+memories in these observed plateaus. Thus Dynamic full-chain is the strongest
+latency--capacity--fidelity trade-off in this sparse slice, while the high-capacity
+CGP/ACGP point has the absolute minimum latency. No cross-workload claim follows
+until the remaining registered slices are complete.
+
+The second complete slice repeats the same exhaustive memory grid for BV without
+changing the simulator or physical parameters.
+
+\input{generated/golden_bv_mesh_xy_memory_sweep}
+
+For BV, Dynamic full-chain reaches the exact 0.44400~ms latency floor and
+736.10~ms makespan with $C=2$ from $M=3$ onward. This is 67.05\% below the
+1.34737~ms ODG request latency. Its intended-request hit rate is 100\%, its
+on-demand fallback rate is zero, and no compiler or protocol waste is observed.
+CGP and ACGP first tie that latency at $M=32$, using $C=18$; at $M=64$ their
+smallest tied allocations are respectively 17 and 15. Their corresponding
+delivered fidelity is approximately 0.781--0.782, roughly 0.160 below Dynamic
+full-chain's 0.94168. At the latency-minimum points in
+Table~\ref{tab:golden-bv-xy-envelope}, CGP/ACGP protocol waste spans
+58.36--71.79\%, while Dynamic full-chain has zero observed protocol and compiler
+waste. Unlike GHZ, CGP and ACGP differ at intermediate capacities, demonstrating
+why conclusions must be checked workload by workload.
+
+\section{QFT-96 study location}
+
+QFT-96 is a separate 96-qubit mapper-generated circuit, not the 48-qubit
+\texttt{qft} workload in the frozen ten-workload corpus. The complete QFT-only
+scope, route audit, simulator matrix, Dynamic launch-policy variants, progress
+ledger and QFT figures are kept together in the final Chapter~\ref{ch:qft96-focus}.
+The material there is the authoritative QFT-96 record; the general Golden-study
+chapters before it are historical context and are not additional QFT runs.
+
+\section{Registered MQT Bench QPE extension}
+
+The frozen ten-workload base matrix is not mutated when a new benchmark is added.
+Instead, the separately versioned QPE extension uses MQT Bench's \texttt{qpeexact}
+factory at 48 logical qubits. Its generated OpenQASM has an immutable SHA-256
+digest, and records a circuit depth of 143 and 1,293 operations. Fresh HQA and
+T-HQA placements were generated for all three mapper seeds and both topologies;
+the mapping audit validated all 30 route artifacts for endpoint correctness,
+adjacency, input hash and partition provenance. Mesh evaluates XY, YX,
+shortest-reliable and maximum-reliability; torus uses Dijkstra only. The execution
+plan below has 15 conceptual aliases, 11 exact-hash-distinct traces, 3,058 runner
+jobs and 180,840 policy-seed simulations. It is a controlled extension, not a
+retroactive change to the base-study denominator. The distinct MQT Bench
+\texttt{qpeinexact} factory is deliberately not silently conflated with this exact
+QPE benchmark.
+
+\input{generated/golden_qpe_extension_execution_plan}

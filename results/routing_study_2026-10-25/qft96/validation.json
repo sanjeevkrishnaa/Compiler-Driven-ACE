@@ -1,0 +1,94 @@
+{
+  "xy": {
+    "partition_equals_contract": true,
+    "logical_migrations": 1770,
+    "physical_hops": 4954,
+    "hop_histogram": {
+      "1": 448,
+      "2": 420,
+      "3": 309,
+      "4": 333,
+      "5": 153,
+      "6": 107
+    },
+    "max_core_relay_visits": null,
+    "relay_visits": 3184,
+    "busiest_relay_core": [
+      9,
+      424
+    ],
+    "same_keys_as_original": true,
+    "routes_identical_to_original": 1013,
+    "routes_different_from_original": 757,
+    "hop_count_differs_from_original": 0
+  },
+  "yx": {
+    "partition_equals_contract": true,
+    "logical_migrations": 1770,
+    "physical_hops": 4954,
+    "hop_histogram": {
+      "1": 448,
+      "2": 420,
+      "3": 309,
+      "4": 333,
+      "5": 153,
+      "6": 107
+    },
+    "max_core_relay_visits": null,
+    "relay_visits": 3184,
+    "busiest_relay_core": [
+      6,
+      427
+    ],
+    "same_keys_as_original": true,
+    "routes_identical_to_original": 1013,
+    "routes_different_from_original": 757,
+    "hop_count_differs_from_original": 0
+  },
+  "shortest_reliable": {
+    "partition_equals_contract": true,
+    "logical_migrations": 1770,
+    "physical_hops": 4954,
+    "hop_histogram": {
+      "1": 448,
+      "2": 420,
+      "3": 309,
+      "4": 333,
+      "5": 153,
+      "6": 107
+    },
+    "max_core_relay_visits": null,
+    "relay_visits": 3184,
+    "busiest_relay_core": [
+      9,
+      961
+    ],
+    "same_keys_as_original": true,
+    "routes_identical_to_original": 825,
+    "routes_different_from_original": 945,
+    "hop_count_differs_from_original": 0
+  },
+  "max_reliability": {
+    "partition_equals_contract": true,
+    "logical_migrations": 1770,
+    "physical_hops": 5070,
+    "hop_histogram": {
+      "1": 406,
+      "2": 414,
+      "3": 345,
+      "4": 335,
+      "5": 159,
+      "6": 111
+    },
+    "max_core_relay_visits": null,
+    "relay_visits": 3300,
+    "busiest_relay_core": [
+      9,
+      1019
+    ],
+    "same_keys_as_original": true,
+    "routes_identical_to_original": 770,
+    "routes_different_from_original": 1000,
+    "hop_count_differs_from_original": 58
+  }
+}

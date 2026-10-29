@@ -1,0 +1,75 @@
+\section*{Mesh / xy}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency ms & p95 ms & Makespan s & Delivered F \\
+\midrule
+ODG & $1.327\pm0.006$ & $3.100\pm0.141$ & $4.033\pm0.031$ & $0.9498\pm0.0000$ \\
+ACGP & $1.908\pm0.079$ & $5.600\pm0.283$ & $4.075\pm0.028$ & $0.9262\pm0.0004$ \\
+CGP & $1.803\pm0.075$ & $5.150\pm0.495$ & $4.006\pm0.031$ & $0.9271\pm0.0004$ \\
+Dynamic first & $1.141\pm0.058$ & $2.900\pm0.283$ & $3.928\pm0.029$ & $0.9472\pm0.0000$ \\
+Dynamic full & $1.335\pm0.020$ & $4.050\pm0.212$ & $3.830\pm0.048$ & $0.9438\pm0.0002$ \\
+\bottomrule\end{tabular}}
+\captionof{table}{M=4; ODG C=0, cached methods C=3. These are final measured results, not policy-selected optima.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/matched_m4_c3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section*{Mesh / yx}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency ms & p95 ms & Makespan s & Delivered F \\
+\midrule
+ODG & $1.326\pm0.001$ & $3.200\pm0.000$ & $4.036\pm0.032$ & $0.9498\pm0.0000$ \\
+ACGP & $1.854\pm0.055$ & $5.250\pm0.212$ & $4.037\pm0.032$ & $0.9262\pm0.0006$ \\
+CGP & $1.828\pm0.019$ & $5.300\pm0.000$ & $4.055\pm0.006$ & $0.9265\pm0.0003$ \\
+Dynamic first & $1.192\pm0.025$ & $3.000\pm0.283$ & $3.993\pm0.058$ & $0.9473\pm0.0000$ \\
+Dynamic full & $1.414\pm0.282$ & $4.250\pm0.919$ & $3.908\pm0.207$ & $0.9437\pm0.0004$ \\
+\bottomrule\end{tabular}}
+\captionof{table}{M=4; ODG C=0, cached methods C=3. These are final measured results, not policy-selected optima.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/matched_m4_c3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section*{Mesh / shortest\_reliable}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency ms & p95 ms & Makespan s & Delivered F \\
+\midrule
+ODG & $1.337\pm0.005$ & $3.133\pm0.103$ & $4.064\pm0.029$ & $0.9498\pm0.0000$ \\
+ACGP & $2.035\pm0.109$ & $5.581\pm0.424$ & $4.258\pm0.060$ & $0.9303\pm0.0007$ \\
+CGP & $2.106\pm0.066$ & $5.850\pm0.164$ & $4.307\pm0.070$ & $0.9305\pm0.0006$ \\
+Dynamic first & $1.160\pm0.010$ & $2.917\pm0.133$ & $3.985\pm0.026$ & $0.9473\pm0.0001$ \\
+Dynamic full & $1.427\pm0.036$ & $4.200\pm0.155$ & $3.998\pm0.031$ & $0.9438\pm0.0001$ \\
+\bottomrule\end{tabular}}
+\captionof{table}{M=4; ODG C=0, cached methods C=3. These are final measured results, not policy-selected optima.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/matched_m4_c3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section*{Mesh / max\_reliability}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency ms & p95 ms & Makespan s & Delivered F \\
+\midrule
+ODG & $1.362\pm0.032$ & $3.200\pm0.000$ & $4.321\pm0.164$ & $0.9498\pm0.0000$ \\
+ACGP & $2.162\pm0.120$ & $5.956\pm0.585$ & $4.598\pm0.214$ & $0.9321\pm0.0018$ \\
+CGP & $2.183\pm0.142$ & $5.900\pm0.551$ & $4.661\pm0.244$ & $0.9334\pm0.0020$ \\
+Dynamic first & $1.257\pm0.083$ & $3.100\pm0.155$ & $4.256\pm0.188$ & $0.9481\pm0.0004$ \\
+Dynamic full & $1.693\pm0.164$ & $5.033\pm0.509$ & $4.390\pm0.214$ & $0.9442\pm0.0002$ \\
+\bottomrule\end{tabular}}
+\captionof{table}{M=4; ODG C=0, cached methods C=3. These are final measured results, not policy-selected optima.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/matched_m4_c3.csv}{Exact CSV values and sample counts}}
+\end{center}
+\section*{Torus / dijkstra}
+\begin{center}{\scriptsize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Policy & Latency ms & p95 ms & Makespan s & Delivered F \\
+\midrule
+ODG & $1.326\pm0.008$ & $3.067\pm0.103$ & $3.666\pm0.014$ & $0.9498\pm0.0000$ \\
+ACGP & $1.973\pm0.072$ & $5.273\pm0.173$ & $3.837\pm0.046$ & $0.9299\pm0.0008$ \\
+CGP & $2.022\pm0.059$ & $5.388\pm0.045$ & $3.858\pm0.042$ & $0.9304\pm0.0013$ \\
+Dynamic first & $1.054\pm0.024$ & $2.750\pm0.122$ & $3.555\pm0.025$ & $0.9463\pm0.0001$ \\
+Dynamic full & $1.113\pm0.073$ & $3.200\pm0.363$ & $3.523\pm0.045$ & $0.9440\pm0.0002$ \\
+\bottomrule\end{tabular}}
+\captionof{table}{M=4; ODG C=0, cached methods C=3. These are final measured results, not policy-selected optima.}
+{\footnotesize\href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/qft96_final/data/matched_m4_c3.csv}{Exact CSV values and sample counts}}
+\end{center}

@@ -1,0 +1,107 @@
+\clearpage\subsection{Supplied route}
+\begin{center}\includegraphics[width=\linewidth,height=0.44\textheight,keepaspectratio]{figures/launch_original.pdf}\captionof{figure}{Every launch-policy screen, including unsuccessful delays and predecessor triggers.}\end{center}
+
+\begin{center}\small
+\begin{longtable}{lrrr}
+\caption{Timing results; mean $\pm$ SD, 10 seeds.}\\
+\toprule
+Variant & Latency ms & p95 ms & Makespan s \\
+\midrule\endfirsthead
+\toprule
+Variant & Latency ms & p95 ms & Makespan s \\
+\midrule\endhead
+first-hop-only & $1.426 \pm 0.043$ & $3.610 \pm 0.202$ & $4.224 \pm 0.023$ \\
+first-hop-only+delay 2ms & $1.625 \pm 0.075$ & $4.020 \pm 0.239$ & $4.378 \pm 0.064$ \\
+two-hops+predecessor-start & $2.318 \pm 0.116$ & $6.300 \pm 0.634$ & $4.843 \pm 0.098$ \\
+first-hop-only+delay 4ms & $2.571 \pm 0.224$ & $6.750 \pm 0.984$ & $5.084 \pm 0.158$ \\
+baseline layer-start & $2.573 \pm 0.103$ & $8.480 \pm 0.579$ & $4.709 \pm 0.086$ \\
+layer-delay 1ms & $2.599 \pm 0.132$ & $8.520 \pm 0.649$ & $4.728 \pm 0.095$ \\
+layer-delay 2ms & $2.751 \pm 0.083$ & $8.710 \pm 0.423$ & $4.848 \pm 0.052$ \\
+layer-delay 6ms & $2.796 \pm 0.120$ & $8.820 \pm 0.418$ & $5.091 \pm 0.089$ \\
+predecessor-start & $2.833 \pm 0.155$ & $7.760 \pm 0.844$ & $5.196 \pm 0.089$ \\
+predecessor-start+first-delay 2ms & $2.884 \pm 0.176$ & $7.790 \pm 0.706$ & $5.252 \pm 0.114$ \\
+layer-delay 3ms & $2.899 \pm 0.147$ & $8.840 \pm 0.793$ & $5.008 \pm 0.105$ \\
+predecessor-start+first-delay 4ms & $3.173 \pm 0.137$ & $8.420 \pm 0.651$ & $5.448 \pm 0.077$ \\
+layer-delay 4ms & $3.219 \pm 0.199$ & $9.690 \pm 0.894$ & $5.243 \pm 0.118$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/launch_screen.csv}{Complete CSV: launch\_screen}. }
+
+\clearpage
+\begin{center}\small
+\begin{longtable}{lrrr}
+\caption{Readiness, compiler waste and delivered fidelity for the same screen.}\\
+\toprule
+Variant & Ready frac. & Waste \% & Delivered F \\
+\midrule\endfirsthead
+\toprule
+Variant & Ready frac. & Waste \% & Delivered F \\
+\midrule\endhead
+first-hop-only & $0.193 \pm 0.001$ & $0.467 \pm 0.199$ & $0.9483 \pm 0.0000$ \\
+first-hop-only+delay 2ms & $0.154 \pm 0.008$ & $2.958 \pm 0.631$ & $0.9491 \pm 0.0000$ \\
+two-hops+predecessor-start & $0.178 \pm 0.013$ & $4.344 \pm 0.583$ & $0.9484 \pm 0.0001$ \\
+first-hop-only+delay 4ms & $0.039 \pm 0.004$ & $18.405 \pm 1.829$ & $0.9497 \pm 0.0000$ \\
+baseline layer-start & $0.434 \pm 0.016$ & $0.518 \pm 0.127$ & $0.9432 \pm 0.0003$ \\
+layer-delay 1ms & $0.412 \pm 0.014$ & $0.746 \pm 0.200$ & $0.9441 \pm 0.0003$ \\
+layer-delay 2ms & $0.333 \pm 0.025$ & $1.727 \pm 0.376$ & $0.9454 \pm 0.0003$ \\
+layer-delay 6ms & $0.130 \pm 0.008$ & $6.108 \pm 0.741$ & $0.9479 \pm 0.0002$ \\
+predecessor-start & $0.154 \pm 0.006$ & $7.732 \pm 0.363$ & $0.9487 \pm 0.0001$ \\
+predecessor-start+first-delay 2ms & $0.136 \pm 0.008$ & $8.682 \pm 0.654$ & $0.9490 \pm 0.0001$ \\
+layer-delay 3ms & $0.264 \pm 0.021$ & $2.987 \pm 0.496$ & $0.9464 \pm 0.0003$ \\
+predecessor-start+first-delay 4ms & $0.076 \pm 0.005$ & $14.604 \pm 0.971$ & $0.9494 \pm 0.0001$ \\
+layer-delay 4ms & $0.163 \pm 0.011$ & $6.639 \pm 0.683$ & $0.9474 \pm 0.0003$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/launch_screen.csv}{Complete CSV: launch\_screen}. }
+
+\clearpage\subsection{XY route}
+\begin{center}\includegraphics[width=\linewidth,height=0.44\textheight,keepaspectratio]{figures/launch_xy.pdf}\captionof{figure}{Every launch-policy screen, including unsuccessful delays and predecessor triggers.}\end{center}
+
+\begin{center}\small
+\begin{longtable}{lrrr}
+\caption{Timing results; mean $\pm$ SD, 10 seeds.}\\
+\toprule
+Variant & Latency ms & p95 ms & Makespan s \\
+\midrule\endfirsthead
+\toprule
+Variant & Latency ms & p95 ms & Makespan s \\
+\midrule\endhead
+first-hop-only & $1.193 \pm 0.015$ & $2.960 \pm 0.151$ & $4.126 \pm 0.022$ \\
+first-hop-only+delay 2ms & $1.422 \pm 0.070$ & $3.560 \pm 0.299$ & $4.311 \pm 0.056$ \\
+baseline layer-start & $1.459 \pm 0.077$ & $4.280 \pm 0.278$ & $4.059 \pm 0.070$ \\
+layer-delay 1ms & $1.566 \pm 0.063$ & $4.560 \pm 0.222$ & $4.153 \pm 0.050$ \\
+two-hops+predecessor-start & $1.806 \pm 0.117$ & $4.800 \pm 0.514$ & $4.536 \pm 0.068$ \\
+layer-delay 2ms & $1.812 \pm 0.100$ & $5.190 \pm 0.332$ & $4.341 \pm 0.067$ \\
+layer-delay 6ms & $2.004 \pm 0.079$ & $5.600 \pm 0.469$ & $4.596 \pm 0.041$ \\
+layer-delay 3ms & $2.016 \pm 0.062$ & $5.530 \pm 0.211$ & $4.511 \pm 0.044$ \\
+first-hop-only+delay 4ms & $2.213 \pm 0.055$ & $5.930 \pm 0.211$ & $4.870 \pm 0.055$ \\
+layer-delay 4ms & $2.215 \pm 0.062$ & $5.960 \pm 0.288$ & $4.660 \pm 0.054$ \\
+predecessor-start & $2.295 \pm 0.092$ & $6.200 \pm 0.350$ & $4.819 \pm 0.058$ \\
+predecessor-start+first-delay 2ms & $2.357 \pm 0.058$ & $6.350 \pm 0.255$ & $4.870 \pm 0.035$ \\
+predecessor-start+first-delay 4ms & $2.540 \pm 0.088$ & $6.550 \pm 0.295$ & $5.004 \pm 0.051$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/launch_screen.csv}{Complete CSV: launch\_screen}. }
+
+\clearpage
+\begin{center}\small
+\begin{longtable}{lrrr}
+\caption{Readiness, compiler waste and delivered fidelity for the same screen.}\\
+\toprule
+Variant & Ready frac. & Waste \% & Delivered F \\
+\midrule\endfirsthead
+\toprule
+Variant & Ready frac. & Waste \% & Delivered F \\
+\midrule\endhead
+first-hop-only & $0.226 \pm 0.004$ & $0.469 \pm 0.138$ & $0.9481 \pm 0.0000$ \\
+first-hop-only+delay 2ms & $0.169 \pm 0.007$ & $2.726 \pm 0.445$ & $0.9490 \pm 0.0000$ \\
+baseline layer-start & $0.506 \pm 0.027$ & $0.456 \pm 0.141$ & $0.9440 \pm 0.0002$ \\
+layer-delay 1ms & $0.449 \pm 0.036$ & $0.846 \pm 0.230$ & $0.9453 \pm 0.0003$ \\
+two-hops+predecessor-start & $0.182 \pm 0.013$ & $4.129 \pm 0.526$ & $0.9484 \pm 0.0001$ \\
+layer-delay 2ms & $0.352 \pm 0.032$ & $1.690 \pm 0.347$ & $0.9467 \pm 0.0002$ \\
+layer-delay 6ms & $0.121 \pm 0.007$ & $7.729 \pm 0.571$ & $0.9488 \pm 0.0001$ \\
+layer-delay 3ms & $0.266 \pm 0.013$ & $3.136 \pm 0.298$ & $0.9476 \pm 0.0002$ \\
+first-hop-only+delay 4ms & $0.037 \pm 0.004$ & $18.740 \pm 1.894$ & $0.9497 \pm 0.0000$ \\
+layer-delay 4ms & $0.186 \pm 0.016$ & $5.695 \pm 0.612$ & $0.9481 \pm 0.0002$ \\
+predecessor-start & $0.159 \pm 0.015$ & $8.267 \pm 1.027$ & $0.9487 \pm 0.0001$ \\
+predecessor-start+first-delay 2ms & $0.140 \pm 0.008$ & $9.348 \pm 0.899$ & $0.9491 \pm 0.0000$ \\
+predecessor-start+first-delay 4ms & $0.074 \pm 0.009$ & $15.644 \pm 2.151$ & $0.9495 \pm 0.0001$ \\
+\bottomrule\end{longtable}\end{center}
+{\footnotesize \href{https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/codex/ace-scheduler-correctness/docs/latex/oct25_pre_golden/data/launch_screen.csv}{Complete CSV: launch\_screen}. }

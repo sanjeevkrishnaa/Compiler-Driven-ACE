@@ -1,0 +1,9 @@
+strategy,seed,events,completed_requests,violations
+on-demand,6,38760,3876,0
+dynamic,6,57960,3876,0
+on-demand,7,38760,3876,0
+dynamic,7,57960,3876,0
+on-demand,8,38760,3876,0
+dynamic,8,57960,3876,0
+on-demand,9,38760,3876,0
+dynamic,9,57960,3876,0

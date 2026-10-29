@@ -1,74 +1,101 @@
 # Compiler-Driven ACE
 
-Physical ACE/SeQUeNCe experiments for on-demand, continuous, adaptive continuous,
+Physical ACE/SeQUeNCe experiments for on-demand, continuous, adaptive-continuous,
 and compiler-directed EPR generation in multicore quantum architectures.
 
-The compiler path supports request-specific one-shot preparation, fixed and
-dynamic scheduling, physical fallback, dependency-preserving communication
-batches, safe reservation release, and retry-inclusive latency accounting.
+The current compiler path uses full-chain preparation, ready-first event
+admission, and ownership handoff of a prepared pair's existing communication
+memory. Latency is completion minus eligibility, including admission, control
+and retries; no preparation window is subtracted.
+These metrics measure EPR delivery. Data-qubit teleportation gates, destination
+data-memory occupancy, and local reset/transfer costs are not simulated.
 
-## Compiler experiments
+## Start here
 
-ACE currently runs against the local **SeQUeNCe 0.8.1** checkout. It is not
-compatible with the separate native SeQUeNCe 1.0.0 fork used for the
-shared-pool/congestion experiments. Run ACE through the checked-in launcher;
-it pins the imported simulator and refuses to run against the wrong checkout.
+- [Current compiler implementation and results](docs/research/compiler-pregeneration/compiler-memory-handoff-2026-10-28.md)
+- [Source-backed pair consumption, memory lifecycle and metric scope](docs/research/compiler-pregeneration/pair-consumption-research-2026-10-28.md)
+- [Seven-route QFT/Draper/QAOA comparison and congestion heatmaps](docs/research/routing/heavy-workloads-2026-10-28/README.md)
+- [Compiler study history and metric changes](docs/research/compiler-pregeneration/README.md)
+- [Documentation index](docs/README.md)
+- [Project structure](docs/project-structure.md)
+- [Committed handoff evidence](results/compiler_memory_handoff_2026-10-28/README.md)
+
+## Run the full-chain comparison
+
+Use SeQUeNCe 0.8.1 at commit
+`cf5283cdfd6692a82a090d15fb09fbc01bd322fc` in your Python environment or on
+PYTHONPATH. The dependency is separate from this repository; preserve the exact
+revision when comparing results.
 
 ```powershell
+$env:PYTHONPATH = 'C:/path/to/pinned-SeQUeNCe'
+python -m tools.compiler_study.run_full_chain_latency --compiler-memories 4 --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
+```
+
+The preset keeps four physical communication memories per core, a two-layer
+minimum lead, all-hop eligibility, ready-first admission and physical audits.
+Use `--dry-run` to inspect the complete command. The simulator entry point is
+`run_trace_comparison.py`; the [compiler tools guide](tools/compiler_study/README.md)
+describes policy sweeps and aggregation. The historical extra-slot consumption
+path remains available through `--compiler-pair-consumption swap`.
+
+## Pinned runtime launcher
+
+The checked-in shell launcher pins the imported SeQUeNCe 0.8.1 checkout and
+rejects other versions, including the separate native SeQUeNCe 1.0.0 fork.
+Run it from a POSIX shell such as Bash:
+
+```bash
 tools/run_ace.sh -B run_trace_comparison.py --trace data/tracegen/qft16_seed101.txt --strategies on-demand,fixed,dynamic --seeds 0,1,2 --total-memories 4 --compiler-memories 3 --output output/compiler_study
 ```
 
-By default the launcher expects a `.venv` in this checkout and a sibling
-`../SeQUeNCe-0.8.1` directory. Override those deliberately with `ACE_PYTHON`
-and `SEQUENCE_ROOT` only for another verified SeQUeNCe 0.8.1 checkout; the
-launcher rejects every other version. Each new ACE experiment records the actual Python
-executable, imported `sequence.__file__`, SeQUeNCe version/commit and ACE
-commit in its metadata.
+Its defaults are this checkout's `.venv` and sibling `../SeQUeNCe-0.8.1`.
+Set `ACE_PYTHON` and `SEQUENCE_ROOT` explicitly for another verified 0.8.1
+installation. New experiments record the actual Python executable, imported
+`sequence.__file__`, SeQUeNCe version/commit and ACE commit in metadata, in
+addition to the EPR-delivery scope and source fingerprints.
 
-The repaired dynamic policy reduced mean request latency by 37.52% on the
-original QFT-96 trace (three matched seeds) and 55.70% on the small random
-trace (ten matched seeds), compared with the corrected ODG baseline. These
-are workload-specific results; storage still reduces EPR fidelity.
-See [validation and reproduction](docs/reports/compiler-repair-validation.md).
+Earlier workload-specific measurements remain in the
+[compiler repair validation report](docs/reports/compiler-repair-validation.md).
 
-## Workload congestion study
+## Repository layout
 
-`tools/congestion_study` runs actual MQT Bench circuits or supplied QASM through
-the provided HQA/TraceGen mapper, exports mappings and traces, and produces
-offline HTML/CSV/JSON hotspot reports. Physical simulation is optional.
+| Directory | Contents |
+| --- | --- |
+| Root Python modules | Simulator protocols, memory/reservation ownership, request scheduling and existing runners. |
+| [tools/compiler_study/](tools/compiler_study/README.md) | Full-chain comparison, policy experiments and audited summaries. |
+| [tools/routing_research/](tools/routing_research/README.md) | Fixed-placement routing experiments, analysis and annotated congestion heatmaps. |
+| tools/ | Other mapping, congestion, verification and frozen-study workflows, grouped by purpose. |
+| [docs/](docs/README.md) | Current guides, research, historical reports and LaTeX sources. |
+| config/final_config/ | Physical mesh and torus configurations. |
+| data/, data_direct_map/, real_benchmarks/ | Existing trace and benchmark inputs. |
+| [examples/](examples/README.md) | Small request-format examples. |
+| [test/](test/README.md) | Regression tests and compatibility-preserved request fixtures. |
+| mapper/ | Vendored mapper and its provenance; see [mapper/PROVENANCE.md](mapper/PROVENANCE.md). |
+| [results/](results/README.md) | Versioned experiment evidence, manifests, validated results and reports. |
+| output/ | Ignored local simulations, diagnostics and temporary files. |
 
-```powershell
-python -m pip install -r tools/congestion_study/requirements.txt
-python tools/congestion_study/run_study.py --mapper-dir C:/path/to/tracegen --workloads bmw_quark_cardinality qft draper_qft_adder bv qaoa ghz cdkm_ripple_carry_adder vqe_real_amp graphstate randomcircuit --seeds 42 43 44 --output output/congestion_study
+Simulator modules and fixture paths retain their established locations. Frozen
+result logs and reports are evidence and remain versioned; scratch console dumps
+and rebuildable caches are not part of the maintained source tree.
+
+## Verify
+
+With the pinned dependency available:
+
+```text
+python -B -m unittest discover -s test -v
+python -B -m unittest discover -s test -p "test_compiler*.py" -v
 ```
 
-Defaults: 4x4 mesh, 128 total physical qubits, four communication memories/core,
-dynamic preparation, and 48 logical circuit qubits. Each core initially has
-three occupied data slots, one spare data slot for migration, and four
-communication slots. The hardware budget is explicit and configurable.
+The committed handoff study includes 32 full-trace policy/seed runs with physical
+ownership and ordering audits. Its figures apply to QFT-96 and the documented
+layer timing model, with the fidelity/storage tradeoff reported explicitly.
 
-- [Study tool and options](tools/congestion_study/README.md)
-- [Ten-workload findings](docs/reports/mqt-congestion-study.md)
-- [Complete study archive, including raw per-core data](results/congestion/mqt_ten_workload_congestion_results.zip)
-- [Compact cross-workload table](results/congestion/aggregate_workloads.csv)
+## Other workflows
 
-## Tests
-
-```powershell
-python -B -m unittest discover -s test -p 'test_compiler*.py' -v
-python -B -m unittest discover -s test -p 'test_congestion*.py' -v
-python -B -m unittest discover -s tools/congestion_study/tests -v
-```
-
-Compiler lifecycle tests require the compatible SeQUeNCe fork and its physical
-dependencies. The characterization unit tests use the Python standard library.
-
-## Documentation
-
-See the [documentation index](docs/README.md) for current results, research
-notes and protocol reference. Generated
-simulation output, logs and caches are ignored; curated results live in `results/`.
-
-Research foundations:
-[Design and Simulation of the Adaptive Continuous Entanglement Generation Protocol](https://arxiv.org/abs/2502.01964),
-[Adaptive, Continuous Entanglement Generation for Quantum Networks](https://ieeexplore.ieee.org/document/9798130).
+- [MQT workload congestion pipeline](tools/congestion_study/README.md)
+- [Ten-workload congestion findings](docs/reports/mqt-congestion-study.md)
+- [Frozen golden-study contract](docs/research/golden-study/README.md)
+- [Original QFT-96 final report](docs/latex/qft96_final/README.md)
+- [Historical October 25 report](docs/latex/oct25_pre_golden/README.md)

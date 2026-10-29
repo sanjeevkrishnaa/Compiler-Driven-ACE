@@ -244,6 +244,7 @@ def _candidate_layers(
     strategy: str,
     delta_layers: int,
     dynamic_lookahead_layers: int,
+    lead_layers: int = 1,
 ) -> tuple[int, ...]:
     if strategy == "on-demand":
         return ()
@@ -251,7 +252,7 @@ def _candidate_layers(
         return (request.layer - delta_layers,)
     if strategy == "dynamic":
         lower = max(0, request.layer - dynamic_lookahead_layers)
-        return tuple(range(request.layer - 1, lower - 1, -1))
+        return tuple(range(request.layer - lead_layers, lower - 1, -1))
     raise ValueError(f"unknown compiler strategy {strategy!r}")
 
 
@@ -264,15 +265,44 @@ def plan_preparations(
     coherence_time_layers: float,
     delta_layers: int = 2,
     dynamic_lookahead_layers: int = 8,
-) -> tuple[tuple[ScheduledPreparation, ...], int, int]:
+    lead_layers: int = 1,
+    planning_mode: str = "offline",
+) -> tuple[tuple[ScheduledPreparation, ...], int, int | None]:
     """Plan request-specific preparations under per-layer memory limits."""
 
-    if compiler_memories_per_core < 1 or generation_capacity_per_core < 1:
-        raise ValueError("compiler memory and generation capacities must be positive")
+    if planning_mode not in ("offline", "runtime"):
+        raise ValueError("planning_mode must be offline or runtime")
+    if compiler_memories_per_core < 0:
+        raise ValueError("compiler memory capacity must be non-negative")
+    if generation_capacity_per_core < 1:
+        raise ValueError("generation capacity must be positive")
     if coherence_time_layers <= 0 or delta_layers < 1 or dynamic_lookahead_layers < 1:
         raise ValueError("coherence and lookahead values must be positive")
+    if not 1 <= lead_layers <= dynamic_lookahead_layers:
+        raise ValueError("the planner lead must lie between 1 and the lookahead")
     if strategy == "on-demand":
         return (), 0, 0
+    if compiler_memories_per_core == 0:
+        # Zero compiler-reserved memories is a valid experimental boundary.
+        # No preparation can be admitted, so every request must fall back to
+        # runtime/on-demand generation rather than aborting the experiment.
+        return (), len(trace.requests), 0
+
+    if planning_mode == "runtime":
+        # These are launch candidates, not capacity reservations. Let physical
+        # timecards and the unchanged per-core compiler quota admit them as
+        # capacity frees. Unlike the offline planner, do not discard a request
+        # just because another pair occupied its logical-layer interval.
+        scheduled = []
+        for request in trace.requests:
+            candidates = _candidate_layers(request, strategy, delta_layers,
+                                           dynamic_lookahead_layers, lead_layers)
+            chosen = next((g for g in candidates
+                           if g >= 0 and request.layer - g < coherence_time_layers), None)
+            if chosen is not None:
+                scheduled.append(ScheduledPreparation(request.request_id, chosen))
+        # No offline peak exists: actual occupancy is enforced by timecards.
+        return tuple(scheduled), len(trace.requests) - len(scheduled), None
 
     memory_load: defaultdict[tuple[int, int], int] = defaultdict(int)
     generation_load: defaultdict[tuple[int, int], int] = defaultdict(int)
@@ -281,7 +311,7 @@ def plan_preparations(
     for request in trace.requests:
         chosen: int | None = None
         for generation_layer in _candidate_layers(
-            request, strategy, delta_layers, dynamic_lookahead_layers
+            request, strategy, delta_layers, dynamic_lookahead_layers, lead_layers
         ):
             if generation_layer < 0:
                 continue

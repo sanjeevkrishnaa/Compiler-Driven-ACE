@@ -1,0 +1,6 @@
+dynamic              seed=0 complete=100.00% latency=2.599629674696205 ms fidelity=0.9431898670663746
+dynamic              seed=1 complete=100.00% latency=2.537697623439645 ms fidelity=0.942995257470237
+dynamic              seed=2 complete=100.00% latency=2.4605461401015343 ms fidelity=0.9432409521472559
+dynamic              seed=3 complete=100.00% latency=2.5344477061830846 ms fidelity=0.9429847538826486
+dynamic              seed=4 complete=100.00% latency=2.626072955292087 ms fidelity=0.942721902301203
+Wrote results/why_xy_2026-10-25/per_core/original_dynamic_run/summary.csv

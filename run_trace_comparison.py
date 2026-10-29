@@ -5,6 +5,10 @@ ACE physical simulator, mesh, request manager, memory count, request window,
 and random seeds.  ``continuous`` and ``adaptive-continuous`` are ACE's
 autonomous cache protocols; ``fixed`` and ``dynamic`` are compiler-directed
 one-shot preparation policies.
+
+Requests deliver entangled memory pairs to a terminal benchmark consumer.
+They do not simulate data-qubit teleportation, its local gates, destination
+data-memory occupancy, or reset latency. Reported times are EPR delivery times.
 """
 
 from __future__ import annotations
@@ -13,10 +17,10 @@ import argparse
 import hashlib
 import csv
 import json
+import os
 from contextlib import redirect_stdout
 from dataclasses import replace
 from datetime import datetime, timezone
-from io import StringIO
 from pathlib import Path
 from statistics import fmean
 
@@ -66,6 +70,8 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         coherence_time_layers=args.coherence_time_layers,
         delta_layers=args.delta_layers,
         dynamic_lookahead_layers=args.dynamic_lookahead_layers,
+        lead_layers=getattr(args, "planner_lead_layers", 1),
+        planning_mode=getattr(args, "planning_mode", "offline"),
     )
     return {
         "requests": trace.requests,
@@ -77,6 +83,15 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         "compiler_memories_per_core": 0 if strategy == "on-demand" else args.compiler_memories,
         "fidelity": args.fidelity_threshold,
         "reservation_duration_ms": args.compiler_reservation_ms,
+        "trigger": getattr(args, "preparation_trigger", "layer-start"),
+        "trigger_delay_ms": getattr(args, "preparation_delay_ms", 0.0),
+        "chain_hops_prepared": getattr(args, "chain_hops_prepared", None),
+        "predecessor_distance": getattr(args, "predecessor_distance", 1),
+        "congestion_threshold": getattr(args, "congestion_threshold", None),
+        "refill_on_release": getattr(args, "refill_on_release", False),
+        "demand_first": getattr(args, "demand_first", False),
+        "borrow_compiler_pairs": getattr(args, "borrow_compiler_pairs", False),
+        "reuse_compiler_memory": getattr(args, "compiler_pair_consumption", "handoff") == "handoff",
     }
 
 
@@ -119,6 +134,7 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
     completed = stats["completed_requests"]
     row = {
         "strategy": strategy,
+        "latency_scope": "entanglement_delivery",
         "seed": seed,
         "requests": request_count,
         "completed_requests": completed,
@@ -164,6 +180,7 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
     # Compiler-only fields.  Every one of these is None for a strategy with no
     # compiler controller, which is a meaningful absence rather than a zero.
     compiler_fields = (
+        "compiler_progress_yields",
         "scheduled_preparations", "planner_blocked_preparations",
         "planner_peak_compiler_memory_per_core", "runtime_admission_attempts",
         "runtime_launched_preparations", "runtime_accepted_preparations",
@@ -199,8 +216,36 @@ def main() -> None:
     parser.add_argument("--seeds", default="0")
     parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--compiler-memories", type=int, default=3)
+    parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
+                        help="handoff delivers the existing pair in place (default); swap explicitly models a separate application communication slot")
+    parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
+                        help="runtime queues all full-chain candidates; physical quotas/timecards enforce capacity")
+    parser.add_argument("--refill-on-release", action="store_true")
+    parser.add_argument("--borrow-compiler-pairs", action="store_true",
+                        help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
+    parser.add_argument("--demand-first", action="store_true",
+                        help="defer speculative admission when eligible demand needs either endpoint")
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
+    parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
+                        help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
+    parser.add_argument("--preparation-delay-ms", type=float, default=0.0,
+                        help="launch delay after the planned generation layer activates (first hops under predecessor-start)")
+    parser.add_argument("--planner-lead-layers", type=int, default=1,
+                        help="the planner tries the layer this many before the request first, then earlier ones (default 1: the layer before)")
+    parser.add_argument("--predecessor-distance", type=int, default=1,
+                        help="predecessor-start launches a hop when the hop this many positions earlier in its chain begins")
+    chain = parser.add_mutually_exclusive_group()
+    chain.add_argument("--chain-hops-prepared", type=int, default=None,
+                       help="prepare only the first N hops of each qubit's chain")
+    chain.add_argument("--all-chain-hops", action="store_const", const=None, dest="chain_hops_prepared",
+                       help="explicitly prepare all hops of each qubit's chain")
+    congestion = parser.add_mutually_exclusive_group()
+    congestion.add_argument("--congestion-threshold", type=int, default=None,
+                            help="prepare only the first hop of a chain whose original layer has more than this many "
+                                 "hop-requests; other chains get the full chain")
+    congestion.add_argument("--no-congestion-threshold", action="store_const", const=None,
+                            dest="congestion_threshold", help="explicitly disable congestion filtering")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
@@ -214,15 +259,30 @@ def main() -> None:
                              "different qubits concurrent (docs/plans/ace-request-scheduler-design.md)")
     parser.add_argument("--admission", choices=("poll", "event"), default="event",
                         help="per-qubit scheduler only")
+    parser.add_argument("--admission-priority", choices=("fifo", "ready-first"), default="ready-first")
     parser.add_argument("--autonomous-cache-follows-compiler-memories", action="store_true",
                         help="CGP/ACGP cache at most --compiler-memories pairs per core (default: the config file's fixed adaptive_max_memory)")
     parser.add_argument("--stop-after-workload", action="store_true",
                         help="end the simulation 1 ms after the last request completes (default: run to --stop-time-s); per-qubit only")
-    parser.add_argument("--no-starvation-guard", action="store_true", help="per-qubit event admission only")
-    parser.add_argument("--max-layers", type=int)
+    starvation = parser.add_mutually_exclusive_group()
+    starvation.add_argument("--starvation-guard", action="store_false", dest="no_starvation_guard",
+                            help="explicitly enable the per-qubit event-admission starvation guard")
+    starvation.add_argument("--no-starvation-guard", action="store_true", dest="no_starvation_guard",
+                            help="explicitly disable the per-qubit event-admission starvation guard")
+    parser.set_defaults(no_starvation_guard=False)
+    layers_group = parser.add_mutually_exclusive_group()
+    layers_group.add_argument("--max-layers", type=int)
+    layers_group.add_argument("--all-layers", action="store_const", const=None, dest="max_layers",
+                              help="explicitly execute the complete trace")
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--audit-events", action="store_true",
+                        help="check physical ownership and hop/layer ordering; save per-request timing")
+    parser.add_argument("--allow-incomplete-audit", action="store_true",
+                        help="diagnostic runs: report incomplete workloads while still enforcing physical/order invariants")
     args = parser.parse_args()
+    if (args.demand_first or args.refill_on_release) and args.scheduler != "per-qubit":
+        parser.error("demand-first/refill-on-release require the per-qubit scheduler")
 
     strategies = _csv_values(args.strategies)
     invalid = set(strategies) - ALL_STRATEGIES
@@ -248,13 +308,18 @@ def main() -> None:
     if declared != args.topology:
         parser.error(f"--topology {args.topology} needs a {args.topology} topology file, but {args.config} is a {declared}")
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
-    scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard}
+    scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard,
+                          "admission_priority": args.admission_priority}
                          if args.scheduler == "per-qubit" else None)
     args.output.mkdir(parents=True, exist_ok=True)
 
     summary: list[dict] = []
     for seed in seeds:
         for strategy in strategies:
+            recorder = None
+            if args.audit_events:
+                from execution_events import ListRecorder
+                recorder = ListRecorder()
             compiler_spec = (
                 _compiler_spec(args, trace, columns, strategy)
                 if strategy in COMPILER_STRATEGIES else None
@@ -276,9 +341,12 @@ def main() -> None:
                     serialize_conflicts=True,
                     scheduler=args.scheduler, request_plan=trace.requests,
                     scheduler_options=scheduler_options,
+                    recorder=recorder,
                 )
             else:
-                with redirect_stdout(StringIO()):
+                # Quiet physical runs emit many diagnostics. Discard them as a
+                # stream rather than retaining an unbounded in-memory StringIO.
+                with open(os.devnull, "w", encoding="utf-8") as sink, redirect_stdout(sink):
                     result = run(
                         str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                         args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
@@ -289,7 +357,33 @@ def main() -> None:
                         serialize_conflicts=True,
                         scheduler=args.scheduler, request_plan=trace.requests,
                         scheduler_options=scheduler_options,
+                        recorder=recorder,
                     )
+            if recorder is not None:
+                from dataclasses import asdict
+                from invariants import RequestInfo, check_events
+                info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order)
+                        for r in trace.requests}
+                violations = check_events(recorder.events, info, require_completion=not args.allow_incomplete_audit,
+                                          submission_after_predecessor=args.scheduler == "per-qubit")
+                (args.output / f"audit_{strategy}_{seed}.json").write_text(
+                    json.dumps({"events": len(recorder.events),
+                                "completion_required": not args.allow_incomplete_audit,
+                                "completed_requests": result["stats"]["completed_requests"],
+                                "total_requests": len(trace.requests),
+                                "violations": [asdict(v) for v in violations]}, indent=2))
+                if violations:
+                    raise RuntimeError(f"physical audit failed: {violations[:3]}")
+                decisions = result["request_manager"].admission_decisions
+                (args.output / f"admission_{strategy}_{seed}.json").write_text(json.dumps(decisions))
+                if args.admission_priority == "ready-first" and any(d["bypassed_ready_ids"] for d in decisions):
+                    raise RuntimeError("ODG bypassed a ready request that could be admitted")
+                _write_csv(args.output / f"timing_{strategy}_{seed}.csv",
+                           [{"request_id": rid, **parts} for rid, parts in
+                            result["stats"]["timing_breakdown"].items()])
+                if result["compiler_metrics"] is not None:
+                    _write_csv(args.output / f"pairs_{strategy}_{seed}.csv",
+                               result["compiler_metrics"]["epr_utilization_trace"])
             row = _row(strategy, seed, result, len(trace.requests), trace.requests)
             summary.append(row)
             print(
@@ -302,10 +396,15 @@ def main() -> None:
     (args.output / "metadata.json").write_text(json.dumps({
         "created_at": datetime.now(timezone.utc).isoformat(),
             "metric_version": 3,
-            "implementation_version": 4,
+            "implementation_version": 5,
+            "latency_scope": "entanglement_delivery",
+            "application_model": "terminal_entanglement_consumer",
+            "data_teleportation_simulated": False,
+            "data_memory_occupancy_simulated": False,
+            "data_teleportation_gate_and_reset_times_modeled": False,
             "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
             "source_sha256": {name: hashlib.sha256((Path(__file__).resolve().parent / name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'runtime_provenance.py']},
+                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py', 'runtime_provenance.py']},
             "readiness_definition": "physical creation strictly before first application submission",
         "runtime": runtime_provenance(Path(__file__).resolve().parent),
         "trace": str(args.trace.resolve()),

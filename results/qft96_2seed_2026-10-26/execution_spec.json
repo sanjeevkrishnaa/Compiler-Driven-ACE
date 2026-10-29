@@ -1,0 +1,68 @@
+{
+  "schema": "golden-study-execution-v1",
+  "study_id": "qft96-mesh-torus-2026-10-26-two-evaluation-seeds",
+  "phase": "base-evaluation",
+  "repository_root": "../..",
+  "source_lock": "manifests/base-evaluation_source-lock.json",
+  "mapping_audit": "validation/mapping_audit.csv",
+  "trace_path_template": "traces/placements/{topology}/{mapping_algorithm}/{workload}/seed_{mapping_seed}/routes/{route_policy}/requests.txt",
+  "trace_selector": {
+    "mapping_algorithm": "T-HQA",
+    "required_workload_count": 1,
+    "workloads": ["qft96"],
+    "mapping_seeds": [42, 43, 44],
+    "topology_routes": {
+      "mesh": ["xy", "yx", "shortest_reliable", "max_reliability"],
+      "torus": ["dijkstra"]
+    },
+    "deduplicate_exact_trace_hashes": true,
+    "deduplication_rule": "Execute one representative per byte-identical trace; retain all conceptual mapping and route aliases."
+  },
+  "physics_seeds": {
+    "training": [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
+    "evaluation": [0, 1],
+    "rule": "Training and evaluation seeds are disjoint. Base-evaluation jobs use only evaluation seeds."
+  },
+  "topology_configs": {
+    "mesh": "config/final_config/grid_4x4_ace_3.json",
+    "torus": "config/final_config/grid_4x4_torus_ace_3.json"
+  },
+  "memory": {
+    "total_memories_per_core": [2, 3, 4, 6, 8, 16, 32],
+    "excluded_after_scope_revision": [64],
+    "scope_revision": "On 2026-10-26 the user approved excluding M=64 from the official complete matrix; already completed M=64 outputs remain archived but are not aggregated.",
+    "compiler_allocations": "every integer from 0 through total_memories_per_core - 1",
+    "generation_capacity_rule": "max(1, compiler_memories_per_core)"
+  },
+  "execution_groups": [
+    {"id": "ODG", "runner_strategies": ["on-demand"], "compiler_allocations": [0], "chain_hops_prepared": null, "congestion_threshold": null},
+    {"id": "CGP_ACGP_DYNAMIC_FULL", "runner_strategies": ["continuous", "adaptive-continuous", "dynamic"], "compiler_allocations": "all", "chain_hops_prepared": null, "congestion_threshold": null},
+    {"id": "DYNAMIC_FIRST_HOP", "runner_strategies": ["dynamic"], "compiler_allocations": "all", "chain_hops_prepared": 1, "congestion_threshold": null}
+  ],
+  "adaptive_congestion_policy": {
+    "status": "separate-training-phase-required",
+    "selection_rule": "Enumerate distinct thresholds from training traces only, select on seeds 30..39 and freeze before evaluation.",
+    "prohibited": "Do not select a threshold from evaluation seeds 0 and 1."
+  },
+  "runner_parameters": {
+    "mesh": "4x4",
+    "delta_layers": 6,
+    "preparation_trigger": "layer-start",
+    "preparation_delay_ms": 0.0,
+    "planner_lead_layers": 1,
+    "predecessor_distance": 1,
+    "dynamic_lookahead_layers": 8,
+    "coherence_time_layers": 10.0,
+    "fidelity_threshold": 0.01,
+    "pregeneration_buffer_ms": 0.0,
+    "compiler_reservation_ms": 1000.0,
+    "request_duration_ms": 50.0,
+    "stop_time_s": 200.0,
+    "scheduler": "per-qubit",
+    "admission": "event",
+    "autonomous_cache_follows_compiler_memories": true,
+    "stop_after_workload": true,
+    "starvation_guard": true,
+    "max_layers": null
+  }
+}

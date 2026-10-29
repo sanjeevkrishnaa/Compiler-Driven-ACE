@@ -1,0 +1,30 @@
+% Generated from dynamic_variants_metrics.csv; do not edit by hand.
+\begin{landscape}
+\begin{longtable}{llrrrrrr}
+\caption{Structural Dynamic-policy comparison at $M=4,C=3$. Delay sensitivity variants remain in the linked source CSV but are not treated as separate algorithms. Values are means $\pm$ sample SD across the available validated trace--physics observations.}\label{tab:qft96-structural-variants}\\
+\toprule
+Variant & Route & $n$ & Latency (ms) & p95 (ms) & Makespan (s) & Fidelity & Hit rate \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Route & $n$ & Latency (ms) & p95 (ms) & Makespan (s) & Fidelity & Hit rate \\
+\midrule
+\endhead
+Layer-start baseline & Mesh max-reliability & 6 & 1.693 $\pm$ 0.164 & 5.033 $\pm$ 0.509 & 4.390 $\pm$ 0.214 & 0.9442 & 0.460 \\
+Layer-start baseline & Mesh shortest-reliable & 6 & 1.427 $\pm$ 0.036 & 4.200 $\pm$ 0.155 & 3.998 $\pm$ 0.031 & 0.9438 & 0.562 \\
+Layer-start baseline & Mesh xy & 2 & 1.335 $\pm$ 0.020 & 4.050 $\pm$ 0.212 & 3.830 $\pm$ 0.048 & 0.9438 & 0.609 \\
+Layer-start baseline & Mesh yx & 2 & 1.414 $\pm$ 0.282 & 4.250 $\pm$ 0.919 & 3.908 $\pm$ 0.207 & 0.9437 & 0.586 \\
+Layer-start baseline & Torus dijkstra & 6 & 1.113 $\pm$ 0.073 & 3.200 $\pm$ 0.363 & 3.523 $\pm$ 0.045 & 0.9440 & 0.665 \\
+first-hop-only & Mesh max-reliability & 6 & 1.257 $\pm$ 0.083 & 3.100 $\pm$ 0.155 & 4.256 $\pm$ 0.188 & 0.9481 & 0.225 \\
+first-hop-only & Mesh shortest-reliable & 6 & 1.160 $\pm$ 0.010 & 2.917 $\pm$ 0.133 & 3.985 $\pm$ 0.026 & 0.9473 & 0.323 \\
+first-hop-only & Mesh xy & 2 & 1.141 $\pm$ 0.058 & 2.900 $\pm$ 0.283 & 3.928 $\pm$ 0.029 & 0.9472 & 0.343 \\
+first-hop-only & Mesh yx & 2 & 1.192 $\pm$ 0.025 & 3.000 $\pm$ 0.283 & 3.993 $\pm$ 0.058 & 0.9473 & 0.325 \\
+first-hop-only & Torus dijkstra & 6 & 1.054 $\pm$ 0.024 & 2.750 $\pm$ 0.122 & 3.555 $\pm$ 0.025 & 0.9463 & 0.461 \\
+predecessor-start & Mesh max-reliability & 6 & 2.560 $\pm$ 0.218 & 6.633 $\pm$ 0.524 & 5.200 $\pm$ 0.368 & 0.9488 & 0.163 \\
+predecessor-start & Mesh shortest-reliable & 6 & 2.304 $\pm$ 0.072 & 6.233 $\pm$ 0.258 & 4.687 $\pm$ 0.056 & 0.9483 & 0.226 \\
+predecessor-start & Mesh xy & 2 & 2.096 $\pm$ 0.039 & 5.650 $\pm$ 0.071 & 4.441 $\pm$ 0.028 & 0.9484 & 0.217 \\
+predecessor-start & Mesh yx & 2 & 2.166 $\pm$ 0.066 & 5.950 $\pm$ 0.212 & 4.477 $\pm$ 0.022 & 0.9484 & 0.203 \\
+predecessor-start & Torus dijkstra & 6 & 1.985 $\pm$ 0.164 & 5.400 $\pm$ 0.551 & 4.022 $\pm$ 0.071 & 0.9476 & 0.307 \\
+\bottomrule
+\end{longtable}
+\end{landscape}

@@ -1,0 +1,20 @@
+{
+  "schema": "qft96-mapping-contract-v1",
+  "benchmark": "qft",
+  "width": 96,
+  "mapping_seeds": [42, 43, 44],
+  "seed_derivation": "mapper-cli-trial-v1",
+  "mapping": {
+    "placer": "T-HQA",
+    "grid": "4x4",
+    "data_qubits_per_core": 8,
+    "reserved_initial_slots_per_core": 2,
+    "reliability_min": 0.1,
+    "reliability_max": 1.0,
+    "initial_placement": "oee"
+  },
+  "routing": {
+    "mesh": ["xy", "yx", "shortest_reliable", "max_reliability"],
+    "torus": ["dijkstra"]
+  }
+}

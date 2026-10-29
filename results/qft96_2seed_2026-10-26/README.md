@@ -1,0 +1,95 @@
+# QFT-96 study output layout
+
+This directory is the authoritative, self-contained output root for the
+26-October QFT-96 study. A later benchmark receives the same layout under its
+own dated study root; it never writes into another workload's directory.
+
+The [standalone final QFT-96 report](../../docs/latex/qft96_final/README.md)
+contains the methodology, all verified congestion heatmaps and complete
+route-by-route memory/policy metric figures with tables. Its committed per-seed
+exports cover all 6,688 base and variant observations, including local raw job
+directories that are not themselves versioned.
+
+```text
+qft96_2seed_2026-10-26/
+├── execution_spec.json          # frozen factors and simulator parameters
+├── execution_scope.json         # explicit official scope and exclusions
+├── mapping_contract.json        # mapper/export contract
+├── manifests/                   # immutable job plans and source lock
+├── traces/                      # placement, migrations, and ACE request traces
+├── validation/                  # hashes, route replay, mapping audit
+├── raw/
+│   ├── base-evaluation/<job-id>/
+│   └── dynamic-variants/<job-id>/
+├── summaries/                   # validated progress and aggregate tables
+├── congestion/                  # trace-level CSVs and heatmaps
+└── figures/                     # checkpoint and incremental metric figures
+```
+
+## Per-job evidence
+
+Every completed job directory is content-addressed by its job ID and contains:
+
+- `summary.csv`: one row per policy and physics seed;
+- `metadata.json`: simulator parameters and trace/config identity;
+- `execution.json`: command, source commit, interpreter, SeQUeNCe identity,
+  timestamps, and stdout/stderr hashes;
+- `stdout.log` and `stderr.log`: the complete child-process logs.
+
+Jobs are written to `raw/.partial/<temporary-id>` first. The directory is
+atomically renamed to `raw/<phase>/<job-id>` only after hashes, expected seed
+rows, completion rate, and metadata validate. A partial directory is therefore
+an active or failed job, never a reportable result.
+
+## Official memory scope
+
+The official complete sweep uses total memories per core
+`2, 3, 4, 6, 8, 16, 32`. The original planned manifest containing `M=64` is
+retained for provenance. The launcher reads `execution_scope.json` and uses
+`manifests/base-evaluation_jobs_max-m32.jsonl.gz`, so completed `M=64` outputs
+remain archived under `raw/` but are excluded from summaries, plots, and final
+claims. This explicit revision was approved on 26 October 2026.
+
+## How to find results quickly
+
+- Start with `summaries/base-evaluation-progress.csv` and its status JSON.
+- Use `manifests/` to resolve a job ID to topology, route, memory allocation,
+  policy, trace hash, and seed list.
+- Open the corresponding `raw/<phase>/<job-id>/summary.csv` for raw rows.
+- Use `raw/<phase>/<job-id>/execution.json` to reproduce the exact command.
+- Use `congestion/trace_congestion_summary.csv` and
+  `congestion/per_core_congestion.csv` for route demand and heatmaps.
+
+The metric plotting outputs are under `figures/metrics/` and
+`figures/dynamic-variants/`. They include latency, p95, makespan, admission
+wait, fidelity, protocol/compiler waste, hit/fallback rates, compiler-not-ready
+requests, and retries. They are explicitly incremental while the runners are
+active; after completion, rerun the plotting commands to produce the final
+figures from the complete validated summaries.
+
+The parent launcher currently prints progress to its terminal; the durable
+per-job logs above are the authoritative logs. When this study is distributed
+across machines, each worker must write only its assigned job IDs into this
+same schema. Aggregation then copies validated rows into `summaries/`; it does
+not merge arbitrary terminal text or unverified CSVs.
+
+## One-command local run
+
+From the repository root, run the resumable end-to-end launcher after any
+already-started workers have stopped:
+
+```bash
+bash tools/golden_study/run_qft96_all.sh \
+  results/qft96_2seed_2026-10-26 \
+  /Users/dhruvrpansuriya/Documents/IITG\ Acad/Sem\ 7/BTP/Compiler-Driven-ACE/.venv/bin/python \
+  6
+```
+
+The final argument is the worker count. The launcher runs mesh and torus base
+jobs, all registered Dynamic policy variants, summary aggregation, congestion
+CSV/heatmap generation, metric plots, and LaTeX report compilation. It is safe
+to rerun after interruption: completed jobs are accepted only when their job,
+trace, configuration, source, and seed records validate. Stage logs are saved
+under `logs/` in this study root. Do not start two launchers for the same root;
+the lock directory prevents that case.
+

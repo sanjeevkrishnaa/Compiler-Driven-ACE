@@ -1,0 +1,14 @@
+variant,unit,mean,sd,n
+baseline-layer-start,%,0.0,0.0,6
+first-hop-only,%,0.0,0.0,6
+first-hop-only-delay-2ms,%,0.0,0.0,6
+first-hop-only-delay-4ms,%,0.0,0.0,6
+layer-delay-1ms,%,0.0,0.0,6
+layer-delay-2ms,%,0.0,0.0,6
+layer-delay-3ms,%,0.0,0.0,6
+layer-delay-4ms,%,0.0,0.0,6
+layer-delay-6ms,%,0.0,0.0,6
+predecessor-start,%,0.0,0.0,6
+predecessor-start-first-delay-2ms,%,0.0,0.0,6
+predecessor-start-first-delay-4ms,%,0.0,0.0,6
+two-hops-predecessor-start,%,0.0,0.0,6

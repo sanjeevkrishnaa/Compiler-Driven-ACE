@@ -1,0 +1,24 @@
+test_all_routes_preserve_endpoints_and_bound_detours (test_heavy_routing.RoutingContracts.test_all_routes_preserve_endpoints_and_bound_detours) ... ok
+test_global_optimization_cannot_worsen_xy_excess (test_heavy_routing.RoutingContracts.test_global_optimization_cannot_worsen_xy_excess) ... ok
+test_greedy_spreads_relay_load_without_changing_unavoidable_endpoints (test_heavy_routing.RoutingContracts.test_greedy_spreads_relay_load_without_changing_unavoidable_endpoints) ... ok
+test_history_breaks_a_shortest_path_tie_away_from_prior_hotspot (test_heavy_routing.RoutingContracts.test_history_breaks_a_shortest_path_tie_away_from_prior_hotspot) ... ok
+test_memory_objective_counts_both_incoming_and_outgoing_relay_pairs (test_heavy_routing.RoutingContracts.test_memory_objective_counts_both_incoming_and_outgoing_relay_pairs) ... ok
+test_migration_clock_includes_admission_wait_exactly_once (test_heavy_routing.RoutingContracts.test_migration_clock_includes_admission_wait_exactly_once) ... ok
+test_touches_agree_with_the_experiment2_definition (test_offline_routing.DemandTests.test_touches_agree_with_the_experiment2_definition) ... ok
+test_a_crossing_that_can_be_avoided_is_avoided (test_offline_routing.OptimizerTests.test_a_crossing_that_can_be_avoided_is_avoided) ... ok
+test_a_layer_with_no_overload_is_left_alone (test_offline_routing.OptimizerTests.test_a_layer_with_no_overload_is_left_alone) ... ok
+test_endpoints_never_change (test_offline_routing.OptimizerTests.test_endpoints_never_change) ... ok
+test_the_result_is_never_worse_and_never_below_the_lower_bound (test_offline_routing.OptimizerTests.test_the_result_is_never_worse_and_never_below_the_lower_bound) ... ok
+test_the_volume_bound_holds_and_is_tight_when_everything_is_saturated (test_offline_routing.OptimizerTests.test_the_volume_bound_holds_and_is_tight_when_everything_is_saturated) ... ok
+test_when_only_endpoints_overload_nothing_can_be_gained (test_offline_routing.OptimizerTests.test_when_only_endpoints_overload_nothing_can_be_gained) ... ok
+test_every_candidate_is_a_simple_walk_between_the_endpoints (test_offline_routing.PathTests.test_every_candidate_is_a_simple_walk_between_the_endpoints) ... ok
+test_extra_hops_add_longer_candidates (test_offline_routing.PathTests.test_extra_hops_add_longer_candidates) ... ok
+test_shortest_paths_on_the_mesh_are_the_binomial_count (test_offline_routing.PathTests.test_shortest_paths_on_the_mesh_are_the_binomial_count) ... ok
+test_the_torus_has_wrap_around_shortcuts (test_offline_routing.PathTests.test_the_torus_has_wrap_around_shortcuts) ... ok
+test_the_study_rows_obey_the_bounds_on_a_small_workload (test_offline_routing.StudyTests.test_the_study_rows_obey_the_bounds_on_a_small_workload) ... ok
+test_a_rerouted_archive_trace_is_valid_and_keeps_every_placement (test_offline_routing.TraceTests.test_a_rerouted_archive_trace_is_valid_and_keeps_every_placement) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.577s
+
+OK

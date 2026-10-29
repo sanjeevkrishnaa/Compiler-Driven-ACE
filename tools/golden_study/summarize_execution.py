@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""Validate completed Golden-study jobs and build incremental source tables."""
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+from pathlib import Path
+from statistics import fmean, stdev
+from typing import Any
+
+from .run_execution import read_jobs, validate_output
+
+
+METRICS = (
+    "request_latency_mean_ms", "request_latency_median_ms",
+    "request_latency_p95_ms", "request_latency_max_ms",
+    "end_to_end_latency_ms", "average_admission_wait_ms",
+    "max_admission_wait_ms", "requests_that_waited_fraction",
+    "avg_reservation_setup_time_ms", "avg_entanglement_generation_time_ms",
+    "avg_retry_wait_time_ms", "average_delivered_epr_fidelity",
+    "total_retries", "requests_with_retries", "protocol_generated_pairs",
+    "protocol_used_pairs", "protocol_unused_pairs", "protocol_waste_percentage",
+    "scheduled_preparations", "planner_blocked_preparations",
+    "planner_peak_compiler_memory_per_core", "runtime_admission_attempts",
+    "runtime_launched_preparations", "runtime_accepted_preparations",
+    "runtime_rejected_preparations", "pregenerated_hits",
+    "pregenerated_success_rate", "intended_request_hits",
+    "intended_request_hit_rate", "compiler_not_ready_requests",
+    "late_compiler_pair_uses", "on_demand_fallbacks",
+    "on_demand_fallback_rate", "generated_compiler_pairs",
+    "utilized_compiler_pairs", "expired_compiler_pairs",
+    "remaining_compiler_pairs", "compiler_expiry_percentage",
+    "compiler_waste_percentage", "average_fidelity_at_creation",
+    "average_fidelity_at_utilization", "average_storage_time_ms",
+)
+
+
+def policy_label(group: str, strategy: str) -> str:
+    labels = {
+        ("ODG", "on-demand"): "ODG",
+        ("CGP_ACGP_DYNAMIC_FULL", "continuous"): "CGP",
+        ("CGP_ACGP_DYNAMIC_FULL", "adaptive-continuous"): "ACGP",
+        ("CGP_ACGP_DYNAMIC_FULL", "dynamic"): "Dynamic-full-chain",
+        ("DYNAMIC_FIRST_HOP", "dynamic"): "Dynamic-first-hop",
+    }
+    try:
+        return labels[(group, strategy)]
+    except KeyError as exc:
+        raise ValueError(f"unknown execution-group/strategy pair: {(group, strategy)}") from exc
+
+
+def numeric(rows: list[dict[str, str]], name: str) -> tuple[float | None, float | None]:
+    values = [float(row[name]) for row in rows if row.get(name) not in (None, "")]
+    if not values:
+        return None, None
+    return fmean(values), stdev(values) if len(values) > 1 else 0.0
+
+
+def collect(root: Path, jobs: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    aggregates: list[dict[str, Any]] = []
+    completed_jobs = completed_evaluations = 0
+    for job in jobs:
+        output = root / job["output_path"]
+        if not output.exists():
+            continue
+        validate_output(output, job, require_execution_record=True)
+        completed_jobs += 1
+        with (output / "summary.csv").open(newline="", encoding="utf-8") as handle:
+            raw = list(csv.DictReader(handle))
+        completed_evaluations += len(raw)
+        alias = job["trace_aliases"][0]
+        for strategy in job["runner_strategies"]:
+            rows = [row for row in raw if row["strategy"] == strategy]
+            result: dict[str, Any] = {
+                "job_id": job["job_id"], "workload": alias["workload"],
+                "mapping_algorithm": alias["mapping_algorithm"],
+                "mapping_seeds": ";".join(str(value) for value in sorted({item["mapping_seed"] for item in job["trace_aliases"]})),
+                "topology": alias["topology"], "route_policy": alias["route_policy"],
+                "trace_sha256": job["trace_sha256"],
+                "total_memories_per_core": job["total_memories_per_core"],
+                "compiler_memories_per_core": job["compiler_memories_per_core"],
+                "policy": policy_label(job["execution_group"], strategy),
+                "physics_seed_count": len(rows),
+                "completion_rate_mean": fmean(float(row["completion_rate"]) for row in rows),
+                "raw_output_path": job["output_path"],
+            }
+            for metric in METRICS:
+                mean, sd = numeric(rows, metric)
+                result[f"{metric}_mean"] = mean
+                result[f"{metric}_sd"] = sd
+            aggregates.append(result)
+    expected_evaluations = sum(len(job["runner_strategies"]) * len(job["physics_seeds"]) for job in jobs)
+    status = {
+        "schema": "golden-study-progress-v1",
+        "total_jobs": len(jobs), "completed_jobs": completed_jobs,
+        "job_completion_fraction": completed_jobs / len(jobs),
+        "total_policy_seed_evaluations": expected_evaluations,
+        "completed_policy_seed_evaluations": completed_evaluations,
+        "evaluation_completion_fraction": completed_evaluations / expected_evaluations,
+        "aggregate_rows": len(aggregates),
+    }
+    aggregates.sort(key=lambda row: (row["workload"], row["topology"], row["route_policy"], row["total_memories_per_core"], row["compiler_memories_per_core"], row["policy"]))
+    return aggregates, status
+
+
+def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not rows:
+        raise ValueError("no completed jobs to summarize")
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=tuple(rows[0]), lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def latex_number(value: Any, digits: int = 5) -> str:
+    return "N/A" if value in (None, "") else f"{float(value):.{digits}f}"
+
+
+def write_latex(path: Path, rows: list[dict[str, Any]], status: dict[str, Any]) -> None:
+    boundary = [row for row in rows if row["workload"] == "ghz" and row["topology"] == "mesh"
+                and row["route_policy"] == "xy" and row["total_memories_per_core"] == 2
+                and row["compiler_memories_per_core"] == 0]
+    source = ("https://github.com/sanjeevkrishnaa/Compiler-Driven-ACE/blob/"
+              "codex/ace-scheduler-correctness/results/golden_study_2026-10-25/"
+              "summaries/base-evaluation-progress.csv")
+    body = [
+        "% Generated by tools/golden_study/summarize_execution.py; do not edit by hand.",
+        "\\begin{table}[H]", "\\centering", "\\small",
+        f"\\caption{{Validated zero-cache boundary: {status['completed_jobs']:,} of {status['total_jobs']:,} jobs and {status['completed_policy_seed_evaluations']:,} of {status['total_policy_seed_evaluations']:,} policy-seed evaluations are complete. \\href{{{source}}}{{Source CSV}}.}}",
+        "\\label{tab:golden-progress-zero}", "\\begin{tabular}{lrrr}", "\\toprule",
+        "Policy at $M=2,C=0$ & Seeds & Mean latency (ms) & Mean p95 (ms) \\\\", "\\midrule",
+    ]
+    for row in boundary:
+        body.append(
+            f"{row['policy']} & {row['physics_seed_count']} & "
+            f"{latex_number(row['request_latency_mean_ms_mean'])} $\\pm$ {latex_number(row['request_latency_mean_ms_sd'])} & "
+            f"{latex_number(row['request_latency_p95_ms_mean'])} $\\pm$ {latex_number(row['request_latency_p95_ms_sd'])} \\\\"
+        )
+    body.extend(["\\bottomrule", "\\end{tabular}", "\\end{table}", ""])
+    positive = [row for row in rows if row["workload"] == "ghz" and row["topology"] == "mesh"
+                and row["route_policy"] == "xy" and row["total_memories_per_core"] == 2
+                and (row["compiler_memories_per_core"] == 1 or row["policy"] == "ODG")]
+    body.extend([
+        "\\begin{table}[H]", "\\centering", "\\scriptsize",
+        f"\\caption{{First positive-cache comparison on GHZ, mesh--XY, $M=2$, 30 paired seeds. ODG has $C=0$ by definition; other policies use $C=1$. \\href{{{source}}}{{Source CSV}}.}}",
+        "\\label{tab:golden-progress-positive}", "\\begin{tabular}{lrrrr}", "\\toprule",
+        "Policy & Mean latency (ms) & Mean p95 (ms) & Makespan (ms) & Fidelity \\\\", "\\midrule",
+    ])
+    for row in positive:
+        body.append(
+            f"{row['policy']} & {latex_number(row['request_latency_mean_ms_mean'])} $\\pm$ {latex_number(row['request_latency_mean_ms_sd'])} & "
+            f"{latex_number(row['request_latency_p95_ms_mean'])} $\\pm$ {latex_number(row['request_latency_p95_ms_sd'])} & "
+            f"{latex_number(row['end_to_end_latency_ms_mean'])} & {latex_number(row['average_delivered_epr_fidelity_mean'])} \\\\"
+        )
+    body.extend(["\\bottomrule", "\\end{tabular}", "\\end{table}", ""])
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(body), encoding="utf-8")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--status", type=Path, required=True)
+    parser.add_argument("--latex-output", type=Path)
+    args = parser.parse_args()
+    root = args.root.resolve()
+    rows, status = collect(root, read_jobs(args.manifest.resolve()))
+    write_csv(args.output.resolve(), rows)
+    args.status.resolve().write_text(json.dumps(status, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if args.latex_output is not None:
+        write_latex(args.latex_output.resolve(), rows, status)
+    print(json.dumps(status, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

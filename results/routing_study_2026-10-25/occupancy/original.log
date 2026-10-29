@@ -1,0 +1,7 @@
+on-demand            seed=0 complete=100.00% latency=1.5326772179572061 ms fidelity=0.949813357734806
+dynamic              seed=0 complete=100.00% latency=2.599629674696205 ms fidelity=0.9431898670663746
+on-demand            seed=1 complete=100.00% latency=1.512188040020186 ms fidelity=0.949813357734806
+dynamic              seed=1 complete=100.00% latency=2.537697623439645 ms fidelity=0.942995257470237
+on-demand            seed=2 complete=100.00% latency=1.5049613065724667 ms fidelity=0.949813357734806
+dynamic              seed=2 complete=100.00% latency=2.4605461401015343 ms fidelity=0.9432409521472559
+Wrote results/routing_study_2026-10-25/occupancy/run_original/summary.csv

@@ -87,7 +87,15 @@ def parser():
     p.add_argument('--dynamic-lookahead-layers', type=int, default=8)
     p.add_argument('--coherence-time-layers', type=float, default=10)
     p.add_argument('--delta-layers', type=int, default=6)
-    p.add_argument('--placer', default='HQA', help='Supplied mapper algorithm; separate from EPR preparation policy')
+    p.add_argument(
+        '--placer',
+        default='T-HQA',
+        help=(
+            'Mapper placement algorithm; separate from EPR preparation policy. '
+            'T-HQA is the default for new studies; pass HQA explicitly for the '
+            'historical baseline or a controlled mapping comparison.'
+        ),
+    )
     p.add_argument('--initial-placement', default='oee')
     p.add_argument('--reliability-min', type=float, default=0.1)
     p.add_argument('--reliability-max', type=float, default=1.0)

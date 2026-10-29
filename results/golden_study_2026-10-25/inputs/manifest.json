@@ -1,0 +1,77 @@
+{
+  "inputs": [
+    {
+      "id": "ghz",
+      "qasm_path": "inputs/ghz/circuit.qasm",
+      "qasm_sha256": "9a0574be5e0e57dbc70e6555a34f241c0b62e413482bcde5976487166aad2743",
+      "source_archive_member": "mqt_ten_workload_study/ghz/seed_42/circuit.qasm",
+      "source_member_sha256": "9a0574be5e0e57dbc70e6555a34f241c0b62e413482bcde5976487166aad2743"
+    },
+    {
+      "id": "bv",
+      "qasm_path": "inputs/bv/circuit.qasm",
+      "qasm_sha256": "f61a991bcbae04274cf8f5446c253d610521c1e51b213b746f58785717b8bd29",
+      "source_archive_member": "mqt_ten_workload_study/bv/seed_42/circuit.qasm",
+      "source_member_sha256": "f61a991bcbae04274cf8f5446c253d610521c1e51b213b746f58785717b8bd29"
+    },
+    {
+      "id": "bmw_quark_cardinality",
+      "qasm_path": "inputs/bmw_quark_cardinality/circuit.qasm",
+      "qasm_sha256": "53dd2d48a108350051d5df152449fa1b4fdbe0c85fdbe892460c7058736a32ce",
+      "source_archive_member": "mqt_ten_workload_study/bmw_quark_cardinality/seed_42/circuit.qasm",
+      "source_member_sha256": "53dd2d48a108350051d5df152449fa1b4fdbe0c85fdbe892460c7058736a32ce"
+    },
+    {
+      "id": "vqe_real_amp",
+      "qasm_path": "inputs/vqe_real_amp/circuit.qasm",
+      "qasm_sha256": "16f806cc120758083e501b917683d953335428336f129a296fc8784b48a10a2c",
+      "source_archive_member": "mqt_ten_workload_study/vqe_real_amp/seed_42/circuit.qasm",
+      "source_member_sha256": "16f806cc120758083e501b917683d953335428336f129a296fc8784b48a10a2c"
+    },
+    {
+      "id": "cdkm_ripple_carry_adder",
+      "qasm_path": "inputs/cdkm_ripple_carry_adder/circuit.qasm",
+      "qasm_sha256": "45859ec5a77f5b6a01ccbbf3bc50ec3124ebe7290f885023b231e0823fa2dec7",
+      "source_archive_member": "mqt_ten_workload_study/cdkm_ripple_carry_adder/seed_42/circuit.qasm",
+      "source_member_sha256": "45859ec5a77f5b6a01ccbbf3bc50ec3124ebe7290f885023b231e0823fa2dec7"
+    },
+    {
+      "id": "graphstate",
+      "qasm_path": "inputs/graphstate/circuit.qasm",
+      "qasm_sha256": "96001aa3775b6298237c1b5bf0d325b492a0181176b5dd9671c072efcaea4bb3",
+      "source_archive_member": "mqt_ten_workload_study/graphstate/seed_42/circuit.qasm",
+      "source_member_sha256": "96001aa3775b6298237c1b5bf0d325b492a0181176b5dd9671c072efcaea4bb3"
+    },
+    {
+      "id": "draper_qft_adder",
+      "qasm_path": "inputs/draper_qft_adder/circuit.qasm",
+      "qasm_sha256": "dc554b83db6983e33093b02567ddf2ff6f59b73b964484238dc7625b39ec4b08",
+      "source_archive_member": "mqt_ten_workload_study/draper_qft_adder/seed_42/circuit.qasm",
+      "source_member_sha256": "dc554b83db6983e33093b02567ddf2ff6f59b73b964484238dc7625b39ec4b08"
+    },
+    {
+      "id": "qaoa",
+      "qasm_path": "inputs/qaoa/circuit.qasm",
+      "qasm_sha256": "dbb27d15d80cac7adc6a3da8b70ffe1770583458022870bddcdaac5718136710",
+      "source_archive_member": "mqt_ten_workload_study/qaoa/seed_42/circuit.qasm",
+      "source_member_sha256": "dbb27d15d80cac7adc6a3da8b70ffe1770583458022870bddcdaac5718136710"
+    },
+    {
+      "id": "qft",
+      "qasm_path": "inputs/qft/circuit.qasm",
+      "qasm_sha256": "11215bb4f2e91060a9c1542930703454f5d70b0289ac9ae9f735b32c4f1c98e7",
+      "source_archive_member": "mqt_ten_workload_study/qft/seed_42/circuit.qasm",
+      "source_member_sha256": "11215bb4f2e91060a9c1542930703454f5d70b0289ac9ae9f735b32c4f1c98e7"
+    },
+    {
+      "id": "randomcircuit",
+      "qasm_path": "inputs/randomcircuit/circuit.qasm",
+      "qasm_sha256": "631d4471b03f7b2df3ab712f976888d068c3f56ef34aac53299444e958675892",
+      "source_archive_member": "mqt_ten_workload_study/randomcircuit/seed_42/circuit.qasm",
+      "source_member_sha256": "631d4471b03f7b2df3ab712f976888d068c3f56ef34aac53299444e958675892"
+    }
+  ],
+  "schema": "golden-study-input-corpus-v1",
+  "source_archive": "source_archives/mqt_ten_workload_congestion_results.zip",
+  "source_archive_sha256": "6654d4701e41d592c1af3570be6aa172271315499376c35913c9c004884f5990"
+}

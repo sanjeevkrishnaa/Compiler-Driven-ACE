@@ -1,0 +1,17 @@
+{
+  "schema": "golden-study-mapping-inputs-v1",
+  "provenance_note": "These are frozen QASM circuit inputs recovered from the historical MQT study archive. They are input evidence only: all Golden-study T-HQA mappings will be generated afresh and identified separately.",
+  "source_archive": "source_archives/mqt_ten_workload_congestion_results.zip",
+  "workloads": [
+    {"id": "ghz", "archive_member": "mqt_ten_workload_study/ghz/seed_42/circuit.qasm"},
+    {"id": "bv", "archive_member": "mqt_ten_workload_study/bv/seed_42/circuit.qasm"},
+    {"id": "bmw_quark_cardinality", "archive_member": "mqt_ten_workload_study/bmw_quark_cardinality/seed_42/circuit.qasm"},
+    {"id": "vqe_real_amp", "archive_member": "mqt_ten_workload_study/vqe_real_amp/seed_42/circuit.qasm"},
+    {"id": "cdkm_ripple_carry_adder", "archive_member": "mqt_ten_workload_study/cdkm_ripple_carry_adder/seed_42/circuit.qasm"},
+    {"id": "graphstate", "archive_member": "mqt_ten_workload_study/graphstate/seed_42/circuit.qasm"},
+    {"id": "draper_qft_adder", "archive_member": "mqt_ten_workload_study/draper_qft_adder/seed_42/circuit.qasm"},
+    {"id": "qaoa", "archive_member": "mqt_ten_workload_study/qaoa/seed_42/circuit.qasm"},
+    {"id": "qft", "archive_member": "mqt_ten_workload_study/qft/seed_42/circuit.qasm"},
+    {"id": "randomcircuit", "archive_member": "mqt_ten_workload_study/randomcircuit/seed_42/circuit.qasm"}
+  ]
+}

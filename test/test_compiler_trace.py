@@ -70,6 +70,44 @@ class CompilerTraceTests(unittest.TestCase):
         self.assertEqual((fixed_blocked, dynamic_blocked), (0, 0))
         self.assertEqual((fixed_peak, dynamic_peak), (1, 1))
 
+    def test_zero_compiler_memory_is_valid_and_blocks_all_preparations(self):
+        trace = self.parse()
+        for strategy in ("fixed", "dynamic"):
+            with self.subTest(strategy=strategy):
+                scheduled, blocked, peak = plan_preparations(
+                    trace,
+                    strategy=strategy,
+                    compiler_memories_per_core=0,
+                    generation_capacity_per_core=1,
+                    coherence_time_layers=3,
+                )
+                self.assertEqual(scheduled, ())
+                self.assertEqual(blocked, len(trace.requests))
+                self.assertEqual(peak, 0)
+
+    def test_on_demand_accepts_zero_compiler_memory(self):
+        trace = self.parse()
+        self.assertEqual(
+            plan_preparations(
+                trace,
+                strategy="on-demand",
+                compiler_memories_per_core=0,
+                generation_capacity_per_core=1,
+                coherence_time_layers=3,
+            ),
+            ((), 0, 0),
+        )
+
+    def test_negative_compiler_memory_is_rejected(self):
+        with self.assertRaisesRegex(ValueError, "non-negative"):
+            plan_preparations(
+                self.parse(),
+                strategy="dynamic",
+                compiler_memories_per_core=-1,
+                generation_capacity_per_core=1,
+                coherence_time_layers=3,
+            )
+
     def test_bad_evolving_placement_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "not 0"):
             self.parse(TRACE.replace("(0, 1, 3)", "(0, 0, 3)"))

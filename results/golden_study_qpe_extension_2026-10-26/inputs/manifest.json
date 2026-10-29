@@ -1,0 +1,21 @@
+{
+  "schema": "golden-study-mapping-inputs-v1",
+  "provenance": {
+    "source": "MQT Bench installed factory mqt.bench.benchmarks.qpeexact.create_circuit",
+    "benchmark_id": "qpeexact",
+    "variant": "exactly-representable phase",
+    "generation_interpreter": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/hqa-reproduction/env/bin/python",
+    "generator": "Qiskit qasm2.dumps(create_circuit(48))",
+    "logical_qubits": 48,
+    "circuit_depth": 143,
+    "circuit_operations": 1293,
+    "selection_rationale": "Canonical non-iterative QPE representative; qpeinexact remains a separately identifiable future workload rather than being silently substituted."
+  },
+  "inputs": [
+    {
+      "id": "qpeexact",
+      "qasm_path": "inputs/qpeexact/circuit.qasm",
+      "qasm_sha256": "27218fb934f74875d5a8499d1e2c84bd3741a96339c0fb4fecc6aecd9fdfcf53"
+    }
+  ]
+}

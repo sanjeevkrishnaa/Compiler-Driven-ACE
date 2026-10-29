@@ -1,0 +1,4 @@
+dynamic              seed=0 complete=100.00% latency=0.46250115725 ms fidelity=0.9414914754499836
+dynamic              seed=1 complete=100.00% latency=0.46250115725 ms fidelity=0.9418675086527862
+dynamic              seed=2 complete=100.00% latency=0.46250115725 ms fidelity=0.9413374508821652
+Wrote results/congestion_adaptive_generalisation_2026-10-25/ghz_t25/summary.csv
