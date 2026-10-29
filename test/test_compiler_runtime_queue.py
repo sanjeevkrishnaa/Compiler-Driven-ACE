@@ -5,11 +5,11 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
-from compiler_trace import CompilerRequest, CompilerTrace, parse_compiler_trace, plan_preparations, to_ace_layers
-from execution_events import ListRecorder
-from invariants import RequestInfo, check_events
-from parallel_core import run_parallel_experiment
-from compiler_scheduler import CompilerPreGenerationController
+from ace.compiler.compiler_trace import CompilerRequest, CompilerTrace, parse_compiler_trace, plan_preparations, to_ace_layers
+from ace.observability.execution_events import ListRecorder
+from ace.observability.invariants import RequestInfo, check_events
+from ace.simulation.parallel_core import run_parallel_experiment
+from ace.compiler.compiler_scheduler import CompilerPreGenerationController
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -69,7 +69,7 @@ class RuntimeQueueTests(unittest.TestCase):
                         self.assertEqual(record["actual_request_id"], record["target_request_id"])
 
     def test_consuming_a_borrowed_pair_replenishes_the_displaced_future_target(self):
-        from compiler_trace import ScheduledPreparation
+        from ace.compiler.compiler_trace import ScheduledPreparation
         calls = []
         requests = (CompilerRequest(0, 1, 0, 0, 0, 1), CompilerRequest(1, 2, 0, 1, 0, 1))
         adaptive = SimpleNamespace(request_compiler_pair=lambda *args: calls.append(args))

@@ -1,4 +1,4 @@
-from parallel_core import *
+from ace.simulation.parallel_core import *
 
 
 if __name__ == "__main__":

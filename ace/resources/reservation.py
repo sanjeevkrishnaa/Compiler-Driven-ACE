@@ -12,15 +12,15 @@ from sequence.resource_management.memory_manager import MemoryInfo
 from sequence.resource_management.rule_manager import Arguments
 from sequence.entanglement_management.entanglement_protocol import EntanglementProtocol
 
-from execution_events import ADAPTIVE, APPLICATION, Booked, MisRemoved, Unbooked, reservation_serial
-from generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
-from swapping import EntanglementSwappingA_bds, EntanglementSwappingB_bds
+from ace.observability.execution_events import ADAPTIVE, APPLICATION, Booked, MisRemoved, Unbooked, reservation_serial
+from ace.protocols.generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
+from ace.protocols.swapping import EntanglementSwappingA_bds, EntanglementSwappingB_bds
 from sequence.entanglement_management.swapping import EntanglementSwappingA, EntanglementSwappingB
-from purification import BBPSSW_bds
+from ace.protocols.purification import BBPSSW_bds
 from sequence.entanglement_management.purification.bbpssw_circuit import BBPSSWCircuit
 
 if TYPE_CHECKING:
-    from node import QuantumRouterAdaptive
+    from ace.topology.node import QuantumRouterAdaptive
 
 
 

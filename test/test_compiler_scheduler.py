@@ -5,9 +5,9 @@ Speculative generation is off, so the requests given are the only demand.
 """
 import unittest
 
-from compiler_trace import CompilerRequest
-from execution_events import RequestCompleted, RequestSubmitted, canonical
-from request_scheduler import QubitOrderedRequestManager, TraceError
+from ace.compiler.compiler_trace import CompilerRequest
+from ace.observability.execution_events import RequestCompleted, RequestSubmitted, canonical
+from ace.simulation.request_scheduler import QubitOrderedRequestManager, TraceError
 from tools.ace_correctness.harness import Hop, run_layers
 
 MS = 1e9            # picoseconds per millisecond
@@ -137,7 +137,7 @@ class ValidationTests(unittest.TestCase):
             run_layers([[Hop(0, 5, 9)]], memories=2, scheduler="nonsense")
 
     def test_the_per_qubit_scheduler_needs_the_trace(self):
-        from parallel_core import run_parallel_experiment
+        from ace.simulation.parallel_core import run_parallel_experiment
         with self.assertRaises(ValueError):
             run_parallel_experiment("unused.json", False, False, [], 5.3, 50, "x", scheduler="per-qubit")
 

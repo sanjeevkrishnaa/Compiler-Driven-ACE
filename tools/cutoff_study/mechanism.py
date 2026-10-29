@@ -26,7 +26,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "tools" / "ace_correctness"))
 sys.path.insert(0, str(REPO))
 from audit_trace import DEFAULT_CONFIG, audit_trace                               # noqa: E402
-from execution_events import Booked, PairCredited, PairDelivered, Unbooked       # noqa: E402
+from ace.observability.execution_events import Booked, PairCredited, PairDelivered, Unbooked       # noqa: E402
 
 ARCHIVE = REPO / "results" / "congestion" / "mqt_ten_workload_congestion_results.zip"
 PREFIX = "mqt_ten_workload_study"

@@ -15,9 +15,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from compiler_trace import CompilerRequest, router_name
-from execution_events import ListRecorder, RequestSubmitted
-from parallel_core import run_parallel_experiment
+from ace.compiler.compiler_trace import CompilerRequest, router_name
+from ace.observability.execution_events import ListRecorder, RequestSubmitted
+from ace.simulation.parallel_core import run_parallel_experiment
 
 CONFIG = Path(__file__).resolve().parents[1] / "config" / "final_config" / "grid_4x4_ace_3.json"
 

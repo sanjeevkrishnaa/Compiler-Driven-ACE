@@ -15,14 +15,14 @@ from sequence.kernel.process import Process
 from sequence.kernel.event import Event
 from sequence.resource_management.rule_manager import Rule
 
-from generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
-from memory_manager import MemoryManagerAdaptive
-from reservation import ReservationAdaptive
-from adaptive_continuous import AdaptiveContinuousProtocol, AdaptiveContinuousMessage, ACMsgType
-from purification import BBPSSW_bds
+from ace.protocols.generation import EntanglementGenerationAadaptive, ShEntanglementGenerationAadaptive
+from ace.resources.memory_manager import MemoryManagerAdaptive
+from ace.resources.reservation import ReservationAdaptive
+from ace.protocols.adaptive_continuous import AdaptiveContinuousProtocol, AdaptiveContinuousMessage, ACMsgType
+from ace.protocols.purification import BBPSSW_bds
 
 if TYPE_CHECKING:
-    from node import QuantumRouterAdaptive
+    from ace.topology.node import QuantumRouterAdaptive
 
 
 class ResourceManagerAdaptive(ResourceManager):

@@ -22,7 +22,7 @@ python -m tools.compiler_study.run_full_chain_latency --compiler-memories 4 --co
 ```
 
 Use `--dry-run` to inspect the complete simulator command without running it.
-The simulator entry point remains `run_trace_comparison.py` at the root.
+The simulator entry point remains `run_trace_comparison.py` at the root; it forwards to `ace/cli/run_trace_comparison.py`. See the [package source map](../../ace/README.md).
 
 See the [study index](../../docs/research/compiler-pregeneration/README.md) and
 [committed evidence](../../results/compiler_memory_handoff_2026-10-28/README.md).

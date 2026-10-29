@@ -20,13 +20,13 @@ from sequence.constants import MILLISECOND, SECOND, EPSILON
 from sequence.components.memory import Memory
 from sequence.network_management.reservation import Reservation
 
-from purification import BBPSSW_bds
-from reservation import ResourceReservationProtocolAdaptive, ReservationAdaptive
+from ace.protocols.purification import BBPSSW_bds
+from ace.resources.reservation import ResourceReservationProtocolAdaptive, ReservationAdaptive
 
 if TYPE_CHECKING:
     from sequence.resource_management.rule_manager import Rule
-    from node import QuantumRouterAdaptive
-    from resource_manager import ResourceManagerAdaptive
+    from ace.topology.node import QuantumRouterAdaptive
+    from ace.resources.resource_manager import ResourceManagerAdaptive
 
 
 class ACMsgType(Enum):

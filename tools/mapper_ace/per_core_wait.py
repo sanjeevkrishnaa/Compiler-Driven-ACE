@@ -30,8 +30,8 @@ PS_PER_MS = 10**9
 
 def run(args) -> int:
     import occupancy                                                   # noqa: E402  (AdmissionLog)
-    import run_trace_comparison as runner                              # noqa: E402
-    from request_scheduler import QubitOrderedRequestManager           # noqa: E402
+    import ace.cli.run_trace_comparison as runner                              # noqa: E402
+    from ace.simulation.request_scheduler import QubitOrderedRequestManager           # noqa: E402
 
     captured = []
     real = runner.run_parallel_experiment

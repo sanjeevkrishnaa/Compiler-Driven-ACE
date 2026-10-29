@@ -10,7 +10,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from execution_events import canonical
+from ace.observability.execution_events import canonical
 from tools.ace_correctness.audit_trace import audit_trace
 
 ARCHIVE = Path(__file__).resolve().parents[1] / "results" / "congestion" / "mqt_ten_workload_congestion_results.zip"

@@ -26,10 +26,10 @@ from statistics import fmean
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-import run_trace_comparison as runner                                   # noqa: E402
-from compiler_trace import router_name                                  # noqa: E402
-from execution_events import Booked, ListRecorder, RequestRejected, Unbooked           # noqa: E402
-from reservation import ADAPTIVE, ReservationAdaptive                                        # noqa: E402
+import ace.cli.run_trace_comparison as runner                                   # noqa: E402
+from ace.compiler.compiler_trace import router_name                                  # noqa: E402
+from ace.observability.execution_events import Booked, ListRecorder, RequestRejected, Unbooked           # noqa: E402
+from ace.resources.reservation import ADAPTIVE, ReservationAdaptive                                        # noqa: E402
 
 PS_PER_MS = 10**9
 
@@ -248,7 +248,7 @@ def main() -> int:
     def wrapper(*a, **kw):
         recorder = ListRecorder()
         log = AdmissionLog()
-        from request_scheduler import QubitOrderedRequestManager
+        from ace.simulation.request_scheduler import QubitOrderedRequestManager
         original = log.install(QubitOrderedRequestManager)
         try:
             result = real(*a, **dict(kw, recorder=recorder))

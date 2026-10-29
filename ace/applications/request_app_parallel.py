@@ -8,14 +8,14 @@ from collections import defaultdict
 from typing import TYPE_CHECKING, Callable
 import sequence.utils.log as log
 from sequence.resource_management.memory_manager import MemoryInfo
-from request_app import RequestAppLatency
-from execution_events import PairCredited, PairDelivered, reservation_serial
+from ace.applications.request_app import RequestAppLatency
+from ace.observability.execution_events import PairCredited, PairDelivered, reservation_serial
 from sequence.kernel.event import Event
 from sequence.kernel.process import Process
 
 if TYPE_CHECKING:
-    from node import QuantumRouterAdaptive
-    from reservation import ReservationAdaptive
+    from ace.topology.node import QuantumRouterAdaptive
+    from ace.resources.reservation import ReservationAdaptive
 
 
 class RequestAppLatencyParallel(RequestAppLatency):

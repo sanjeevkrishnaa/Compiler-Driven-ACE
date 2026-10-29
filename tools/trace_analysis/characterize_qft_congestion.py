@@ -83,7 +83,10 @@ def main():
     by_layer = defaultdict(list)
     for rid, layer, qubit, source, target in requests:
         by_layer[layer].append((rid, qubit, source, target))
-    source_tree = ast.parse((args.ace/'parallel_core.py').read_text())
+    manager_source = args.ace / 'ace/simulation/parallel_core.py'
+    if not manager_source.exists():
+        manager_source = args.ace / 'parallel_core.py'  # frozen flat-layout checkouts
+    source_tree = ast.parse(manager_source.read_text())
     function = next(node for node in source_tree.body
                     if isinstance(node, ast.FunctionDef) and node.name == 'serialize_core_conflicts')
     namespace = {}

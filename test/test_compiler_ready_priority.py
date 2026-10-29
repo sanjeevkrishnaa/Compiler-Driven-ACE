@@ -2,8 +2,8 @@
 from types import SimpleNamespace
 import unittest
 
-from request_scheduler import QubitOrderedRequestManager
-from adaptive_continuous import AdaptiveContinuousProtocol
+from ace.simulation.request_scheduler import QubitOrderedRequestManager
+from ace.protocols.adaptive_continuous import AdaptiveContinuousProtocol
 
 
 class AdmissionTests(unittest.TestCase):

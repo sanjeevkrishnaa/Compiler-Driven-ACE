@@ -23,10 +23,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:          # ACE's modules live at the repository root
     sys.path.insert(0, str(REPO_ROOT))
 
-from compiler_trace import CompilerRequest, router_name     # noqa: E402
-from execution_events import Event, ListRecorder           # noqa: E402
-from invariants import RequestInfo, Violation, check_events  # noqa: E402
-from parallel_core import run_parallel_experiment          # noqa: E402
+from ace.compiler.compiler_trace import CompilerRequest, router_name     # noqa: E402
+from ace.observability.execution_events import Event, ListRecorder           # noqa: E402
+from ace.observability.invariants import RequestInfo, Violation, check_events  # noqa: E402
+from ace.simulation.parallel_core import run_parallel_experiment          # noqa: E402
 
 CONFIG = REPO_ROOT / "config" / "final_config" / "grid_4x4_ace_3.json"
 MESH_COLUMNS = 4

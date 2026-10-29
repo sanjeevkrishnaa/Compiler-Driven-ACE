@@ -19,7 +19,7 @@ from sequence.resource_management.memory_manager import MemoryInfo, MemoryManage
 from sequence.kernel.quantum_manager import BELL_DIAGONAL_STATE_FORMALISM
 
 if TYPE_CHECKING:
-    from adaptive_continuous import AdaptiveContinuousProtocol
+    from ace.protocols.adaptive_continuous import AdaptiveContinuousProtocol
 
 
 def valid_trigger_time(trigger_time: int, target_time: int, resolution: int) -> bool:

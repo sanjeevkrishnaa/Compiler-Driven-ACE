@@ -10,7 +10,7 @@ import collections
 import random
 import unittest
 
-from execution_events import Booked, Unbooked
+from ace.observability.execution_events import Booked, Unbooked
 from tools.ace_correctness.harness import MESH_COLUMNS, Hop, are_neighbours, run_layers
 
 CORES = MESH_COLUMNS * MESH_COLUMNS

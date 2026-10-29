@@ -66,10 +66,10 @@ def fix_request_numbers(input_file, output_file=None):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python fix_request_numbers.py <input_file> [output_file]")
+        print("Usage: python -m ace.utilities.fix_request_numbers <input_file> [output_file]")
         print("\nExample:")
-        print("  python fix_request_numbers.py test/qubit_displacement_1.json")
-        print("  python fix_request_numbers.py test/qubit_displacement_1.json test/qubit_displacement_1_fixed.json")
+        print("  python -m ace.utilities.fix_request_numbers test/qubit_displacement_1.json")
+        print("  python -m ace.utilities.fix_request_numbers test/qubit_displacement_1.json test/qubit_displacement_1_fixed.json")
         sys.exit(1)
     
     input_file = sys.argv[1]

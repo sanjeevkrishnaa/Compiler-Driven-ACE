@@ -44,7 +44,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from typing import Iterable, Mapping, Sequence
 
-from execution_events import (
+from ace.observability.execution_events import (
     ADAPTIVE, APPLICATION, Booked, Event, MisRemoved, PairCredited, PairDelivered,
     RequestCompleted, RequestRejected, RequestSubmitted, Unbooked,
 )

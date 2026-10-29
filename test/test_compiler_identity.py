@@ -2,8 +2,8 @@
 from types import SimpleNamespace
 import unittest
 
-from execution_events import ListRecorder, MisRemoved, Unbooked
-from reservation import (
+from ace.observability.execution_events import ListRecorder, MisRemoved, Unbooked
+from ace.resources.reservation import (
     ApplicationReservation, ObservedTimeCard, ReservationAdaptive, ResourceReservationProtocolAdaptive,
     describe_reservation,
 )

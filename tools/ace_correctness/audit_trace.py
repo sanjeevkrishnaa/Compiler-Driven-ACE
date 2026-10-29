@@ -26,13 +26,13 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from compiler_trace import (                                    # noqa: E402
+from ace.compiler.compiler_trace import (                                    # noqa: E402
     mesh_dimensions, parse_compiler_trace, to_ace_layers, validate_neighbor_requests,
 )
-from execution_events import Event, ListRecorder               # noqa: E402
-from invariants import RequestInfo, Violation, check_events, summarize  # noqa: E402
-from parallel_core import run_parallel_experiment               # noqa: E402
-from run_trace_comparison import _compiler_spec                 # noqa: E402
+from ace.observability.execution_events import Event, ListRecorder               # noqa: E402
+from ace.observability.invariants import RequestInfo, Violation, check_events, summarize  # noqa: E402
+from ace.simulation.parallel_core import run_parallel_experiment               # noqa: E402
+from ace.cli.run_trace_comparison import _compiler_spec                 # noqa: E402
 
 DEFAULT_CONFIG = REPO_ROOT / "config" / "final_config" / "grid_4x4_ace_3.json"
 COMPILER_STRATEGIES = ("on-demand", "fixed", "dynamic")

@@ -6,12 +6,12 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from compiler_trace import CompilerRequest, CompilerTrace, plan_preparations, to_ace_layers
-from execution_events import ADAPTIVE, APPLICATION, Booked, ListRecorder, Unbooked
-from invariants import RequestInfo, check_events
-from parallel_core import run_parallel_experiment
-from reservation import ApplicationReservation, ReservationAdaptive, ResourceReservationProtocolAdaptive
-from request_scheduler import QubitOrderedRequestManager
+from ace.compiler.compiler_trace import CompilerRequest, CompilerTrace, plan_preparations, to_ace_layers
+from ace.observability.execution_events import ADAPTIVE, APPLICATION, Booked, ListRecorder, Unbooked
+from ace.observability.invariants import RequestInfo, check_events
+from ace.simulation.parallel_core import run_parallel_experiment
+from ace.resources.reservation import ApplicationReservation, ReservationAdaptive, ResourceReservationProtocolAdaptive
+from ace.simulation.request_scheduler import QubitOrderedRequestManager
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -144,7 +144,7 @@ class HandoffTests(unittest.TestCase):
         self.assertFalse(protocol.schedule(application))
 
     def test_future_pairs_cannot_deadlock_an_unprepared_current_layer(self):
-        from compiler_trace import ScheduledPreparation
+        from ace.compiler.compiler_trace import ScheduledPreparation
         requests = (CompilerRequest(0, 1, 0, 0, 5, 9),
                     CompilerRequest(1, 2, 0, 1, 9, 10),
                     CompilerRequest(2, 2, 1, 2, 9, 13))

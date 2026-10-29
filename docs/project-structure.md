@@ -5,11 +5,12 @@ organized under `tools/compiler_study/` and
 `docs/research/compiler-pregeneration/`. The dated QFT-96 campaign below remains
 the frozen historical input/evidence tree, not the current handoff implementation.
 
-## Current compiler entry points
+## Current source packages and entry points
 
 | Location | Purpose |
 | --- | --- |
-| `run_trace_comparison.py` | Simulator-facing entry point; module locations remain unchanged. |
+| [ace/](../ace/README.md) | Maintained simulation code, grouped by responsibility; includes an EPR lifecycle reading guide. |
+| `run_trace_comparison.py` | Thin compatibility launcher for `ace/cli/run_trace_comparison.py`. |
 | [tools/compiler_study/](../tools/compiler_study/README.md) | Full-chain comparison, controlled sweeps and audited aggregation. |
 | [Compiler research index](research/compiler-pregeneration/README.md) | Current handoff correction and chronological historical studies. |
 | `docs/research/compiler-pregeneration/data/` | Derived seed rows, aggregate metrics and audit outcomes. |
@@ -92,14 +93,14 @@ table or graph.
 | `tools/golden_study/analyze_qft96_congestion.py` | Measures per-layer/per-core route demand and emits relay/source-destination heatmaps. | For congestion analysis. |
 | `tools/golden_study/plot_qft96_metrics.py` | Plots latency, readiness, waste, fidelity, and related base metrics. | For final QFT figures. |
 | `run_trace_comparison.py` | Simulator-facing runner for one trace, policy/allocation, and seed cell. | Core experiment execution path. |
-| `compiler_scheduler.py` | Compiler-driven EPR scheduling, preparation triggers, lookahead, and allocation logic. | Main Dynamic algorithm study. |
-| `compiler_trace.py` | Parses compiler migration/hop traces and exposes layer/request structure. | To understand scheduler input. |
-| `request_scheduler.py` | Per-qubit eligibility, ordering, and admission timing. | To understand corrected latency. |
-| `resource_manager.py` | Memory/resource admission and reservation management. | To study queueing and contention. |
-| `reservation.py` | Reservation lifecycle and resource accounting. | To study allocation correctness. |
-| `node.py` | Quantum-network node/core construction and attached managers. | To understand simulator core objects. |
-| `generation.py` | EPR-generation behaviour and physical-generation events. | To study EPR time/fidelity parameters. |
-| `traffic.py` | Legacy traffic-generation/helper logic. | Historical context; not the trace-driven QFT path. |
+| `ace/compiler/compiler_scheduler.py` | Compiler-driven EPR scheduling, preparation triggers, lookahead, and allocation logic. | Main Dynamic algorithm study. |
+| `ace/compiler/compiler_trace.py` | Parses compiler migration/hop traces and exposes layer/request structure. | To understand scheduler input. |
+| `ace/simulation/request_scheduler.py` | Per-qubit eligibility, ordering, and admission timing. | To understand corrected latency. |
+| `ace/resources/resource_manager.py` | Memory/resource admission and reservation management. | To study queueing and contention. |
+| `ace/resources/reservation.py` | Reservation lifecycle and resource accounting. | To study allocation correctness. |
+| `ace/topology/node.py` | Quantum-network node/core construction and attached managers. | To understand simulator core objects. |
+| `ace/protocols/generation.py` | EPR-generation behaviour and physical-generation events. | To study EPR time/fidelity parameters. |
+| `ace/traffic/traffic.py` | Legacy traffic-generation/helper logic. | Historical context; not the trace-driven QFT path. |
 | `mapper/` | External/dependent mapper code, including HQA/T-HQA placement workflow. | Before changing placement. |
 | `tools/mapper_ace/export.py` | Converts mapper placement/migrations into ACE trace contracts and routing alternatives. | To change routing or trace export. |
 | `mapper/verification/verify_mapper.py` | Validates mapper output and placement/routing invariants. | Before accepting mapper data. |
@@ -124,7 +125,7 @@ T-HQA placement
 
 The October 28 directory cleanup groups the compiler CLI tools under
 `tools/compiler_study/` and their reports/data under
-`docs/research/compiler-pregeneration/`. Root simulator modules are unchanged.
+`docs/research/compiler-pregeneration/`. Simulator modules now live in the documented `ace/` packages; root CLI launchers remain compatible.
 The former `sample.json` is retained at `examples/requests/sample.json`.
 The merge preserves main's deletion of obsolete `dummy.txt` notes rather than
 reintroducing them under `docs/reference/historical-experiment-notes.txt`.

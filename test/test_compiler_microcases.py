@@ -6,8 +6,8 @@ major, so core 9 is router_2_1 and its neighbours are 5, 8, 10 and 13.
 """
 import unittest
 
-from execution_events import Booked, RequestCompleted, RequestRejected, Unbooked, canonical
-from compiler_trace import router_name
+from ace.observability.execution_events import Booked, RequestCompleted, RequestRejected, Unbooked, canonical
+from ace.compiler.compiler_trace import router_name
 from tools.ace_correctness.harness import Hop, are_neighbours, run_layers
 
 SAME_LINK = [[Hop(i, 5, 9, qubit=i) for i in range(4)]]

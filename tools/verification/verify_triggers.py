@@ -16,6 +16,8 @@ import sys
 from pathlib import Path
 
 DESIGN = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(DESIGN))
+from ace.paths import source_path
 MAIN = DESIGN.parent / "Compiler-Driven-ACE-correctness"
 BTP = DESIGN.parent
 failures = []
@@ -37,7 +39,7 @@ def load(path: Path, alias: str):
 
 # ----------------------------------------------------------------------------------------------------- V1
 main_trace = load(MAIN / "compiler_trace.py", "main_compiler_trace")
-design_trace = load(DESIGN / "compiler_trace.py", "design_compiler_trace")
+design_trace = load(source_path("compiler_trace.py"), "design_compiler_trace")
 for label, path in (("supplied", BTP / "qft_requests.txt"),
                     ("xy", MAIN / "results/routing_study_2026-10-25/qft96/xy/requests.txt")):
     trace_main, trace_design = main_trace.parse_compiler_trace(path), design_trace.parse_compiler_trace(path)
@@ -68,8 +70,8 @@ for bad in (0, 9):
 
 # ------------------------------------------------------------------------------------------- simulations
 sys.path.insert(0, str(DESIGN))
-import run_trace_comparison as runner                                   # noqa: E402
-import compiler_scheduler                                               # noqa: E402
+import ace.cli.run_trace_comparison as runner                                   # noqa: E402
+import ace.compiler.compiler_scheduler as compiler_scheduler                                               # noqa: E402
 
 captured = []
 real_run = runner.run_parallel_experiment

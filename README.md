@@ -62,7 +62,8 @@ Earlier workload-specific measurements remain in the
 
 | Directory | Contents |
 | --- | --- |
-| Root Python modules | Simulator protocols, memory/reservation ownership, request scheduling and existing runners. |
+| [ace/](ace/README.md) | Simulator implementations grouped by compiler, simulation, protocols, resources, topology, applications, observability and traffic. |
+| Root Python launchers | Four compatibility CLI entry points; their implementations live under `ace/cli/`. |
 | [tools/compiler_study/](tools/compiler_study/README.md) | Full-chain comparison, policy experiments and audited summaries. |
 | [tools/routing_research/](tools/routing_research/README.md) | Fixed-placement routing experiments, analysis and annotated congestion heatmaps. |
 | [legacy/](legacy/README.md) | Historical standalone runners with fixed buffers/paths; excluded from current experiment guidance. |
@@ -76,7 +77,7 @@ Earlier workload-specific measurements remain in the
 | [results/](results/README.md) | Versioned experiment evidence, manifests, validated results and reports. |
 | output/ | Ignored local simulations, diagnostics and temporary files. |
 
-Simulator modules and fixture paths retain their established locations. Frozen
+Simulator implementations are grouped under `ace/`; root CLI commands and fixture paths retain their established locations. Frozen
 result logs and reports are evidence and remain versioned; scratch console dumps
 and rebuildable caches are not part of the maintained source tree.
 The older `parallel_real`, `parallel_random`, earlier real-workload sweep, and

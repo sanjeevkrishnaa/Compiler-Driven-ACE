@@ -34,6 +34,8 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO_ROOT = HERE.parents[1]
+sys.path.insert(0, str(REPO_ROOT))
+from ace.paths import source_path
 sys.path.insert(0, str(REPO_ROOT / "tools" / "ace_budget_rerun"))
 import run_budget_sweep as sweep                                   # noqa: E402  (shared single-run machinery)
 
@@ -73,11 +75,11 @@ def extract_traces(directory: Path) -> Path:
 
 def source_constants() -> dict:
     """Constants the simulator reads from code rather than config, parsed from the source so the record cannot drift."""
-    topo = (REPO_ROOT / "router_net_topo_adaptive.py").read_text(encoding="utf-8")
+    topo = (source_path("router_net_topo_adaptive.py")).read_text(encoding="utf-8")
     delay = re.search(r"hop_count \* (\d+) \* MICROSECOND \+ (\d+) \* MICROSECOND", topo)
-    scheduler = (REPO_ROOT / "request_scheduler.py").read_text(encoding="utf-8")
+    scheduler = (source_path("request_scheduler.py")).read_text(encoding="utf-8")
     pick = lambda name: float(re.search(rf"^{name}\s*=\s*([0-9.]+)", scheduler, re.M).group(1))
-    runner = (REPO_ROOT / "run_trace_comparison.py").read_text(encoding="utf-8")
+    runner = (source_path("run_trace_comparison.py")).read_text(encoding="utf-8")
     return {
         "classical_delay_per_hop_us": int(delay.group(1)), "classical_delay_base_us": int(delay.group(2)),
         "classical_delay_formula": "distance / c + hops * per_hop + base (router_net_topo_adaptive.py)",

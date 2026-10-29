@@ -49,9 +49,9 @@ from sequence.constants import MILLISECOND
 from sequence.kernel.event import Event
 from sequence.kernel.process import Process
 
-from execution_events import RequestCompleted, RequestRejected
-from parallel_core import ParallelLayerRequestManager
-from reservation import ApplicationReservation
+from ace.observability.execution_events import RequestCompleted, RequestRejected
+from ace.simulation.parallel_core import ParallelLayerRequestManager
+from ace.resources.reservation import ApplicationReservation
 
 # Preserved from the legacy manager so the two are comparable; made configurable in Gate 5.
 EMPTY_LAYER_GAP_MS = 5

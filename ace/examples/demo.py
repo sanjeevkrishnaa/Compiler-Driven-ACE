@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 from sequence.topology.router_net_topo import RouterNetTopo
 from sequence.constants import MILLISECOND
 import sequence.utils.log as log
-from request_app import RequestAppTimeToServe
-from router_net_topo_adaptive import RouterNetTopoAdaptive
-from traffic import TrafficMatrix
+from ace.applications.request_app import RequestAppTimeToServe
+from ace.topology.router_net_topo_adaptive import RouterNetTopoAdaptive
+from ace.traffic.traffic import TrafficMatrix
 
 
 # five node linear network, zero quantum memory for ACP

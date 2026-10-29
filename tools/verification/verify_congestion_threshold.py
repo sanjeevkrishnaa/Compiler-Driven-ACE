@@ -30,8 +30,8 @@ def check(name, ok, detail=""):
 
 
 sys.path.insert(0, str(DESIGN))
-import run_trace_comparison as runner                                   # noqa: E402
-import compiler_scheduler                                               # noqa: E402
+import ace.cli.run_trace_comparison as runner                                   # noqa: E402
+import ace.compiler.compiler_scheduler as compiler_scheduler                                               # noqa: E402
 
 captured = []
 real_init = compiler_scheduler.CompilerPreGenerationController.__init__

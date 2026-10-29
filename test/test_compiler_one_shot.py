@@ -2,9 +2,9 @@
 
 import unittest
 
-from adaptive_continuous import AdaptiveContinuousProtocol
-from parallel_core import serialize_core_conflicts
-from reservation import ReservationAdaptive, eg_rule_condition_one_shot
+from ace.protocols.adaptive_continuous import AdaptiveContinuousProtocol
+from ace.simulation.parallel_core import serialize_core_conflicts
+from ace.resources.reservation import ReservationAdaptive, eg_rule_condition_one_shot
 
 
 class _MemoryInfo:

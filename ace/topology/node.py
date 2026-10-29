@@ -10,10 +10,10 @@ from sequence.network_management.network_manager import NetworkManager
 from sequence.utils import log
 from sequence.message import Message
 from math import inf
-from resource_manager import ResourceManagerAdaptive
-from reservation import ResourceReservationProtocolAdaptive
-from adaptive_continuous import AdaptiveContinuousProtocol
-from generation import EntanglementGenerationBadaptive, GenerationMsgType, ShEntanglementGenerationBadaptive
+from ace.resources.resource_manager import ResourceManagerAdaptive
+from ace.resources.reservation import ResourceReservationProtocolAdaptive
+from ace.protocols.adaptive_continuous import AdaptiveContinuousProtocol
+from ace.protocols.generation import EntanglementGenerationBadaptive, GenerationMsgType, ShEntanglementGenerationBadaptive
 
 def xyrouting(current: str ,dst: str)->str:
     # Parse source and destination coordinates

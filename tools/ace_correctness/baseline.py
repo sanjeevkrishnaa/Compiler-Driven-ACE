@@ -47,6 +47,8 @@ from pathlib import Path
 from typing import Iterable, Mapping, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+from ace.paths import source_path
 RUNNER = REPO_ROOT / "run_trace_comparison.py"
 ARCHIVE = REPO_ROOT / "results" / "congestion" / "mqt_ten_workload_congestion_results.zip"
 ARCHIVE_PREFIX = "mqt_ten_workload_study/"
@@ -324,7 +326,7 @@ def environment_manifest() -> dict:
             "commit": _git(REPO_ROOT, "rev-parse", "HEAD"),
             "branch": _git(REPO_ROOT, "rev-parse", "--abbrev-ref", "HEAD"),
             "tracked_files_modified": bool(_git(REPO_ROOT, "status", "--porcelain", "--untracked-files=no")),
-            "source_sha256": {name: sha256_bytes((REPO_ROOT / name).read_bytes()) for name in TRACKED_SOURCES},
+            "source_sha256": {name: sha256_bytes(source_path(name).read_bytes()) for name in TRACKED_SOURCES},
         },
         "sequence": {
             "path": str(sequence_root),

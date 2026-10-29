@@ -5,15 +5,15 @@ from sequence.constants import MILLISECOND
 from sequence.kernel.process import Process
 from sequence.kernel.event import Event
 import sequence.utils.log as log
-from execution_events import RequestCompleted, RequestRejected, RequestSubmitted
-from request_app_parallel import RequestAppLatencyParallel
-from router_net_topo_adaptive import RouterNetTopoAdaptive
+from ace.observability.execution_events import RequestCompleted, RequestRejected, RequestSubmitted
+from ace.applications.request_app_parallel import RequestAppLatencyParallel
+from ace.topology.router_net_topo_adaptive import RouterNetTopoAdaptive
 import random
 import json
 import os
 import csv
 import matplotlib.pyplot as plt
-from parallel_core_helper import *
+from ace.simulation.parallel_core_helper import *
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -624,7 +624,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             router.adaptive_continuous.set_adaptive_max_memory(autonomous_cache_limit)
     compiler_controller = None
     if compiler_spec is not None:
-        from compiler_scheduler import CompilerPreGenerationController
+        from ace.compiler.compiler_scheduler import CompilerPreGenerationController
         routers = {
             router.name: router
             for router in network_topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER)
@@ -672,7 +672,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     elif scheduler == "per-qubit":
         if request_plan is None:
             request_plan = compiler_spec["requests"]
-        from request_scheduler import QubitOrderedRequestManager     # imports this module
+        from ace.simulation.request_scheduler import QubitOrderedRequestManager     # imports this module
         request_manager = QubitOrderedRequestManager(
             tl, name_to_apps, layered_requests,
             pregeneration_time_ms, request_duration_ms, compiler_controller, recorder,

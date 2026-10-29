@@ -10,7 +10,7 @@ import mechanism as m                                                          #
 
 class VariantTests(unittest.TestCase):
     def test_a_cutoff_ratio_written_by_the_tool_reaches_every_memory(self):
-        from router_net_topo_adaptive import RouterNetTopoAdaptive
+        from ace.topology.router_net_topo_adaptive import RouterNetTopoAdaptive
         from sequence.topology.router_net_topo import RouterNetTopo
         with tempfile.TemporaryDirectory() as tmp:
             path = m.variant_config(Path(tmp), {"cutoff_ratio": 0.02})
@@ -20,7 +20,7 @@ class VariantTests(unittest.TestCase):
                 self.assertAlmostEqual(memory.cutoff_ratio * memory.coherence_time, 0.02)
 
     def test_the_default_leaves_the_cutoff_at_the_coherence_time(self):
-        from router_net_topo_adaptive import RouterNetTopoAdaptive
+        from ace.topology.router_net_topo_adaptive import RouterNetTopoAdaptive
         from sequence.topology.router_net_topo import RouterNetTopo
         topo = RouterNetTopoAdaptive(str(m.DEFAULT_CONFIG))
         memory = topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER)[0].get_components_by_type("MemoryArray")[0][0]

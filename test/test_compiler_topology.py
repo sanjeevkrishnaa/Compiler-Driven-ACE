@@ -4,7 +4,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from compiler_trace import cores_adjacent, config_topology, validate_neighbor_requests, CompilerRequest, CompilerTrace
+from ace.compiler.compiler_trace import cores_adjacent, config_topology, validate_neighbor_requests, CompilerRequest, CompilerTrace
 
 ROOT = Path(__file__).resolve().parents[1]
 MESH = json.loads((ROOT / "config" / "final_config" / "grid_4x4_ace_3.json").read_text())
@@ -43,7 +43,7 @@ class ConfigGuardTests(unittest.TestCase):
 
 class TorusLoadsInAce(unittest.TestCase):
     def test_ace_builds_the_torus_and_every_router_has_four_quantum_neighbours(self):
-        from router_net_topo_adaptive import RouterNetTopoAdaptive
+        from ace.topology.router_net_topo_adaptive import RouterNetTopoAdaptive
         from sequence.topology.router_net_topo import RouterNetTopo
         topo = RouterNetTopoAdaptive(str(ROOT / "config" / "final_config" / "grid_4x4_torus_ace_3.json"))
         routers = topo.get_nodes_by_type(RouterNetTopo.QUANTUM_ROUTER)

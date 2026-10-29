@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-from parallel_core import run_parallel_experiment , generate_hotspot_layered_requests
+from ace.simulation.parallel_core import run_parallel_experiment , generate_hotspot_layered_requests
 
 def run_cgp_waste_analysis():
 

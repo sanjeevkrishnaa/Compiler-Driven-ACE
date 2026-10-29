@@ -2,7 +2,7 @@
 from types import SimpleNamespace
 import unittest
 
-from reservation import ReservationAdaptive, ResourceReservationProtocolAdaptive
+from ace.resources.reservation import ReservationAdaptive, ResourceReservationProtocolAdaptive
 from sequence.network_management.reservation import Reservation
 
 
@@ -87,8 +87,8 @@ class LeaseTests(unittest.TestCase):
 
 class AdmissionTests(unittest.TestCase):
     def controller(self):
-        from compiler_scheduler import CompilerPreGenerationController
-        from compiler_trace import CompilerRequest, ScheduledPreparation
+        from ace.compiler.compiler_scheduler import CompilerPreGenerationController
+        from ace.compiler.compiler_trace import CompilerRequest, ScheduledPreparation
         events, removed, calls = [], [], []
         clock = SimpleNamespace(now=lambda: 0, schedule=events.append, remove_event=removed.append)
         request = CompilerRequest(0, 3, 0, 0, 0, 1)
@@ -124,8 +124,8 @@ class PhysicalIntegrationTests(unittest.TestCase):
         from contextlib import redirect_stdout
         from io import StringIO
         from pathlib import Path
-        from compiler_trace import parse_compiler_trace, plan_preparations, to_ace_layers
-        from parallel_core import run_parallel_experiment
+        from ace.compiler.compiler_trace import parse_compiler_trace, plan_preparations, to_ace_layers
+        from ace.simulation.parallel_core import run_parallel_experiment
         root = Path(__file__).resolve().parents[1]
         trace = parse_compiler_trace(root/'data/tracegen/random16_d80_seed303.txt')
         def run(strategy, seed):

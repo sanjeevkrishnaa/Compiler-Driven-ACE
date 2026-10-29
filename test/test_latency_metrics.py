@@ -6,9 +6,9 @@ from pathlib import Path
 from types import SimpleNamespace
 import unittest
 
-from compiler_trace import CompilerRequest, router_name
-from latency_metrics import arrival_latencies_ms, layer_activation_times
-from parallel_core import run_parallel_experiment
+from ace.compiler.compiler_trace import CompilerRequest, router_name
+from ace.observability.latency_metrics import arrival_latencies_ms, layer_activation_times
+from ace.simulation.parallel_core import run_parallel_experiment
 from tools.ace_correctness import harness
 from tools.ace_correctness.harness import Hop
 
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
 class AdmissionWaitColumnTests(unittest.TestCase):
     def test_admission_waits_are_reported_for_the_per_qubit_scheduler_and_absent_for_legacy(self):
-        import run_trace_comparison as runner
+        import ace.cli.run_trace_comparison as runner
         layers = [[Hop(0, 5, 6, 0), Hop(1, 5, 9, 1), Hop(2, 9, 10, 2)]]
         per_qubit, _ = simulate(layers, "per-qubit", memories=1)
         legacy, _ = simulate(layers, "legacy", memories=1)
@@ -94,7 +94,7 @@ class AdmissionWaitColumnTests(unittest.TestCase):
         self.assertIsNone(runner._admission_waits(legacy["stats"])["average_admission_wait_ms"])
 
     def test_a_one_picosecond_grace_is_not_a_wait(self):
-        import run_trace_comparison as runner
+        import ace.cli.run_trace_comparison as runner
         stats = {"timing_breakdown": {0: {"admission_wait_time_ms": 0.0}, 1: {"admission_wait_time_ms": 1e-9},
                                       2: {"admission_wait_time_ms": 0.5}, 3: {"admission_wait_time_ms": 2.0}}}
         got = runner._admission_waits(stats)

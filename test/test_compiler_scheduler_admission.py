@@ -6,7 +6,7 @@ admission modes differ.
 """
 import unittest
 
-from execution_events import RequestCompleted, RequestSubmitted
+from ace.observability.execution_events import RequestCompleted, RequestSubmitted
 from tools.ace_correctness.harness import Hop, run_layers
 
 SWAP = [[Hop(0, 8, 12, qubit=0), Hop(1, 12, 8, qubit=1)]]          # two qubits exchange cores 8 and 12

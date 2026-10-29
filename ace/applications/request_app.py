@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING
 from sequence.app.request_app import RequestApp
 import sequence.utils.log as log
 from collections import defaultdict
-from reservation import ReservationAdaptive
+from ace.resources.reservation import ReservationAdaptive
 from sequence.constants import SECOND
 from sequence.resource_management.memory_manager import MemoryInfo
 
 if TYPE_CHECKING:
-    from node import QuantumRouterAdaptive
+    from ace.topology.node import QuantumRouterAdaptive
     from sequence.network_management.reservation import Reservation
 
 

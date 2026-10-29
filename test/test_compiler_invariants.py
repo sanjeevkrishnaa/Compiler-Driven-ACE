@@ -1,10 +1,10 @@
 import unittest
 
-from execution_events import (
+from ace.observability.execution_events import (
     ADAPTIVE, APPLICATION, Booked, ListRecorder, MisRemoved, NullRecorder, PairCredited,
     PairDelivered, RequestCompleted, RequestRejected, RequestSubmitted, Unbooked, canonical,
 )
-from invariants import (
+from ace.observability.invariants import (
     ALIASED_RESERVATIONS, BOOKING_SURVIVES_COMPLETION, COMPLETION_COUNT, CREDIT_EXCEEDS_REQUEST,
     CREDIT_WITHOUT_BOOKING,
     LAYER_BARRIER, MEMORY_DOUBLE_BOOKED, MISREMOVAL, ORPHAN_PAIR, RELEASE_NOT_LIVE,

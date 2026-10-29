@@ -10,8 +10,8 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from execution_events import Booked, Unbooked, reservation_serial
-from invariants import MEMORY_DOUBLE_BOOKED, RELEASE_NOT_LIVE, check_events
+from ace.observability.execution_events import Booked, Unbooked, reservation_serial
+from ace.observability.invariants import MEMORY_DOUBLE_BOOKED, RELEASE_NOT_LIVE, check_events
 from tools.ace_correctness.audit_trace import audit_trace
 
 ARCHIVE = Path(__file__).resolve().parents[1] / "results" / "congestion" / "mqt_ten_workload_congestion_results.zip"

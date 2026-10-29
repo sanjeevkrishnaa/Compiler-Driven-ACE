@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections import defaultdict
 from statistics import fmean
 
-from compiler_trace import CompilerRequest, ScheduledPreparation
+from ace.compiler.compiler_trace import CompilerRequest, ScheduledPreparation
 from sequence.constants import MILLISECOND
 from sequence.kernel.event import Event
 from sequence.kernel.process import Process
@@ -267,7 +267,7 @@ class CompilerPreGenerationController:
         """Preview both existing leases without claiming a pair or another slot."""
         if not self.reuse_compiler_memory or not self.request_has_ready_pair(request_id):
             return False
-        from reservation import ApplicationReservation
+        from ace.resources.reservation import ApplicationReservation
         request = self.requests[request_id]
         source, destination = map(self._router_name, (request.source_core, request.destination_core))
         preview = ApplicationReservation(source, destination, start, end, 1, self.fidelity, 1, request_id)

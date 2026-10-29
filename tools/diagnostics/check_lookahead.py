@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tools" / "ace_budget_rerun"))
 import run_budget_sweep as sweep                                        # noqa: E402
-from compiler_trace import parse_compiler_trace, plan_preparations      # noqa: E402
+from ace.compiler.compiler_trace import parse_compiler_trace, plan_preparations      # noqa: E402
 
 WORKLOADS = ["ghz", "bv", "graphstate", "vqe_real_amp", "cdkm_ripple_carry_adder", "bmw_quark_cardinality",
              "draper_qft_adder", "qft", "qaoa", "randomcircuit"]

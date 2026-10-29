@@ -7,7 +7,7 @@ from sequence.topology.router_net_topo import RouterNetTopo
 from sequence.kernel.quantum_manager import QuantumManager
 from sequence.constants import SPEED_OF_LIGHT, MICROSECOND, BELL_DIAGONAL_STATE_FORMALISM
 
-from node import QuantumRouterAdaptive, BSMNodeAdaptive
+from ace.topology.node import QuantumRouterAdaptive, BSMNodeAdaptive
 
 
 class RouterNetTopoAdaptive(RouterNetTopo):

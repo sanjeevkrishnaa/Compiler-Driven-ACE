@@ -2,7 +2,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from compiler_trace import (
+from ace.compiler.compiler_trace import (
     mesh_dimensions,
     parse_compiler_trace,
     plan_preparations,

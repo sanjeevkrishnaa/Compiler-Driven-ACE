@@ -1,4 +1,4 @@
-from request_app import *
+from ace.applications.request_app import *
 
 class RequestAppLatencyDynamic(RequestAppLatency):
     '''for the time-to-serve (latency) metric

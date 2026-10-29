@@ -4,6 +4,7 @@ Load the actual manager definitions without importing the physical simulator;
 the tests exercise production method bodies with a minimal event/app harness.
 """
 import ast
+from ace.paths import source_path
 from contextlib import redirect_stdout
 from io import StringIO
 from pathlib import Path
@@ -15,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def load_definitions(filename, names, namespace):
-    tree = ast.parse((ROOT / filename).read_text(encoding='utf-8'))
+    tree = ast.parse(source_path(filename).read_text(encoding='utf-8'))
     definitions = [node for node in tree.body
                    if isinstance(node, (ast.ClassDef, ast.FunctionDef)) and node.name in names]
     exec(compile(ast.Module(body=definitions, type_ignores=[]), filename, 'exec'), namespace)

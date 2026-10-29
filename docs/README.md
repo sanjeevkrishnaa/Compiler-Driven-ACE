@@ -2,6 +2,8 @@
 
 ## Start here
 
+- [Simulator source packages and EPR lifecycle reading guide](../ace/README.md)
+
 - [Heavy-workload routing comparison: QFT, Draper and QAOA, with congestion heatmaps](research/routing/heavy-workloads-2026-10-28/README.md)
 - [Current source-backed pair-delivery model and physical-memory ownership](research/compiler-pregeneration/pair-consumption-research-2026-10-28.md)
 - [Extra-memory experiment and revert comparison](research/compiler-pregeneration/extra-memory-revert-2026-10-28.md)
