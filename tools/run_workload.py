@@ -11,6 +11,25 @@ sys.path.insert(0, str(ROOT))
 from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 
 
+
+def ensure_engine(root: Path) -> Path:
+    """Initialize only a missing engine; preserve an existing checkout."""
+    engine = root / "third_party" / "SeQUeNCe"
+    if (engine / "sequence" / "__init__.py").is_file():
+        return engine
+    print("Initializing pinned SeQUeNCe engine...", flush=True)
+    try:
+        subprocess.run(["git", "submodule", "update", "--init", "--recursive", "--", "third_party/SeQUeNCe"],
+                       cwd=root, check=True)
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise RuntimeError("Could not initialize SeQUeNCe. Ensure Git and network access are available, "
+                           "then run: git submodule update --init --recursive -- third_party/SeQUeNCe") from exc
+    if not (engine / "sequence" / "__init__.py").is_file():
+        raise RuntimeError("SeQUeNCe source is still missing after initialization. Use a Git clone of ACE, "
+                           "rather than a downloaded source ZIP.")
+    return engine
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("stage", choices=("run", "trace", "route", "simulate"), nargs="?", default="run")
@@ -29,8 +48,11 @@ def main():
     out = (a.output or ROOT / "output" / (a.workload + "-" + a.routing)).resolve()
     inputs = out / "inputs"
     engine = ROOT / "third_party" / "SeQUeNCe"
-    if not a.dry_run and not (engine / "sequence" / "__init__.py").is_file():
-        p.error("initialize engine first: git submodule update --init --recursive")
+    if not a.dry_run:
+        try:
+            engine = ensure_engine(ROOT)
+        except RuntimeError as exc:
+            p.error(str(exc))
     env = os.environ.copy()
     env["PYTHONPATH"] = os.pathsep.join([str(engine), str(ROOT / "mapper"), str(ROOT)] + ([env["PYTHONPATH"]] if env.get("PYTHONPATH") else []))
     temporary = ROOT / "output" / "runtime_temp"

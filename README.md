@@ -27,14 +27,14 @@ The compiler reservation lifetime defaults to **50 ms**; see the [window sweep a
 With the study Python environment active and GNU Make installed:
 
 ```text
-git submodule update --init --recursive
 make run WORKLOAD=qaoa ROUTING=greedy
 ```
 
 This generates a fresh 96-qubit circuit, maps it with T-HQA, writes the selected
 routed trace, then simulates compiler C=4 and ODG on four physics seeds. Only the
 selected workload is generated. The runner sets PYTHONPATH and a writable temp
-folder automatically. Output defaults to `output/qaoa-greedy/`; results are in
+folder automatically, and initializes the pinned engine submodule if missing
+(requires Git and network access on the first run). Output defaults to `output/qaoa-greedy/`; results are in
 `simulation/qaoa/seed_42/greedy/summary.csv` beneath it.
 
 Use `make dry-run` to inspect commands, or `make trace`, `make route` and
