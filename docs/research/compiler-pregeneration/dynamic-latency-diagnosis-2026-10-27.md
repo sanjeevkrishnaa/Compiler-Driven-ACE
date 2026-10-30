@@ -58,7 +58,7 @@ From the repository root, with the study's compatible SeQUeNCe 0.8.1 revision
 `cf5283cdfd6692a82a090d15fb09fbc01bd322fc` on PYTHONPATH:
 
 ```text
-python tools/compiler_study/run_full_chain_latency.py --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 0,1 --output output/full_chain_m4_c2_recheck
+python tools/compiler_study/run_full_chain_latency.py --compiler-reservation-ms 1000 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 0,1 --output output/full_chain_m4_c2_recheck
 ```
 
 Use an independent seed set before making a new performance claim. A broader

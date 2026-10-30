@@ -14,6 +14,8 @@ import numpy as np
 import offline_routing as ro
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 WORKLOADS = ('qft', 'draper_qft_adder', 'qaoa')
 ALGORITHMS = ('xy', 'yx', 'greedy', 'history', 'minexcess', 'minhop', 'detour2')
 ADJ = ro.adjacency('mesh')
@@ -125,7 +127,7 @@ def build(out, inputs=None, algorithms=ALGORITHMS):
         rows=[r for r in previous if r['algorithm'] not in algorithms]+rows
     write_csv(out/'structural.csv',rows); (out/'inputs.json').write_text(json.dumps(manifests,indent=2))
 
-def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_dir='simulation', consumption='handoff'):
+def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_dir='simulation', consumption='handoff', reservation_ms=DEFAULT_COMPILER_RESERVATION_MS):
     # Archived seeds 42/43/44 have identical trace hashes: do not count duplicates as replicates.
     jobs=[p for p in (out/'traces').glob('*/seed_42/*/requests.txt')
           if p.parent.name in algorithms and p.parent.parent.parent.name in workloads]
@@ -134,15 +136,15 @@ def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_
         if (dest/'summary.csv').exists():
             metadata=json.loads((dest/'metadata.json').read_text())
             actual=metadata['parameters']['compiler_pair_consumption']
-            if actual!=consumption or metadata['seeds']!=[int(s) for s in seeds.split(',')]:
-                raise ValueError(f'{dest}: completed results use different consumption/seeds; choose a fresh output folder')
+            if metadata['parameters']['compiler_reservation_ms']!=reservation_ms or actual!=consumption or metadata['seeds']!=[int(s) for s in seeds.split(',')]:
+                raise ValueError(f'{dest}: completed results use different reservation window/consumption/seeds; choose a fresh output folder')
             return
         dest.mkdir(parents=True,exist_ok=True)
         cmd=[sys.executable,'-B','run_trace_comparison.py','--trace',str(trace.resolve()),'--config','config/final_config/grid_4x4_ace_3.json',
              '--strategies','on-demand,dynamic','--seeds',seeds,'--total-memories','4','--compiler-memories','4','--generation-capacity','4',
              '--planner-lead-layers','2','--scheduler','per-qubit','--admission','event','--admission-priority','ready-first',
              '--all-chain-hops','--no-congestion-threshold','--pregeneration-buffer-ms','0','--stop-after-workload','--audit-events',
-             '--compiler-pair-consumption',consumption,'--output',str(dest.resolve())]
+             '--compiler-reservation-ms',str(reservation_ms),'--compiler-pair-consumption',consumption,'--output',str(dest.resolve())]
         (dest/'command.json').write_text(json.dumps(cmd))
         with (dest/'run.log').open('w') as f: subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT,check=True)
         print('completed',str(rel),flush=True)
@@ -159,6 +161,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('stage',choices=['build','simulate']); p.add_argument('--output',type=Path,required=True); p.add_argument('--inputs',type=Path); p.add_argument('--seeds',default='60,61,62,63');p.add_argument('--algorithms',nargs='+',choices=ALGORITHMS,default=ALGORITHMS)
     p.add_argument('--workloads',nargs='+',choices=WORKLOADS,default=WORKLOADS);p.add_argument('--simulation-dir',choices=['simulation','validation'],default='simulation')
     p.add_argument('--compiler-pair-consumption',choices=['swap','handoff'],default='handoff')
+    p.add_argument("--compiler-reservation-ms",type=float,default=DEFAULT_COMPILER_RESERVATION_MS)
     a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True)
-    build(a.output,a.inputs,a.algorithms) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption)
+    build(a.output,a.inputs,a.algorithms) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms)
 if __name__=='__main__': main()

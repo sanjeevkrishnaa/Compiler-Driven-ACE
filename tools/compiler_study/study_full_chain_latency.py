@@ -10,6 +10,8 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 VARIANTS = {
     "swap-c1-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2", "--compiler-memories", "1", "--generation-capacity", "1"],
     "swap-c2-l2": ["--compiler-pair-consumption", "swap", "--admission-priority", "ready-first", "--planner-lead-layers", "2"],
@@ -54,6 +56,7 @@ def main():
     p.add_argument("--variants", default=",".join(VARIANTS))
     p.add_argument("--workers", type=int, default=2)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--compiler-reservation-ms", type=float, default=DEFAULT_COMPILER_RESERVATION_MS)
     args = p.parse_args()
     names = args.variants.split(",")
     if any(n not in VARIANTS for n in names):
@@ -69,6 +72,7 @@ def main():
             "--admission-priority", "fifo",
             "--compiler-pair-consumption", "swap",
             "--all-chain-hops", "--no-congestion-threshold", "--pregeneration-buffer-ms", "0",
+            "--compiler-reservation-ms", str(args.compiler_reservation_ms),
             "--stop-after-workload", "--audit-events"]
     commands = {n: base + VARIANTS[n] + ["--output", str((args.output / n).resolve())] for n in names}
     (args.output / "commands.json").write_text(json.dumps(commands, indent=2))

@@ -26,3 +26,14 @@ The simulator entry point remains `run_trace_comparison.py` at the root; it forw
 
 See the [study index](../../docs/research/compiler-pregeneration/README.md) and
 [committed evidence](../../results/compiler_memory_handoff_2026-10-28/README.md).
+
+Compiler reservation lifetime defaults to **50 ms** from scheduled start.
+All launchers accept `--compiler-reservation-ms`; use `1000` to reproduce historical
+handoff/extra-memory measurements. See the [window study](../../docs/research/compiler-pregeneration/reservation-window-2026-10-29.md).
+
+`study_reservation_window.py` restores frozen QFT/Draper/QAOA XY inputs and runs
+matched explicit-window trials with two workers. Select `--phase`, `--windows`,
+`--seeds` and `--compiler-memories` for each phase.
+`summarize_reservation_window.py --study <directory>` checks audits and booking
+durations, separates deadline expiry from progress evictions, and writes
+`aggregate.csv`. Exact commands and raw records remain under each phase.

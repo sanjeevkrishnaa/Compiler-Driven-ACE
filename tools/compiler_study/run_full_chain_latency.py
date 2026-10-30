@@ -13,6 +13,8 @@ import sys
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 
 
 def main() -> None:
@@ -29,6 +31,7 @@ def main() -> None:
                         help="minimum preparation lead (2: verified full-chain preset; 1: earlier C=2 baseline)")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--compiler-reservation-ms", type=float, default=DEFAULT_COMPILER_RESERVATION_MS)
     args = parser.parse_args()
     command = [
         sys.executable, "-u", str(ROOT / "run_trace_comparison.py"),
@@ -43,7 +46,7 @@ def main() -> None:
         "--preparation-delay-ms", "0", "--planner-lead-layers", str(args.planner_lead_layers),
         "--dynamic-lookahead-layers", "8", "--coherence-time-layers", "10",
         "--fidelity-threshold", "0.01", "--pregeneration-buffer-ms", "0",
-        "--compiler-reservation-ms", "1000", "--request-duration-ms", "50",
+        "--compiler-reservation-ms", str(args.compiler_reservation_ms), "--request-duration-ms", "50",
         "--stop-time-s", "200", "--scheduler", "per-qubit",
         "--admission", "event", "--admission-priority", "ready-first", "--starvation-guard", "--stop-after-workload", "--audit-events",
         "--output", str(args.output.resolve()),

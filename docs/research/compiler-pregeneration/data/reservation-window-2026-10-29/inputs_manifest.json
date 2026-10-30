@@ -1,0 +1,32 @@
+[
+  {
+    "workload": "qft",
+    "logical_qubits": 96,
+    "mapping": "T-HQA",
+    "mapping_seed": 42,
+    "routing": "xy",
+    "archive": "results\\heavy_routing_2026-10-28\\evidence.zip",
+    "member": "study/traces/qft/seed_42/xy/requests.txt",
+    "sha256": "665c1f6be5b2e9dea18ef972a2a91cee9df595340f77b220b970df4e2c56d035"
+  },
+  {
+    "workload": "draper_qft_adder",
+    "logical_qubits": 96,
+    "mapping": "T-HQA",
+    "mapping_seed": 42,
+    "routing": "xy",
+    "archive": "results\\heavy_routing_2026-10-28\\evidence.zip",
+    "member": "study/traces/draper_qft_adder/seed_42/xy/requests.txt",
+    "sha256": "eb7a1ea3a6bdbb5924ed35b4740a7554761ebaa17e1584d734540174b72409d8"
+  },
+  {
+    "workload": "qaoa",
+    "logical_qubits": 96,
+    "mapping": "T-HQA",
+    "mapping_seed": 42,
+    "routing": "xy",
+    "archive": "results\\heavy_routing_2026-10-28\\evidence.zip",
+    "member": "study/traces/qaoa/seed_42/xy/requests.txt",
+    "sha256": "8b8decf21f396b89a9b9b93f7b484d567c6eb52460166adfe995c71307752f14"
+  }
+]

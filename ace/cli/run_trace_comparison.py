@@ -13,6 +13,7 @@ data-memory occupancy, or reset latency. Reported times are EPR delivery times.
 
 from __future__ import annotations
 
+from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 from ace.paths import REPO_ROOT, SOURCE_PATHS, source_path
 
 import argparse
@@ -253,7 +254,8 @@ def main() -> None:
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
     parser.add_argument("--pregeneration-buffer-ms", type=float, default=0,
                         help="additional experiment delay before reservation start; default 0 (the RSVP channel guard is calculated from the topology)")
-    parser.add_argument("--compiler-reservation-ms", type=float, default=1000)
+    parser.add_argument("--compiler-reservation-ms", type=float, default=DEFAULT_COMPILER_RESERVATION_MS,
+                        help="compiler reservation lifetime in ms from scheduled start (default: 50); independent of physical coherence")
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
     parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="legacy",
@@ -398,7 +400,7 @@ def main() -> None:
     (args.output / "metadata.json").write_text(json.dumps({
         "created_at": datetime.now(timezone.utc).isoformat(),
             "metric_version": 3,
-            "implementation_version": 5,
+            "implementation_version": 6,
             "latency_scope": "entanglement_delivery",
             "application_model": "terminal_entanglement_consumer",
             "data_teleportation_simulated": False,
@@ -408,7 +410,7 @@ def main() -> None:
             "source_layout": "ace-package-v1",
             "source_paths": SOURCE_PATHS,
             "source_sha256": {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest()
-                              for name in ['reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py', 'runtime_provenance.py']},
+                              for name in ['compiler_settings.py', 'reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py', 'runtime_provenance.py']},
             "readiness_definition": "physical creation strictly before first application submission",
         "runtime": runtime_provenance(REPO_ROOT),
         "trace": str(args.trace.resolve()),

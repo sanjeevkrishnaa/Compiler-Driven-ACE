@@ -126,6 +126,10 @@ across algorithms and workloads. These metrics are deliberately separate:
 
 ![Mean logical migration latency](figures/migration_latency.png)
 
+This dated routing study used a 1000 ms compiler reservation lifetime. The current
+default is [50 ms](../../compiler-pregeneration/reservation-window-2026-10-29.md);
+pass `--compiler-reservation-ms 1000` to reproduce its runtime results.
+
 ## Evidence and reproduction
 
 - [Complete measurement tables, uncertainty and fresh-seed results](measurements.md).

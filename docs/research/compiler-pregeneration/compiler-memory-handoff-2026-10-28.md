@@ -120,5 +120,5 @@ runs. [Every seed row](data/compiler-handoff-2026-10-28/all_seeds.csv),
 Reproduce from the repository root with the pinned SeQUeNCe 0.8.1 dependency:
 
 ```text
-python tools/compiler_study/run_full_chain_latency.py --compiler-memories 4 --compiler-pair-consumption handoff --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
+python tools/compiler_study/run_full_chain_latency.py --compiler-memories 4 --compiler-pair-consumption handoff --seeds 6,7,8,9 --compiler-reservation-ms 1000 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
 ```

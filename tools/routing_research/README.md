@@ -84,3 +84,5 @@ uses seed 42 only rather than treating duplicate placements as replication.
 The older `run_routing_study.py` performs a broader structural capacity sweep;
 `simulate_rerouted.py` uses the historical budget-sweep runner. Use
 `heavy_routing.py` for the corrected compiler scheduler comparison.
+
+The current compiler reservation default is 50 ms. Pass `--compiler-reservation-ms 1000` to `heavy_routing.py simulate` when reproducing the dated 2026-10-28 study; cached results must match the requested window.

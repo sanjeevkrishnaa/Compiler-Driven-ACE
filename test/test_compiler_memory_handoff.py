@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class HandoffTests(unittest.TestCase):
-    def run_full_pool(self, memories, reuse):
+    def run_full_pool(self, memories, reuse, reservation_ms=1000):
         requests = (CompilerRequest(0, 1, 0, 0, 5, 9),)
         if memories == 2:
             requests += (CompilerRequest(1, 1, 1, 1, 9, 10),)
@@ -28,7 +28,7 @@ class HandoffTests(unittest.TestCase):
         spec = dict(requests=requests, schedule=schedule, strategy="dynamic", columns=4,
                     planner_blocked=blocked, planner_peak_memory=peak,
                     compiler_memories_per_core=memories, fidelity=.01,
-                    reservation_duration_ms=1000)
+                    reservation_duration_ms=reservation_ms)
         if reuse is not None:
             spec['reuse_compiler_memory'] = reuse
         recorder = ListRecorder()
@@ -108,6 +108,23 @@ class HandoffTests(unittest.TestCase):
         result, _ = self.run_full_pool(1, False)
         self.assertGreater(result['stats']['end_to_end_latency_ms'], 1000)
         self.assertEqual(result['compiler_metrics']['expired_compiler_pairs'], 1)
+
+    def test_short_window_preserves_early_ready_pair_consumption(self):
+        from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
+        result, _ = self.run_full_pool(1, True, DEFAULT_COMPILER_RESERVATION_MS)
+        self.assertEqual(result['compiler_metrics']['pregenerated_hits'], 1)
+        self.assertLess(result['stats']['end_to_end_latency_ms'], 10)
+        record = result['compiler_metrics']['epr_utilization_trace'][0]
+        self.assertEqual(record['reservation_end_ps'] - record['reservation_start_ps'],
+                         DEFAULT_COMPILER_RESERVATION_MS * 1e9)
+
+    def test_short_window_releases_a_blocking_unused_compiler_pair_at_its_deadline(self):
+        from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
+        result, _ = self.run_full_pool(1, False, DEFAULT_COMPILER_RESERVATION_MS)
+        self.assertEqual(result['stats']['completed_requests'], 1)
+        self.assertEqual(result['compiler_metrics']['expired_compiler_pairs'], 1)
+        self.assertGreater(result['stats']['end_to_end_latency_ms'], DEFAULT_COMPILER_RESERVATION_MS)
+        self.assertLess(result['stats']['end_to_end_latency_ms'], DEFAULT_COMPILER_RESERVATION_MS + 20)
 
     def test_booking_transfer_preserves_the_memory_and_cancels_old_cleanup(self):
         protocol = ResourceReservationProtocolAdaptive.__new__(ResourceReservationProtocolAdaptive)

@@ -246,6 +246,8 @@ class CompilerPreGenerationController:
             "generation_layer": metadata["generation_layer"],
             "target_layer": metadata["target_layer"],
             "generated_at_ps": generated_at,
+            "reservation_start_ps": metadata.get("reservation_start_ps"),
+            "reservation_end_ps": metadata.get("reservation_end_ps"),
             "utilized_at_ps": None,
             "expired_at_ps": None,
             "expiry_reason": None,

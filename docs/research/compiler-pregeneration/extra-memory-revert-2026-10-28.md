@@ -74,5 +74,5 @@ omitting the consumption argument now emits `--compiler-pair-consumption swap`.
 Reproduce using the pinned SeQUeNCe 0.8.1 dependency on `PYTHONPATH`:
 
 ```text
-python -B -m tools.compiler_study.study_full_chain_latency --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 6,7,8,9 --variants swap-c1-l2,swap-c2-l2,swap-c3-l2,swap-c4-l2,odg --workers 2 --output output/swap-revert-reproduction
+python -B -m tools.compiler_study.study_full_chain_latency --compiler-reservation-ms 1000 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --seeds 6,7,8,9 --variants swap-c1-l2,swap-c2-l2,swap-c3-l2,swap-c4-l2,odg --workers 2 --output output/swap-revert-reproduction
 ```

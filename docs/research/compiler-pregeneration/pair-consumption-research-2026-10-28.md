@@ -109,5 +109,5 @@ both strategies, not assumed to be physically instantaneous.
 Reproduce with the pinned SeQUeNCe 0.8.1 runtime on `PYTHONPATH`:
 
 ```text
-python -B -m tools.compiler_study.run_full_chain_latency --compiler-memories 4 --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/researched-pair-delivery-reproduction
+python -B -m tools.compiler_study.run_full_chain_latency --compiler-memories 4 --seeds 6,7,8,9 --compiler-reservation-ms 1000 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/researched-pair-delivery-reproduction
 ```

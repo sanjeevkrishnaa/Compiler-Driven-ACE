@@ -1,5 +1,7 @@
 # Compiler pre-generation studies
 
+The compiler reservation lifetime is **50 ms**. See the [window selection and validation](reservation-window-2026-10-29.md).
+
 **Current default:** in-place ownership handoff for EPR delivery, restored after
 the user's requested online research. See the [source-backed memory lifecycle
 and metric scope](pair-consumption-research-2026-10-28.md). The temporary

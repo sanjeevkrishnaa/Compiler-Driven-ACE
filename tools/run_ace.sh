@@ -5,7 +5,7 @@ set -eu
 
 repo=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 python_bin=${ACE_PYTHON:-"$repo/.venv/bin/python"}
-sequence_root=${SEQUENCE_ROOT:-"$repo/../SeQUeNCe-0.8.1"}
+sequence_root=${SEQUENCE_ROOT:-"$repo/third_party/SeQUeNCe"}
 
 if [ ! -x "$python_bin" ]; then
     echo "ACE Python not found: $python_bin" >&2
@@ -14,7 +14,7 @@ if [ ! -x "$python_bin" ]; then
 fi
 if [ ! -f "$sequence_root/sequence/__init__.py" ]; then
     echo "SeQUeNCe 0.8.1 checkout not found: $sequence_root" >&2
-    echo "Set SEQUENCE_ROOT=/absolute/path/to/SeQUeNCe-0.8.1" >&2
+    echo "Run: git submodule update --init --recursive" >&2
     exit 2
 fi
 

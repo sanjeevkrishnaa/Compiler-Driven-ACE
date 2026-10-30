@@ -10,6 +10,8 @@ and retries; no preparation window is subtracted.
 These metrics measure EPR delivery. Data-qubit teleportation gates, destination
 data-memory occupancy, and local reset/transfer costs are not simulated.
 
+The compiler reservation lifetime defaults to **50 ms**; see the [window sweep and validation](docs/research/compiler-pregeneration/reservation-window-2026-10-29.md). Override with `--compiler-reservation-ms`.
+
 ## Start here
 
 - [Current compiler implementation and results](docs/research/compiler-pregeneration/compiler-memory-handoff-2026-10-28.md)
@@ -24,11 +26,12 @@ data-memory occupancy, and local reset/transfer costs are not simulated.
 
 Use SeQUeNCe 0.8.1 at commit
 `cf5283cdfd6692a82a090d15fb09fbc01bd322fc` in your Python environment or on
-PYTHONPATH. The dependency is separate from this repository; preserve the exact
-revision when comparing results.
+PYTHONPATH. The engine is pinned as a Git submodule under `third_party/SeQUeNCe`.
+Initialize it with `git submodule update --init --recursive` (or clone ACE with
+`git clone --recurse-submodules`). Preserve the exact revision when comparing results.
 
 ```powershell
-$env:PYTHONPATH = 'C:/path/to/pinned-SeQUeNCe'
+$env:PYTHONPATH = (Resolve-Path 'third_party/SeQUeNCe').Path
 python -m tools.compiler_study.run_full_chain_latency --compiler-memories 4 --seeds 6,7,8,9 --trace results/qft96_2seed_2026-10-26/traces/placements/mesh/T-HQA/qft96/seed_42/routes/xy/requests.txt --config config/final_config/grid_4x4_ace_3.json --output output/handoff_reproduction
 ```
 
@@ -49,7 +52,7 @@ Run it from a POSIX shell such as Bash:
 tools/run_ace.sh -B run_trace_comparison.py --trace data/tracegen/qft16_seed101.txt --strategies on-demand,fixed,dynamic --seeds 0,1,2 --total-memories 4 --compiler-memories 3 --output output/compiler_study
 ```
 
-Its defaults are this checkout's `.venv` and sibling `../SeQUeNCe-0.8.1`.
+Its defaults are this checkout's `.venv` and bundled `third_party/SeQUeNCe` submodule.
 Set `ACE_PYTHON` and `SEQUENCE_ROOT` explicitly for another verified 0.8.1
 installation. New experiments record the actual Python executable, imported
 `sequence.__file__`, SeQUeNCe version/commit and ACE commit in metadata, in

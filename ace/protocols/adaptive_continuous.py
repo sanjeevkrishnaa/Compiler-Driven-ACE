@@ -20,6 +20,7 @@ from sequence.constants import MILLISECOND, SECOND, EPSILON
 from sequence.components.memory import Memory
 from sequence.network_management.reservation import Reservation
 
+from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 from ace.protocols.purification import BBPSSW_bds
 from ace.resources.reservation import ResourceReservationProtocolAdaptive, ReservationAdaptive
 
@@ -210,9 +211,9 @@ class AdaptiveContinuousProtocol(Protocol):
         start_time = self.owner.timeline.now() + round_trip_time
         # A compiler target may be delayed by congestion/retry layers after its
         # nominal generation layer.  Keep the one-shot reservation valid for a
-        # physical coherence window instead of ACE's short periodic CGP epoch.
+        # finite lifetime independent of physical coherence and the CGP epoch.
         reservation_duration = int(
-            request_metadata.get("reservation_duration_ms", 1000) * MILLISECOND
+            request_metadata.get("reservation_duration_ms", DEFAULT_COMPILER_RESERVATION_MS) * MILLISECOND
         )
         if reservation_duration <= 0:
             raise ValueError("compiler reservation duration must be positive")
@@ -476,6 +477,8 @@ class AdaptiveContinuousProtocol(Protocol):
                     "generation_layer": reservation.compiler_generation_layer,
                     "target_layer": reservation.compiler_target_layer,
                     "strategy": reservation.compiler_strategy,
+                    "reservation_start_ps": reservation.start_time,
+                    "reservation_end_ps": reservation.end_time,
                 }
                 self.generated_pair_metadata[entanglement_pair] = metadata
                 if self.compiler_observer:

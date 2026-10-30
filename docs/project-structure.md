@@ -142,3 +142,5 @@ Their Git history remains recoverable. `parallel_*.py`, PIR runners, legacy
 traffic/configuration helpers, and root simulator modules remain until a
 separate dependency audit classifies them; they were not removed by this
 cleanup.
+
+The pinned SeQUeNCe 0.8.1 engine lives in [`third_party/SeQUeNCe/`](../third_party/README.md) as a Git submodule. Initialize it with `git submodule update --init --recursive`; ACE-specific code remains in `ace/`.

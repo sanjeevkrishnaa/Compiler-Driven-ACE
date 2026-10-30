@@ -2,6 +2,7 @@
 
 ## Start here
 
+- [Current 50 ms compiler reservation window and validation](research/compiler-pregeneration/reservation-window-2026-10-29.md)
 - [Simulator source packages and EPR lifecycle reading guide](../ace/README.md)
 
 - [Heavy-workload routing comparison: QFT, Draper and QAOA, with congestion heatmaps](research/routing/heavy-workloads-2026-10-28/README.md)

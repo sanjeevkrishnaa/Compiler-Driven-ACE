@@ -3,6 +3,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATHS = {'adaptive_continuous.py': 'ace/protocols/adaptive_continuous.py',
+ 'compiler_settings.py': 'ace/compiler/settings.py',
  'compiler_scheduler.py': 'ace/compiler/compiler_scheduler.py',
  'compiler_trace.py': 'ace/compiler/compiler_trace.py',
  'demo.py': 'ace/examples/demo.py',
