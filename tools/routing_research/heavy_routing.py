@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 WORKLOADS = ('qft', 'draper_qft_adder', 'qaoa')
+SUPPORTED_WORKLOADS = WORKLOADS + ('bv',)
 ALGORITHMS = ('xy', 'yx', 'greedy', 'history', 'minexcess', 'minhop', 'detour2')
 ADJ = ro.adjacency('mesh')
 
@@ -159,7 +160,7 @@ def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_
 
 def main():
     p=argparse.ArgumentParser(description=__doc__); p.add_argument('stage',choices=['build','simulate']); p.add_argument('--output',type=Path,required=True); p.add_argument('--inputs',type=Path); p.add_argument('--seeds',default='60,61,62,63');p.add_argument('--algorithms',nargs='+',choices=ALGORITHMS,default=ALGORITHMS)
-    p.add_argument('--workloads',nargs='+',choices=WORKLOADS,default=WORKLOADS);p.add_argument('--simulation-dir',choices=['simulation','validation'],default='simulation')
+    p.add_argument('--workloads',nargs='+',choices=SUPPORTED_WORKLOADS,default=WORKLOADS);p.add_argument('--simulation-dir',choices=['simulation','validation'],default='simulation')
     p.add_argument('--compiler-pair-consumption',choices=['swap','handoff'],default='handoff')
     p.add_argument("--compiler-reservation-ms",type=float,default=DEFAULT_COMPILER_RESERVATION_MS)
     a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True)

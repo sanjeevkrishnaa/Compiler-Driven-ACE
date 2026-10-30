@@ -7,3 +7,5 @@
 The dated study holds logical placements and migration endpoints fixed. It
 distinguishes compile-time congestion scores from physical simulator latency
 and admission waiting.
+
+- [Fresh Greedy versus XY comparison: QFT, QAOA and BV (2026-10-30)](greedy-xy-2026-10-30/README.md)

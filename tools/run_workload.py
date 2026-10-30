@@ -1,6 +1,8 @@
 """Generate, route and simulate one workload using the pinned engine."""
 from __future__ import annotations
 import argparse
+import importlib.util
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -10,6 +12,24 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 
+
+
+def module_available(name):
+    try:
+        return importlib.util.find_spec(name) is not None
+    except ModuleNotFoundError:
+        return False
+
+
+def empty_failed_generation(inputs):
+    """Retry only metadata-only failed attempts; never overwrite generated data."""
+    if {p.name for p in inputs.iterdir()} - {"study.json", "summary.csv"}:
+        return False
+    try:
+        study = json.loads((inputs / "study.json").read_text())
+        return study.get("status") == "partial_failure" and study.get("trials") == []
+    except (OSError, ValueError):
+        return False
 
 
 def ensure_engine(root: Path) -> Path:
@@ -33,7 +53,7 @@ def ensure_engine(root: Path) -> Path:
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("stage", choices=("run", "trace", "route", "simulate"), nargs="?", default="run")
-    p.add_argument("--workload", choices=("qaoa", "qft", "draper_qft_adder"), default="qaoa")
+    p.add_argument("--workload", choices=("qaoa", "qft", "draper_qft_adder", "bv"), default="qaoa")
     p.add_argument("--routing", choices=("xy", "yx", "greedy", "history", "minexcess", "minhop", "detour2"), default="greedy")
     p.add_argument("--qubits", type=int, default=96)
     p.add_argument("--mapping-seed", type=int, choices=(42,), default=42,
@@ -49,6 +69,12 @@ def main():
     inputs = out / "inputs"
     engine = ROOT / "third_party" / "SeQUeNCe"
     if not a.dry_run:
+        missing = [name for name in ("numpy", "scipy", "networkx", "matplotlib", "qiskit", "qutip", "mqt.bench")
+                   if not module_available(name)]
+        if missing:
+            p.error("Missing Python dependencies: " + ", ".join(missing) +
+                    ". Run make setup with the same PYTHON, or: " +
+                    subprocess.list2cmdline([sys.executable, "-m", "pip", "install", "-r", str(ROOT / "requirements-workload.txt")]))
         try:
             engine = ensure_engine(ROOT)
         except RuntimeError as exc:
@@ -72,12 +98,19 @@ def main():
             "--compiler-pair-consumption", "handoff", "--compiler-reservation-ms", str(a.reservation_ms)],
     }
     stages = ("trace", "route", "simulate") if a.stage == "run" else (a.stage,)
-    if not a.dry_run and "trace" in stages and inputs.exists() and any(inputs.iterdir()):
+    if not a.dry_run and "trace" in stages and inputs.exists() and any(inputs.iterdir()) and not empty_failed_generation(inputs):
         p.error("input folder already exists; choose a fresh --output, or use route/simulate stages")
     for stage in stages:
         print(stage + ": " + subprocess.list2cmdline(commands[stage]), flush=True)
         if not a.dry_run:
-            subprocess.run(commands[stage], cwd=ROOT, env=env, check=True)
+            try:
+                subprocess.run(commands[stage], cwd=ROOT, env=env, check=True)
+            except subprocess.CalledProcessError as exc:
+                detail = ""
+                if stage == "trace" and (inputs / "study.json").is_file():
+                    failures = json.loads((inputs / "study.json").read_text()).get("errors", [])
+                    detail = "; ".join(str(e.get("error", e)) for e in failures)
+                p.error(f"{stage} stage failed (exit {exc.returncode}). {detail} See output logs above.")
     print("Results: " + str(out / "simulation" / a.workload / "seed_42" / a.routing / "summary.csv"))
 
 

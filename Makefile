@@ -9,11 +9,14 @@ RESERVATION_MS ?= 50
 OUTPUT ?= output/$(WORKLOAD)-$(ROUTING)
 ARGS = --workload "$(WORKLOAD)" --routing "$(ROUTING)" --qubits "$(QUBITS)" --seeds "$(SEEDS)" --reservation-ms "$(RESERVATION_MS)" --output "$(OUTPUT)"
 
-.PHONY: help init run trace route simulate dry-run
+.PHONY: help init setup run trace route simulate dry-run
 help:
 	@echo make run WORKLOAD=qaoa ROUTING=greedy
-	@echo Targets: init, run, trace, route, simulate, dry-run
+	@echo Targets: init, setup, run, trace, route, simulate, dry-run
 	@echo Options: PYTHON, WORKLOAD, ROUTING, QUBITS, SEEDS, RESERVATION_MS, OUTPUT
+setup:
+	"$(PYTHON)" -m pip install -r requirements-workload.txt
+
 init:
 	git submodule update --init --recursive
 run trace route simulate:

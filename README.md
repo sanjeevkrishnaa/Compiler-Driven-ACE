@@ -27,11 +27,12 @@ The compiler reservation lifetime defaults to **50 ms**; see the [window sweep a
 With the study Python environment active and GNU Make installed:
 
 ```text
+make setup
 make run WORKLOAD=qaoa ROUTING=greedy
 ```
 
 This generates a fresh 96-qubit circuit, maps it with T-HQA, writes the selected
-routed trace, then simulates compiler C=4 and ODG on four physics seeds. Only the
+routed trace, then simulates compiler C=4 and ODG on four physics seeds. Supported workloads are QFT, QAOA, Draper QFT adder and BV. Only the
 selected workload is generated. The runner sets PYTHONPATH and a writable temp
 folder automatically, and initializes the pinned engine submodule if missing
 (requires Git and network access on the first run). Output defaults to `output/qaoa-greedy/`; results are in
@@ -50,7 +51,10 @@ python -B tools/run_workload.py run --workload qaoa --routing greedy
 ```
 
 Use an environment with the mapper/MQT Bench and pinned-engine dependencies
-already installed; these commands do not install Python packages.
+installed. Run `make setup` once to install them into the selected `PYTHON`.
+The runner checks missing dependencies before creating output folders and reports
+trace-generation errors without a subprocess traceback. Metadata-only failed
+generation attempts can be retried safely; generated data remains protected.
 
 ## Run the full-chain comparison
 

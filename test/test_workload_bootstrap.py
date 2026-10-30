@@ -4,7 +4,8 @@ import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import patch
-from tools.run_workload import ensure_engine
+from tools.run_workload import ensure_engine, module_available, empty_failed_generation
+import json
 
 
 class EngineBootstrapTests(unittest.TestCase):
@@ -36,3 +37,24 @@ class EngineBootstrapTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d, patch("tools.run_workload.subprocess.run"):
             with self.assertRaisesRegex(RuntimeError, "Git clone"):
                 ensure_engine(Path(d))
+
+
+class DependencyAndRetryTests(unittest.TestCase):
+    def test_missing_parent_module_is_reported_without_traceback(self):
+        with patch("tools.run_workload.importlib.util.find_spec", side_effect=ModuleNotFoundError("mqt")):
+            self.assertFalse(module_available("mqt.bench"))
+
+    def test_metadata_only_failure_can_be_retried(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            (p / "study.json").write_text(json.dumps(dict(status="partial_failure", trials=[])))
+            (p / "summary.csv").write_text("")
+            self.assertTrue(empty_failed_generation(p))
+            (p / "qaoa").mkdir()
+            self.assertFalse(empty_failed_generation(p))
+
+    def test_successful_generation_is_protected(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d)
+            (p / "study.json").write_text(json.dumps(dict(status="complete", trials=[])))
+            self.assertFalse(empty_failed_generation(p))
