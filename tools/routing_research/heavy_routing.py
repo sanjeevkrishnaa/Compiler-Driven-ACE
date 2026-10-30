@@ -62,10 +62,10 @@ def choose(records, algorithm, history):
         load.update(selected[i])
     return selected, True
 
-def build(out, inputs=None, algorithms=ALGORITHMS):
+def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
     rows = []; manifests = []
     if inputs is not None: inputs=inputs.resolve()
-    for workload in WORKLOADS:
+    for workload in workloads:
         for seed in ((42,) if inputs else (42,43,44)):
             source = inputs/workload/f'seed_{seed}' if inputs else ROOT / f'results/golden_study_2026-10-25/traces/placements/mesh/T-HQA/{workload}/seed_{seed}/routes/xy'
             trace = ro.read_trace(source/'requests.txt',4,4)
@@ -124,7 +124,7 @@ def build(out, inputs=None, algorithms=ALGORITHMS):
                 print(workload,seed,algorithm,rows[-1]['hops'],rows[-1]['excess'],flush=True)
     if (out/'structural.csv').exists():
         previous=list(csv.DictReader((out/'structural.csv').open()))
-        rows=[r for r in previous if r['algorithm'] not in algorithms]+rows
+        rows=[r for r in previous if not (r['algorithm'] in algorithms and r['workload'] in workloads)]+rows
     write_csv(out/'structural.csv',rows); (out/'inputs.json').write_text(json.dumps(manifests,indent=2))
 
 def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_dir='simulation', consumption='handoff', reservation_ms=DEFAULT_COMPILER_RESERVATION_MS):
@@ -163,5 +163,5 @@ def main():
     p.add_argument('--compiler-pair-consumption',choices=['swap','handoff'],default='handoff')
     p.add_argument("--compiler-reservation-ms",type=float,default=DEFAULT_COMPILER_RESERVATION_MS)
     a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True)
-    build(a.output,a.inputs,a.algorithms) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms)
+    build(a.output,a.inputs,a.algorithms,a.workloads) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms)
 if __name__=='__main__': main()

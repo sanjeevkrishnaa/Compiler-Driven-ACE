@@ -22,6 +22,36 @@ The compiler reservation lifetime defaults to **50 ms**; see the [window sweep a
 - [Project structure](docs/project-structure.md)
 - [Committed handoff evidence](results/compiler_memory_handoff_2026-10-28/README.md)
 
+## One-command workload run
+
+With the study Python environment active and GNU Make installed:
+
+```text
+git submodule update --init --recursive
+make run WORKLOAD=qaoa ROUTING=greedy
+```
+
+This generates a fresh 96-qubit circuit, maps it with T-HQA, writes the selected
+routed trace, then simulates compiler C=4 and ODG on four physics seeds. Only the
+selected workload is generated. The runner sets PYTHONPATH and a writable temp
+folder automatically. Output defaults to `output/qaoa-greedy/`; results are in
+`simulation/qaoa/seed_42/greedy/summary.csv` beneath it.
+
+Use `make dry-run` to inspect commands, or `make trace`, `make route` and
+`make simulate` for individual stages. Override `PYTHON`, `WORKLOAD`, `ROUTING`,
+`QUBITS`, `SEEDS`, `RESERVATION_MS` or `OUTPUT` as needed. Use fresh output folders
+for new experiments; `run` refuses to overwrite existing mapping inputs.
+Mapping seed is currently fixed to 42 by the routing study pipeline.
+
+Without Make (including Windows), the equivalent command is:
+
+```text
+python -B tools/run_workload.py run --workload qaoa --routing greedy
+```
+
+Use an environment with the mapper/MQT Bench and pinned-engine dependencies
+already installed; these commands do not install Python packages.
+
 ## Run the full-chain comparison
 
 Use SeQUeNCe 0.8.1 at commit
