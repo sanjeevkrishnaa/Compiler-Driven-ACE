@@ -1,0 +1,86 @@
+[
+ {
+  "workload": "qft",
+  "route": "xy",
+  "sha256": "bbad8c3596ad9067b9a34e9df4dc2cd14740bda5ad637d011bac3fea3ada2cfb",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qft",
+  "route": "greedy",
+  "sha256": "0d63d5e1358679ca6c23c8c36583bfbdc220fdcee1ba875fa8154c3c29a2743f",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qft",
+  "route": "history",
+  "sha256": "f00f87f9739b7ba50fd9d3981c3b1b47647129379b6aad824c44cec5b37b0739",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qft",
+  "route": "minhop",
+  "sha256": "d84c293bb841d42cd3cefad92ff5bef491d78107b76abe2562fadb3b97dd0b8b",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qaoa",
+  "route": "xy",
+  "sha256": "2dbb0b6ae69ae51231deb2013557023aedbb0c076c3b2e9ee51bc79130b3fb38",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qaoa",
+  "route": "greedy",
+  "sha256": "f4818e84707dcfdfccf7dc66ca4a0df5cd0523fbc6973618151d34a9f9090e80",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qaoa",
+  "route": "history",
+  "sha256": "3a6665fdafd4c54a5fc2671c579c3e4f4dff6f362a82f33efe474e3c4f5e323f",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "qaoa",
+  "route": "minhop",
+  "sha256": "1a9019c4bb0299bafe4bcf0d6d81509c4e8953b406ad9d9ce0ef3603c6ddf46f",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "draper_qft_adder",
+  "route": "xy",
+  "sha256": "d8f1856522f580d40f5589a35addec0121bf63532f9c18bd5193f1b7b3b19b2a",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "draper_qft_adder",
+  "route": "history",
+  "sha256": "c14bc3a28a1e002d89c802d27883c2f85e70bf1576950aed7821a05b66e131b6",
+  "provenance": "mapping from evidence.zip, route from tools/routing_research/heavy_routing.py"
+ },
+ {
+  "workload": "cdkm_ripple_carry_adder",
+  "route": "xy",
+  "sha256": "915458e660679004b50fdff94734f74f26a074cfc3927b481c981e00293596c5",
+  "provenance": "48-qubit T-HQA golden-study mapping, route from heavy_routing.py"
+ },
+ {
+  "workload": "cdkm_ripple_carry_adder",
+  "route": "history",
+  "sha256": "904b9e2fca61e38cf64929ef81b6164ac8e23241b997a8b304735926c9fe2dfc",
+  "provenance": "48-qubit T-HQA golden-study mapping, route from heavy_routing.py"
+ },
+ {
+  "workload": "randomcircuit",
+  "route": "xy",
+  "sha256": "eab1a5bc7bf1131878ffa9eccd3148cd8e562c2231fe95de9c26f5a618aa2ee2",
+  "provenance": "48-qubit T-HQA golden-study mapping, route from heavy_routing.py"
+ },
+ {
+  "workload": "randomcircuit",
+  "route": "history",
+  "sha256": "23669f361f9896fd5eb76a99f634b59257aeade407c9fdfd2e38586154c91c80",
+  "provenance": "48-qubit T-HQA golden-study mapping, route from heavy_routing.py"
+ }
+]
