@@ -79,6 +79,37 @@ route, C = M - 1, lead 2, ready-first, handoff, 50 ms compiler reservation, no e
 - Absolute latency constants rest on the 100 us delay and the 5 ms gap, neither of which is a
   chip-scale hardware value, so conclusions are stated in terms of ratios wherever possible.
 
+## Deviations
+
+Recorded when made, before the affected results existed.
+
+1. **Reduced matrix, 2026-11-01 15:45.** The planned 912 cases assumed about 3 minutes per case. On
+   this machine (Apple M2, 8 GB, swapping, with the laptop lid sometimes closed) the plan needed 15
+   hours or more, so grids and seeds were reduced. No hypothesis was dropped. At that point 45
+   cases were finished, all from the efficiency grid at 0.7 or above, and no gap, lead, tuning,
+   coherence, route or workload result had been seen. Seed noise on the gains so far was about
+   0.4 percentage points, which is why fewer seeds were accepted.
+
+   | Experiment | Planned | Run |
+   | --- | --- | --- |
+   | efficiency | 10 seeds | 10 seeds at 0.7 and above, 6 seeds below |
+   | delay | x0.1, 0.25, 0.5, 2, 3, 5, 8, 10 seeds | x0.1, 0.5, 2, 5, 6 seeds |
+   | gap | 8 gaps, both memory sizes, 6 seeds | 7 gaps at M=4, 3 gaps at M=3, 4 seeds |
+   | scale | 4 scales, 10 seeds | 3 scales, 4 seeds |
+   | chip | 5 gaps, both memory sizes, 6 seeds | 4 gaps, M=4, 4 seeds |
+   | memory | M = 2, 3, 4, 5, 6, 8, three efficiencies, 6 seeds | M = 2, 3, 4, 6, 8, two efficiencies, 4 seeds |
+   | lead_gap | leads to 12, gaps 0, 0.5, 5 | leads to 8, gaps 0, 5 |
+   | tuning | 12 contexts, 30 options | 8 contexts (efficiency 0.95 and 0.4), 27 options |
+   | coherence, routes | both memory sizes, 6 seeds | M=4, 4 seeds |
+   | workloads | three efficiencies, both memory sizes, 6 seeds | two efficiencies, M=4, 4 seeds |
+   | validation | seeds 100 to 109 | seeds 100 to 105 |
+
+2. **Run order changed** to put the decisive experiments first: gap, efficiency, lead_gap, tuning,
+   delay, then the rest.
+
+3. **Three link probes stopped early.** Dark counts of 1e6 and 1e8 per second and coherence 0.1 ms
+   ran for 15 minutes without finishing 3000 samples. They are rerun with few samples and a time limit.
+
 ## Not addressed
 
 Data teleportation, local gate time, and circuit fidelity are not simulated. Delivered EPR fidelity

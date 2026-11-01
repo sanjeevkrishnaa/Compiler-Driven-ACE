@@ -48,7 +48,7 @@ def main() -> None:
         def wrapped(self, *call, **named):
             owner = getattr(self, "owner", None)
             before = owner.timeline.now()
-            text = describe(self, call)
+            text = describe(self, call + tuple(named.values()))
             if text:
                 log.append((before, owner.name, text))
             return original(self, *call, **named)
