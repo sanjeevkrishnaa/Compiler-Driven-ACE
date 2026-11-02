@@ -327,6 +327,20 @@ def link_rerun_text() -> None:
         "they are too expensive to simulate, so we say nothing about them. A setting that did not finish is part of no conclusion.\n")
 
 
+def activation_table() -> None:
+    """The simulator's newer default admission order against the order this study used (same cases, gaps 0 and 5 ms)."""
+    new = pair(pd.read_csv(DATA / "activation_summary.csv"))
+    old = pair(pd.read_csv(DATA / "gap_summary.csv"))
+    old = old[(old.memories == 4) & np.isclose(old.memory_efficiency, 0.95)]
+    rows = []
+    for w in ("qft", "qaoa"):
+        for gap in (0.0, 5.0):
+            a = old[(old.workload == w) & (old.empty_gap_ms == gap)].iloc[0]
+            b = new[(new.workload == w) & (new.empty_gap_ms == gap)].iloc[0]
+            rows.append([NAME[w], f"{gap:g}", f(a.latency_ms, 3), f(a.gain_latency_ms, 1, True), f(100 * a.hit_rate, 1), f(b.latency_ms, 3), f(b.gain_latency_ms, 1, True), f(100 * b.hit_rate, 1)])
+    table("activation", "llrrrrrr", ["Workload", "Gap (ms)", "Dyn. (ms)", "Gain (\\%)", "Hit (\\%)", "Dyn. (ms)", "Gain (\\%)", "Hit (\\%)"], rows)
+
+
 def provenance() -> None:
     import subprocess
     def git(*args):
@@ -334,7 +348,7 @@ def provenance() -> None:
     engine = ROOT / "third_party" / "SeQUeNCe"
     text = ("\\chapter{Provenance}\n\\begin{small}\\begin{tabular}{@{}ll@{}}\\toprule\n"
             f"Study branch & \\code{{{git('branch', '--show-current')}}} \\\\\n"
-            f"Simulator commit used & \\code{{{git('rev-parse', '--short', 'main')}}} (main at the start of the study, unchanged under \\code{{ace/}}) \\\\\n"
+            "Simulator commit studied & \\code{dfd4b839} (main at the start of the study); rechecked on \\code{e4db6bfa} \\\\\n"
             "Engine & SeQUeNCe 0.8.1, commit \\code{cf5283cd} \\\\\n"
             "Python / libraries & 3.13; numpy, scipy, pandas, matplotlib \\\\\n"
             "Report built with & tectonic \\\\\n"
@@ -353,6 +367,7 @@ def main() -> None:
     scorecard()
     counts()
     link_rerun_text()
+    activation_table()
     provenance()
     (OUT / "numbers.tex").write_text("".join(f"\\newcommand{{\\{k}}}{{{v}}}\n" for k, v in sorted(macros.items())))
     print(len(macros), "macros;", len(list(OUT.glob("*.tex"))), "files")

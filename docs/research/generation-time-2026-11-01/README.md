@@ -3,7 +3,7 @@
 Question: what is the EPR generation time in ACE, which parameters change it, and when does the
 compiler-driven Dynamic strategy gain from a slower generation?
 
-- **Report (39 pages):** [main.pdf](../../latex/generation_time_study/report/main.pdf), source in `docs/latex/generation_time_study/report/`
+- **Report (40 pages):** [main.pdf](../../latex/generation_time_study/report/main.pdf), source in `docs/latex/generation_time_study/report/`
 - **Plan, hypotheses and deviations (written before the sweeps):** [plan.md](plan.md)
 - **Data:** [data/](data/) holds one `*_summary.csv` (mean, spread, 95% interval per setting) and one `*_trials.csv.gz` (one row per strategy and seed) per experiment, plus `link_screen.csv`, `anatomy.csv`, `hypotheses.json`, `model_*.csv`, `validation_check.csv` and `audit_runs.json`.
 - **Raw per-case results:** [evidence.zip](../../../results/generation_time_2026-11-01/evidence.zip) with its checksum, and the 14 routed traces in `results/generation_time_2026-11-01/traces/`.

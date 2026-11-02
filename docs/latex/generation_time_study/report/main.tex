@@ -303,6 +303,11 @@ Dynamic wins on every workload we tried, and by more on the three additional wor
 \item \textbf{Single-link gaps.} Dark counts of $10^8$\,/s and coherence 0.1\,ms could not be simulated in a practical time (Section~\ref{sec:limitations}).
 \item \textbf{Fidelity.} No pair is rejected for low fidelity, so a Dynamic pair that waits 9\ms{} still counts. The reported delivered fidelity is a mean over pairs, not a circuit success probability.
 \end{itemize}
+\section{A later change to the simulator}\label{sec:later}
+The study ran on the simulator as of commit \code{dfd4b839}. On 3 November the shared \code{main} gained two changes (commit \code{e4db6bfa}): the empty-layer gap became a command-line option, and live requests are now admitted before preparations launch (\code{--layer-activation-order execution-first}, the new default). The study launches preparations first, so its runner now requests \code{preparation-first} explicitly, and passes the gap through the new option. We repeated the study's base and no-gap cases on the merged code: the results are unchanged (QFT, $M=4$, $C=3$, gap 5\ms{}: ODG $1.3249$\ms{}, Dynamic $0.7013$\ms{}; gap 0: $1.3248$ and $1.5838$\ms{}, against $1.3249$ and $1.5840$\ms{} originally). We then measured the new default on the same cases:
+\begin{table}[htbp]\centering\fit{generated/activation.tex}\caption{Preparation-first (the order studied, first three result columns) against execution-first (the new default, last three), \code{history}, $M=4$, $C=3$, efficiency 0.95, four seeds.}\label{tab:activation}\end{table}
+The new default changes nothing on QFT and improves QAOA slightly (about 1.7 points at both gaps). It does not remove the dependence on the gap: with no gap, default Dynamic is still worse than ODG (QFT $-19.5\%$, QAOA $-11.2\%$). The conclusions of this report therefore hold on the current \code{main}; the experiments above were not repeated under the new default beyond this check.
+
 \section{The single-link settings that were hard to simulate}\label{sec:limitations}
 \input{generated/link_rerun.tex}
 

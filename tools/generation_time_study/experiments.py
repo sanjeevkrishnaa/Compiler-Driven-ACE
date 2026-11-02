@@ -149,6 +149,12 @@ def retry() -> list[dict]:
     return out
 
 
+def activation() -> list[dict]:
+    """The simulator's newer default (live requests admitted before preparations launch) against the order studied here."""
+    return [case(w, "history", 4, 3, Knobs(memory_efficiency=0.95, empty_gap_ms=g), seeds=TUNING, tag="execution-first",
+                 flags=["--layer-activation-order", "execution-first"]) for w in WORKLOADS for g in (0.0, 5.0)]
+
+
 def validation() -> list[dict]:
     """Written by choose_tuned.py from the tuning seeds, run on seeds that tuning never saw."""
     path = ROOT / "docs" / "research" / "generation-time-2026-11-01" / "data" / "tuned_choices.json"
@@ -163,4 +169,4 @@ def validation() -> list[dict]:
 
 
 EXPERIMENTS = dict(efficiency=efficiency, delay=delay, equivalence=equivalence, gap=gap, scale=scale, chip=chip, memory=memory,
-                   lead_gap=lead_gap, tuning=tuning, coherence=coherence, routes=routes, workloads=workloads, distance=distance, retry=retry, validation=validation)
+                   lead_gap=lead_gap, tuning=tuning, coherence=coherence, routes=routes, workloads=workloads, distance=distance, retry=retry, activation=activation, validation=validation)

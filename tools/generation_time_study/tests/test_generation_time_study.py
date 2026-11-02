@@ -98,3 +98,20 @@ def test_retry_knobs_leave_old_case_keys_unchanged():
 def test_the_compiler_retry_replacement_matches_the_original_logic():
     source = (kn.ROOT / "ace" / "compiler" / "compiler_scheduler.py").read_text()
     assert "Event(self.timeline.now() + MILLISECOND," in source and "Process(self, \"retry_preparation\", [request_id])" in source
+
+
+def test_the_gap_and_activation_order_reach_the_simulator_when_its_cli_has_them():
+    spec = experiments.case("qft", "history", 4, 3, kn.Knobs(empty_gap_ms=0.0))
+    argv = run_case.build_argv(spec, Path("c.json"), Path("o"))
+    if run_case.cli_supports("--empty-layer-gap-ms"):
+        assert argv[argv.index("--empty-layer-gap-ms") + 1] == "0.0"
+    if run_case.cli_supports("--layer-activation-order"):
+        assert argv[argv.index("--layer-activation-order") + 1] == "preparation-first"
+    override = experiments.case("qft", "history", 4, 3, flags=["--layer-activation-order", "execution-first"])
+    last = run_case.build_argv(override, Path("c.json"), Path("o"))
+    assert last[len(last) - 1 - last[::-1].index("--layer-activation-order") + 1] == "execution-first"
+
+
+def test_existing_case_keys_do_not_change_when_the_runner_gains_options():
+    assert run_matrix.case_key(experiments.case("qft", "history", 4, 3)) == run_matrix.case_key(experiments.case("qft", "history", 4, 3))
+    assert "flags" in experiments.case("qft", "history", 4, 3) and experiments.case("qft", "history", 4, 3)["flags"] == []

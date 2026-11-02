@@ -34,6 +34,11 @@ SUMMARY_FIELDS = (
     "protocol_unused_pairs", "compiler_progress_yields")
 
 
+def cli_supports(flag: str) -> bool:
+    """Whether the simulator's CLI has this option.  Older commits do not, and then nothing is passed."""
+    return flag in (kn.ROOT / "ace" / "cli" / "run_trace_comparison.py").read_text()
+
+
 def build_argv(spec: dict, config: Path, output: Path) -> list[str]:
     argv = ["run_trace_comparison", "--trace", str(kn.ROOT / spec["trace"]), "--config", str(config),
             "--strategies", spec["strategies"], "--seeds", spec["seeds"],
@@ -48,6 +53,13 @@ def build_argv(spec: dict, config: Path, output: Path) -> list[str]:
             "--planning-mode", spec["planning"], "--output", str(output)]
     argv += ["--all-chain-hops"] if spec["chain_hops"] is None else ["--chain-hops-prepared", str(spec["chain_hops"])]
     argv += ["--no-congestion-threshold"] if spec["congestion"] is None else ["--congestion-threshold", str(spec["congestion"])]
+    # Since 2026-11-03 the gap is a CLI option (the module constant is only its default) and live requests are
+    # admitted before preparations launch unless told otherwise.  The study was run with preparations first, so
+    # that is requested explicitly; both are placed before spec["flags"], so an experiment can override them.
+    if cli_supports("--empty-layer-gap-ms"):
+        argv += ["--empty-layer-gap-ms", str(kn.Knobs(**spec["knobs"]).empty_gap_ms)]
+    if cli_supports("--layer-activation-order"):
+        argv += ["--layer-activation-order", "preparation-first"]
     return argv + list(spec["flags"])
 
 
