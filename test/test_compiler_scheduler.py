@@ -67,10 +67,10 @@ class LayerTests(unittest.TestCase):
         done = completions(outcome)
         self.assertEqual(first_submissions(outcome)[2], max(done[0], done[1]))
 
-    def test_an_empty_layer_costs_one_microsecond_by_default(self):
+    def test_an_empty_layer_costs_five_milliseconds_by_default(self):
         outcome = run([[Hop(0, 5, 9)], [], [Hop(1, 5, 9)]])
         self.assertEqual((outcome.completed, outcome.violations), (2, []))
-        self.assertEqual(first_submissions(outcome)[1] - completions(outcome)[0], 0.001 * MS)
+        self.assertEqual(first_submissions(outcome)[1] - completions(outcome)[0], 5 * MS)
 
     def test_the_makespan_covers_every_layer(self):
         outcome = run([[Hop(0, 5, 9)], [Hop(1, 9, 10)]])

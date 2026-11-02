@@ -75,7 +75,7 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         dynamic_lookahead_layers=args.dynamic_lookahead_layers,
         lead_layers=getattr(args, "planner_lead_layers", 1),
         planning_mode=getattr(args, "planning_mode", "offline"),
-        layer_basis=getattr(args, "dynamic_layer_basis", "active"),
+        layer_basis=getattr(args, "dynamic_layer_basis", "logical"),
     )
     return {
         "requests": trace.requests,
@@ -250,9 +250,10 @@ def main() -> None:
                                  "hop-requests; other chains get the full chain")
     congestion.add_argument("--no-congestion-threshold", action="store_const", const=None,
                             dest="congestion_threshold", help="explicitly disable congestion filtering")
-    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="active",
-                        help="dynamic lead/lookahead and planner age count active communication layers")
-    parser.add_argument("--empty-layer-gap-ms", type=float, default=0.001,
+    parser.add_argument("--layer-activation-order", choices=("execution-first", "preparation-first"), default="execution-first")
+    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical",
+                        help="axis for dynamic lead/lookahead and planner age; logical includes empty layers")
+    parser.add_argument("--empty-layer-gap-ms", type=float, default=5.0,
                         help="empty-layer timing placeholder in ms, not a local gate model")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
@@ -318,7 +319,7 @@ def main() -> None:
         parser.error(f"--topology {args.topology} needs a {args.topology} topology file, but {args.config} is a {declared}")
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
     scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard,
-                          "admission_priority": args.admission_priority, "empty_layer_gap_ms": args.empty_layer_gap_ms}
+                          "admission_priority": args.admission_priority, "empty_layer_gap_ms": args.empty_layer_gap_ms, "layer_activation_order": args.layer_activation_order}
                          if args.scheduler == "per-qubit" else None)
     args.output.mkdir(parents=True, exist_ok=True)
 

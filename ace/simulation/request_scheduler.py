@@ -56,7 +56,7 @@ from ace.simulation.parallel_core import ParallelLayerRequestManager
 from ace.resources.reservation import ApplicationReservation
 
 # Preserved from the legacy manager so the two are comparable; made configurable in Gate 5.
-EMPTY_LAYER_GAP_MS = 0.001
+EMPTY_LAYER_GAP_MS = 5.0
 RETRY_PERIOD = MILLISECOND          # the legacy retry cadence, used after a physical rejection
 # The reservation window ends at the instant a request times out, and a release is reported at the
 # instant it happens.  Acting strictly later guarantees the booking is gone, whatever order SeQUeNCe
@@ -81,7 +81,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
                  pregeneration_time_ms: float, request_duration_ms: float,
                  compiler_controller=None, recorder=None, *, requests: Sequence,
                  admission: str = "event", starvation_guard: bool = True,
-                 admission_priority: str = "ready-first", empty_layer_gap_ms: float = EMPTY_LAYER_GAP_MS):
+                 admission_priority: str = "ready-first", empty_layer_gap_ms: float = EMPTY_LAYER_GAP_MS,
+                 layer_activation_order: str = "execution-first"):
         if admission not in ADMISSION_MODES:
             raise ValueError(f"admission must be one of {ADMISSION_MODES}, got {admission!r}")
         if admission_priority not in ("fifo", "ready-first"):
@@ -97,6 +98,9 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.working_layer_origins = list(range(len(layered_requests)))
         if not math.isfinite(empty_layer_gap_ms) or empty_layer_gap_ms < 0:
             raise ValueError("empty layer gap must be finite and non-negative")
+        if layer_activation_order not in ("execution-first", "preparation-first"):
+            raise ValueError("invalid layer activation order")
+        self.layer_activation_order = layer_activation_order
         self.empty_layer_gap_ms = empty_layer_gap_ms
         self.admission = admission
         self.starvation_guard = starvation_guard
@@ -173,23 +177,28 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self._activate_layer(0)
 
     def _activate_layer(self, index: int):
-        """Open layer ``index``: tell the controller, then release every request with no predecessor."""
+        """Offer current demand memory before launching future preparations."""
         if index >= len(self.layered_requests):
             return
         now = self.timeline.now()
         self.active_layer = index
-        if self.compiler_controller is not None:
-            self.compiler_controller.on_original_layer(index)
         self.layer_start_times[index] = now
+        preparation_first = self.layer_activation_order == "preparation-first"
+        if preparation_first and self.compiler_controller is not None:
+            self.compiler_controller.on_original_layer(index)
         layer = self.layered_requests[index]
-        if not layer:
-            self._finish_layer(index, now, gap_ms=self.empty_layer_gap_ms)
-            return
         for tuple_ in layer:
             if self.predecessor[tuple_[0]] is None:
-                self._release(tuple_[0], now)
+                self._release(tuple_[0], now, schedule_admission=preparation_first)
+        if not preparation_first:
+            if layer and self.admission == "event":
+                self._try_admit()
+            if self.compiler_controller is not None:
+                self.compiler_controller.on_original_layer(index)
+        if not layer:
+            self._finish_layer(index, now, gap_ms=self.empty_layer_gap_ms)
 
-    def _release(self, request_id: int, now: int):
+    def _release(self, request_id: int, now: int, *, schedule_admission: bool = True):
         """The request became eligible: from here on it counts as waiting, whether or not it can start."""
         self.request_eligible_times[request_id] = now
         # A request's latency runs from the moment it was eligible, so time spent waiting for a
@@ -199,7 +208,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
             self._admit(request_id, now)
         else:
             self.waiting[request_id] = now
-            self._schedule_admission(0)
+            if schedule_admission:
+                self._schedule_admission(0)
 
     def _release_successor(self, request_id: int):
         self._release(request_id, self.timeline.now())

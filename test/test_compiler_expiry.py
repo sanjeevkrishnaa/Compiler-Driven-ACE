@@ -90,7 +90,8 @@ class ExpiryOnTheSimulatorTests(unittest.TestCase):
     def test_pairs_that_expire_unused_leave_every_request_completed_and_every_invariant_intact(self):
         for scheduler in ("legacy", "per-qubit"):
             for window_ms in (20, 5):
-                audit = audit_trace(self.trace, "dynamic", seed=0, scheduler=scheduler, compiler_reservation_ms=window_ms)
+                audit = audit_trace(self.trace, "dynamic", seed=0, scheduler=scheduler, compiler_reservation_ms=window_ms,
+                                    scheduler_options={"empty_layer_gap_ms": 5} if scheduler=="per-qubit" else None)
                 reasons = collections.Counter(e.reason for e in audit.events
                                               if isinstance(e, Unbooked) and e.kind == "adaptive")
                 label = (scheduler, window_ms)

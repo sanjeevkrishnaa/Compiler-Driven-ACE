@@ -60,8 +60,9 @@ def main():
                    help="current routing study supports mapping seed 42")
     p.add_argument("--seeds", default="60,61,62,63")
     p.add_argument("--reservation-ms", type=float, default=DEFAULT_COMPILER_RESERVATION_MS)
-    p.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="active")
-    p.add_argument("--empty-layer-gap-ms", type=float, default=0.001)
+    p.add_argument("--layer-activation-order", choices=("execution-first", "preparation-first"), default="execution-first")
+    p.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical")
+    p.add_argument("--empty-layer-gap-ms", type=float, default=5.0)
     p.add_argument("--output", type=Path)
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args()
@@ -97,7 +98,7 @@ def main():
             "--workloads", a.workload, "--algorithms", a.routing, "--output", str(out)],
         "simulate": base + ["tools/routing_research/heavy_routing.py", "simulate", "--output", str(out),
             "--workloads", a.workload, "--algorithms", a.routing, "--seeds", a.seeds,
-            "--dynamic-layer-basis", a.dynamic_layer_basis, "--empty-layer-gap-ms", str(a.empty_layer_gap_ms),
+            "--layer-activation-order", a.layer_activation_order, "--dynamic-layer-basis", a.dynamic_layer_basis, "--empty-layer-gap-ms", str(a.empty_layer_gap_ms),
             "--compiler-pair-consumption", "handoff", "--compiler-reservation-ms", str(a.reservation_ms)],
     }
     stages = ("trace", "route", "simulate") if a.stage == "run" else (a.stage,)

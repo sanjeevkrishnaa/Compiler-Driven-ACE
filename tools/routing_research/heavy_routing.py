@@ -128,7 +128,7 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
         rows=[r for r in previous if not (r['algorithm'] in algorithms and r['workload'] in workloads)]+rows
     write_csv(out/'structural.csv',rows); (out/'inputs.json').write_text(json.dumps(manifests,indent=2))
 
-def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_dir='simulation', consumption='handoff', reservation_ms=DEFAULT_COMPILER_RESERVATION_MS, layer_basis='active', empty_layer_gap_ms=0.001):
+def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_dir='simulation', consumption='handoff', reservation_ms=DEFAULT_COMPILER_RESERVATION_MS, layer_basis='logical', empty_layer_gap_ms=5.0, layer_activation_order="execution-first"):
     # Archived seeds 42/43/44 have identical trace hashes: do not count duplicates as replicates.
     jobs=[p for p in (out/'traces').glob('*/seed_42/*/requests.txt')
           if p.parent.name in algorithms and p.parent.parent.parent.name in workloads]
@@ -137,7 +137,7 @@ def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_
         if (dest/'summary.csv').exists():
             metadata=json.loads((dest/'metadata.json').read_text())
             actual=metadata['parameters']['compiler_pair_consumption']
-            if metadata['parameters'].get('dynamic_layer_basis','logical')!=layer_basis or metadata['parameters'].get('empty_layer_gap_ms',5)!=empty_layer_gap_ms or metadata['parameters']['compiler_reservation_ms']!=reservation_ms or actual!=consumption or metadata['seeds']!=[int(s) for s in seeds.split(',')]:
+            if metadata['parameters'].get('layer_activation_order','preparation-first')!=layer_activation_order or metadata['parameters'].get('dynamic_layer_basis','logical')!=layer_basis or metadata['parameters'].get('empty_layer_gap_ms',5)!=empty_layer_gap_ms or metadata['parameters']['compiler_reservation_ms']!=reservation_ms or actual!=consumption or metadata['seeds']!=[int(s) for s in seeds.split(',')]:
                 raise ValueError(f'{dest}: completed results use different reservation window/consumption/seeds; choose a fresh output folder')
             return
         dest.mkdir(parents=True,exist_ok=True)
@@ -145,7 +145,7 @@ def simulate(out, seeds, algorithms=ALGORITHMS, workloads=WORKLOADS, simulation_
              '--strategies','on-demand,dynamic','--seeds',seeds,'--total-memories','4','--compiler-memories','4','--generation-capacity','4',
              '--planner-lead-layers','2','--scheduler','per-qubit','--admission','event','--admission-priority','ready-first',
              '--all-chain-hops','--no-congestion-threshold','--pregeneration-buffer-ms','0','--stop-after-workload','--audit-events',
-             '--dynamic-layer-basis',layer_basis,'--empty-layer-gap-ms',str(empty_layer_gap_ms),'--compiler-reservation-ms',str(reservation_ms),'--compiler-pair-consumption',consumption,'--output',str(dest.resolve())]
+             '--layer-activation-order',layer_activation_order,'--dynamic-layer-basis',layer_basis,'--empty-layer-gap-ms',str(empty_layer_gap_ms),'--compiler-reservation-ms',str(reservation_ms),'--compiler-pair-consumption',consumption,'--output',str(dest.resolve())]
         (dest/'command.json').write_text(json.dumps(cmd))
         with (dest/'run.log').open('w') as f: subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT,check=True)
         print('completed',str(rel),flush=True)
@@ -163,8 +163,9 @@ def main():
     p.add_argument('--workloads',nargs='+',choices=SUPPORTED_WORKLOADS,default=WORKLOADS);p.add_argument('--simulation-dir',choices=['simulation','validation'],default='simulation')
     p.add_argument('--compiler-pair-consumption',choices=['swap','handoff'],default='handoff')
     p.add_argument("--compiler-reservation-ms",type=float,default=DEFAULT_COMPILER_RESERVATION_MS)
-    p.add_argument("--dynamic-layer-basis",choices=["active","logical"],default="active")
-    p.add_argument("--empty-layer-gap-ms",type=float,default=0.001)
+    p.add_argument("--dynamic-layer-basis",choices=["active","logical"],default="logical")
+    p.add_argument("--empty-layer-gap-ms",type=float,default=5.0)
+    p.add_argument("--layer-activation-order",choices=["execution-first","preparation-first"],default="execution-first")
     a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True)
-    build(a.output,a.inputs,a.algorithms,a.workloads) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms,a.dynamic_layer_basis,a.empty_layer_gap_ms)
+    build(a.output,a.inputs,a.algorithms,a.workloads) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms,a.dynamic_layer_basis,a.empty_layer_gap_ms,a.layer_activation_order)
 if __name__=='__main__': main()

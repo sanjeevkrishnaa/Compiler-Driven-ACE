@@ -67,7 +67,7 @@ def main() -> None:
     parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
-    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="active")
+    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
