@@ -1,0 +1,62 @@
+[
+ {
+  "workload": "qft",
+  "route": "xy",
+  "sha256": "f8cfb79876fb8904f2c62382cb2c61641ea59efe40bcbfbd3f4e5de3d1761cfc",
+  "bytes": 162321
+ },
+ {
+  "workload": "qft",
+  "route": "history",
+  "sha256": "e0326d960fb35734543764d0b5a75a6b6ee692783d739314b8f9ef5b30298c07",
+  "bytes": 162745
+ },
+ {
+  "workload": "qpeexact",
+  "route": "xy",
+  "sha256": "cc7e108a1005dd365bdf656ecf4f32a51309ca7f2d77b9edce4752dd12cdf5c5",
+  "bytes": 181585
+ },
+ {
+  "workload": "qpeexact",
+  "route": "history",
+  "sha256": "2cab5b2b75e9305982dd415bfb32a50fd33ee77c823c01f1c5cd3df36d3509d1",
+  "bytes": 182013
+ },
+ {
+  "workload": "qaoa",
+  "route": "xy",
+  "sha256": "f13bae10c8394bf96557d13270f758d520c859ca1794d265fd5b643523356838",
+  "bytes": 388980
+ },
+ {
+  "workload": "qaoa",
+  "route": "history",
+  "sha256": "b3f45168bc69205b6cb16445ffe6667ea0a6307d8510f9cd950e0afbe9d21775",
+  "bytes": 389548
+ },
+ {
+  "workload": "draper_qft_adder",
+  "route": "xy",
+  "sha256": "ca26b4f63230b25fbf1418a24c1476cd7ff81faa5bbeeb6a899ccf8cd2e0f480",
+  "bytes": 115519
+ },
+ {
+  "workload": "draper_qft_adder",
+  "route": "history",
+  "sha256": "df32dbc3400327dbb953056e88724d8b15d9911bbcf89cea22e2bb8656416375",
+  "bytes": 114677
+ },
+ {
+  "workload": "quantum_volume",
+  "route": "xy",
+  "sha256": "1aa946fd2808c17d066a70e23682d5e57033a2e3fd5eaad25f13e12993854ec2",
+  "bytes": 809438
+ },
+ {
+  "workload": "quantum_volume",
+  "route": "history",
+  "sha256": "96b71e9c170a8d8de91d3a3425f61ddc281a7cdf1ebbd6922f2ed7645e9b85ee",
+  "bytes": 812530
+ }
+]
