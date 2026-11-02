@@ -8,6 +8,10 @@ one of two module constants replaced in the current process before the simulatio
   MICROSECOND, which is used nowhere else in that module (see tests).  distance/c is not scaled.
 * ``empty_gap_ms`` replaces EMPTY_LAYER_GAP_MS in ace/simulation/request_scheduler.py, the time
   charged for a layer with no inter-core request.
+* ``request_retry_ms`` replaces RETRY_PERIOD in the same file, the wait before a request that the
+  protocol refused is submitted again; ``compiler_retry_ms`` is the wait before a refused
+  preparation is launched again, which the controller hard-codes as one millisecond (see
+  patch_runtime for the exact replacement).
 
 Default knobs change nothing: apply_config(config, Knobs()) returns an equal configuration.
 """
@@ -56,6 +60,8 @@ class Knobs:
     dark_count_per_s: float = 0.0
     gate_fidelity: float = 0.99
     measurement_fidelity: float = 0.99
+    request_retry_ms: float = 1.0
+    compiler_retry_ms: float = 1.0
 
     def overrides(self) -> dict:
         """Only the knobs that differ from the default, for labels and file names."""
@@ -127,6 +133,23 @@ def patch_runtime(knobs: Knobs) -> None:
     import ace.topology.router_net_topo_adaptive as topology
     topology.MICROSECOND = MICROSECOND * knobs.classical_scale
     scheduler.EMPTY_LAYER_GAP_MS = knobs.empty_gap_ms
+    from sequence.constants import MILLISECOND
+    scheduler.RETRY_PERIOD = int(knobs.request_retry_ms * MILLISECOND)
+    if knobs.compiler_retry_ms != Knobs().compiler_retry_ms:
+        from sequence.kernel.event import Event
+        from sequence.kernel.process import Process
+        from ace.compiler.compiler_scheduler import CompilerPreGenerationController as Controller
+        period = int(knobs.compiler_retry_ms * MILLISECOND)
+
+        def on_preparation_rejected(self, request_id: int, reason: str) -> None:
+            """Same as the controller's method, with the retry wait taken from the knob."""
+            self.rejections[request_id].append(reason)
+            if (request_id not in self.deadlines and request_id not in self.accepted
+                    and request_id not in self.preparation_retry_events):
+                event = Event(self.timeline.now() + period, Process(self, "retry_preparation", [request_id]))
+                self.preparation_retry_events[request_id] = event
+                self.timeline.schedule(event)
+        Controller.on_preparation_rejected = on_preparation_rejected
 
 
 def success_probability(knobs: Knobs) -> float:

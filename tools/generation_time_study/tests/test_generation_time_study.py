@@ -88,3 +88,13 @@ def test_argv_passes_every_option_the_study_varies():
     assert argv[argv.index("--chain-hops-prepared") + 1] == "1"
     assert argv[argv.index("--congestion-threshold") + 1] == "25"
     assert "--demand-first" in argv and "--audit-events" in argv and "--all-chain-hops" not in argv
+
+
+def test_retry_knobs_leave_old_case_keys_unchanged():
+    assert kn.Knobs().overrides() == {}
+    assert kn.Knobs(request_retry_ms=0.01).overrides() == {"request_retry_ms": 0.01}
+
+
+def test_the_compiler_retry_replacement_matches_the_original_logic():
+    source = (kn.ROOT / "ace" / "compiler" / "compiler_scheduler.py").read_text()
+    assert "Event(self.timeline.now() + MILLISECOND," in source and "Process(self, \"retry_preparation\", [request_id])" in source

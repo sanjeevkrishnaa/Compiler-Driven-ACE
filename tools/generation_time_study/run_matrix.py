@@ -22,9 +22,15 @@ def case_key(spec: dict) -> str:
     return hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()[:16]
 
 
+def running(name: str) -> bool:
+    """True when another pool is simulating this case right now."""
+    done = subprocess.run(["pgrep", "-f", f"run_case.py --spec .*{name}/spec.json"], capture_output=True, text=True)
+    return bool(done.stdout.strip())
+
+
 def run(spec: dict, timeout: float) -> tuple[str, str]:
     folder = RUNS / case_key(spec)
-    if (folder / "reduced.json").exists():
+    if (folder / "reduced.json").exists() or running(folder.name):
         return "skipped", folder.name
     folder.mkdir(parents=True, exist_ok=True)
     path = folder / "spec.json"
@@ -46,12 +52,15 @@ def run(spec: dict, timeout: float) -> tuple[str, str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("experiment", choices=sorted(experiments.EXPERIMENTS))
+    parser.add_argument("experiment", nargs="+", choices=sorted(experiments.EXPERIMENTS))
     parser.add_argument("--workers", type=int, default=7)
     parser.add_argument("--timeout", type=float, default=3 * 3600)
+    parser.add_argument("--reverse", action="store_true", help="start with the cheapest cases, to meet another pool in the middle")
     args = parser.parse_args()
-    specs = experiments.EXPERIMENTS[args.experiment]()
+    specs = [spec for name in args.experiment for spec in experiments.EXPERIMENTS[name]()]
     unique = {case_key(s): s for s in specs}
+    cost = lambda spec: len(spec["seeds"].split(",")) * len(spec["strategies"].split(",")) * (2 if spec["workload"] == "qaoa" else 1) * (3 if spec["workload"] == "randomcircuit" else 1)
+    unique = dict(sorted(unique.items(), key=lambda item: cost(item[1]) if args.reverse else -cost(item[1])))
     counts = {"ok": 0, "skipped": 0, "failed": 0}
     print(f"{args.experiment}: {len(specs)} cases, {len(unique)} unique", flush=True)
     started = time.time()

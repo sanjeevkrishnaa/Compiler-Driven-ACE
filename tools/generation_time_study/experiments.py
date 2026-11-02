@@ -127,6 +127,28 @@ def workloads() -> list[dict]:
             for e in (0.95, 0.4)]
 
 
+def distance() -> list[dict]:
+    """Real inter-core link lengths.  The configured core-to-core distance is 0.05 m, with the BSM halfway."""
+    out = []
+    for metres in (1.0, 6.6, 30.0):
+        for w in WORKLOADS:
+            out.append(case(w, "history", 4, 3, Knobs(distance_scale=metres / 0.05), seeds=TUNING, tag=f"distance={metres:g}m"))
+    for w in WORKLOADS:
+        out.append(case(w, "history", 4, 3, Knobs(distance_scale=6.6 / 0.05, classical_scale=0.01), seeds=TUNING, tag="distance=6.6m,fast control"))
+    return out
+
+
+def retry() -> list[dict]:
+    """Is QAOA's loss at fast control caused by the two fixed one-millisecond retry waits?"""
+    out = []
+    for w in WORKLOADS:
+        for scale in (0.01, 0.1):
+            for request, compiler in ((1.0, 1.0), (scale, 1.0), (1.0, scale), (scale, scale)):
+                knobs = Knobs(classical_scale=scale, empty_gap_ms=5.0 * scale, request_retry_ms=request, compiler_retry_ms=compiler)
+                out.append(case(w, "history", 4, 3, knobs, seeds=TUNING, tag=f"retry request={request:g} compiler={compiler:g}"))
+    return out
+
+
 def validation() -> list[dict]:
     """Written by choose_tuned.py from the tuning seeds, run on seeds that tuning never saw."""
     path = ROOT / "docs" / "research" / "generation-time-2026-11-01" / "data" / "tuned_choices.json"
@@ -141,4 +163,4 @@ def validation() -> list[dict]:
 
 
 EXPERIMENTS = dict(efficiency=efficiency, delay=delay, equivalence=equivalence, gap=gap, scale=scale, chip=chip, memory=memory,
-                   lead_gap=lead_gap, tuning=tuning, coherence=coherence, routes=routes, workloads=workloads, validation=validation)
+                   lead_gap=lead_gap, tuning=tuning, coherence=coherence, routes=routes, workloads=workloads, distance=distance, retry=retry, validation=validation)
