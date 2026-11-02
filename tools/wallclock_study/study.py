@@ -11,6 +11,7 @@ Routes: XY and history.  Latency is eligibility to EPR delivery; data teleportat
 from __future__ import annotations
 
 import argparse
+import shlex
 from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
@@ -21,6 +22,8 @@ ROOT = Path(__file__).resolve().parents[2]
 TRACES = ROOT / "results" / "wallclock_2026-11-03" / "traces"
 RUNS = ROOT / "output" / "wallclock_study" / "runs"
 CONFIG = ROOT / "config" / "final_config" / "grid_4x4_ace_3.json"
+LAYER_TIMES = ROOT / "results" / "wallclock_2026-11-03" / "layer_times"
+CALIBRATION_SEED = "59"         # layer start times are measured on this seed; every evaluation uses other seeds
 
 WORKLOADS = ("qft", "qpeexact", "qaoa", "draper_qft_adder")
 SETUP_ONLY = ("quantum_volume",)        # mapped and routed, deliberately not simulated for now
@@ -36,8 +39,31 @@ COMMON = ["--config", str(CONFIG), "--total-memories", str(MEMORIES), "--compile
 
 def command(workload: str, route: str, strategy: str, seeds: str, output: Path, extra: tuple[str, ...] = ()) -> list[str]:
     trace = TRACES / workload / route / "requests.txt"
+    extra = tuple(item.replace("{layer_times}", str(LAYER_TIMES / f"{workload}_{route}.json")) for item in extra)
     return [sys.executable, "-B", str(ROOT / "run_trace_comparison.py"), "--trace", str(trace), "--strategies", strategy,
             "--seeds", seeds, *COMMON, *extra, "--output", str(output)]
+
+
+def calibrate(workloads, routes, jobs: int) -> None:
+    """Measure layer start times with the layer planner on the calibration seed and keep them for the time planner."""
+    LAYER_TIMES.mkdir(parents=True, exist_ok=True)
+
+    def one(item):
+        workload, route = item
+        scratch = RUNS / "calibration" / f"{workload}_{route}"
+        scratch.mkdir(parents=True, exist_ok=True)
+        env = dict(os.environ)
+        env["PYTHONPATH"] = os.pathsep.join(filter(None, [env.get("SEQUENCE_ENGINE", ""), str(ROOT), env.get("PYTHONPATH", "")]))
+        cmd = command(workload, route, "dynamic", CALIBRATION_SEED, scratch / "run", ("--layer-times-output", str(scratch / "times"))
+                      )
+        code = subprocess.run(cmd, cwd=ROOT, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT).returncode
+        if code == 0:
+            (LAYER_TIMES / f"{workload}_{route}.json").write_bytes((scratch / "times" / f"layer_times_dynamic_{CALIBRATION_SEED}.json").read_bytes())
+        return f"{workload}_{route}", code
+
+    with ThreadPoolExecutor(jobs) as pool:
+        for name, code in pool.map(one, [(w, r) for w in workloads for r in routes]):
+            print(("calibrated " if code == 0 else f"FAILED({code}) ") + name, flush=True)
 
 
 def run_job(job) -> tuple[str, int]:
@@ -61,10 +87,14 @@ def main() -> None:
     p.add_argument("--strategies", nargs="+", default=list(STRATEGIES))
     p.add_argument("--seeds", default="60,61,62,63")
     p.add_argument("--folder", default="baseline", help="subfolder of output/wallclock_study/runs")
-    p.add_argument("--extra", nargs="*", default=[], help="extra run_trace_comparison.py flags, e.g. --extra --dynamic-planner time")
+    p.add_argument("--extra", default="", help='one quoted string of extra run_trace_comparison.py flags, e.g. --extra "--dynamic-planner time"')
     p.add_argument("--jobs", type=int, default=8)
+    p.add_argument("--calibrate", action="store_true", help="measure layer start times (seed 59) instead of running the comparison")
     a = p.parse_args()
-    jobs = [(w, r, s, a.seeds, tuple(a.extra), a.folder) for w in a.workloads for r in a.routes for s in a.strategies]
+    if a.calibrate:
+        calibrate(a.workloads, a.routes, a.jobs)
+        return
+    jobs = [(w, r, s, a.seeds, tuple(shlex.split(a.extra)), a.folder) for w in a.workloads for r in a.routes for s in a.strategies]
     with ThreadPoolExecutor(a.jobs) as pool:
         for name, code in pool.map(run_job, jobs):
             print(("ok     " if code == 0 else f"FAILED({code}) ") + name, flush=True)

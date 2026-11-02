@@ -102,6 +102,7 @@ class CompilerPreGenerationController:
                              or layer_activity[self.requests[item.request_id].layer] <= congestion_threshold)
         self.waiting_for_predecessor = defaultdict(list)
         self.schedule = {item.request_id: item.generation_layer for item in schedule}
+        self.offsets = {item.request_id: int(item.offset_ms * MILLISECOND) for item in schedule}
         self.by_generation_layer = defaultdict(list)
         for item in schedule:
             self.by_generation_layer[item.generation_layer].append(item.request_id)
@@ -131,8 +132,9 @@ class CompilerPreGenerationController:
             if self.trigger == "predecessor-start" and request_id in self.chain_predecessor:
                 # a later hop is prepared when the hop before it of the same qubit begins
                 self.waiting_for_predecessor[self.chain_predecessor[request_id]].append(request_id)
-            elif self.trigger_delay > 0 or self.demand_first:
-                self.timeline.schedule(Event(self.timeline.now() + max(1, self.trigger_delay),
+            elif self.trigger_delay > 0 or self.demand_first or self.offsets.get(request_id, 0) > 0:
+                # an offset launches it part-way into the layer, counted from the moment the layer really opens
+                self.timeline.schedule(Event(self.timeline.now() + max(1, self.trigger_delay + self.offsets.get(request_id, 0)),
                                              Process(self, "launch_preparation", [request_id])))
             else:
                 self.launch_preparation(request_id)
