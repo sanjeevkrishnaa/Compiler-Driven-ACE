@@ -6,8 +6,10 @@ ROUTING ?= greedy
 QUBITS ?= 96
 SEEDS ?= 60,61,62,63
 RESERVATION_MS ?= 50
+LAYER_BASIS ?= active
+EMPTY_LAYER_GAP_MS ?= 0.001
 OUTPUT ?= output/$(WORKLOAD)-$(ROUTING)
-ARGS = --workload "$(WORKLOAD)" --routing "$(ROUTING)" --qubits "$(QUBITS)" --seeds "$(SEEDS)" --reservation-ms "$(RESERVATION_MS)" --output "$(OUTPUT)"
+ARGS = --dynamic-layer-basis "$(LAYER_BASIS)" --empty-layer-gap-ms "$(EMPTY_LAYER_GAP_MS)" --workload "$(WORKLOAD)" --routing "$(ROUTING)" --qubits "$(QUBITS)" --seeds "$(SEEDS)" --reservation-ms "$(RESERVATION_MS)" --output "$(OUTPUT)"
 
 .PHONY: help init setup run trace route simulate dry-run
 help:

@@ -42,6 +42,8 @@ See docs/plans/ace-request-scheduler-design.md.
 """
 from __future__ import annotations
 
+import math
+
 from collections import defaultdict
 from typing import Sequence
 
@@ -54,7 +56,7 @@ from ace.simulation.parallel_core import ParallelLayerRequestManager
 from ace.resources.reservation import ApplicationReservation
 
 # Preserved from the legacy manager so the two are comparable; made configurable in Gate 5.
-EMPTY_LAYER_GAP_MS = 5
+EMPTY_LAYER_GAP_MS = 0.001
 RETRY_PERIOD = MILLISECOND          # the legacy retry cadence, used after a physical rejection
 # The reservation window ends at the instant a request times out, and a release is reported at the
 # instant it happens.  Acting strictly later guarantees the booking is gone, whatever order SeQUeNCe
@@ -79,7 +81,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
                  pregeneration_time_ms: float, request_duration_ms: float,
                  compiler_controller=None, recorder=None, *, requests: Sequence,
                  admission: str = "event", starvation_guard: bool = True,
-                 admission_priority: str = "ready-first"):
+                 admission_priority: str = "ready-first", empty_layer_gap_ms: float = EMPTY_LAYER_GAP_MS):
         if admission not in ADMISSION_MODES:
             raise ValueError(f"admission must be one of {ADMISSION_MODES}, got {admission!r}")
         if admission_priority not in ("fifo", "ready-first"):
@@ -93,6 +95,9 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         # controller is attached.  This manager releases whole layers, so undo that.
         self.layered_requests = [list(layer) for layer in layered_requests]
         self.working_layer_origins = list(range(len(layered_requests)))
+        if not math.isfinite(empty_layer_gap_ms) or empty_layer_gap_ms < 0:
+            raise ValueError("empty layer gap must be finite and non-negative")
+        self.empty_layer_gap_ms = empty_layer_gap_ms
         self.admission = admission
         self.starvation_guard = starvation_guard
         self.admission_priority = admission_priority
@@ -178,7 +183,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.layer_start_times[index] = now
         layer = self.layered_requests[index]
         if not layer:
-            self._finish_layer(index, now, gap_ms=EMPTY_LAYER_GAP_MS)
+            self._finish_layer(index, now, gap_ms=self.empty_layer_gap_ms)
             return
         for tuple_ in layer:
             if self.predecessor[tuple_[0]] is None:

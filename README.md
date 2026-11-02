@@ -141,3 +141,21 @@ layer timing model, with the fidelity/storage tradeoff reported explicitly.
 - [Frozen golden-study contract](docs/research/golden-study/README.md)
 - [Original QFT-96 final report](docs/latex/qft96_final/README.md)
 - [Historical October 25 report](docs/latex/oct25_pre_golden/README.md)
+
+## Active-layer preparation timing (experimental branch)
+
+Dynamic preparation now counts its 2-8 lookback window in communication-active
+layers. It cannot launch from an empty layer. The first candidate is the second
+previous active layer, not the nearest previous active layer. Planner age limits
+also use that active-layer axis; physical coherence remains unchanged.
+Empty layers advance by a configurable 0.001 ms (1 microsecond) placeholder.
+This is not a local gate/teleportation model or a hardware-calibrated delay.
+
+`make run` forwards these settings; override `LAYER_BASIS=logical
+EMPTY_LAYER_GAP_MS=5` to reproduce the earlier layer/timing policy. Direct
+comparison CLI and heavy routing `simulate` accept `--dynamic-layer-basis logical
+--empty-layer-gap-ms 5`. Use new output folders; cached historical runs are
+rejected when the layer/timing settings differ. Historical routing reports used
+logical lookback and 5 ms gaps; do not reinterpret their makespans as active-layer
+results. The low-level planner keeps its logical default for existing callers;
+current CLI entry points explicitly select active mode.
