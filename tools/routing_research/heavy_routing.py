@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 WORKLOADS = ('qft', 'draper_qft_adder', 'qaoa')
-SUPPORTED_WORKLOADS = WORKLOADS + ('bv',)
+SUPPORTED_WORKLOADS = WORKLOADS + ('bv', 'qpeexact', 'quantum_volume')
 ALGORITHMS = ('xy', 'yx', 'greedy', 'history', 'minexcess', 'minhop', 'detour2')
 ADJ = ro.adjacency('mesh')
 

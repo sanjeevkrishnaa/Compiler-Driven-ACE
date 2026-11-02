@@ -78,10 +78,10 @@ def parser():
     p.add_argument('--mesh', default='4x4')
     p.add_argument('--topology', choices=['mesh', 'torus'], default='mesh', help='core interconnect; routes are Dijkstra shortest-hop paths with reliability as tie-break')
     p.add_argument('--mapping-only', action='store_true', help='map and export requests.txt/mapping files only; skip the mesh-specific hotspot analysis')
-    p.add_argument('--total-qubits', type=int, default=128, help='Total physical slots INCLUDING communication memories')
+    p.add_argument('--total-qubits', type=int, default=320, help='Total physical slots INCLUDING communication memories')
     p.add_argument('--memory-slots', type=int, default=4, help='Communication memories PER CORE, deducted from physical capacity')
-    p.add_argument('--on-demand-reserve', type=int, default=1, help='Slots within the memory bank reserved for fallback/adoption')
-    p.add_argument('--spare-data-slots-per-core', type=int, default=1, help='Initial data vacancies needed by the supplied migration mapper')
+    p.add_argument('--on-demand-reserve', type=int, default=0, help='Slots within the memory bank reserved for fallback/adoption')
+    p.add_argument('--spare-data-slots-per-core', type=int, default=2, help='Initial data vacancies needed by the supplied migration mapper')
     p.add_argument('--logical-qubits', type=int, help='Requested circuit width; defaults to data capacity minus initial spare slots')
     p.add_argument('--policy', choices=['dynamic', 'fixed', 'on-demand'], default='dynamic')
     p.add_argument('--dynamic-lookahead-layers', type=int, default=8)
@@ -171,16 +171,26 @@ def load_circuit(name, qasm_path, width, args, options):
     else:
         if not re.fullmatch(r'[a-z][a-z0-9_]*', name):
             raise ValueError('workload names must be MQT benchmark module names')
-        module = importlib.import_module(f'mqt.bench.benchmarks.{name}')
-        factory = module.create_circuit
-        kwargs = dict(options.get(name, {}))
-        if 'seed' in inspect.signature(factory).parameters:
+        if name == 'quantum_volume':
+            # Not an MQT Bench circuit: Qiskit's standard Quantum Volume model, random SU(4) on random pairs,
+            # with depth equal to width unless workload options say otherwise.
+            from qiskit.circuit.library import quantum_volume
+            kwargs = dict(options.get(name, {}))
             kwargs.setdefault('seed', args.circuit_seed)
-        circuit = factory(width, **kwargs)
-        source = dict(kind='mqt-bench', benchmark=name, factory_options=kwargs,
-                      factory_source=str(Path(module.__file__).resolve()),
-                      factory_sha256=digest(Path(module.__file__)),
-                      reference=f'{BENCH_URL.replace("/tree/", "/blob/")}/{name}.py')
+            circuit = quantum_volume(width, **kwargs)
+            source = dict(kind='qiskit', benchmark=name, factory_options=kwargs,
+                          reference='qiskit.circuit.library.quantum_volume')
+        else:
+            module = importlib.import_module(f'mqt.bench.benchmarks.{name}')
+            factory = module.create_circuit
+            kwargs = dict(options.get(name, {}))
+            if 'seed' in inspect.signature(factory).parameters:
+                kwargs.setdefault('seed', args.circuit_seed)
+            circuit = factory(width, **kwargs)
+            source = dict(kind='mqt-bench', benchmark=name, factory_options=kwargs,
+                          factory_source=str(Path(module.__file__).resolve()),
+                          factory_sha256=digest(Path(module.__file__)),
+                          reference=f'{BENCH_URL.replace("/tree/", "/blob/")}/{name}.py')
     if not isinstance(circuit, QuantumCircuit):
         raise ValueError('factory must return a Qiskit QuantumCircuit')
     raw_qubits = circuit.num_qubits

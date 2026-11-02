@@ -25,7 +25,8 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-CONFIG = ROOT / "config" / "final_config" / "grid_4x4_ace_3.json"
+# Frozen copy: this study was run at memory efficiency 0.95, before the project default moved to 0.8.
+CONFIG = ROOT / "results" / "generation_time_2026-11-01" / "config_grid_4x4_efficiency095.json"
 TEMPLATE = "adaptive_protocol"
 LINK_METRES = 0.025     # router to BSM, the qchannel distance of the default configuration
 

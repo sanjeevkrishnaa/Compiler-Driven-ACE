@@ -219,7 +219,7 @@ def main() -> None:
     )
     parser.add_argument("--seeds", default="0")
     parser.add_argument("--total-memories", type=int, default=4)
-    parser.add_argument("--compiler-memories", type=int, default=3)
+    parser.add_argument("--compiler-memories", type=int, default=4)
     parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
                         help="handoff delivers the existing pair in place (default); swap explicitly models a separate application communication slot")
     parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
@@ -229,7 +229,7 @@ def main() -> None:
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
     parser.add_argument("--demand-first", action="store_true",
                         help="defer speculative admission when eligible demand needs either endpoint")
-    parser.add_argument("--generation-capacity", type=int, default=3)
+    parser.add_argument("--generation-capacity", type=int, default=4)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
                         help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
