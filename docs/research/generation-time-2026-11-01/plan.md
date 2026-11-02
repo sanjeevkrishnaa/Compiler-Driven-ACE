@@ -108,7 +108,25 @@ Recorded when made, before the affected results existed.
    delay, then the rest.
 
 3. **Three link probes stopped early.** Dark counts of 1e6 and 1e8 per second and coherence 0.1 ms
-   ran for 15 minutes without finishing 3000 samples. They are rerun with few samples and a time limit.
+   ran for 15 minutes without finishing 3000 samples. They were rerun with a time limit: dark counts of 1e6 finished (100 samples, agrees with the formula); dark counts of 1e8 and coherence 0.1 ms still did not finish 30 samples in 7 minutes and are reported as not simulated.
+
+4. **Experiments added after seeing results, 2026-11-02.** `distance` (real core-to-core link lengths,
+   asked for by the user) and `retry` (a controlled test of the inference that QAOA's loss at fast
+   classical control is caused by the fixed 1 ms retry waits). Both are exploratory in the plan's sense;
+   the retry test confirmed its inference. The knobs `request_retry_ms` and `compiler_retry_ms` were
+   added to `knobs.py` for it; they change no earlier case key.
+5. **Route.** The user designated `history` as the optimal route after the first comparison used
+   `greedy`. The workload sweeps use `history` and XY; `greedy` and `minhop` appear only in the
+   `routes` experiment.
+6. **A second worker pool** was run for part of the queue and caused three spurious failure markers
+   (see the report, Chapter 3). All three flagged cases were re-validated; `audit_runs.py` accepts every case.
+
+## Outcome
+
+The report is `docs/latex/generation_time_study/report/main.pdf`. Final verdicts for H1 to H10 are in its
+scorecard and in `data/hypotheses.json`. H1 mostly supported, H2 partly falsified (memory excitation rate),
+H3 supported in practice, H4 supported, H5 supported, H6 supported, H7 falsified for QAOA and then
+explained by the retry test, H8 supported, H9 supported, H10 partly supported.
 
 ## Not addressed
 

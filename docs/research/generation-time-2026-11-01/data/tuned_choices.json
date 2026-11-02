@@ -1,0 +1,110 @@
+[
+ {
+  "workload": "qaoa",
+  "memories": 3,
+  "compiler_memories": 2,
+  "memory_efficiency": 0.4,
+  "tag": "borrow",
+  "options": {
+   "flags": [
+    "--borrow-compiler-pairs"
+   ]
+  },
+  "tuning_default_ms": 6.0698,
+  "tuning_option_ms": 5.43042
+ },
+ {
+  "workload": "qaoa",
+  "memories": 3,
+  "compiler_memories": 2,
+  "memory_efficiency": 0.95,
+  "tag": "demand-first",
+  "options": {
+   "flags": [
+    "--demand-first"
+   ]
+  },
+  "tuning_default_ms": 1.2689,
+  "tuning_option_ms": 1.1727
+ },
+ {
+  "workload": "qaoa",
+  "memories": 4,
+  "compiler_memories": 3,
+  "memory_efficiency": 0.4,
+  "tag": "borrow",
+  "options": {
+   "flags": [
+    "--borrow-compiler-pairs"
+   ]
+  },
+  "tuning_default_ms": 4.537,
+  "tuning_option_ms": 3.90554
+ },
+ {
+  "workload": "qaoa",
+  "memories": 4,
+  "compiler_memories": 3,
+  "memory_efficiency": 0.95,
+  "tag": "borrow",
+  "options": {
+   "flags": [
+    "--borrow-compiler-pairs"
+   ]
+  },
+  "tuning_default_ms": 0.983794,
+  "tuning_option_ms": 0.915057
+ },
+ {
+  "workload": "qft",
+  "memories": 3,
+  "compiler_memories": 2,
+  "memory_efficiency": 0.4,
+  "tag": "C=3",
+  "options": {
+   "compiler_memories": 3,
+   "generation_capacity": 3
+  },
+  "tuning_default_ms": 4.21548,
+  "tuning_option_ms": 3.32456
+ },
+ {
+  "workload": "qft",
+  "memories": 3,
+  "compiler_memories": 2,
+  "memory_efficiency": 0.95,
+  "tag": "C=3",
+  "options": {
+   "compiler_memories": 3,
+   "generation_capacity": 3
+  },
+  "tuning_default_ms": 0.932763,
+  "tuning_option_ms": 0.780657
+ },
+ {
+  "workload": "qft",
+  "memories": 4,
+  "compiler_memories": 3,
+  "memory_efficiency": 0.4,
+  "tag": "C=4",
+  "options": {
+   "compiler_memories": 4,
+   "generation_capacity": 4
+  },
+  "tuning_default_ms": 2.90183,
+  "tuning_option_ms": 2.2279
+ },
+ {
+  "workload": "qft",
+  "memories": 4,
+  "compiler_memories": 3,
+  "memory_efficiency": 0.95,
+  "tag": "C=4",
+  "options": {
+   "compiler_memories": 4,
+   "generation_capacity": 4
+  },
+  "tuning_default_ms": 0.701287,
+  "tuning_option_ms": 0.589034
+ }
+]
