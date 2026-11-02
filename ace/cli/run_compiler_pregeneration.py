@@ -67,6 +67,7 @@ def main() -> None:
     parser.add_argument("--total-memories", type=int, default=4)
     parser.add_argument("--generation-capacity", type=int, default=3)
     parser.add_argument("--delta-layers", type=int, default=6)
+    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical")
     parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
     parser.add_argument("--coherence-time-layers", type=float, default=10)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
@@ -117,6 +118,7 @@ def main() -> None:
                 coherence_time_layers=args.coherence_time_layers,
                 delta_layers=args.delta_layers,
                 dynamic_lookahead_layers=args.dynamic_lookahead_layers,
+                layer_basis=args.dynamic_layer_basis,
             )
             compiler_limit = 0 if strategy == "on-demand" else args.compiler_memories
             compiler_spec = {

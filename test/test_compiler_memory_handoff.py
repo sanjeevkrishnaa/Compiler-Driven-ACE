@@ -38,7 +38,7 @@ class HandoffTests(unittest.TestCase):
                 to_ace_layers(trace, columns=4), 0, 50, "handoff-full-pool", compiler_spec=spec,
                 total_memories_per_core=memories, simulation_stop_time_s=3,
                 scheduler="per-qubit", request_plan=requests, stop_after_workload=True,
-                recorder=recorder)
+                recorder=recorder, scheduler_options={"empty_layer_gap_ms": 5})
         info = {r.request_id: RequestInfo(r.request_id, r.layer, r.qubit, r.order) for r in requests}
         self.assertEqual(check_events(recorder.events, info, require_completion=True,
                                       submission_after_predecessor=True), [])
@@ -178,7 +178,7 @@ class HandoffTests(unittest.TestCase):
                 to_ace_layers(trace, columns=4), 0, 50, 'future-cache-progress',
                 compiler_spec=spec, total_memories_per_core=2, simulation_stop_time_s=3,
                 scheduler='per-qubit', request_plan=requests, stop_after_workload=True,
-                recorder=recorder)
+                recorder=recorder, scheduler_options={"empty_layer_gap_ms": 5})
         self.assertEqual(result['stats']['completed_requests'], 3)
         self.assertLess(result['stats']['end_to_end_latency_ms'], 20)
         self.assertEqual(result['compiler_metrics']['compiler_progress_yields'], 1)

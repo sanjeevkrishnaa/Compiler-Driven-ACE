@@ -46,7 +46,7 @@ class GhzEquivalenceTests(unittest.TestCase):
 
     def both(self, strategy, seed):
         return (audit_trace(self.trace, strategy, seed=seed, scheduler="legacy"),
-                audit_trace(self.trace, strategy, seed=seed, scheduler="per-qubit"))
+                audit_trace(self.trace, strategy, seed=seed, scheduler="per-qubit", scheduler_options={"empty_layer_gap_ms": 5, "layer_activation_order": "preparation-first"}))
 
     def test_on_demand_and_dynamic_runs_are_identical_event_for_event(self):
         for strategy in ("on-demand", "dynamic"):

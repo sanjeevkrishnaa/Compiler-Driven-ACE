@@ -7,7 +7,7 @@ treated as data only and are validated against the evolving qubit placement.
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from math import ceil, isqrt
 from pathlib import Path
 import re
@@ -267,8 +267,27 @@ def plan_preparations(
     dynamic_lookahead_layers: int = 8,
     lead_layers: int = 1,
     planning_mode: str = "offline",
+    layer_basis: str = "logical",
 ) -> tuple[tuple[ScheduledPreparation, ...], int, int | None]:
     """Plan request-specific preparations under per-layer memory limits."""
+
+    if layer_basis not in ("logical", "active"):
+        raise ValueError("layer_basis must be logical or active")
+    if layer_basis == "active" and strategy == "dynamic":
+        # Rank only communication-active layers; retain original layer IDs at
+        # the runtime boundary. Memory occupancy and logical age use this axis.
+        active = sorted({r.layer for r in trace.requests})
+        rank = {layer: i for i, layer in enumerate(active)}
+        compressed = replace(trace, requests=tuple(replace(r, layer=rank[r.layer])
+                            for r in trace.requests), layer_count=len(active))
+        planned, blocked, peak = plan_preparations(
+            compressed, strategy=strategy, compiler_memories_per_core=compiler_memories_per_core,
+            generation_capacity_per_core=generation_capacity_per_core,
+            coherence_time_layers=coherence_time_layers, delta_layers=delta_layers,
+            dynamic_lookahead_layers=dynamic_lookahead_layers, lead_layers=lead_layers,
+            planning_mode=planning_mode, layer_basis="logical")
+        return tuple(ScheduledPreparation(p.request_id, active[p.generation_layer])
+                     for p in planned), blocked, peak
 
     if planning_mode not in ("offline", "runtime"):
         raise ValueError("planning_mode must be offline or runtime")

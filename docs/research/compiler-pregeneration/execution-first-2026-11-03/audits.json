@@ -1,0 +1,56 @@
+[
+  {
+    "variant": "original",
+    "strategy": "on-demand",
+    "events": 79130,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "variant": "original",
+    "strategy": "dynamic",
+    "events": 112874,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "variant": "execution-first",
+    "strategy": "on-demand",
+    "events": 79130,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "variant": "execution-first",
+    "strategy": "dynamic",
+    "events": 113174,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "variant": "execution-first-guarded",
+    "strategy": "on-demand",
+    "events": 79130,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "variant": "execution-first-guarded",
+    "strategy": "dynamic",
+    "events": 111612,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  }
+]

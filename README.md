@@ -141,3 +141,35 @@ layer timing model, with the fidelity/storage tradeoff reported explicitly.
 - [Frozen golden-study contract](docs/research/golden-study/README.md)
 - [Original QFT-96 final report](docs/latex/qft96_final/README.md)
 - [Historical October 25 report](docs/latex/oct25_pre_golden/README.md)
+
+## Current preparation timing
+
+Dynamic preparation uses the original logical-layer lookback: the full-chain
+preset tries L-2 through L-8, including communication-empty layers. Empty layers
+advance by **5 ms** by default. This is a timing placeholder, not modeled local
+gate execution. Physical coherence and the 50 ms compiler reservation cap are
+unchanged.
+
+`make run` uses `LAYER_BASIS=logical EMPTY_LAYER_GAP_MS=5`. Equivalent direct CLI
+options are `--dynamic-layer-basis logical --empty-layer-gap-ms 5` with
+`--planner-lead-layers 2` for the full-chain preset. Optional `active` basis
+remains available for reproducing the experimental branch's comparison, but is
+not the default. Use fresh output folders when changing timing; cache reuse
+rejects mismatched settings. Dated reports retain their original gap and basis.
+
+### Execution-first layer activation experiment
+
+Branch `codex/execution-first-pregeneration` restores 5 ms empty gaps and original
+logical 2-8 layer planning. The per-qubit scheduler's default layer activation
+releases all eligible current requests, runs one ready-first admission pass, then
+triggers new compiler preparations at the same simulation timestamp. It does not
+wait for demand to complete; future pairs already held in memory are not removed
+by this ordering change. Empty layers still launch their scheduled preparations.
+
+`--layer-activation-order preparation-first` reproduces the original ordering;
+`execution-first` selects the new ordering. Heavy routing accepts the same flag
+and rejects incompatible cached outputs. Optional `--demand-first` additionally
+uses the existing guard against speculation ahead of eligible demand and
+unbooked remote promises; it is a separate experimental variant, not silently
+enabled by the ordering change. The original logical planner and all physical
+hardware, quotas, coherence and reservation settings remain unchanged.
