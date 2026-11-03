@@ -1,0 +1,125 @@
+MQT Bench 2.3.0, Qiskit 2.6.1, Python 3.14.0
+  ok    manifest lists every benchmark once
+
+qft (qft/qft_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    QFT: h = n, cp = n(n-1)/2, swap = n/2 at n = 128
+  ok    QFT: the 3-qubit circuit equals the DFT matrix (up to global phase)
+  ok    QFT: the 4-qubit circuit equals the DFT matrix (up to global phase)
+  ok    QFT: the 5-qubit circuit equals the DFT matrix (up to global phase)
+  ok    QFT: the 6-qubit circuit equals the DFT matrix (up to global phase)
+
+bv (bv/bv_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    BV: every measured bit is deterministic
+  ok    BV: classical bit i reads hidden-string character i (alternating 0101...)
+
+ghz (ghz/ghz_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    GHZ: only |0...0> and |1...1>, each with probability 1/2
+
+dj (dj/dj_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    DJ: the outcome is deterministic
+  ok    DJ: the outcome is not all zeros, so the oracle is balanced (a constant one gives 0...0)
+
+qpeexact (qpeexact/qpeexact_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    QPE: x = 1, h = 2(n-1), cp = (n-1) + (n-1)(n-2)/2, swap = (n-1)/2 at n = 128
+  ok    QPE exact: the 4-qubit circuit reads its phase with probability 1
+  ok    QPE exact: the 5-qubit circuit reads its phase with probability 1
+  ok    QPE exact: the 6-qubit circuit reads its phase with probability 1
+  ok    QPE exact: the 7-qubit circuit reads its phase with probability 1
+  ok    QPE exact: the 8-qubit circuit reads its phase with probability 1
+
+qaoa (qaoa/qaoa_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  note  measurements differ from main: 0 measured qubits here, 128 in main
+  ok    QAOA: rzz count = 2 layers x 4106 graph edges
+  ok    QAOA: each layer applies rzz on exactly the edges of the seed-10 graph
+  ok    QAOA: no unbound parameter
+
+draper_qft_adder (draper_qft_adder/draper_qft_adder_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  note  measurements differ from main: 128 measured qubits here, 64 in main
+  ok    Draper: h = n, cp = 2*QFT(64) + 64(64+1)/2 at n = 128
+  ok    Draper: for all 16 inputs at 4 qubits, a stays a and b becomes (a + b) mod 2^2
+  ok    Draper: for all 64 inputs at 6 qubits, a stays a and b becomes (a + b) mod 2^3
+
+graphstate (graphstate/graphstate_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    graphstate: CZ edges equal networkx random_regular_graph(2, n, seed=10)
+  ok    graphstate: 2-regular graph, n edges, no repeated edge
+  ok    graphstate: every stabilizer X_v Z_N(v) has expectation +1
+
+bmw_quark_cardinality (bmw_quark_cardinality/bmw_quark_cardinality_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    BMW cardinality: rx, rz and rxx counts match its source
+  ok    BMW cardinality: no unbound parameter
+
+bmw_quark_copula (bmw_quark_copula/bmw_quark_copula_128.qasm)
+  ok    file matches the SHA-256 in manifest.json
+  ok    regenerating gives byte-identical QASM
+  ok    no custom block left in the file
+  ok    the file has exactly MQT's gates, wires and parameters (its blocks expanded)
+  ok    128 qubits
+  ok    every gate acts on at most two qubits after expansion
+  ok    gates equal those of MQT Bench main (same gate sequence on every qubit)
+  ok    BMW copula: h, cx, rz, rx and rxx counts match its source
+  ok    BMW copula: no unbound parameter
+
+ALL CHECKS PASSED

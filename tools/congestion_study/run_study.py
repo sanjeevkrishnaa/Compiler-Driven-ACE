@@ -166,7 +166,7 @@ def load_circuit(name, qasm_path, width, args, options):
     source = {}
     if qasm_path is not None:
         text = qasm_path.read_text(encoding='utf-8')
-        circuit = qasm3.loads(text) if re.search(r'OPENQASM\s+3', text) else qasm2.loads(text)
+        circuit = qasm3.loads(text) if re.search(r'OPENQASM\s+3', text) else qasm2.loads(text, custom_instructions=qasm2.LEGACY_CUSTOM_INSTRUCTIONS)   # cp, rzz, rxx (Qiskit's exporter writes them; qelib1.inc lacks them)
         source = dict(kind='qasm', path=str(qasm_path.resolve()), sha256=digest(qasm_path))
     else:
         if not re.fullmatch(r'[a-z][a-z0-9_]*', name):

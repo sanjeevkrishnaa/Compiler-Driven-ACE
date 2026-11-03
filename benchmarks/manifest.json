@@ -1,0 +1,269 @@
+{
+ "generator": "benchmarks/generate.py",
+ "level": "ALG",
+ "format": "OpenQASM 2 (qiskit.qasm2.dumps)",
+ "custom_blocks": "expanded into their standard gates (qft, DJ oracle, Draper circuit_*); gates unchanged",
+ "reading_note": "cp, rzz and rxx are not in qelib1.inc: read with qiskit.qasm2.loads(text, custom_instructions=qasm2.LEGACY_CUSTOM_INSTRUCTIONS) or pytket",
+ "mqt_bench": "2.3.0",
+ "qiskit": "2.6.1",
+ "python": "3.14.0",
+ "random_parameter_rule": "MQT binds free parameters with numpy default_rng(10), uniform in [0, 2 pi)",
+ "files": [
+  {
+   "benchmark": "qft",
+   "requested_size": 128,
+   "file": "qft/qft_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 257,
+   "two_qubit_gates": 8192,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cp": 8128,
+    "h": 128,
+    "measure": 128,
+    "swap": 64
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cp": 8128,
+    "h": 128,
+    "measure": 128,
+    "swap": 64
+   },
+   "options": {},
+   "sha256": "1078fe7e01313e79820f6a35e27a993482ae49b73bea8285bcd32ff4de22f38f"
+  },
+  {
+   "benchmark": "bv",
+   "requested_size": 128,
+   "file": "bv/bv_128.qasm",
+   "qubits": 128,
+   "clbits": 127,
+   "depth": 66,
+   "two_qubit_gates": 63,
+   "ops_after_expansion": {
+    "cz": 63,
+    "h": 254,
+    "measure": 127,
+    "x": 1
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "cz": 63,
+    "h": 254,
+    "measure": 127,
+    "x": 1
+   },
+   "options": {},
+   "sha256": "4da7071bfc795da1f93854da1671e11c50c081c5a6fcdc052657238f0756f639"
+  },
+  {
+   "benchmark": "ghz",
+   "requested_size": 128,
+   "file": "ghz/ghz_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 129,
+   "two_qubit_gates": 127,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cx": 127,
+    "h": 1,
+    "measure": 128
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cx": 127,
+    "h": 1,
+    "measure": 128
+   },
+   "options": {},
+   "sha256": "e06a4bfad5a508459a69b2ec906f190a0eb1093e07b078e1f8d9f39b9f35b094"
+  },
+  {
+   "benchmark": "dj",
+   "requested_size": 128,
+   "file": "dj/dj_128.qasm",
+   "qubits": 128,
+   "clbits": 127,
+   "depth": 131,
+   "two_qubit_gates": 127,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cx": 127,
+    "h": 255,
+    "measure": 127,
+    "x": 127
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cx": 127,
+    "h": 255,
+    "measure": 127,
+    "x": 127
+   },
+   "options": {},
+   "sha256": "20d1f8fe67accddc5fc09ab1e5f46c37447a764c97ef5d3042008a0b5c4f8a45"
+  },
+  {
+   "benchmark": "qpeexact",
+   "requested_size": 128,
+   "file": "qpeexact/qpeexact_128.qasm",
+   "qubits": 128,
+   "clbits": 127,
+   "depth": 383,
+   "two_qubit_gates": 8191,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cp": 8128,
+    "h": 254,
+    "measure": 127,
+    "swap": 63,
+    "x": 1
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cp": 8128,
+    "h": 254,
+    "measure": 127,
+    "swap": 63,
+    "x": 1
+   },
+   "options": {},
+   "sha256": "27d61a09afe77c71a56ce6baaed6d825f1633beca2cf152ac788339e5763b396"
+  },
+  {
+   "benchmark": "qaoa",
+   "requested_size": 128,
+   "file": "qaoa/qaoa_128.qasm",
+   "qubits": 128,
+   "clbits": 0,
+   "depth": 327,
+   "two_qubit_gates": 8212,
+   "ops_after_expansion": {
+    "h": 128,
+    "rx": 256,
+    "rzz": 8212
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "h": 128,
+    "rx": 256,
+    "rzz": 8212
+   },
+   "options": {},
+   "sha256": "1c46763fd7ee3d389347b8a4c8fb4b3a905c0b932f22ae5c43def7dfde6287ed"
+  },
+  {
+   "benchmark": "draper_qft_adder",
+   "requested_size": 128,
+   "file": "draper_qft_adder/draper_qft_adder_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 319,
+   "two_qubit_gates": 6112,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cp": 6112,
+    "h": 128,
+    "measure": 128
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cp": 6112,
+    "h": 128,
+    "measure": 128
+   },
+   "options": {},
+   "sha256": "b6a9d764c44c8170f8a02aeaa7142b38e4453c0adec448273150c2b42931a37f"
+  },
+  {
+   "benchmark": "graphstate",
+   "requested_size": 128,
+   "file": "graphstate/graphstate_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 7,
+   "two_qubit_gates": 128,
+   "ops_after_expansion": {
+    "barrier": 1,
+    "cz": 128,
+    "h": 128,
+    "measure": 128
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 1,
+    "cz": 128,
+    "h": 128,
+    "measure": 128
+   },
+   "options": {
+    "seed": 10
+   },
+   "sha256": "5003e27a6841919700a4f46f9951daa7ea679bf089bbf6dd235c40721fa3f5f1"
+  },
+  {
+   "benchmark": "bmw_quark_cardinality",
+   "requested_size": 128,
+   "file": "bmw_quark_cardinality/bmw_quark_cardinality_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 389,
+   "two_qubit_gates": 381,
+   "ops_after_expansion": {
+    "barrier": 7,
+    "measure": 128,
+    "rx": 512,
+    "rxx": 381,
+    "rz": 384
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 7,
+    "measure": 128,
+    "rx": 512,
+    "rxx": 381,
+    "rz": 384
+   },
+   "options": {},
+   "sha256": "6659229992cafe2ac96c0e3a359ea294797b70adabb34f90320b4446a93f2038"
+  },
+  {
+   "benchmark": "bmw_quark_copula",
+   "requested_size": 128,
+   "file": "bmw_quark_copula/bmw_quark_copula_128.qasm",
+   "qubits": 128,
+   "clbits": 128,
+   "depth": 259,
+   "two_qubit_gates": 8128,
+   "ops_after_expansion": {
+    "barrier": 4,
+    "cx": 64,
+    "h": 64,
+    "measure": 128,
+    "rx": 256,
+    "rxx": 8064,
+    "rz": 512
+   },
+   "gates_wider_than_two_qubits": [],
+   "top_level_ops": {
+    "barrier": 4,
+    "cx": 64,
+    "h": 64,
+    "measure": 128,
+    "rx": 256,
+    "rxx": 8064,
+    "rz": 512
+   },
+   "options": {},
+   "sha256": "d0ff9a0a26f5b3a40683d8827caa48bcdd86cbf1b2edd4ef4d26ca772627126c"
+  }
+ ]
+}
