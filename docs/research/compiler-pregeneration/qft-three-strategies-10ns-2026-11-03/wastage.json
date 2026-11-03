@@ -1,0 +1,11 @@
+{
+  "compiler_generated": 7380,
+  "compiler_used": 7359,
+  "compiler_expiry": 21,
+  "compiler_eviction": 0,
+  "compiler_remaining": 0,
+  "compiler_waste_percent": 0.2845528455284553,
+  "acgp_reported_protocol_waste_percent": 3.8519924098671727,
+  "acgp_pair_waste_validated": false,
+  "reason": "num_unused_entanglement_pairs increments on adaptive memory release even when no generated pair exists; this is not a unique generated-pair lifecycle ledger"
+}

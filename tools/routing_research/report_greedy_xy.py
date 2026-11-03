@@ -21,10 +21,12 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     a = p.parse_args(); a.output.mkdir(parents=True, exist_ok=True)
     workloads = ("qft", "qaoa", "bv"); routes = ("xy", "greedy")
-    rows = list(csv.DictReader((a.study / "runtime.csv").open()))
+    rows = [r for r in csv.DictReader((a.study / "runtime.csv").open())
+            if r["workload"] in workloads and r["algorithm"] in routes]
     assert len(rows) == 48, "expected four seeds, two routes, two strategies, three workloads"
     audits = []
     for path in a.study.glob("simulation/*/seed_42/*/audit*.json"):
+        if path.parent.name not in routes or path.parents[2].name not in workloads: continue
         d = json.loads(path.read_text())
         assert not d["violations"] and d["completed_requests"] == d["total_requests"]
         audits.append(dict(path=str(path.relative_to(a.study)), **d))

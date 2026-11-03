@@ -1,0 +1,12 @@
+{
+  "active_layers": 764,
+  "logical_layers": 1645,
+  "scheduled": 19220,
+  "blocked": 11012,
+  "peak_planner_slots": 8,
+  "active_lookback_histogram": {
+    "2": 19220
+  },
+  "active_2_8_and_2_16_plans_identical": true,
+  "trace_sha256": "53625346d069e5509da62ec5068634095f742e5ac6bcdd4a9e07da5eab52703e"
+}

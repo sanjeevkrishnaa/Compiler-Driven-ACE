@@ -26,6 +26,21 @@ RESERVATION_START_GRACE_PS = 1
 # write the new functions here
 
 
+def seed_entity_indices(entities, reference_memories=None):
+    """Preserve original component streams when extra memories are introduced."""
+    names = sorted(entities)
+    if reference_memories is None:
+        return {name: i for i, name in enumerate(names)}
+    if reference_memories < 1:
+        raise ValueError("reference memories must be positive")
+    common, extra = [], []
+    for name in names:
+        array = getattr(entities[name], "memory_array", None)
+        index = getattr(array, "memory_name_to_index", {}).get(name)
+        (extra if index is not None and index >= reference_memories else common).append(name)
+    return {name: i for i, name in enumerate(common + extra)}
+
+
 def serialize_core_conflicts(layered_requests: list) -> tuple[list, list[int]]:
     """Preserve trace order at each core while keeping disjoint work parallel.
 
@@ -539,7 +554,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
                             recorder=None,
                             scheduler: str = "legacy",
                             request_plan=None,
-                            scheduler_options: dict | None = None):
+                            scheduler_options: dict | None = None,
+                            seed_reference_memories: int | None = None):
     """
     Run an experiment with parallel layered requests.
 
@@ -593,7 +609,7 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
     # Photon/detector sampling uses each node's own generator, not only the
     # timeline/global RNG. Give every physical node a deterministic seed.
     node_seed_manifest = {}
-    for index, name in enumerate(sorted(tl.entities)):
+    for name, index in seed_entity_indices(tl.entities, seed_reference_memories).items():
         entity = tl.entities[name]
         if hasattr(entity, "set_seed"):
             node_seed = int(np.random.SeedSequence([seed, index]).generate_state(1)[0])
@@ -658,6 +674,8 @@ def run_parallel_experiment(config_file: str, update_prob_setting: bool, purify_
             congestion_threshold=compiler_spec.get("congestion_threshold"),
             refill_on_release=compiler_spec.get("refill_on_release", False),
             demand_first=compiler_spec.get("demand_first", False),
+            preparation_priority=compiler_spec.get("preparation_priority", "trace"),
+            generation_capacity_per_core=compiler_spec.get("runtime_generation_capacity"),
             borrow_compiler_pairs=compiler_spec.get("borrow_compiler_pairs", False),
             reuse_compiler_memory=compiler_spec.get("reuse_compiler_memory", True),
         )

@@ -46,6 +46,8 @@ class CompilerPreGenerationController:
         demand_first: bool = False,
         borrow_compiler_pairs: bool = False,
         reuse_compiler_memory: bool = True,
+        preparation_priority: str = "trace",
+        generation_capacity_per_core: int | None = None,
     ):
         if predecessor_distance < 1:
             raise ValueError("predecessor distance must be at least 1")
@@ -55,6 +57,16 @@ class CompilerPreGenerationController:
             raise ValueError("congestion_threshold must be non-negative")
         if trigger not in TRIGGERS:
             raise ValueError(f"unknown preparation trigger {trigger!r}; expected one of {TRIGGERS}")
+        if preparation_priority not in ("trace", "dependency"):
+            raise ValueError("preparation priority must be trace or dependency")
+        if generation_capacity_per_core is not None and generation_capacity_per_core < 1:
+            raise ValueError("generation capacity must be positive")
+        self.preparation_priority = preparation_priority
+        self.generation_capacity_per_core = generation_capacity_per_core
+        self.active_layers = {r.layer for r in requests}
+        self.launch_counts = defaultdict(int)
+        self.current_generation_layer = None
+        self._refill_event = None
         self.timeline = timeline
         self.refill_on_release = refill_on_release
         self.demand_first = demand_first
@@ -78,9 +90,11 @@ class CompilerPreGenerationController:
         for request in requests:
             chains[(request.layer, request.qubit)].append(request)
         self.chain_position, self.chain_predecessor = {}, {}
+        self.chain_ancestors = {}
         for hops in chains.values():
             hops.sort(key=lambda r: r.order)
             for index, request in enumerate(hops):
+                self.chain_ancestors[request.request_id] = tuple(r.request_id for r in hops[:index])
                 self.chain_position[request.request_id] = index
                 # the hop whose start launches this one: predecessor_distance positions earlier, if the chain has one
                 if index >= predecessor_distance:
@@ -127,7 +141,10 @@ class CompilerPreGenerationController:
         if layer in self.triggered_generation_layers:
             return
         self.triggered_generation_layers.add(layer)
-        for request_id in self.by_generation_layer.get(layer, ()):
+        if layer in self.active_layers:
+            self.current_generation_layer = layer
+            self.on_resource_release()
+        for request_id in sorted(self.by_generation_layer.get(layer, ()), key=self._preparation_key):
             if self.trigger == "predecessor-start" and request_id in self.chain_predecessor:
                 # a later hop is prepared when the hop before it of the same qubit begins
                 self.waiting_for_predecessor[self.chain_predecessor[request_id]].append(request_id)
@@ -161,6 +178,12 @@ class CompilerPreGenerationController:
         if metadata is None:
             return
         request = self.requests[request_id]
+        capacity = self.generation_capacity_per_core
+        if capacity is not None and any(
+                self.launch_counts[(self.current_generation_layer, core)] >= capacity
+                for core in request.edge):
+            self.on_preparation_rejected(request_id, "generation_budget")
+            return
         if self.admission_guard is not None and not self.admission_guard(request):
             self.on_preparation_rejected(request_id, "demand_priority")
             return
@@ -179,27 +202,40 @@ class CompilerPreGenerationController:
         for successor in (waiting.pop(request_id, ()) if waiting else ()):
             self.launch_preparation(successor)
 
+    def _preparation_key(self, request_id):
+        request = self.requests[request_id]
+        if self.preparation_priority == "trace":
+            return (request.layer, request.order)
+        # A later hop cannot become eligible before its earlier hops start.
+        # Use outstanding starts as a dependency proxy, not a claimed wall-clock ETA.
+        remaining = sum(rid not in self.deadlines for rid in self.chain_ancestors[request_id])
+        return (request.layer, remaining, request.order)
+
     def on_resource_release(self) -> None:
         """Retry queued candidates after demand admission has observed a release."""
-        if not self.refill_on_release:
+        if not self.refill_on_release or self._refill_event is not None or not self.pending_preparations:
             return
-        for request_id in sorted(self.pending_preparations,
-                                 key=lambda rid: (self.requests[rid].layer,
-                                                  self.requests[rid].order)):
+        self._refill_event = Event(self.timeline.now() + 2,
+                                   Process(self, "_refill_preparations", []))
+        self.timeline.schedule(self._refill_event)
+
+    def _refill_preparations(self):
+        self._refill_event = None
+        for request_id in sorted(self.pending_preparations, key=self._preparation_key):
             event = self.preparation_retry_events.pop(request_id, None)
             if event is None:
                 # No retry means a handshake may still be in flight.
                 continue
             self.timeline.remove_event(event)
-            replacement = Event(self.timeline.now() + 2,
-                                Process(self, "retry_preparation", [request_id]))
-            self.preparation_retry_events[request_id] = replacement
-            self.timeline.schedule(replacement)
+            self.retry_preparation(request_id)
 
     def _router_name(self, core: int) -> str:
         return f"router_{core // self.columns}_{core % self.columns}"
 
     def on_preparation_launched(self, request_id: int) -> None:
+        if self.generation_capacity_per_core is not None:
+            for core in self.requests[request_id].edge:
+                self.launch_counts[(self.current_generation_layer, core)] += 1
         self.launched.add(request_id)
 
     def on_preparation_accepted(self, request_id: int) -> None:

@@ -171,16 +171,26 @@ def load_circuit(name, qasm_path, width, args, options):
     else:
         if not re.fullmatch(r'[a-z][a-z0-9_]*', name):
             raise ValueError('workload names must be MQT benchmark module names')
-        module = importlib.import_module(f'mqt.bench.benchmarks.{name}')
-        factory = module.create_circuit
         kwargs = dict(options.get(name, {}))
+        if name == 'quantum_volume':
+            from qiskit.circuit.library import quantum_volume
+            factory = quantum_volume
+            factory_path = Path(inspect.getfile(factory)).resolve()
+            reference = 'https://quantum.cloud.ibm.com/docs/en/api/qiskit/2.3/qiskit.circuit.library.quantum_volume'
+            kind = 'qiskit-circuit-library'
+            kwargs.setdefault('depth', width)
+        else:
+            module = importlib.import_module(f'mqt.bench.benchmarks.{name}')
+            factory = module.create_circuit
+            factory_path = Path(module.__file__).resolve()
+            reference = f'{BENCH_URL.replace("/tree/", "/blob/")}/{name}.py'
+            kind = 'mqt-bench'
         if 'seed' in inspect.signature(factory).parameters:
             kwargs.setdefault('seed', args.circuit_seed)
         circuit = factory(width, **kwargs)
-        source = dict(kind='mqt-bench', benchmark=name, factory_options=kwargs,
-                      factory_source=str(Path(module.__file__).resolve()),
-                      factory_sha256=digest(Path(module.__file__)),
-                      reference=f'{BENCH_URL.replace("/tree/", "/blob/")}/{name}.py')
+        source = dict(kind=kind, benchmark=name, factory_options=kwargs,
+                      factory_source=str(factory_path), factory_sha256=digest(factory_path),
+                      reference=reference)
     if not isinstance(circuit, QuantumCircuit):
         raise ValueError('factory must return a Qiskit QuantumCircuit')
     raw_qubits = circuit.num_qubits

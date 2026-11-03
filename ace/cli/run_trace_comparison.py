@@ -94,6 +94,8 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
         "congestion_threshold": getattr(args, "congestion_threshold", None),
         "refill_on_release": getattr(args, "refill_on_release", False),
         "demand_first": getattr(args, "demand_first", False),
+        "preparation_priority": getattr(args, "preparation_priority", "trace"),
+        "runtime_generation_capacity": (args.generation_capacity if getattr(args, "planning_mode", "offline") == "runtime" else None),
         "borrow_compiler_pairs": getattr(args, "borrow_compiler_pairs", False),
         "reuse_compiler_memory": getattr(args, "compiler_pair_consumption", "handoff") == "handoff",
     }
@@ -225,6 +227,8 @@ def main() -> None:
     parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
                         help="runtime queues all full-chain candidates; physical quotas/timecards enforce capacity")
     parser.add_argument("--refill-on-release", action="store_true")
+    parser.add_argument("--preparation-priority", choices=("trace", "dependency"), default="trace",
+                        help="order pending preparations by trace order or target layer and outstanding predecessor starts")
     parser.add_argument("--borrow-compiler-pairs", action="store_true",
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
     parser.add_argument("--demand-first", action="store_true",
@@ -286,6 +290,10 @@ def main() -> None:
                               help="explicitly execute the complete trace")
     parser.add_argument("--output", type=Path, default=Path("output/trace_comparison"))
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--seed-reference-memories", type=int, default=None,
+                        help="preserve physical component RNG streams of the reference memory count")
+    parser.add_argument("--record-chain-coverage", action="store_true",
+                        help="snapshot all hop pairs at layer opening, before admission/preparation")
     parser.add_argument("--audit-events", action="store_true",
                         help="check physical ownership and hop/layer ordering; save per-request timing")
     parser.add_argument("--allow-incomplete-audit", action="store_true",
@@ -302,6 +310,8 @@ def main() -> None:
         seeds = [int(seed) for seed in _csv_values(args.seeds)]
     except ValueError:
         parser.error("--seeds must be a comma-separated list of integers")
+    if args.seed_reference_memories is not None and not 1 <= args.seed_reference_memories <= args.total_memories:
+        parser.error("seed reference memories must be between 1 and physical capacity")
     if args.compiler_memories > args.total_memories:
         parser.error("--compiler-memories cannot exceed --total-memories")
 
@@ -319,7 +329,7 @@ def main() -> None:
         parser.error(f"--topology {args.topology} needs a {args.topology} topology file, but {args.config} is a {declared}")
     layers = to_ace_layers(trace, columns=columns, fidelity=args.fidelity_threshold)
     scheduler_options = ({"admission": args.admission, "starvation_guard": not args.no_starvation_guard,
-                          "admission_priority": args.admission_priority, "empty_layer_gap_ms": args.empty_layer_gap_ms, "layer_activation_order": args.layer_activation_order}
+                          "admission_priority": args.admission_priority, "empty_layer_gap_ms": args.empty_layer_gap_ms, "layer_activation_order": args.layer_activation_order, "record_chain_coverage": args.record_chain_coverage}
                          if args.scheduler == "per-qubit" else None)
     args.output.mkdir(parents=True, exist_ok=True)
 
@@ -345,6 +355,7 @@ def main() -> None:
                     str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                     args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
                     total_memories_per_core=args.total_memories,
+                    seed_reference_memories=args.seed_reference_memories,
                     autonomous_cache_limit=(args.compiler_memories if args.autonomous_cache_follows_compiler_memories and strategy in AUTONOMOUS_STRATEGIES else None),
                     stop_after_workload=args.stop_after_workload,
                     simulation_stop_time_s=args.stop_time_s,
@@ -361,6 +372,7 @@ def main() -> None:
                         str(args.config), update_prob, False, layers, args.pregeneration_buffer_ms,
                         args.request_duration_ms, label, seed=seed, compiler_spec=compiler_spec,
                         total_memories_per_core=args.total_memories,
+                    seed_reference_memories=args.seed_reference_memories,
                     autonomous_cache_limit=(args.compiler_memories if args.autonomous_cache_follows_compiler_memories and strategy in AUTONOMOUS_STRATEGIES else None),
                     stop_after_workload=args.stop_after_workload,
                         simulation_stop_time_s=args.stop_time_s,
@@ -394,6 +406,20 @@ def main() -> None:
                 if result["compiler_metrics"] is not None:
                     _write_csv(args.output / f"pairs_{strategy}_{seed}.csv",
                                result["compiler_metrics"]["epr_utilization_trace"])
+            if recorder is not None:
+                from ace.observability.capacity import capacity_diagnostics
+                controller = result["request_manager"].compiler_controller
+                rejections = getattr(controller, "rejections", {}) if controller is not None else {}
+                diagnostic = capacity_diagnostics(recorder.events, trace.requests, columns, rejections)
+                diagnostic["physical_slots_per_core"] = args.total_memories
+                diagnostic["compiler_quota_per_core"] = args.compiler_memories
+                diagnostic["node_seeds"] = result["stats"]["node_seeds"]
+                (args.output / f"capacity_{strategy}_{seed}.json").write_text(json.dumps(diagnostic, indent=2))
+            if args.record_chain_coverage:
+                if args.scheduler != "per-qubit":
+                    parser.error("chain coverage requires --scheduler per-qubit")
+                (args.output / f"chain_coverage_{strategy}_{seed}.json").write_text(
+                    json.dumps(result["request_manager"].chain_coverage))
             row = _row(strategy, seed, result, len(trace.requests), trace.requests)
             summary.append(row)
             print(
@@ -412,11 +438,12 @@ def main() -> None:
             "data_teleportation_simulated": False,
             "data_memory_occupancy_simulated": False,
             "data_teleportation_gate_and_reset_times_modeled": False,
-            "physical_seed_algorithm": "SeedSequence([trial_seed, sorted_timeline_entity_index])",
+            "physical_seed_algorithm": ("SeedSequence([trial_seed, sorted_timeline_entity_index])" if args.seed_reference_memories is None
+                                        else f"SeedSequence([trial_seed, entity_index_with_{args.seed_reference_memories}_reference_memories])"),
             "source_layout": "ace-package-v1",
             "source_paths": SOURCE_PATHS,
             "source_sha256": {name: hashlib.sha256(source_path(name).read_bytes()).hexdigest()
-                              for name in ['compiler_settings.py', 'reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py', 'runtime_provenance.py']},
+                              for name in ['capacity_diagnostics.py', 'compiler_settings.py', 'reservation.py', 'resource_manager.py', 'generation.py', 'adaptive_continuous.py', 'request_app_parallel.py', 'parallel_core.py', 'compiler_scheduler.py', 'compiler_trace.py', 'latency_metrics.py', 'request_scheduler.py', 'run_trace_comparison.py', 'runtime_provenance.py']},
             "readiness_definition": "physical creation strictly before first application submission",
         "runtime": runtime_provenance(REPO_ROOT),
         "trace": str(args.trace.resolve()),

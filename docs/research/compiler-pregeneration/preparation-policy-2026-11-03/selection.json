@@ -1,0 +1,29 @@
+{
+  "best_latency": {
+    "configuration": "demand6",
+    "compiler_quota": 6,
+    "latency_ms_per_hop": 1.0010676429068868,
+    "makespan_s": 4.344710215273,
+    "fidelity_percent": 94.07077646465633,
+    "hop_readiness_percent": 49.81476581106113,
+    "admission_wait_ms": 0.09553274279197539,
+    "peak_compiler_bookings": 6,
+    "retries": 68,
+    "generated_compiler_pairs": 15080,
+    "waste_percent": 0.05305039787798409
+  },
+  "best_makespan": {
+    "configuration": "runtime6",
+    "compiler_quota": 6,
+    "latency_ms_per_hop": 1.0442059524768128,
+    "makespan_s": 4.006899386511,
+    "fidelity_percent": 94.44702360672258,
+    "hop_readiness_percent": 42.53109288171474,
+    "admission_wait_ms": 0.0902995697427891,
+    "peak_compiler_bookings": 6,
+    "retries": 138,
+    "generated_compiler_pairs": 14688,
+    "waste_percent": 5.453431372549019
+  },
+  "trials": 8
+}

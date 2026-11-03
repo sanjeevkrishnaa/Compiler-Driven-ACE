@@ -9,3 +9,7 @@ distinguishes compile-time congestion scores from physical simulator latency
 and admission waiting.
 
 - [Fresh Greedy versus XY comparison: QFT, QAOA and BV (2026-10-30)](greedy-xy-2026-10-30/README.md)
+
+- [Detour2 versus Greedy and XY: latency, makespan, fidelity and readiness (2026-10-30)](detour-comparison-2026-10-30/README.md)
+
+- [History versus XY, Greedy and Detour2: current 50 ms comparison (2026-10-30)](history-comparison-2026-10-30/README.md)

@@ -1,0 +1,62 @@
+[
+  {
+    "workload": "qft",
+    "route": "xy",
+    "reasons": {
+      "reservation_expired": 1
+    }
+  },
+  {
+    "workload": "qft",
+    "route": "history",
+    "reasons": {
+      "reservation_expired": 1
+    }
+  },
+  {
+    "workload": "qpeexact",
+    "route": "xy",
+    "reasons": {}
+  },
+  {
+    "workload": "qpeexact",
+    "route": "history",
+    "reasons": {}
+  },
+  {
+    "workload": "qaoa",
+    "route": "xy",
+    "reasons": {
+      "reservation_expired": 8
+    }
+  },
+  {
+    "workload": "qaoa",
+    "route": "history",
+    "reasons": {
+      "reservation_expired": 5
+    }
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "xy",
+    "reasons": {
+      "reservation_expired": 1
+    }
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "history",
+    "reasons": {}
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "xy",
+    "reasons": {}
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "history",
+    "reasons": {}
+  }
+]

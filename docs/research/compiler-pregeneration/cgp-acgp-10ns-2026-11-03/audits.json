@@ -1,0 +1,34 @@
+[
+  {
+    "strategy": "ODG",
+    "events": 302320,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "strategy": "CGP",
+    "events": 377090,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "strategy": "ACGP",
+    "events": 394576,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "strategy": "Compiler quota6 + demand guard",
+    "events": 399626,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  }
+]

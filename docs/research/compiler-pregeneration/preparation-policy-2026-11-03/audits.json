@@ -1,0 +1,66 @@
+[
+  {
+    "configuration": "odg",
+    "events": 302320,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "quota4",
+    "events": 376234,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "quota5",
+    "events": 396790,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "quota6",
+    "events": 417176,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "quota7",
+    "events": 436154,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "demand6",
+    "events": 399626,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "release6",
+    "events": 415718,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "runtime6",
+    "events": 440806,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  }
+]

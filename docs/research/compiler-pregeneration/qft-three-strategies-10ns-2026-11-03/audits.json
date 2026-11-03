@@ -1,0 +1,26 @@
+[
+  {
+    "strategy": "on-demand",
+    "events": 127840,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "strategy": "adaptive-continuous",
+    "events": 168623,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "strategy": "dynamic",
+    "events": 176184,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  }
+]

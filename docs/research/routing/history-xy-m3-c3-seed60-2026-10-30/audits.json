@@ -1,0 +1,56 @@
+[
+  {
+    "workload": "qft",
+    "algorithm": "xy",
+    "events": 54542,
+    "completion_required": true,
+    "completed_requests": 3833,
+    "total_requests": 3833,
+    "violations": []
+  },
+  {
+    "workload": "qft",
+    "algorithm": "history",
+    "events": 55262,
+    "completion_required": true,
+    "completed_requests": 3833,
+    "total_requests": 3833,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "algorithm": "xy",
+    "events": 105290,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "algorithm": "history",
+    "events": 106472,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "workload": "bv",
+    "algorithm": "xy",
+    "events": 384,
+    "completion_required": true,
+    "completed_requests": 24,
+    "total_requests": 24,
+    "violations": []
+  },
+  {
+    "workload": "bv",
+    "algorithm": "history",
+    "events": 384,
+    "completion_required": true,
+    "completed_requests": 24,
+    "total_requests": 24,
+    "violations": []
+  }
+]

@@ -82,7 +82,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
                  compiler_controller=None, recorder=None, *, requests: Sequence,
                  admission: str = "event", starvation_guard: bool = True,
                  admission_priority: str = "ready-first", empty_layer_gap_ms: float = EMPTY_LAYER_GAP_MS,
-                 layer_activation_order: str = "execution-first"):
+                 layer_activation_order: str = "execution-first", record_chain_coverage: bool = False):
         if admission not in ADMISSION_MODES:
             raise ValueError(f"admission must be one of {ADMISSION_MODES}, got {admission!r}")
         if admission_priority not in ("fifo", "ready-first"):
@@ -100,6 +100,9 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
             raise ValueError("empty layer gap must be finite and non-negative")
         if layer_activation_order not in ("execution-first", "preparation-first"):
             raise ValueError("invalid layer activation order")
+        self.record_chain_coverage = record_chain_coverage
+        self.chain_coverage = []
+        self.request_qubits = {r.request_id: r.qubit for r in requests}
         self.layer_activation_order = layer_activation_order
         self.empty_layer_gap_ms = empty_layer_gap_ms
         self.admission = admission
@@ -183,6 +186,16 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         now = self.timeline.now()
         self.active_layer = index
         self.layer_start_times[index] = now
+        if getattr(self, "record_chain_coverage", False):
+            chains = {}
+            for item in self.layered_requests[index]:
+                chains.setdefault(self.request_qubits[item[0]], []).append(item[0])
+            for qubit, ids in chains.items():
+                ready = [rid for rid in ids if self.compiler_controller is not None
+                         and self.compiler_controller.request_has_ready_pair(rid)]
+                self.chain_coverage.append(dict(time_ps=now, layer=index, qubit=qubit,
+                    request_ids=ids, ready_request_ids=ready, hops=len(ids), ready_hops=len(ready),
+                    coverage="full" if len(ready)==len(ids) else "partial" if ready else "zero"))
         preparation_first = self.layer_activation_order == "preparation-first"
         if preparation_first and self.compiler_controller is not None:
             self.compiler_controller.on_original_layer(index)

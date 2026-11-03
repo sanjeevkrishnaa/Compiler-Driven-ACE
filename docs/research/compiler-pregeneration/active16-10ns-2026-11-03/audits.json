@@ -1,0 +1,18 @@
+[
+  {
+    "configuration": "Original: logical 2-8, 5 ms",
+    "events": 454374,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "Active 2-16, 10 ns",
+    "events": 455998,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  }
+]

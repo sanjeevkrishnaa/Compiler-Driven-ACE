@@ -1,0 +1,26 @@
+[
+  {
+    "configuration": "ODG",
+    "events": 302320,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "Compiler quota 8",
+    "events": 455998,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "configuration": "Compiler quota 6",
+    "events": 417176,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  }
+]

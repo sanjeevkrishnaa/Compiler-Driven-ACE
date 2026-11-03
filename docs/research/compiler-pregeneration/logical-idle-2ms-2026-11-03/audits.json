@@ -1,0 +1,38 @@
+[
+  {
+    "empty_gap_ms": 5,
+    "strategy": "on-demand",
+    "events": 79130,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "empty_gap_ms": 5,
+    "strategy": "dynamic",
+    "events": 112874,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "empty_gap_ms": 2,
+    "strategy": "on-demand",
+    "events": 79130,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  },
+  {
+    "empty_gap_ms": 2,
+    "strategy": "dynamic",
+    "events": 113234,
+    "completion_required": true,
+    "completed_requests": 7913,
+    "total_requests": 7913,
+    "violations": []
+  }
+]

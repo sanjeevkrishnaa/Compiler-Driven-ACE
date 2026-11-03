@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
 WORKLOADS = ('qft', 'draper_qft_adder', 'qaoa')
-SUPPORTED_WORKLOADS = WORKLOADS + ('bv',)
+SUPPORTED_WORKLOADS = WORKLOADS + ('bv', 'qpeexact', 'quantum_volume')
 ALGORITHMS = ('xy', 'yx', 'greedy', 'history', 'minexcess', 'minhop', 'detour2')
 ADJ = ro.adjacency('mesh')
 
@@ -34,7 +34,7 @@ def write_csv(path, rows):
         fields=list(dict.fromkeys(k for row in rows for k in row))
         w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(rows)
 
-def choose(records, algorithm, history):
+def choose(records, algorithm, history, capacity=4):
     original = [tuple(r['path']) for r in records]
     if algorithm in ('xy', 'yx'):
         paths = []
@@ -50,20 +50,20 @@ def choose(records, algorithm, history):
     shortest = [ro.simple_paths(ADJ, p[0], p[-1], ro.shortest_length(ADJ, p[0], p[-1])) for p in original]
     if algorithm in ('minexcess', 'minhop', 'detour2'):
         # Start from shortest XY, so the historical-path fallback cannot admit long detours.
-        base, _ = choose(records, 'xy', history)
-        result = ro.optimize_layer(base, 4, 'hop' if algorithm=='minhop' else 'route', ADJ, 2 if algorithm == 'detour2' else 0, 2)
+        base, _ = choose(records, 'xy', history, capacity)
+        result = ro.optimize_layer(base, capacity, 'hop' if algorithm=='minhop' else 'route', ADJ, 2 if algorithm == 'detour2' else 0, 2)
         return result.paths, result.optimal
     load = Counter(); selected = [None] * len(records)
     # Hardest routes first; stable tie breaking makes repeated runs reproducible.
     for i in sorted(range(len(records)), key=lambda i: (-len(original[i]), i)):
         def score(p):
-            return (sum(max(0, load[c]+1-4)-max(0, load[c]-4) for c in p),
+            return (sum(max(0, load[c]+1-capacity)-max(0, load[c]-capacity) for c in p),
                     sum(2*load[c]+1 for c in p) + (0.1*sum(history[c] for c in p) if algorithm == 'history' else 0), p)
         selected[i] = min(shortest[i], key=score)
         load.update(selected[i])
     return selected, True
 
-def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
+def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS, capacity=4):
     rows = []; manifests = []
     if inputs is not None: inputs=inputs.resolve()
     for workload in workloads:
@@ -92,7 +92,7 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
                 start=time.perf_counter(); routes={}; qs={}; history=Counter(); unproved=0
                 core=np.zeros((trace.layers,16)); link=Counter(); endpoint_bound=0
                 for layer, rs in sorted(groups.items()):
-                    paths, optimal = choose(rs, algorithm, history); unproved += not optimal
+                    paths, optimal = choose(rs, algorithm, history, capacity); unproved += not optimal
                     for r,p in zip(rs,paths):
                         assert p[0]==r['source_core'] and p[-1]==r['destination_core']
                         assert len(set(p))==len(p) and all(b in ADJ[a] for a,b in zip(p,p[1:]))
@@ -100,7 +100,7 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
                         for c in p: core[layer,c]+=1
                         link.update(tuple(sorted((a,b))) for a,b in zip(p,p[1:]))
                     history.update(c for p in paths for c in p)
-                    endpoint_bound += ro.lower_bound(paths,4,'route')
+                    endpoint_bound += ro.lower_bound(paths,capacity,'route')
                     routes[layer]=paths; qs[layer]=[r['qubit'] for r in rs]
                 dest=out/'traces'/workload/f'seed_{seed}'/algorithm
                 ro.write_trace(trace,routes,qs,dest/'requests.txt')
@@ -118,8 +118,8 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS):
                 active=core.sum(axis=1)>0
                 rows.append(dict(workload=workload,mapping_seed=seed,algorithm=algorithm,qubits=trace.qubits,
                                  layers=trace.layers,active_layers=int(active.sum()),migrations=len(records),hops=len(check.hops),
-                                 excess=float(np.maximum(core-4,0).sum()),endpoint_lower_bound=endpoint_bound,
-                                 overloaded_core_layers=int((core>4).sum()),peak_demand=float(core.max()),
+                                 excess=float(np.maximum(core-capacity,0).sum()),endpoint_lower_bound=endpoint_bound,
+                                 overloaded_core_layers=int((core>capacity).sum()),peak_demand=float(core.max()),
                                  peak_link_hops=max(link.values(),default=0),unproved_layers=unproved,
                                  routing_seconds=time.perf_counter()-start))
                 print(workload,seed,algorithm,rows[-1]['hops'],rows[-1]['excess'],flush=True)

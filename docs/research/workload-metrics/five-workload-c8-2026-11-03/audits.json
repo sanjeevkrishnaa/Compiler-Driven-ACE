@@ -1,0 +1,202 @@
+[
+  {
+    "workload": "qft",
+    "route": "xy",
+    "strategy": "on-demand",
+    "events": 127840,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "workload": "qft",
+    "route": "xy",
+    "strategy": "dynamic",
+    "events": 199618,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "workload": "qft",
+    "route": "history",
+    "strategy": "on-demand",
+    "events": 127840,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "workload": "qft",
+    "route": "history",
+    "strategy": "dynamic",
+    "events": 202264,
+    "completion_required": true,
+    "completed_requests": 12784,
+    "total_requests": 12784,
+    "violations": []
+  },
+  {
+    "workload": "qpeexact",
+    "route": "xy",
+    "strategy": "on-demand",
+    "events": 134700,
+    "completion_required": true,
+    "completed_requests": 13470,
+    "total_requests": 13470,
+    "violations": []
+  },
+  {
+    "workload": "qpeexact",
+    "route": "xy",
+    "strategy": "dynamic",
+    "events": 209616,
+    "completion_required": true,
+    "completed_requests": 13470,
+    "total_requests": 13470,
+    "violations": []
+  },
+  {
+    "workload": "qpeexact",
+    "route": "history",
+    "strategy": "on-demand",
+    "events": 134700,
+    "completion_required": true,
+    "completed_requests": 13470,
+    "total_requests": 13470,
+    "violations": []
+  },
+  {
+    "workload": "qpeexact",
+    "route": "history",
+    "strategy": "dynamic",
+    "events": 212772,
+    "completion_required": true,
+    "completed_requests": 13470,
+    "total_requests": 13470,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "route": "xy",
+    "strategy": "on-demand",
+    "events": 302320,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "route": "xy",
+    "strategy": "dynamic",
+    "events": 450826,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "route": "history",
+    "strategy": "on-demand",
+    "events": 302320,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "workload": "qaoa",
+    "route": "history",
+    "strategy": "dynamic",
+    "events": 454374,
+    "completion_required": true,
+    "completed_requests": 30232,
+    "total_requests": 30232,
+    "violations": []
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "xy",
+    "strategy": "on-demand",
+    "events": 74490,
+    "completion_required": true,
+    "completed_requests": 7449,
+    "total_requests": 7449,
+    "violations": []
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "xy",
+    "strategy": "dynamic",
+    "events": 117780,
+    "completion_required": true,
+    "completed_requests": 7449,
+    "total_requests": 7449,
+    "violations": []
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "history",
+    "strategy": "on-demand",
+    "events": 74490,
+    "completion_required": true,
+    "completed_requests": 7449,
+    "total_requests": 7449,
+    "violations": []
+  },
+  {
+    "workload": "draper_qft_adder",
+    "route": "history",
+    "strategy": "dynamic",
+    "events": 118164,
+    "completion_required": true,
+    "completed_requests": 7449,
+    "total_requests": 7449,
+    "violations": []
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "xy",
+    "strategy": "on-demand",
+    "events": 534940,
+    "completion_required": true,
+    "completed_requests": 53494,
+    "total_requests": 53494,
+    "violations": []
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "xy",
+    "strategy": "dynamic",
+    "events": 609580,
+    "completion_required": true,
+    "completed_requests": 53494,
+    "total_requests": 53494,
+    "violations": []
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "history",
+    "strategy": "on-demand",
+    "events": 534940,
+    "completion_required": true,
+    "completed_requests": 53494,
+    "total_requests": 53494,
+    "violations": []
+  },
+  {
+    "workload": "quantum_volume",
+    "route": "history",
+    "strategy": "dynamic",
+    "events": 609508,
+    "completion_required": true,
+    "completed_requests": 53494,
+    "total_requests": 53494,
+    "violations": []
+  }
+]
