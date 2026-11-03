@@ -269,6 +269,7 @@ def plan_preparations(
     lead_layers: int = 1,
     planning_mode: str = "offline",
     layer_basis: str = "logical",
+    preparation_priority: str = "trace",
 ) -> tuple[tuple[ScheduledPreparation, ...], int, int | None]:
     """Plan request-specific preparations under per-layer memory limits."""
 
@@ -286,12 +287,15 @@ def plan_preparations(
             generation_capacity_per_core=generation_capacity_per_core,
             coherence_time_layers=coherence_time_layers, delta_layers=delta_layers,
             dynamic_lookahead_layers=dynamic_lookahead_layers, lead_layers=lead_layers,
-            planning_mode=planning_mode, layer_basis="logical")
+            planning_mode=planning_mode, layer_basis="logical",
+            preparation_priority=preparation_priority)
         return tuple(ScheduledPreparation(p.request_id, active[p.generation_layer])
                      for p in planned), blocked, peak
 
     if planning_mode not in ("offline", "runtime"):
         raise ValueError("planning_mode must be offline or runtime")
+    if preparation_priority not in ("trace", "dependency", "chain-length"):
+        raise ValueError("preparation priority must be trace, dependency, or chain-length")
     if compiler_memories_per_core < 0:
         raise ValueError("compiler memory capacity must be non-negative")
     if generation_capacity_per_core < 1:
@@ -324,11 +328,20 @@ def plan_preparations(
         # No offline peak exists: actual occupancy is enforced by timecards.
         return tuple(scheduled), len(trace.requests) - len(scheduled), None
 
+    requests = trace.requests
+    if preparation_priority == "chain-length":
+        chain_sizes = Counter((request.layer, request.qubit) for request in requests)
+        requests = tuple(sorted(requests, key=lambda request: (
+            -chain_sizes[(request.layer, request.qubit)],
+            request.layer,
+            request.order,
+        )))
+
     memory_load: defaultdict[tuple[int, int], int] = defaultdict(int)
     generation_load: defaultdict[tuple[int, int], int] = defaultdict(int)
     scheduled: list[ScheduledPreparation] = []
     blocked = 0
-    for request in trace.requests:
+    for request in requests:
         chosen: int | None = None
         for generation_layer in _candidate_layers(
             request, strategy, delta_layers, dynamic_lookahead_layers, lead_layers

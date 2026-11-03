@@ -2,6 +2,7 @@ import unittest
 from types import SimpleNamespace
 from ace.compiler.compiler_scheduler import CompilerPreGenerationController
 from ace.compiler.compiler_trace import CompilerRequest
+from ace.simulation.request_scheduler import QubitOrderedRequestManager
 
 
 class PreparationPriorityTests(unittest.TestCase):
@@ -24,6 +25,10 @@ class PreparationPriorityTests(unittest.TestCase):
         c.deadlines[0] = 5
         self.assertEqual(sorted([1, 2], key=c._preparation_key), [1, 2])
 
+    def test_longer_routed_chain_has_preparation_priority(self):
+        c = self.controller(preparation_priority='chain-length')
+        self.assertEqual(sorted([2, 1, 0], key=c._preparation_key), [0, 1, 2])
+
     def test_release_burst_coalesces_and_does_not_retry_inflight_handshake(self):
         c = self.controller(refill_on_release=True)
         c.pending_preparations[0] = {}
@@ -33,6 +38,17 @@ class PreparationPriorityTests(unittest.TestCase):
         c._refill_preparations()
         self.assertEqual(self.calls, [])
         self.assertIsNone(c._refill_event)
+
+    def test_application_release_wakes_compiler_without_waiting_for_layer_end(self):
+        calls = []
+        manager = QubitOrderedRequestManager.__new__(QubitOrderedRequestManager)
+        manager.waiting = {}
+        manager._admitting = False
+        manager.compiler_controller = SimpleNamespace(
+            on_resource_release=lambda: calls.append("compiler-refill")
+        )
+        manager._on_release("router_0_0")
+        self.assertEqual(calls, ["compiler-refill"])
 
     def test_runtime_launch_budget_blocks_second_attempt_until_next_active_layer(self):
         c = self.controller(generation_capacity_per_core=1)

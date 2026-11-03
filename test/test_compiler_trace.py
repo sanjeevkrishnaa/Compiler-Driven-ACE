@@ -3,6 +3,8 @@ import tempfile
 import unittest
 
 from ace.compiler.compiler_trace import (
+    CompilerRequest,
+    CompilerTrace,
     mesh_dimensions,
     parse_compiler_trace,
     plan_preparations,
@@ -84,6 +86,34 @@ class CompilerTraceTests(unittest.TestCase):
                 self.assertEqual(scheduled, ())
                 self.assertEqual(blocked, len(trace.requests))
                 self.assertEqual(peak, 0)
+
+    def test_longest_chain_gets_offline_capacity_before_earlier_trace_entry(self):
+        trace = CompilerTrace(
+            core_count=4,
+            qubit_slots_per_core=4,
+            qubit_count=2,
+            initial_placement={0: 0, 1: 0},
+            requests=(
+                CompilerRequest(0, 2, 0, 0, 0, 1),       # one-hop chain, first in file
+                CompilerRequest(1, 2, 1, 1, 0, 2),       # first hop of a two-hop chain
+                CompilerRequest(2, 2, 2, 1, 2, 3),
+            ),
+            layer_count=3,
+        )
+        schedule, blocked, _ = plan_preparations(
+            trace,
+            strategy="dynamic",
+            compiler_memories_per_core=1,
+            generation_capacity_per_core=1,
+            coherence_time_layers=3,
+            dynamic_lookahead_layers=2,
+            lead_layers=2,
+            preparation_priority="chain-length",
+        )
+        ids = {item.request_id for item in schedule}
+        self.assertIn(1, ids)
+        self.assertNotIn(0, ids)
+        self.assertEqual(blocked, 2)
 
     def test_on_demand_accepts_zero_compiler_memory(self):
         trace = self.parse()

@@ -13,7 +13,7 @@ data-memory occupancy, or reset latency. Reported times are EPR delivery times.
 
 from __future__ import annotations
 
-from ace.compiler.settings import DEFAULT_COMPILER_RESERVATION_MS
+from ace.compiler.settings import DEFAULT_COMPILER_POLICY, DEFAULT_COMPILER_RESERVATION_MS
 from ace.paths import REPO_ROOT, SOURCE_PATHS, source_path
 
 import argparse
@@ -92,6 +92,7 @@ def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str)
             lead_layers=getattr(args, "planner_lead_layers", 1),
             planning_mode=getattr(args, "planning_mode", "offline"),
             layer_basis=getattr(args, "dynamic_layer_basis", "logical"),
+            preparation_priority=getattr(args, "preparation_priority", "trace"),
         )
     return {
         "requests": trace.requests,
@@ -236,27 +237,37 @@ def main() -> None:
         help="comma-separated: on-demand, continuous, adaptive-continuous, fixed, dynamic",
     )
     parser.add_argument("--seeds", default="0")
-    parser.add_argument("--total-memories", type=int, default=4)
-    parser.add_argument("--compiler-memories", type=int, default=4)
+    parser.add_argument("--total-memories", type=int, default=DEFAULT_COMPILER_POLICY.total_memories)
+    parser.add_argument("--compiler-memories", type=int, default=DEFAULT_COMPILER_POLICY.compiler_memories)
     parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
                         help="handoff delivers the existing pair in place (default); swap explicitly models a separate application communication slot")
     parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
                         help="runtime queues all full-chain candidates; physical quotas/timecards enforce capacity")
-    parser.add_argument("--refill-on-release", action="store_true")
-    parser.add_argument("--preparation-priority", choices=("trace", "dependency"), default="trace",
-                        help="order pending preparations by trace order or target layer and outstanding predecessor starts")
+    refill = parser.add_mutually_exclusive_group()
+    refill.add_argument("--refill-on-release", action="store_true", dest="refill_on_release",
+                        help="wake deferred preparation after any application booking release (default)")
+    refill.add_argument("--no-refill-on-release", action="store_false", dest="refill_on_release",
+                        help="use only the 1 ms preparation retry fallback")
+    parser.set_defaults(refill_on_release=DEFAULT_COMPILER_POLICY.refill_on_release)
+    parser.add_argument("--preparation-priority", choices=("trace", "dependency", "chain-length"),
+                        default=DEFAULT_COMPILER_POLICY.preparation_priority,
+                        help="order preparation by trace, dependency progress, or longest routed hop chain first")
     parser.add_argument("--borrow-compiler-pairs", action="store_true",
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
-    parser.add_argument("--demand-first", action="store_true",
-                        help="defer speculative admission when eligible demand needs either endpoint")
-    parser.add_argument("--generation-capacity", type=int, default=4)
+    demand_guard = parser.add_mutually_exclusive_group()
+    demand_guard.add_argument("--demand-first", action="store_true", dest="demand_first",
+                              help="defer preparation when eligible demand needs either endpoint (default)")
+    demand_guard.add_argument("--no-demand-first", action="store_false", dest="demand_first",
+                              help="allow preparation to compete with already-waiting execution")
+    parser.set_defaults(demand_first=DEFAULT_COMPILER_POLICY.demand_first)
+    parser.add_argument("--generation-capacity", type=int, default=DEFAULT_COMPILER_POLICY.generation_capacity)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
                         help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
     parser.add_argument("--preparation-delay-ms", type=float, default=0.0,
                         help="launch delay after the planned generation layer activates (first hops under predecessor-start)")
-    parser.add_argument("--planner-lead-layers", type=int, default=1,
-                        help="the planner tries the layer this many before the request first, then earlier ones (default 1: the layer before)")
+    parser.add_argument("--planner-lead-layers", type=int, default=DEFAULT_COMPILER_POLICY.planner_lead_layers,
+                        help="the planner tries this many communication-active layers before demand first (default 2)")
     parser.add_argument("--predecessor-distance", type=int, default=1,
                         help="predecessor-start launches a hop when the hop this many positions earlier in its chain begins")
     chain = parser.add_mutually_exclusive_group()
@@ -281,12 +292,12 @@ def main() -> None:
     parser.add_argument("--classical-delay-ms", type=float, default=0.1, help="time planner: one classical message")
     parser.add_argument("--epr-success-probability", type=float, default=None, help="time planner: default is computed from --config")
     parser.add_argument("--layer-activation-order", choices=("execution-first", "preparation-first"), default="execution-first")
-    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical",
+    parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default=DEFAULT_COMPILER_POLICY.dynamic_layer_basis,
                         help="axis for dynamic lead/lookahead and planner age; logical includes empty layers")
-    parser.add_argument("--empty-layer-gap-ms", type=float, default=5.0,
+    parser.add_argument("--empty-layer-gap-ms", type=float, default=DEFAULT_COMPILER_POLICY.empty_layer_gap_ms,
                         help="empty-layer timing placeholder in ms, not a local gate model")
-    parser.add_argument("--dynamic-lookahead-layers", type=int, default=8)
-    parser.add_argument("--coherence-time-layers", type=float, default=10)
+    parser.add_argument("--dynamic-lookahead-layers", type=int, default=DEFAULT_COMPILER_POLICY.dynamic_lookahead_layers)
+    parser.add_argument("--coherence-time-layers", type=float, default=DEFAULT_COMPILER_POLICY.coherence_time_layers)
     parser.add_argument("--fidelity-threshold", type=float, default=0.01)
     parser.add_argument("--pregeneration-buffer-ms", type=float, default=0,
                         help="additional experiment delay before reservation start; default 0 (the RSVP channel guard is calculated from the topology)")
@@ -294,7 +305,7 @@ def main() -> None:
                         help="compiler reservation lifetime in ms from scheduled start (default: 50); independent of physical coherence")
     parser.add_argument("--request-duration-ms", type=float, default=50)
     parser.add_argument("--stop-time-s", type=float, default=200)
-    parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default="legacy",
+    parser.add_argument("--scheduler", choices=("legacy", "per-qubit"), default=DEFAULT_COMPILER_POLICY.scheduler,
                         help="legacy: per-core batches (the historical runs); per-qubit: hops of one qubit in order, "
                              "different qubits concurrent (docs/plans/ace-request-scheduler-design.md)")
     parser.add_argument("--admission", choices=("poll", "event"), default="event",

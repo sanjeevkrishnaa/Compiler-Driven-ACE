@@ -13,6 +13,7 @@ class AdmissionTests(unittest.TestCase):
         manager.waiting = {rid: 0 for rid in requests}
         manager.tuple_by_id = requests
         manager.position = {rid: (0, rid) for rid in requests}
+        manager.chain_length = {rid: 1 for rid in requests}
         manager.compiler_controller = SimpleNamespace(request_has_ready_pair=lambda rid: rid in ready)
         manager.admission_priority = priority
         manager.admission_decisions = []
@@ -43,6 +44,18 @@ class AdmissionTests(unittest.TestCase):
         manager._try_admit()
         self.assertEqual(admitted, [1, 2])
         self.assertTrue(all(not d["bypassed_ready_ids"] for d in manager.admission_decisions))
+
+    def test_ready_class_stays_first_then_longer_chains_win_within_each_class(self):
+        requests = {
+            0: (0, "a", "b", 1),
+            1: (1, "a", "c", 1),
+            2: (2, "d", "e", 1),
+            3: (3, "d", "f", 1),
+        }
+        manager, admitted = self.manager(requests, dict.fromkeys("abcdef", 1), {0, 1})
+        manager.chain_length = {0: 2, 1: 4, 2: 2, 3: 5}
+        manager._try_admit()
+        self.assertEqual(admitted, [1, 3])
 
     def test_remaining_slots_admit_multiple_odg_requests_on_the_same_core(self):
         requests = {0: (0, "a", "b", 1), 1: (1, "a", "c", 1), 2: (2, "a", "d", 1)}

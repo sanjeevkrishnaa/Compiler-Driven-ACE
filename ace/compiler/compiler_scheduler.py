@@ -57,8 +57,8 @@ class CompilerPreGenerationController:
             raise ValueError("congestion_threshold must be non-negative")
         if trigger not in TRIGGERS:
             raise ValueError(f"unknown preparation trigger {trigger!r}; expected one of {TRIGGERS}")
-        if preparation_priority not in ("trace", "dependency"):
-            raise ValueError("preparation priority must be trace or dependency")
+        if preparation_priority not in ("trace", "dependency", "chain-length"):
+            raise ValueError("preparation priority must be trace, dependency, or chain-length")
         if generation_capacity_per_core is not None and generation_capacity_per_core < 1:
             raise ValueError("generation capacity must be positive")
         self.preparation_priority = preparation_priority
@@ -89,11 +89,12 @@ class CompilerPreGenerationController:
         chains = defaultdict(list)
         for request in requests:
             chains[(request.layer, request.qubit)].append(request)
-        self.chain_position, self.chain_predecessor = {}, {}
+        self.chain_position, self.chain_predecessor, self.chain_length = {}, {}, {}
         self.chain_ancestors = {}
         for hops in chains.values():
             hops.sort(key=lambda r: r.order)
             for index, request in enumerate(hops):
+                self.chain_length[request.request_id] = len(hops)
                 self.chain_ancestors[request.request_id] = tuple(r.request_id for r in hops[:index])
                 self.chain_position[request.request_id] = index
                 # the hop whose start launches this one: predecessor_distance positions earlier, if the chain has one
@@ -208,6 +209,13 @@ class CompilerPreGenerationController:
         request = self.requests[request_id]
         if self.preparation_priority == "trace":
             return (request.layer, request.order)
+        if self.preparation_priority == "chain-length":
+            # The trace stores a routed end-to-end movement as consecutive
+            # elementary hops for one qubit in one layer. Prefer the longest
+            # such chain, then its earlier hop, without violating predecessor
+            # eligibility at execution time.
+            return (-self.chain_length[request_id], request.layer,
+                    self.chain_position[request_id], request.order)
         # A later hop cannot become eligible before its earlier hops start.
         # Use outstanding starts as a dependency proxy, not a claimed wall-clock ETA.
         remaining = sum(rid not in self.deadlines for rid in self.chain_ancestors[request_id])

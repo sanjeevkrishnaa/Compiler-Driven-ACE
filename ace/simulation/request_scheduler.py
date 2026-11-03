@@ -103,6 +103,13 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         self.record_chain_coverage = record_chain_coverage
         self.chain_coverage = []
         self.request_qubits = {r.request_id: r.qubit for r in requests}
+        chain_sizes = defaultdict(int)
+        for request in requests:
+            chain_sizes[(request.layer, request.qubit)] += 1
+        self.chain_length = {
+            request.request_id: chain_sizes[(request.layer, request.qubit)]
+            for request in requests
+        }
         self.layer_activation_order = layer_activation_order
         self.empty_layer_gap_ms = empty_layer_gap_ms
         self.admission = admission
@@ -317,8 +324,10 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
 
         ready = {rid: (self.compiler_controller is not None and
                        self.compiler_controller.request_has_ready_pair(rid)) for rid in self.waiting}
+        chain_length = getattr(self, "chain_length", {})
         ordered = sorted(self.waiting, key=lambda rid: (
             0 if self.admission_priority == "fifo" or ready[rid] else 1,
+            0 if self.admission_priority == "fifo" else -chain_length.get(rid, 1),
             self.waiting[rid], self.position[rid]))
 
         self._admitting = True
