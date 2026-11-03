@@ -10,7 +10,7 @@ Same recipe as the original single-benchmark script: ``get_benchmark(name, Bench
 
 Run with MQT Bench 2.3.0 (the latest release) and Qiskit 2.6.1:
 
-    python benchmarks/generate.py               # 128 qubits, as in the original script
+    python benchmarks/generate.py               # 224 qubits: 4x4 cores x 14 occupied data slots
     python benchmarks/generate.py --sizes 128 224
 """
 from __future__ import annotations
@@ -80,7 +80,7 @@ def circuit(name: str, size: int):
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--sizes", type=int, nargs="+", default=[128])
+    parser.add_argument("--sizes", type=int, nargs="+", default=[224])
     parser.add_argument("--out", type=Path, default=HERE)
     args = parser.parse_args()
     files = []

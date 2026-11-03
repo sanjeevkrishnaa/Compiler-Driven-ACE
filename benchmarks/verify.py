@@ -244,7 +244,10 @@ def main() -> int:
     args = parser.parse_args()
     manifest = json.loads((HERE / "manifest.json").read_text())
     print(f"MQT Bench {manifest['mqt_bench']}, Qiskit {manifest['qiskit']}, Python {manifest['python']}")
-    check(sorted(f["benchmark"] for f in manifest["files"]) == sorted(BENCHMARKS), "manifest lists every benchmark once")
+    sizes = sorted({f["requested_size"] for f in manifest["files"]})
+    for size in sizes:
+        check(sorted(f["benchmark"] for f in manifest["files"] if f["requested_size"] == size) == sorted(BENCHMARKS),
+              f"manifest lists every benchmark once at {size} qubits")
     for entry in manifest["files"]:
         name, size, path = entry["benchmark"], entry["requested_size"], HERE / entry["file"]
         print(f"\n{name} ({path.relative_to(HERE)})")

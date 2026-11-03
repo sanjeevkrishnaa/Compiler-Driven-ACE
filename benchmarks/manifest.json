@@ -11,259 +11,259 @@
  "files": [
   {
    "benchmark": "qft",
-   "requested_size": 128,
-   "file": "qft/qft_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 257,
-   "two_qubit_gates": 8192,
+   "requested_size": 224,
+   "file": "qft/qft_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 449,
+   "two_qubit_gates": 25088,
    "ops_after_expansion": {
     "barrier": 1,
-    "cp": 8128,
-    "h": 128,
-    "measure": 128,
-    "swap": 64
+    "cp": 24976,
+    "h": 224,
+    "measure": 224,
+    "swap": 112
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cp": 8128,
-    "h": 128,
-    "measure": 128,
-    "swap": 64
+    "cp": 24976,
+    "h": 224,
+    "measure": 224,
+    "swap": 112
    },
    "options": {},
-   "sha256": "1078fe7e01313e79820f6a35e27a993482ae49b73bea8285bcd32ff4de22f38f"
+   "sha256": "55a4de75de41be14b5f107b6e7ac1a65b18d01c3bdd1167d5e1046519e1586ab"
   },
   {
    "benchmark": "bv",
-   "requested_size": 128,
-   "file": "bv/bv_128.qasm",
-   "qubits": 128,
-   "clbits": 127,
-   "depth": 66,
-   "two_qubit_gates": 63,
+   "requested_size": 224,
+   "file": "bv/bv_224.qasm",
+   "qubits": 224,
+   "clbits": 223,
+   "depth": 114,
+   "two_qubit_gates": 111,
    "ops_after_expansion": {
-    "cz": 63,
-    "h": 254,
-    "measure": 127,
+    "cz": 111,
+    "h": 446,
+    "measure": 223,
     "x": 1
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
-    "cz": 63,
-    "h": 254,
-    "measure": 127,
+    "cz": 111,
+    "h": 446,
+    "measure": 223,
     "x": 1
    },
    "options": {},
-   "sha256": "4da7071bfc795da1f93854da1671e11c50c081c5a6fcdc052657238f0756f639"
+   "sha256": "ac39866ffc23ccde68a31b3f71d703db4a22cfdefe36bb3033f0b4d5aa848577"
   },
   {
    "benchmark": "ghz",
-   "requested_size": 128,
-   "file": "ghz/ghz_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 129,
-   "two_qubit_gates": 127,
+   "requested_size": 224,
+   "file": "ghz/ghz_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 225,
+   "two_qubit_gates": 223,
    "ops_after_expansion": {
     "barrier": 1,
-    "cx": 127,
+    "cx": 223,
     "h": 1,
-    "measure": 128
+    "measure": 224
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cx": 127,
+    "cx": 223,
     "h": 1,
-    "measure": 128
+    "measure": 224
    },
    "options": {},
-   "sha256": "e06a4bfad5a508459a69b2ec906f190a0eb1093e07b078e1f8d9f39b9f35b094"
+   "sha256": "ec3f9bc79023ce8098079e3482ed20e9a54c07ac4308b5f7ee725d75ce1ae38e"
   },
   {
    "benchmark": "dj",
-   "requested_size": 128,
-   "file": "dj/dj_128.qasm",
-   "qubits": 128,
-   "clbits": 127,
-   "depth": 131,
-   "two_qubit_gates": 127,
+   "requested_size": 224,
+   "file": "dj/dj_224.qasm",
+   "qubits": 224,
+   "clbits": 223,
+   "depth": 227,
+   "two_qubit_gates": 223,
    "ops_after_expansion": {
     "barrier": 1,
-    "cx": 127,
-    "h": 255,
-    "measure": 127,
-    "x": 127
+    "cx": 223,
+    "h": 447,
+    "measure": 223,
+    "x": 221
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cx": 127,
-    "h": 255,
-    "measure": 127,
-    "x": 127
+    "cx": 223,
+    "h": 447,
+    "measure": 223,
+    "x": 221
    },
    "options": {},
-   "sha256": "20d1f8fe67accddc5fc09ab1e5f46c37447a764c97ef5d3042008a0b5c4f8a45"
+   "sha256": "7d0cca4b33938b935000d9a3b7b0a2b600428b5e9fd6ec3a94580292f72a02cd"
   },
   {
    "benchmark": "qpeexact",
-   "requested_size": 128,
-   "file": "qpeexact/qpeexact_128.qasm",
-   "qubits": 128,
-   "clbits": 127,
-   "depth": 383,
-   "two_qubit_gates": 8191,
+   "requested_size": 224,
+   "file": "qpeexact/qpeexact_224.qasm",
+   "qubits": 224,
+   "clbits": 223,
+   "depth": 671,
+   "two_qubit_gates": 25087,
    "ops_after_expansion": {
     "barrier": 1,
-    "cp": 8128,
-    "h": 254,
-    "measure": 127,
-    "swap": 63,
+    "cp": 24976,
+    "h": 446,
+    "measure": 223,
+    "swap": 111,
     "x": 1
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cp": 8128,
-    "h": 254,
-    "measure": 127,
-    "swap": 63,
+    "cp": 24976,
+    "h": 446,
+    "measure": 223,
+    "swap": 111,
     "x": 1
    },
    "options": {},
-   "sha256": "27d61a09afe77c71a56ce6baaed6d825f1633beca2cf152ac788339e5763b396"
+   "sha256": "1dfdbf5096a6ab46b45696643c3b17670a54e6e65a55fcd5c9a4978c96538911"
   },
   {
    "benchmark": "qaoa",
-   "requested_size": 128,
-   "file": "qaoa/qaoa_128.qasm",
-   "qubits": 128,
+   "requested_size": 224,
+   "file": "qaoa/qaoa_224.qasm",
+   "qubits": 224,
    "clbits": 0,
-   "depth": 327,
-   "two_qubit_gates": 8212,
+   "depth": 599,
+   "two_qubit_gates": 24810,
    "ops_after_expansion": {
-    "h": 128,
-    "rx": 256,
-    "rzz": 8212
+    "h": 224,
+    "rx": 448,
+    "rzz": 24810
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
-    "h": 128,
-    "rx": 256,
-    "rzz": 8212
+    "h": 224,
+    "rx": 448,
+    "rzz": 24810
    },
    "options": {},
-   "sha256": "1c46763fd7ee3d389347b8a4c8fb4b3a905c0b932f22ae5c43def7dfde6287ed"
+   "sha256": "d53eec0354d1217dc2e460b9d8b2bda98b0f34de7247e1a9c8dd15d4ba687484"
   },
   {
    "benchmark": "draper_qft_adder",
-   "requested_size": 128,
-   "file": "draper_qft_adder/draper_qft_adder_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 319,
-   "two_qubit_gates": 6112,
+   "requested_size": 224,
+   "file": "draper_qft_adder/draper_qft_adder_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 559,
+   "two_qubit_gates": 18760,
    "ops_after_expansion": {
     "barrier": 1,
-    "cp": 6112,
-    "h": 128,
-    "measure": 128
+    "cp": 18760,
+    "h": 224,
+    "measure": 224
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cp": 6112,
-    "h": 128,
-    "measure": 128
+    "cp": 18760,
+    "h": 224,
+    "measure": 224
    },
    "options": {},
-   "sha256": "b6a9d764c44c8170f8a02aeaa7142b38e4453c0adec448273150c2b42931a37f"
+   "sha256": "25a11dc7837e1919c9dc88f4e73f23bee127796675766ec1aa24de8cff7e9f89"
   },
   {
    "benchmark": "graphstate",
-   "requested_size": 128,
-   "file": "graphstate/graphstate_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 7,
-   "two_qubit_gates": 128,
+   "requested_size": 224,
+   "file": "graphstate/graphstate_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 8,
+   "two_qubit_gates": 224,
    "ops_after_expansion": {
     "barrier": 1,
-    "cz": 128,
-    "h": 128,
-    "measure": 128
+    "cz": 224,
+    "h": 224,
+    "measure": 224
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 1,
-    "cz": 128,
-    "h": 128,
-    "measure": 128
+    "cz": 224,
+    "h": 224,
+    "measure": 224
    },
    "options": {
     "seed": 10
    },
-   "sha256": "5003e27a6841919700a4f46f9951daa7ea679bf089bbf6dd235c40721fa3f5f1"
+   "sha256": "bbda7dd1fc6edcb1c04df6d7637e5710766546074ad414c8b867f166819393b8"
   },
   {
    "benchmark": "bmw_quark_cardinality",
-   "requested_size": 128,
-   "file": "bmw_quark_cardinality/bmw_quark_cardinality_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 389,
-   "two_qubit_gates": 381,
+   "requested_size": 224,
+   "file": "bmw_quark_cardinality/bmw_quark_cardinality_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 677,
+   "two_qubit_gates": 669,
    "ops_after_expansion": {
     "barrier": 7,
-    "measure": 128,
-    "rx": 512,
-    "rxx": 381,
-    "rz": 384
+    "measure": 224,
+    "rx": 896,
+    "rxx": 669,
+    "rz": 672
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 7,
-    "measure": 128,
-    "rx": 512,
-    "rxx": 381,
-    "rz": 384
+    "measure": 224,
+    "rx": 896,
+    "rxx": 669,
+    "rz": 672
    },
    "options": {},
-   "sha256": "6659229992cafe2ac96c0e3a359ea294797b70adabb34f90320b4446a93f2038"
+   "sha256": "67bafab417f6d58f6d3d02e36df2d07af639d9e7e59b432609ab7a447b924851"
   },
   {
    "benchmark": "bmw_quark_copula",
-   "requested_size": 128,
-   "file": "bmw_quark_copula/bmw_quark_copula_128.qasm",
-   "qubits": 128,
-   "clbits": 128,
-   "depth": 259,
-   "two_qubit_gates": 8128,
+   "requested_size": 224,
+   "file": "bmw_quark_copula/bmw_quark_copula_224.qasm",
+   "qubits": 224,
+   "clbits": 224,
+   "depth": 451,
+   "two_qubit_gates": 24976,
    "ops_after_expansion": {
     "barrier": 4,
-    "cx": 64,
-    "h": 64,
-    "measure": 128,
-    "rx": 256,
-    "rxx": 8064,
-    "rz": 512
+    "cx": 112,
+    "h": 112,
+    "measure": 224,
+    "rx": 448,
+    "rxx": 24864,
+    "rz": 896
    },
    "gates_wider_than_two_qubits": [],
    "top_level_ops": {
     "barrier": 4,
-    "cx": 64,
-    "h": 64,
-    "measure": 128,
-    "rx": 256,
-    "rxx": 8064,
-    "rz": 512
+    "cx": 112,
+    "h": 112,
+    "measure": 224,
+    "rx": 448,
+    "rxx": 24864,
+    "rz": 896
    },
    "options": {},
-   "sha256": "d0ff9a0a26f5b3a40683d8827caa48bcdd86cbf1b2edd4ef4d26ca772627126c"
+   "sha256": "16e8249e8ac03fe65ca3334a6edf50719a87d57d17afc148e24503cb6d4087cc"
   }
  ]
 }
