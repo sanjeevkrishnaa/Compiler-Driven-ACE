@@ -64,19 +64,35 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
+def _timed_plan(args: argparse.Namespace, trace):
+    """Wall-clock-aware plan: launch each pair one preparation time before its request, not when a layer opens."""
+    from ace.compiler.timed_planner import (LayerClock, PreparationModel, plan_timed_preparations,
+                                            success_probability_from_config)
+    clock = (LayerClock.from_profile(args.layer_times) if args.layer_times is not None
+             else LayerClock.analytic(trace, args.time_hop_ms, args.empty_layer_gap_ms))
+    probability = (args.epr_success_probability if args.epr_success_probability is not None
+                   else success_probability_from_config(args.config))
+    model = PreparationModel(args.classical_delay_ms, probability, args.prep_quantile, args.prep_margin_ms)
+    return plan_timed_preparations(trace, clock, model, compiler_memories_per_core=args.compiler_memories,
+                                   generation_capacity_per_core=args.generation_capacity, max_lookback_ms=args.max_lookback_ms)
+
+
 def _compiler_spec(args: argparse.Namespace, trace, columns: int, strategy: str) -> dict:
-    schedule, blocked, peak = plan_preparations(
-        trace,
-        strategy=strategy,
-        compiler_memories_per_core=args.compiler_memories,
-        generation_capacity_per_core=args.generation_capacity,
-        coherence_time_layers=args.coherence_time_layers,
-        delta_layers=args.delta_layers,
-        dynamic_lookahead_layers=args.dynamic_lookahead_layers,
-        lead_layers=getattr(args, "planner_lead_layers", 1),
-        planning_mode=getattr(args, "planning_mode", "offline"),
-        layer_basis=getattr(args, "dynamic_layer_basis", "logical"),
-    )
+    if strategy == "dynamic" and getattr(args, "dynamic_planner", "layer") == "time":
+        schedule, blocked, peak = _timed_plan(args, trace)
+    else:
+        schedule, blocked, peak = plan_preparations(
+            trace,
+            strategy=strategy,
+            compiler_memories_per_core=args.compiler_memories,
+            generation_capacity_per_core=args.generation_capacity,
+            coherence_time_layers=args.coherence_time_layers,
+            delta_layers=args.delta_layers,
+            dynamic_lookahead_layers=args.dynamic_lookahead_layers,
+            lead_layers=getattr(args, "planner_lead_layers", 1),
+            planning_mode=getattr(args, "planning_mode", "offline"),
+            layer_basis=getattr(args, "dynamic_layer_basis", "logical"),
+        )
     return {
         "requests": trace.requests,
         "schedule": schedule,
@@ -221,7 +237,7 @@ def main() -> None:
     )
     parser.add_argument("--seeds", default="0")
     parser.add_argument("--total-memories", type=int, default=4)
-    parser.add_argument("--compiler-memories", type=int, default=3)
+    parser.add_argument("--compiler-memories", type=int, default=4)
     parser.add_argument("--compiler-pair-consumption", choices=("handoff", "swap"), default="handoff",
                         help="handoff delivers the existing pair in place (default); swap explicitly models a separate application communication slot")
     parser.add_argument("--planning-mode", choices=("offline", "runtime"), default="offline",
@@ -233,7 +249,7 @@ def main() -> None:
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
     parser.add_argument("--demand-first", action="store_true",
                         help="defer speculative admission when eligible demand needs either endpoint")
-    parser.add_argument("--generation-capacity", type=int, default=3)
+    parser.add_argument("--generation-capacity", type=int, default=4)
     parser.add_argument("--delta-layers", type=int, default=6)
     parser.add_argument("--preparation-trigger", choices=("layer-start", "predecessor-start"), default="layer-start",
                         help="when a planned preparation launches (compiler_scheduler.TRIGGERS)")
@@ -254,6 +270,16 @@ def main() -> None:
                                  "hop-requests; other chains get the full chain")
     congestion.add_argument("--no-congestion-threshold", action="store_const", const=None,
                             dest="congestion_threshold", help="explicitly disable congestion filtering")
+    parser.add_argument("--dynamic-planner", choices=("layer", "time"), default="layer",
+                        help="layer: start each pair when a planned layer opens; time: launch it one preparation time before its request")
+    parser.add_argument("--layer-times", type=Path, help="JSON list of layer start times in ms (see --layer-times-output); default is an analytic estimate")
+    parser.add_argument("--layer-times-output", type=Path, help="folder to write each run's measured layer start times (ms)")
+    parser.add_argument("--time-hop-ms", type=float, default=0.6, help="time planner without --layer-times: assumed time of one hop")
+    parser.add_argument("--prep-quantile", type=float, default=0.9, help="time planner: probability that a pair is ready in time")
+    parser.add_argument("--prep-margin-ms", type=float, default=0.0, help="time planner: extra lead added to every launch")
+    parser.add_argument("--max-lookback-ms", type=float, default=20.0, help="time planner: how much earlier than ideal a launch may move")
+    parser.add_argument("--classical-delay-ms", type=float, default=0.1, help="time planner: one classical message")
+    parser.add_argument("--epr-success-probability", type=float, default=None, help="time planner: default is computed from --config")
     parser.add_argument("--layer-activation-order", choices=("execution-first", "preparation-first"), default="execution-first")
     parser.add_argument("--dynamic-layer-basis", choices=("active", "logical"), default="logical",
                         help="axis for dynamic lead/lookahead and planner age; logical includes empty layers")
@@ -420,6 +446,12 @@ def main() -> None:
                     parser.error("chain coverage requires --scheduler per-qubit")
                 (args.output / f"chain_coverage_{strategy}_{seed}.json").write_text(
                     json.dumps(result["request_manager"].chain_coverage))
+            if args.layer_times_output is not None:
+                manager = result["request_manager"]
+                origin = manager.series_start_time
+                args.layer_times_output.mkdir(parents=True, exist_ok=True)
+                (args.layer_times_output / f"layer_times_{strategy}_{seed}.json").write_text(json.dumps(
+                    [(manager.layer_start_times[i] - origin) / MILLISECOND for i in sorted(manager.layer_start_times)]))
             row = _row(strategy, seed, result, len(trace.requests), trace.requests)
             summary.append(row)
             print(

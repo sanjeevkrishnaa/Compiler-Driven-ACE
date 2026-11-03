@@ -1,5 +1,27 @@
 # Compiler pre-generation studies
 
+## November 3 admission and timing experiments
+
+- [Quota sweep, demand guard, release retries and runtime planning](preparation-policy-2026-11-03/README.md)
+- [QFT: quota-six compiler versus ODG and ACGP, including wastage limits](qft-three-strategies-10ns-2026-11-03/README.md)
+- [QAOA: CGP and ACGP comparison](cgp-acgp-10ns-2026-11-03/README.md)
+- [Active-layer lookback 2-16 with 10 ns empty gaps](active16-10ns-2026-11-03/README.md)
+- [BV with active-layer preparation](bv-active16-10ns-2026-11-03/README.md)
+- [Five-workload eight-memory study](../workload-metrics/five-workload-c8-2026-11-03/README.md)
+- [Verified nonbinding-memory comparison](../workload-metrics/unlimited-memory-2026-11-03/README.md)
+- [Preparation admission CLI controls](../../reference/preparation-admission.md)
+
+These are dated experimental profiles, not the permanent architecture defaults.
+The eight-memory studies used 208 logical qubits, 14 data slots/core and memory
+efficiency 0.95. They precede the separately committed wall-clock study and its
+efficiency-0.8 defaults. Their archived commands, configuration and source
+snapshots under `results/` preserve the measured setup. Do not reproduce their
+numbers using a newer default configuration or compare them directly with a
+different architecture profile. Historical ACGP wastage-counter limitations are
+recorded with the affected results; they are not corrected retrospectively.
+
+## Earlier lifecycle studies
+
 The compiler reservation lifetime is **50 ms**. See the [window selection and validation](reservation-window-2026-10-29.md).
 
 **Current default:** in-place ownership handoff for EPR delivery, restored after

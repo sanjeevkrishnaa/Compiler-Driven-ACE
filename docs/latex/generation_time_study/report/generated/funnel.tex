@@ -1,0 +1,24 @@
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Per 100 requests & gap 5\,ms & gap 1\,ms & gap 0 \\
+\midrule
+Preparations planned & 73.6 & 73.6 & 73.6 \\
+Launched & 73.6 & 72.2 & 64.6 \\
+Accepted by the protocol & 73.6 & 60.1 & 35.9 \\
+Pair actually made & 73.6 & 60.1 & 35.9 \\
+Used by a request & 73.6 & 57.2 & 29.5 \\
+Ready before the request (hit) & 73.6 & 52.5 & 19.7 \\
+Made but expired unused & 0.0 & 2.8 & 6.3 \\
+Rejections (events) & 0.0 & 44.9 & 80.4 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Times (ms)}} \\
+Time from launch to request (slack) & 9.9 & 2.4 & 1.4 \\
+Time to make a pair & 1.11 & 1.10 & 1.11 \\
+Hit hop latency & 0.448 & 0.459 & 0.579 \\
+Non-hit hop latency & 1.409 & 1.600 & 1.904 \\
+Wait for a free memory, non-hit & 0.100 & 0.309 & 0.592 \\
+ODG hop latency & 1.325 & 1.325 & 1.325 \\
+ODG wait for a free memory & 0.008 & 0.008 & 0.008 \\
+Dynamic hop latency & 0.701 & 0.968 & 1.584 \\
+\bottomrule
+\end{tabular}

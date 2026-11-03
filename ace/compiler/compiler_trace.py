@@ -50,6 +50,7 @@ class CompilerTrace:
 class ScheduledPreparation:
     request_id: int
     generation_layer: int
+    offset_ms: float = 0.0      # time after the layer opens; zero launches when it opens (the layer planner)
 
 
 def _parse_tuple(line: str, line_number: int) -> tuple[int, ...]:

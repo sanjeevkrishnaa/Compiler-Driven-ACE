@@ -2,6 +2,7 @@
 
 ## Start here
 
+- [EPR generation time and the Dynamic strategy: report, plan, data (2026-11-02)](research/generation-time-2026-11-01/README.md)
 - [Current 50 ms compiler reservation window and validation](research/compiler-pregeneration/reservation-window-2026-10-29.md)
 - [Simulator source packages and EPR lifecycle reading guide](../ace/README.md)
 

@@ -53,9 +53,9 @@ def ensure_engine(root: Path) -> Path:
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("stage", choices=("run", "trace", "route", "simulate"), nargs="?", default="run")
-    p.add_argument("--workload", choices=("qaoa", "qft", "draper_qft_adder", "bv"), default="qaoa")
+    p.add_argument("--workload", choices=("qft", "qpeexact", "qaoa", "draper_qft_adder", "quantum_volume", "bv"), default="qaoa")
     p.add_argument("--routing", choices=("xy", "yx", "greedy", "history", "minexcess", "minhop", "detour2"), default="greedy")
-    p.add_argument("--qubits", type=int, default=96)
+    p.add_argument("--qubits", type=int, default=224, help="circuit width; 224 fills the 4x4 x 14 workload capacity")
     p.add_argument("--mapping-seed", type=int, choices=(42,), default=42,
                    help="current routing study supports mapping seed 42")
     p.add_argument("--seeds", default="60,61,62,63")
@@ -66,8 +66,8 @@ def main():
     p.add_argument("--output", type=Path)
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args()
-    if a.qubits <= 0 or a.qubits > 112 or a.reservation_ms <= 0:
-        p.error("qubits must be 1..112 and reservation-ms must be positive")
+    if a.qubits <= 0 or a.qubits > 224 or a.reservation_ms <= 0:
+        p.error("qubits must be 1..224 and reservation-ms must be positive")
     out = (a.output or ROOT / "output" / (a.workload + "-" + a.routing)).resolve()
     inputs = out / "inputs"
     engine = ROOT / "third_party" / "SeQUeNCe"
@@ -91,8 +91,8 @@ def main():
     base = [sys.executable, "-B"]
     commands = {
         "trace": base + ["tools/congestion_study/run_study.py", "--mapper-dir", "mapper",
-            "--workloads", a.workload, "--logical-qubits", str(a.qubits), "--total-qubits", "192",
-            "--memory-slots", "4", "--placer", "T-HQA", "--seeds", str(a.mapping_seed),
+            "--workloads", a.workload, "--logical-qubits", str(a.qubits), "--total-qubits", "320",
+            "--memory-slots", "4", "--spare-data-slots-per-core", "2", "--on-demand-reserve", "0", "--placer", "T-HQA", "--seeds", str(a.mapping_seed),
             "--mapping-only", "--output", str(inputs)],
         "route": base + ["tools/routing_research/heavy_routing.py", "build", "--inputs", str(inputs),
             "--workloads", a.workload, "--algorithms", a.routing, "--output", str(out)],

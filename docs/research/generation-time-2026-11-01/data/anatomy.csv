@@ -1,0 +1,117 @@
+case,seed,t_us,node,event
+dynamic 0->1,0,-10000.0,router_0_0,compiler launches preparation
+dynamic 0->1,0,-9699.999,router_0_1,received pairing REQUEST from router_0_0
+dynamic 0->1,0,-9699.999,router_0_1,generation protocol starts
+dynamic 0->1,0,-9599.999,router_0_0,received pairing RESPONSE from router_0_1
+dynamic 0->1,0,-9599.999,router_0_0,generation protocol starts
+dynamic 0->1,0,-9599.999,router_0_0,received NEGOTIATE from router_0_1
+dynamic 0->1,0,-9499.999,router_0_1,received NEGOTIATE_ACK from router_0_0
+dynamic 0->1,0,-9499.987,router_0_0,memory emits photon
+dynamic 0->1,0,-9499.987,router_0_1,memory emits photon
+dynamic 0->1,0,-9399.987,router_0_0,received MEAS_RES from BSM_0_0_0_1
+dynamic 0->1,0,-9399.987,router_0_1,received MEAS_RES from BSM_0_0_0_1
+dynamic 0->1,0,-9399.987,router_0_0,received MEAS_RES from BSM_0_0_0_1
+dynamic 0->1,0,-9399.987,router_0_1,received MEAS_RES from BSM_0_0_0_1
+dynamic 0->1,0,-9399.987,router_0_0,herald: attempt succeeded
+dynamic 0->1,0,-9399.987,router_0_1,herald: attempt succeeded
+dynamic 0->1,0,100.0,router_0_1,received reservation REQUEST from router_0_0
+dynamic 0->1,0,200.0,router_0_0,received reservation APPROVE from router_0_1
+dynamic 0->1,0,200.001,manager,reservation window opens
+dynamic 0->1,0,300.001,router_0_1,received pairing REQUEST from router_0_0
+dynamic 0->1,0,300.001,router_0_1,generation protocol starts
+dynamic 0->1,0,400.001,router_0_0,received pairing RESPONSE from router_0_1
+dynamic 0->1,0,400.001,router_0_0,generation protocol starts
+dynamic 0->1,0,400.001,router_0_0,received INFORM_EP from router_0_1
+dynamic 0->1,0,400.001,router_0_0,pair moved to request
+dynamic 0->1,0,400.001,router_0_1,pair moved to request
+dynamic 0->1,0,400.001,manager,request completed
+dynamic 0->1,0,500.001,router_0_1,received pairing REQUEST from router_0_0
+dynamic 0->1,0,600.002,router_0_0,received pairing RESPONSE from router_0_1
+dynamic 1->0,0,-10000.0,router_0_1,compiler launches preparation
+dynamic 1->0,0,-9699.999,router_0_0,received pairing REQUEST from router_0_1
+dynamic 1->0,0,-9699.999,router_0_0,generation protocol starts
+dynamic 1->0,0,-9599.999,router_0_1,received pairing RESPONSE from router_0_0
+dynamic 1->0,0,-9599.999,router_0_1,generation protocol starts
+dynamic 1->0,0,-9499.999,router_0_0,received NEGOTIATE from router_0_1
+dynamic 1->0,0,-9399.998,router_0_1,received NEGOTIATE_ACK from router_0_0
+dynamic 1->0,0,-9399.987,router_0_0,memory emits photon
+dynamic 1->0,0,-9399.987,router_0_1,memory emits photon
+dynamic 1->0,0,-9299.987,router_0_0,received MEAS_RES from BSM_0_0_0_1
+dynamic 1->0,0,-9299.987,router_0_1,received MEAS_RES from BSM_0_0_0_1
+dynamic 1->0,0,-9299.987,router_0_0,received MEAS_RES from BSM_0_0_0_1
+dynamic 1->0,0,-9299.987,router_0_1,received MEAS_RES from BSM_0_0_0_1
+dynamic 1->0,0,-9299.987,router_0_0,herald: attempt succeeded
+dynamic 1->0,0,-9299.987,router_0_1,herald: attempt succeeded
+dynamic 1->0,0,100.0,router_0_0,received reservation REQUEST from router_0_1
+dynamic 1->0,0,200.0,router_0_1,received reservation APPROVE from router_0_0
+dynamic 1->0,0,200.001,manager,reservation window opens
+dynamic 1->0,0,300.001,router_0_0,received pairing REQUEST from router_0_1
+dynamic 1->0,0,300.001,router_0_0,generation protocol starts
+dynamic 1->0,0,400.001,router_0_1,received pairing RESPONSE from router_0_0
+dynamic 1->0,0,400.001,router_0_1,generation protocol starts
+dynamic 1->0,0,500.001,router_0_0,received INFORM_EP from router_0_1
+dynamic 1->0,0,500.001,router_0_0,pair moved to request
+dynamic 1->0,0,500.001,router_0_1,pair moved to request
+dynamic 1->0,0,500.001,manager,request completed
+dynamic 1->0,0,600.002,router_0_0,received pairing REQUEST from router_0_1
+dynamic 1->0,0,700.002,router_0_1,received pairing RESPONSE from router_0_0
+on-demand 0->1,7,100.0,router_0_1,received reservation REQUEST from router_0_0
+on-demand 0->1,7,200.0,router_0_0,received reservation APPROVE from router_0_1
+on-demand 0->1,7,200.001,manager,reservation window opens
+on-demand 0->1,7,300.001,router_0_1,received pairing REQUEST from router_0_0
+on-demand 0->1,7,300.001,router_0_1,generation protocol starts
+on-demand 0->1,7,400.001,router_0_0,received pairing RESPONSE from router_0_1
+on-demand 0->1,7,400.001,router_0_0,generation protocol starts
+on-demand 0->1,7,400.001,router_0_0,received NEGOTIATE from router_0_1
+on-demand 0->1,7,500.001,router_0_1,received NEGOTIATE_ACK from router_0_0
+on-demand 0->1,7,500.012,router_0_0,memory emits photon
+on-demand 0->1,7,500.012,router_0_1,memory emits photon
+on-demand 0->1,7,600.013,router_0_0,herald: attempt failed
+on-demand 0->1,7,600.013,router_0_1,herald: attempt failed
+on-demand 0->1,7,700.013,router_0_1,received pairing REQUEST from router_0_0
+on-demand 0->1,7,700.013,router_0_1,generation protocol starts
+on-demand 0->1,7,800.013,router_0_0,received pairing RESPONSE from router_0_1
+on-demand 0->1,7,800.013,router_0_0,generation protocol starts
+on-demand 0->1,7,800.013,router_0_0,received NEGOTIATE from router_0_1
+on-demand 0->1,7,900.014,router_0_1,received NEGOTIATE_ACK from router_0_0
+on-demand 0->1,7,900.025,router_0_0,memory emits photon
+on-demand 0->1,7,900.025,router_0_1,memory emits photon
+on-demand 0->1,7,1000.025,router_0_0,received MEAS_RES from BSM_0_0_0_1
+on-demand 0->1,7,1000.025,router_0_1,received MEAS_RES from BSM_0_0_0_1
+on-demand 0->1,7,1000.025,router_0_0,received MEAS_RES from BSM_0_0_0_1
+on-demand 0->1,7,1000.025,router_0_1,received MEAS_RES from BSM_0_0_0_1
+on-demand 0->1,7,1000.025,router_0_0,herald: attempt succeeded
+on-demand 0->1,7,1000.025,router_0_1,herald: attempt succeeded
+on-demand 0->1,7,1000.025,manager,request completed
+on-demand 0->1,7,1100.026,router_0_1,received pairing REQUEST from router_0_0
+on-demand 0->1,7,1200.026,router_0_0,received pairing RESPONSE from router_0_1
+on-demand 1->0,7,100.0,router_0_0,received reservation REQUEST from router_0_1
+on-demand 1->0,7,200.0,router_0_1,received reservation APPROVE from router_0_0
+on-demand 1->0,7,200.001,manager,reservation window opens
+on-demand 1->0,7,300.001,router_0_0,received pairing REQUEST from router_0_1
+on-demand 1->0,7,300.001,router_0_0,generation protocol starts
+on-demand 1->0,7,400.001,router_0_1,received pairing RESPONSE from router_0_0
+on-demand 1->0,7,400.001,router_0_1,generation protocol starts
+on-demand 1->0,7,500.001,router_0_0,received NEGOTIATE from router_0_1
+on-demand 1->0,7,600.002,router_0_1,received NEGOTIATE_ACK from router_0_0
+on-demand 1->0,7,600.013,router_0_0,memory emits photon
+on-demand 1->0,7,600.013,router_0_1,memory emits photon
+on-demand 1->0,7,700.013,router_0_0,herald: attempt failed
+on-demand 1->0,7,700.013,router_0_1,herald: attempt failed
+on-demand 1->0,7,800.013,router_0_0,received pairing REQUEST from router_0_1
+on-demand 1->0,7,800.013,router_0_0,generation protocol starts
+on-demand 1->0,7,900.013,router_0_1,received pairing RESPONSE from router_0_0
+on-demand 1->0,7,900.013,router_0_1,generation protocol starts
+on-demand 1->0,7,1000.014,router_0_0,received NEGOTIATE from router_0_1
+on-demand 1->0,7,1100.014,router_0_1,received NEGOTIATE_ACK from router_0_0
+on-demand 1->0,7,1100.025,router_0_0,memory emits photon
+on-demand 1->0,7,1100.025,router_0_1,memory emits photon
+on-demand 1->0,7,1200.025,router_0_0,received MEAS_RES from BSM_0_0_0_1
+on-demand 1->0,7,1200.025,router_0_1,received MEAS_RES from BSM_0_0_0_1
+on-demand 1->0,7,1200.025,router_0_0,received MEAS_RES from BSM_0_0_0_1
+on-demand 1->0,7,1200.025,router_0_1,received MEAS_RES from BSM_0_0_0_1
+on-demand 1->0,7,1200.025,router_0_0,herald: attempt succeeded
+on-demand 1->0,7,1200.025,router_0_1,herald: attempt succeeded
+on-demand 1->0,7,1200.025,manager,request completed
+on-demand 1->0,7,1300.026,router_0_0,received pairing REQUEST from router_0_1
+on-demand 1->0,7,1400.026,router_0_1,received pairing RESPONSE from router_0_0

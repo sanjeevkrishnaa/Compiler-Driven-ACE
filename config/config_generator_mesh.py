@@ -75,7 +75,7 @@ output_dict[Topology.ALL_TEMPLATES] = \
         "adaptive_protocol": {
             "MemoryArray": {
                 "fidelity": 0.95,
-                "efficiency": 0.95,
+                "efficiency": 0.8,
                 "coherence_time": 1
             },
             "adaptive_max_memory": max_ace_qubits,

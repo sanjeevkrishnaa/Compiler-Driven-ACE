@@ -1,0 +1,16 @@
+\begin{tabular}{@{}lp{3.2cm}p{2.6cm}p{7.0cm}@{}}
+\toprule
+ID & Hypothesis & Verdict & Evidence \\
+\midrule
+H1 & Generation time is $(4\text{ or }5)\,\delta/p$. & \textbf{Mostly supported} & Attempts: 110/110 probes inside tolerance. Time: 102/110; the 8 misses are 4 at memory excitation 1--2\,kHz (H2) and 4 where requests longer than the 50\,ms window restart (efficiency 0.3, attenuation 200\,dB/m). \\[2pt]
+H2 & Only $\delta$ and the factors of $p$ matter. & \textbf{Partly falsified} & Coherence, fidelity, gap and dark counts $\le$ 1000/s change nothing (all within 14.7\%). Memory excitation below 5\,kHz does matter (+99\% at 1\,kHz). \\[2pt]
+H3 & Equal $p$ gives equal results whatever its cause. & \textbf{Supported in practice} & 8 of 36 comparisons exceed two standard errors (1.8 expected by chance); none survives a Bonferroni correction; the largest difference is 2.4\%. \\[2pt]
+H4 & Two separate limits on the hit rate. & \textbf{Supported} & The planner-blocked share is constant in efficiency (spread 0.000 in all four cases) and equals the miss rate at fast generation. The ready-in-time share of accepted pairs falls only below efficiency 0.6. \\[2pt]
+H5 & Absolute saving grows; relative gain peaks. & \textbf{Supported} & All four contexts peak at an interior efficiency (0.6); the absolute saving grows with generation time in 3 of 4 (QAOA M3 turns at 0.4). \\[2pt]
+H6 & The gap decides how much Dynamic gains. & \textbf{Supported, strongly} & With no gap, default Dynamic loses to ODG at normal speed ($-$20\% on QFT M4/C3). The hit rate responds to the gap in every context. Beyond 5\,ms the gain stops changing. \\[2pt]
+H7 & Only ratios of time constants matter. & \textbf{Falsified for QAOA, then explained} & QFT: hit rate identical at every scale. QAOA at delay $\times$0.01: $-59\%$, caused by the fixed 1\,ms retry waits; scaling them restores $+24\%$ (retry test). \\[2pt]
+H8 & The best lead depends on generation time. & \textbf{Supported} & Best leads found: 1, 2, 3, 4. They depend on both the gap and the generation speed, and leads above 4 are never best. \\[2pt]
+H9 & Short coherence removes the gain. & \textbf{Supported} & Coherence 100\,ms changes only fidelity; 10\,ms cuts the QFT gain from 47\% to 20\% (hits fall as pairs expire); 1\,ms makes Dynamic 55--99\% worse than ODG. \\[2pt]
+H10 & History's advantage grows with slower generation. & \textbf{Partly supported} & History beats XY at every efficiency in all 4 contexts, by 2--6 points. The advantage grows significantly only for QAOA M4 ($\rho=0.82$, $p=0.007$); it is flat for QFT. \\[2pt]
+\bottomrule
+\end{tabular}
