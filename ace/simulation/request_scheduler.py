@@ -136,6 +136,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
             self._require_the_hardware_can_ever_serve(requests)
             for app in name_to_apps.values():
                 app.node.release_observer = self._on_release
+                if compiler_controller is None:
+                    app.node.cached_pair_ready_observer = self._on_pair_ready
             if compiler_controller is not None:
                 compiler_controller.readiness_observer = self._on_pair_ready
 
@@ -198,8 +200,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
             for item in self.layered_requests[index]:
                 chains.setdefault(self.request_qubits[item[0]], []).append(item[0])
             for qubit, ids in chains.items():
-                ready = [rid for rid in ids if self.compiler_controller is not None
-                         and self.compiler_controller.request_has_ready_pair(rid)]
+                ready = [rid for rid in ids if self._request_has_ready_pair(rid)]
                 self.chain_coverage.append(dict(time_ps=now, layer=index, qubit=qubit,
                     request_ids=ids, ready_request_ids=ready, hops=len(ids), ready_hops=len(ready),
                     coverage="full" if len(ready)==len(ids) else "partial" if ready else "zero"))
@@ -297,6 +298,13 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         if self.waiting:
             self._schedule_admission(GRACE_PS)
 
+    def _request_has_ready_pair(self, request_id):
+        if self.compiler_controller is not None:
+            return self.compiler_controller.request_has_ready_pair(request_id)
+        _, source, destination, _, fidelity, *_ = self.tuple_by_id[request_id]
+        protocol = self.name_to_apps[source].node.adaptive_continuous
+        return protocol.has_ready_cached_pair(destination, fidelity)
+
     def _can_prepare(self, request) -> bool:
         """Do not speculate ahead of eligible demand or its unbooked promises."""
         endpoints = {self.compiler_controller._router_name(request.source_core),
@@ -322,8 +330,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
                 free[name] = self._free_memories(name, start, end)
             return free[name]
 
-        ready = {rid: (self.compiler_controller is not None and
-                       self.compiler_controller.request_has_ready_pair(rid)) for rid in self.waiting}
+        ready = {rid: self._request_has_ready_pair(rid) for rid in self.waiting}
         chain_length = getattr(self, "chain_length", {})
         ordered = sorted(self.waiting, key=lambda rid: (
             0 if self.admission_priority == "fifo" or ready[rid] else 1,
@@ -334,7 +341,7 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         try:
             for request_id in ordered:
                 _, source, destination, need, *_ = self.tuple_by_id[request_id]
-                handoff = (ready[request_id] and
+                handoff = (ready[request_id] and self.compiler_controller is not None and
                            getattr(self.compiler_controller, "reuse_compiler_memory", False) and need == 1 and
                            self.compiler_controller.request_can_handoff(request_id, start, end))
                 if handoff or (available(source) >= need and available(destination) >= need):

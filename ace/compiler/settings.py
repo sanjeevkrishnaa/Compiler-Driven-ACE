@@ -18,7 +18,7 @@ class CompilerPolicyDefaults:
     total_memories: int = 8
     compiler_memories: int = 6
     generation_capacity: int = 8
-    planner_lead_layers: int = 2
+    planner_lead_layers: int = 1
     dynamic_lookahead_layers: int = 8
     coherence_time_layers: float = 10
     empty_layer_gap_ms: float = 0.00001

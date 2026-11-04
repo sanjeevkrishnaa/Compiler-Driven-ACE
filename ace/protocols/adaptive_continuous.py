@@ -487,9 +487,29 @@ class AdaptiveContinuousProtocol(Protocol):
                         entanglement_pair, self.owner.timeline.now(), fidelity, metadata
                     )
             log.logger.info(f'{self.owner.name} added EP {entanglement_pair}')
+            observer = getattr(self.owner, 'cached_pair_ready_observer', None)
+            if observer is not None:
+                observer()
         else:
             log.logger.warning(f'{self.owner.name} EP {entanglement_pair} already exist')
 
+
+    def has_ready_cached_pair(self, remote_node_name: str, fidelity_threshold: float) -> bool:
+        """Preview a generic autonomous pair without selecting or consuming it.
+
+        Both endpoints must still own the same pair. Compiler-targeted pairs
+        are excluded: only the compiler controller may offer those to demand.
+        """
+        remote = self.owner.timeline.get_entity_by_name(remote_node_name).adaptive_continuous
+        for pair in sorted(self.generated_entanglement_pairs):
+            if pair[0][0] != self.owner.name or pair[1][0] != remote_node_name:
+                continue
+            reverse = (pair[1], pair[0])
+            if pair in self.generated_pair_metadata or reverse in remote.generated_pair_metadata:
+                continue
+            if reverse in remote.generated_entanglement_pairs and self.get_fidelity(pair) >= fidelity_threshold:
+                return True
+        return False
 
     def has_ready_compiler_pair(self, remote_node_name: str, request_id: int,
                                 fidelity_threshold: float) -> bool:

@@ -90,8 +90,47 @@ class AdmissionTests(unittest.TestCase):
         manager._on_pair_ready()
         self.assertEqual(scheduled, [1])
 
+    def test_autonomous_ready_pair_is_admitted_before_competing_odg(self):
+        requests = {0: (0, 'a', 'b', 1, .01, 1), 1: (1, 'a', 'c', 1, .01, 1)}
+        manager, admitted = self.manager(requests, dict(a=1, b=1, c=1), set())
+        manager.compiler_controller = None
+        protocol = SimpleNamespace(has_ready_cached_pair=lambda remote, threshold: remote == 'c')
+        manager.name_to_apps = {'a': SimpleNamespace(node=SimpleNamespace(adaptive_continuous=protocol))}
+        manager._try_admit()
+        self.assertEqual(admitted, [1])
+        self.assertTrue(manager.admission_decisions[0]['ready_pair'])
+
 
 class ReadinessTests(unittest.TestCase):
+    def test_autonomous_readiness_is_bilateral_fidelity_checked_and_excludes_compiler_pairs(self):
+        pair = (('a', 'ma'), ('b', 'mb'))
+        reverse = (pair[1], pair[0])
+        peer = SimpleNamespace(generated_entanglement_pairs={reverse}, generated_pair_metadata={})
+        protocol = AdaptiveContinuousProtocol.__new__(AdaptiveContinuousProtocol)
+        protocol.owner = SimpleNamespace(name='a', timeline=SimpleNamespace(
+            get_entity_by_name=lambda name: SimpleNamespace(adaptive_continuous=peer)))
+        protocol.generated_entanglement_pairs = {pair}
+        protocol.generated_pair_metadata = {}
+        protocol.get_fidelity = lambda pair: .95
+        self.assertTrue(protocol.has_ready_cached_pair('b', .9))
+        self.assertFalse(protocol.has_ready_cached_pair('b', .99))
+        self.assertEqual(protocol.generated_entanglement_pairs, {pair})
+        protocol.generated_pair_metadata[pair] = {'target_request_id': 7}
+        self.assertFalse(protocol.has_ready_cached_pair('b', .9))
+        protocol.generated_pair_metadata.clear()
+        peer.generated_entanglement_pairs.clear()
+        self.assertFalse(protocol.has_ready_cached_pair('b', .9))
+
+    def test_manager_recognizes_autonomous_cache_without_compiler_controller(self):
+        manager = QubitOrderedRequestManager.__new__(QubitOrderedRequestManager)
+        manager.compiler_controller = None
+        manager.tuple_by_id = {0: (0, 'a', 'b', 1, .9)}
+        calls = []
+        protocol = SimpleNamespace(has_ready_cached_pair=lambda *args: calls.append(args) or True)
+        manager.name_to_apps = {'a': SimpleNamespace(node=SimpleNamespace(adaptive_continuous=protocol))}
+        self.assertTrue(manager._request_has_ready_pair(0))
+        self.assertEqual(calls, [('b', .9)])
+
     def test_readiness_is_bilateral_targeted_non_consuming_and_fidelity_checked(self):
         pair = (("a", "ma"), ("b", "mb"))
         reverse = (pair[1], pair[0])

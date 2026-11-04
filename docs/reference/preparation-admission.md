@@ -2,7 +2,7 @@
 
 The default compiler policy is quota-six with demand guarding: eight physical
 communication memories per core, at most six compiler reservations, generation
-budget eight, offline active-layer lookback 2--8, 10 ns empty-layer gaps,
+budget eight, offline active-layer lookback 1--8, 10 ns empty-layer gaps,
 execution-first/ready-first per-qubit admission, all-chain preparation, in-place
 pair handoff and a 50 ms compiler reservation lifetime. The planning coherence
 window is ten active layers.
