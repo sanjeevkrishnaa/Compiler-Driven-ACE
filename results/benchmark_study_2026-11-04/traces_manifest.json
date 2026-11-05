@@ -1,0 +1,222 @@
+[
+ {
+  "benchmark": "qft",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "f8cfb79876fb8904f2c62382cb2c61641ea59efe40bcbfbd3f4e5de3d1761cfc",
+  "hops": 11076,
+  "layers": 1790,
+  "qasm_sha256": "55a4de75de41be14b5f107b6e7ac1a65b18d01c3bdd1167d5e1046519e1586ab",
+  "mapping_trace_sha256": "2f0c35714cd826fcdd59419bc1e5eaf647459dd70d89148ca82e5c3657bf27d1"
+ },
+ {
+  "benchmark": "qft",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "84f8676a21a10bc8941d1aa266a96f752799b9e23468148c7aad5468e21e2430",
+  "hops": 11076,
+  "layers": 1790,
+  "qasm_sha256": "55a4de75de41be14b5f107b6e7ac1a65b18d01c3bdd1167d5e1046519e1586ab",
+  "mapping_trace_sha256": "2f0c35714cd826fcdd59419bc1e5eaf647459dd70d89148ca82e5c3657bf27d1"
+ },
+ {
+  "benchmark": "bv",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "6dafa3f4e0d3ebdd73a7d887e63d207958cf7576998bae12b43df455bbba0516",
+  "hops": 23,
+  "layers": 778,
+  "qasm_sha256": "ac39866ffc23ccde68a31b3f71d703db4a22cfdefe36bb3033f0b4d5aa848577",
+  "mapping_trace_sha256": "de8746e6a81bbb75e3e70c0880778a7fd9aa69ddb2ec5cf23da2a57936f9f21a"
+ },
+ {
+  "benchmark": "bv",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "6dafa3f4e0d3ebdd73a7d887e63d207958cf7576998bae12b43df455bbba0516",
+  "hops": 23,
+  "layers": 778,
+  "qasm_sha256": "ac39866ffc23ccde68a31b3f71d703db4a22cfdefe36bb3033f0b4d5aa848577",
+  "mapping_trace_sha256": "de8746e6a81bbb75e3e70c0880778a7fd9aa69ddb2ec5cf23da2a57936f9f21a"
+ },
+ {
+  "benchmark": "ghz",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "bf1bb52f905ea259300c484933499d57fc7906088df53ab45d8bca4959ac6e90",
+  "hops": 24,
+  "layers": 226,
+  "qasm_sha256": "ec3f9bc79023ce8098079e3482ed20e9a54c07ac4308b5f7ee725d75ce1ae38e",
+  "mapping_trace_sha256": "5b3f472a2bcd1b8166f2c1af4d0e63e2fb4d2abca153e3f4d583e41f3b5c0505"
+ },
+ {
+  "benchmark": "ghz",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "bf1bb52f905ea259300c484933499d57fc7906088df53ab45d8bca4959ac6e90",
+  "hops": 24,
+  "layers": 226,
+  "qasm_sha256": "ec3f9bc79023ce8098079e3482ed20e9a54c07ac4308b5f7ee725d75ce1ae38e",
+  "mapping_trace_sha256": "5b3f472a2bcd1b8166f2c1af4d0e63e2fb4d2abca153e3f4d583e41f3b5c0505"
+ },
+ {
+  "benchmark": "dj",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "3d25d4fd387f99c2f95a48458177c271c6c5eecf4ea8c887f7590c17a48aad41",
+  "hops": 30,
+  "layers": 230,
+  "qasm_sha256": "7d0cca4b33938b935000d9a3b7b0a2b600428b5e9fd6ec3a94580292f72a02cd",
+  "mapping_trace_sha256": "7445bf34c706d21dac9c2d7ef8fa5a3d9fffd1a5f20acaa2e5f9b59b38d3727f"
+ },
+ {
+  "benchmark": "dj",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "3d25d4fd387f99c2f95a48458177c271c6c5eecf4ea8c887f7590c17a48aad41",
+  "hops": 30,
+  "layers": 230,
+  "qasm_sha256": "7d0cca4b33938b935000d9a3b7b0a2b600428b5e9fd6ec3a94580292f72a02cd",
+  "mapping_trace_sha256": "7445bf34c706d21dac9c2d7ef8fa5a3d9fffd1a5f20acaa2e5f9b59b38d3727f"
+ },
+ {
+  "benchmark": "qpeexact",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "cc7e108a1005dd365bdf656ecf4f32a51309ca7f2d77b9edce4752dd12cdf5c5",
+  "hops": 11921,
+  "layers": 2675,
+  "qasm_sha256": "1dfdbf5096a6ab46b45696643c3b17670a54e6e65a55fcd5c9a4978c96538911",
+  "mapping_trace_sha256": "49ba42fe8df893a8747c41ba45448f953f55885091e15814ee95944d4bfc17d5"
+ },
+ {
+  "benchmark": "qpeexact",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "0b51eac6bea5097ea7b4679e58ceb0ddf4be99249be553780d180a3cba13d041",
+  "hops": 11921,
+  "layers": 2675,
+  "qasm_sha256": "1dfdbf5096a6ab46b45696643c3b17670a54e6e65a55fcd5c9a4978c96538911",
+  "mapping_trace_sha256": "49ba42fe8df893a8747c41ba45448f953f55885091e15814ee95944d4bfc17d5"
+ },
+ {
+  "benchmark": "qaoa",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "2657f6294446f0e7a7b64a20d74d43fcf835db787b79553e1808e86dc568ed59",
+  "hops": 29605,
+  "layers": 1801,
+  "qasm_sha256": "d53eec0354d1217dc2e460b9d8b2bda98b0f34de7247e1a9c8dd15d4ba687484",
+  "mapping_trace_sha256": "da5ce7d8e57eefe52653ba70ca780515209363c77f0d5daac9cbae2a2602f22e"
+ },
+ {
+  "benchmark": "qaoa",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "e61c9ca0aaec526c704e5fc2b6a3c274cba672082599c7900e0dfc272292e502",
+  "hops": 29605,
+  "layers": 1801,
+  "qasm_sha256": "d53eec0354d1217dc2e460b9d8b2bda98b0f34de7247e1a9c8dd15d4ba687484",
+  "mapping_trace_sha256": "da5ce7d8e57eefe52653ba70ca780515209363c77f0d5daac9cbae2a2602f22e"
+ },
+ {
+  "benchmark": "draper_qft_adder",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "ca26b4f63230b25fbf1418a24c1476cd7ff81faa5bbeeb6a899ccf8cd2e0f480",
+  "hops": 6510,
+  "layers": 2230,
+  "qasm_sha256": "25a11dc7837e1919c9dc88f4e73f23bee127796675766ec1aa24de8cff7e9f89",
+  "mapping_trace_sha256": "b06d7cd7ecf997a87e64aee51a5d66187311b5b1c4eb15a9852eee236d72304d"
+ },
+ {
+  "benchmark": "draper_qft_adder",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "df32dbc3400327dbb953056e88724d8b15d9911bbcf89cea22e2bb8656416375",
+  "hops": 6510,
+  "layers": 2230,
+  "qasm_sha256": "25a11dc7837e1919c9dc88f4e73f23bee127796675766ec1aa24de8cff7e9f89",
+  "mapping_trace_sha256": "b06d7cd7ecf997a87e64aee51a5d66187311b5b1c4eb15a9852eee236d72304d"
+ },
+ {
+  "benchmark": "graphstate",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "1d251d82b054e52765c4651a96b56e4761bc1ab68f6c64dea90b5e605fe0c269",
+  "hops": 136,
+  "layers": 33,
+  "qasm_sha256": "bbda7dd1fc6edcb1c04df6d7637e5710766546074ad414c8b867f166819393b8",
+  "mapping_trace_sha256": "1f1beaae8b63933a1fb47077ceb3cb48403670ac9c59aba977df3ea381a7718c"
+ },
+ {
+  "benchmark": "graphstate",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "fe50551407cfcab0bb647114136b2fb3409dbeb55b0b8dfd6b042b8d28de4f99",
+  "hops": 136,
+  "layers": 33,
+  "qasm_sha256": "bbda7dd1fc6edcb1c04df6d7637e5710766546074ad414c8b867f166819393b8",
+  "mapping_trace_sha256": "1f1beaae8b63933a1fb47077ceb3cb48403670ac9c59aba977df3ea381a7718c"
+ },
+ {
+  "benchmark": "bmw_quark_cardinality",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "86e4a752823e836530b0aba86e2aceaab21669f102b191d8c9f810b5469e5f66",
+  "hops": 306,
+  "layers": 6049,
+  "qasm_sha256": "67bafab417f6d58f6d3d02e36df2d07af639d9e7e59b432609ab7a447b924851",
+  "mapping_trace_sha256": "ff0a4e148ab91e33a926e6bcb340e693b2b79f0273360600c63c42ff3a294740"
+ },
+ {
+  "benchmark": "bmw_quark_cardinality",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "48d4b7b6edba287fec26c2e0b78158af98fc23806cc1716c94e23b57d359ac17",
+  "hops": 306,
+  "layers": 6049,
+  "qasm_sha256": "67bafab417f6d58f6d3d02e36df2d07af639d9e7e59b432609ab7a447b924851",
+  "mapping_trace_sha256": "ff0a4e148ab91e33a926e6bcb340e693b2b79f0273360600c63c42ff3a294740"
+ },
+ {
+  "benchmark": "bmw_quark_copula",
+  "route": "xy",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "0314295594f316f1712ef4c04f58cc23df788266020b50362ab14a53da4a5683",
+  "hops": 9510,
+  "layers": 3998,
+  "qasm_sha256": "16e8249e8ac03fe65ca3334a6edf50719a87d57d17afc148e24503cb6d4087cc",
+  "mapping_trace_sha256": "30412df52969f1cfe5f5a0d499f22cfeb7b57ccfb6ba781123e27bd5765a5d8d"
+ },
+ {
+  "benchmark": "bmw_quark_copula",
+  "route": "history",
+  "routing_capacity": 8,
+  "history_window_layers": 0,
+  "sha256": "6f908ac97f96fc9cd9eb41e4508741f632f49c87bc567c1ebdee7acd3511ae4c",
+  "hops": 9510,
+  "layers": 3998,
+  "qasm_sha256": "16e8249e8ac03fe65ca3334a6edf50719a87d57d17afc148e24503cb6d4087cc",
+  "mapping_trace_sha256": "30412df52969f1cfe5f5a0d499f22cfeb7b57ccfb6ba781123e27bd5765a5d8d"
+ }
+]

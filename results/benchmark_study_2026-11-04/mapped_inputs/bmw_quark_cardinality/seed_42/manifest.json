@@ -1,0 +1,57 @@
+{
+  "status": "complete",
+  "mapping_only": true,
+  "workload": "bmw_quark_cardinality_224_67bafab4",
+  "seed": 42,
+  "source": {
+    "kind": "qasm",
+    "path": "/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP/Compiler-Driven-ACE-correctness/benchmarks/bmw_quark_cardinality/bmw_quark_cardinality_224.qasm",
+    "sha256": "67bafab417f6d58f6d3d02e36df2d07af639d9e7e59b432609ab7a447b924851",
+    "actual_qubits": 224,
+    "normalized_depth": 6044,
+    "normalized_gates": 15192,
+    "basis_gates": [
+      "rz",
+      "sx",
+      "x",
+      "cx"
+    ],
+    "optimization_level": 0,
+    "circuit_seed": 42,
+    "final_measurements_removed": true
+  },
+  "topology": "mesh",
+  "architecture": {
+    "mesh": "4x4",
+    "rows": 4,
+    "columns": 4,
+    "cores": 16,
+    "physical_qubits": 320,
+    "physical_slots_per_core": 20,
+    "communication_slots_per_core": 4,
+    "compiler_slots_per_core": 4,
+    "fallback_slots_per_core": 0,
+    "data_slots_per_core": 16,
+    "data_capacity": 256,
+    "initial_spare_data_slots_per_core": 2,
+    "initial_workload_capacity": 224,
+    "requested_circuit_qubits": 224,
+    "seeds": [
+      42
+    ]
+  },
+  "seconds": 1.53864733397495,
+  "hops": 306,
+  "layers": 6049,
+  "trace_sha256": "ff0a4e148ab91e33a926e6bcb340e693b2b79f0273360600c63c42ff3a294740",
+  "versions": {
+    "python": "3.14.0",
+    "mqt-bench": "2.3.0",
+    "qiskit": "2.6.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "networkx": "3.7",
+    "qm2026": "1.0.0"
+  },
+  "normalized_circuit_sha256": "c71c6e45aa870a15f56db8bb62d822c0cfa2246245ea031f2ae7d221e942b93c"
+}

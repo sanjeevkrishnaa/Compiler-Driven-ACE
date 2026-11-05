@@ -1,0 +1,81 @@
+% Benchmark study, started 2026-11-04.  Grows one benchmark and route at a time.
+% Build:  python tools/benchmark_study/analyze.py && python tools/benchmark_study/report.py && tectonic main.tex
+% Every table and figure in generated/ and figures/ is written by those scripts from the simulation records;
+% only sections/*_findings.tex is written by hand, and every number in it is copied from the generated tables.
+\documentclass[11pt,a4paper]{report}
+\usepackage[margin=22mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,booktabs,array,amsmath,xcolor,graphicx,float,caption,hyperref,enumitem}
+\hypersetup{colorlinks=true,urlcolor=blue,linkcolor=black}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}\setlength{\emergencystretch}{3em}
+\setlist{itemsep=2pt,topsep=2pt}
+\graphicspath{{figures/}}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+
+\title{EPR pre-generation on ten benchmarks\\[3pt]\large ODG, CGP, ACGP and compiler-driven Dynamic, memories per core $K=1$ to $\infty$}
+\author{BTP, MARS Lab, IIT Guwahati}
+\date{Started 4 November 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Setup}
+\section{Architecture and workloads}
+\begin{itemize}
+\item $4\times4$ mesh of 16 cores; each core has 16 data slots, 14 occupied at the start and 2 kept free for migration,
+      so circuits have $16\times14=224$ logical qubits.
+\item Benchmarks: ten MQT Bench~2.3.0 circuits at 224 qubits (\code{benchmarks/}, verified by
+      \code{benchmarks/verify.py}). Each is mapped once (T-HQA placer, OEE initial placement, mapping seed 42) and routed
+      with XY and with history routing (history counts the route visits of all preceding layers, i.e.\ cumulative history, routing capacity 8); every strategy and every $K$ sees the same frozen trace.
+\item Physics (\code{config/final_config/grid_4x4_ace_3.json}): memory efficiency 0.8, memory fidelity 0.95, coherence
+      1\,s, detector efficiency 0.95. The classical delay is set by the topology code to about 0.1\,ms between neighbours.
+\end{itemize}
+
+\section{Strategies and policy}
+ODG generates every pair on demand. CGP and ACGP generate pairs continuously into a cache. Dynamic is compiler driven:
+the planner chooses, before the run, the layer in which each pair is started.
+Everything except $K$ and the memory split is the default policy of the code (branch \code{history-algo-update},
+\code{ace/compiler/settings.py}):
+\begin{table}[H]\centering\small
+\begin{tabular}{ll}\toprule
+Setting & Value\\\midrule
+Layer basis, lead, lookahead, age limit & active layers; 1, 2, 10 layers\\
+Generation budget & 8 launches per core per active layer\\
+Preparation priority & trace order (\code{trace})\\
+Demand guard / refill on release & on / on\\
+Admission & per-qubit, event driven, ready pairs first, longer chains first\\
+Empty-layer gap & 10\,ns\\
+Compiler reservation, pair use & 50\,ms, handoff\\
+Physics seeds & 60 and 61\\\bottomrule
+\end{tabular}
+\caption{Default policy used in every run.}\end{table}
+
+\section{Memories per core and the split}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+$K$ (memories per core) & 1 & 2 & 3 & 4 & 6 & 8 & $\infty$ (64)\\\midrule
+Dynamic may use & 1 & 2 & 3 & 4 & 6 & 6 & 64\\
+CGP / ACGP cache ($\lfloor0.75K\rfloor$) & 0 & 1 & 2 & 3 & 4 & 6 & 48\\\bottomrule
+\end{tabular}
+\caption{Pre-generation share of the $K$ memories. At $K=8$ six memories are reserved for pre-generation. CGP/ACGP use
+$\lfloor0.75K\rfloor$ because caching in all $K$ memories starves requests (smoke test: 150--1060\,ms per hop at
+$K=1$--4); at $K=1$ they therefore equal ODG.}\end{table}
+
+\section{Metrics}
+A \emph{hop} is one request between neighbouring cores; a \emph{chain} is all hops of one qubit in one layer.
+\begin{description}
+\item[Latency] mean time per hop from eligibility to EPR delivery, including any wait for a free memory.
+\item[Fidelity] mean fidelity of the delivered pairs (not a circuit fidelity).
+\item[Coverage] share of hops that found a pair already made: generation phase under 0.35\,ms, i.e.\ only the
+      reservation handshake. Same definition for every strategy. Chain full coverage: every hop of the chain ready.
+\item[Utilisation] pairs used divided by pairs generated. \textbf{Wastage} $=100-$ utilisation: pairs that expired or
+      were never used. ODG makes no pairs in advance, so both are not applicable to it.
+\end{description}
+Bars are the mean of the two seeds; whiskers span the two seeds.
+
+\chapter{Results}
+\input{generated/sections.tex}
+
+\end{document}
