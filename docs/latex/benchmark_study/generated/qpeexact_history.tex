@@ -1,0 +1,94 @@
+\section{QPE (exact), history routing}
+11921 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.774 & 4.40 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.947 & 2.95 & 0.9428 & 76.3 & 55.6 & 4.16 & 95.8\\
+ACGP & 0.960 & 3.10 & 0.9425 & 76.2 & 55.0 & 3.97 & 96.0\\
+Dynamic (8) & 0.714 & 2.20 & 0.9434 & 79.5 & 67.0 & 1.10 & 98.9\\
+Dynamic ($\infty$) & 0.578 & 1.40 & 0.9446 & 86.7 & 74.4 & 1.19 & 98.8\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_headline_8.pdf}
+\caption{QPE (exact), history routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.830 & 4.65 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 2.256 & 8.20 & 0.9416 & 61.6 & 36.2 & 5.21 & 94.8\\
+ACGP & 2.248 & 8.31 & 0.9413 & 63.4 & 38.6 & 5.33 & 94.7\\
+Dynamic (4) & 1.305 & 4.60 & 0.9417 & 62.6 & 51.4 & 4.57 & 95.4\\
+Dynamic ($\infty$) & 0.578 & 1.40 & 0.9446 & 86.7 & 74.4 & 1.19 & 98.8\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_headline_4all.pdf}
+\caption{QPE (exact), history routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 6.043 & 2.654 & 2.011 & 1.830 & 1.776 & 1.774 & 1.775\\
+CGP & 6.043 & 3.831 & 2.846 & 2.256 & 1.162 & 0.947 & 0.456\\
+ACGP & 6.043 & 3.843 & 2.809 & 2.248 & 1.127 & 0.960 & 0.456\\
+Dynamic & 8.359 & 3.260 & 1.832 & 1.305 & 0.856 & 0.714 & 0.578\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_k_latency_ms.pdf}
+\caption{QPE (exact), history routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9451 & 0.9426 & 0.9416 & 0.9434 & 0.9428 & 0.9421\\
+ACGP & 0.9498 & 0.9450 & 0.9426 & 0.9413 & 0.9435 & 0.9425 & 0.9419\\
+Dynamic & 0.9485 & 0.9446 & 0.9426 & 0.9417 & 0.9428 & 0.9434 & 0.9446\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_k_fidelity.pdf}
+\caption{QPE (exact), history routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 26.7 & 47.6 & 61.6 & 63.6 & 76.3 & 99.3\\
+ACGP & 0.0 & 27.9 & 48.4 & 63.4 & 65.1 & 76.2 & 99.3\\
+Dynamic & 11.3 & 33.1 & 49.1 & 62.6 & 78.8 & 79.5 & 86.7\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_k_hop_coverage_pct.pdf}
+\caption{QPE (exact), history routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 5.93 & 5.44 & 5.21 & 3.71 & 4.16 & 12.64\\
+ACGP & -- & 5.61 & 5.27 & 5.33 & 3.54 & 3.97 & 12.64\\
+Dynamic & 45.07 & 15.64 & 7.46 & 4.57 & 2.19 & 1.10 & 1.19\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_k_wastage_pct.pdf}
+\caption{QPE (exact), history routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 94.1 & 94.6 & 94.8 & 96.3 & 95.8 & 87.4\\
+ACGP & -- & 94.4 & 94.7 & 94.7 & 96.5 & 96.0 & 87.4\\
+Dynamic & 54.9 & 84.4 & 92.5 & 95.4 & 97.8 & 98.9 & 98.8\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), history routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_history_k_utilisation_pct.pdf}
+\caption{QPE (exact), history routing: utilisation for every K.}\end{figure}

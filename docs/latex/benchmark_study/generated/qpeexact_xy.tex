@@ -1,0 +1,94 @@
+\section{QPE (exact), XY routing}
+11921 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.784 & 4.60 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 1.020 & 3.40 & 0.9420 & 75.4 & 54.8 & 4.42 & 95.6\\
+ACGP & 1.016 & 3.35 & 0.9422 & 76.1 & 56.3 & 4.32 & 95.7\\
+Dynamic (8) & 0.758 & 2.40 & 0.9435 & 77.0 & 64.6 & 0.99 & 99.0\\
+Dynamic ($\infty$) & 0.615 & 1.65 & 0.9440 & 84.9 & 72.9 & 1.07 & 98.9\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_headline_8.pdf}
+\caption{QPE (exact), XY routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.894 & 4.70 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 2.527 & 9.72 & 0.9400 & 61.5 & 36.4 & 5.96 & 94.0\\
+ACGP & 2.408 & 9.05 & 0.9405 & 63.2 & 39.6 & 5.48 & 94.5\\
+Dynamic (4) & 1.358 & 4.80 & 0.9424 & 60.6 & 49.4 & 4.00 & 96.0\\
+Dynamic ($\infty$) & 0.615 & 1.65 & 0.9440 & 84.9 & 72.9 & 1.07 & 98.9\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_headline_4all.pdf}
+\caption{QPE (exact), XY routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 6.455 & 2.860 & 2.122 & 1.894 & 1.792 & 1.784 & 1.784\\
+CGP & 6.455 & 4.218 & 3.079 & 2.527 & 1.205 & 1.020 & 0.458\\
+ACGP & 6.455 & 4.345 & 3.096 & 2.408 & 1.223 & 1.016 & 0.457\\
+Dynamic & 8.929 & 3.513 & 1.897 & 1.358 & 0.897 & 0.758 & 0.615\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_k_latency_ms.pdf}
+\caption{QPE (exact), XY routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9445 & 0.9419 & 0.9400 & 0.9435 & 0.9420 & 0.9421\\
+ACGP & 0.9498 & 0.9445 & 0.9419 & 0.9405 & 0.9431 & 0.9422 & 0.9423\\
+Dynamic & 0.9488 & 0.9444 & 0.9432 & 0.9424 & 0.9429 & 0.9435 & 0.9440\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_k_fidelity.pdf}
+\caption{QPE (exact), XY routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 26.4 & 47.6 & 61.5 & 64.1 & 75.4 & 99.2\\
+ACGP & 0.0 & 26.1 & 47.1 & 63.2 & 64.0 & 76.1 & 99.1\\
+Dynamic & 10.0 & 32.8 & 48.4 & 60.6 & 76.7 & 77.0 & 84.9\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_k_hop_coverage_pct.pdf}
+\caption{QPE (exact), XY routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 6.46 & 6.04 & 5.96 & 3.60 & 4.42 & 12.61\\
+ACGP & -- & 6.71 & 5.66 & 5.48 & 3.78 & 4.32 & 12.50\\
+Dynamic & 49.72 & 13.88 & 6.38 & 4.00 & 2.09 & 0.99 & 1.07\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_k_wastage_pct.pdf}
+\caption{QPE (exact), XY routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 93.5 & 94.0 & 94.0 & 96.4 & 95.6 & 87.4\\
+ACGP & -- & 93.3 & 94.3 & 94.5 & 96.2 & 95.7 & 87.5\\
+Dynamic & 50.3 & 86.1 & 93.6 & 96.0 & 97.9 & 99.0 & 98.9\\
+\bottomrule\end{tabular}
+\caption{QPE (exact), XY routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qpeexact_xy_k_utilisation_pct.pdf}
+\caption{QPE (exact), XY routing: utilisation for every K.}\end{figure}
