@@ -1,0 +1,64 @@
+\section{QAOA, XY routing}
+29605 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 8.860 & 3.673 & 2.493 & 2.076 & -- & -- & --\\
+CGP & 8.860 & 5.593 & 3.951 & 2.984 & -- & -- & --\\
+ACGP & 8.860 & 5.613 & 3.924 & 2.998 & -- & -- & --\\
+Dynamic & 11.684 & 3.773 & 2.129 & -- & -- & -- & --\\
+\bottomrule\end{tabular}
+\caption{QAOA, XY routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qaoa_xy_k_latency_ms.pdf}
+\caption{QAOA, XY routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & -- & -- & --\\
+CGP & 0.9498 & 0.9447 & 0.9416 & 0.9400 & -- & -- & --\\
+ACGP & 0.9498 & 0.9447 & 0.9416 & 0.9398 & -- & -- & --\\
+Dynamic & 0.9487 & 0.9462 & 0.9449 & -- & -- & -- & --\\
+\bottomrule\end{tabular}
+\caption{QAOA, XY routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qaoa_xy_k_fidelity.pdf}
+\caption{QAOA, XY routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & -- & -- & --\\
+CGP & 0.0 & 26.9 & 48.8 & 63.5 & -- & -- & --\\
+ACGP & 0.0 & 27.5 & 48.4 & 63.3 & -- & -- & --\\
+Dynamic & 9.8 & 29.3 & 43.0 & -- & -- & -- & --\\
+\bottomrule\end{tabular}
+\caption{QAOA, XY routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qaoa_xy_k_hop_coverage_pct.pdf}
+\caption{QAOA, XY routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 5.39 & 4.93 & 4.45 & -- & -- & --\\
+ACGP & -- & 5.51 & 4.71 & 4.61 & -- & -- & --\\
+Dynamic & 37.78 & 8.38 & 4.63 & -- & -- & -- & --\\
+\bottomrule\end{tabular}
+\caption{QAOA, XY routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qaoa_xy_k_wastage_pct.pdf}
+\caption{QAOA, XY routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 94.6 & 95.1 & 95.5 & -- & -- & --\\
+ACGP & -- & 94.5 & 95.3 & 95.4 & -- & -- & --\\
+Dynamic & 62.2 & 91.6 & 95.4 & -- & -- & -- & --\\
+\bottomrule\end{tabular}
+\caption{QAOA, XY routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{qaoa_xy_k_utilisation_pct.pdf}
+\caption{QAOA, XY routing: utilisation for every K.}\end{figure}

@@ -1,0 +1,94 @@
+\section{Draper adder, XY routing}
+6510 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.761 & 4.20 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.687 & 1.90 & 0.9404 & 81.5 & 68.7 & 6.00 & 94.0\\
+ACGP & 0.671 & 1.80 & 0.9405 & 81.7 & 69.6 & 6.03 & 94.0\\
+Dynamic (8) & 0.623 & 1.60 & 0.9467 & 79.2 & 65.8 & 2.43 & 97.6\\
+Dynamic ($\infty$) & 0.611 & 1.50 & 0.9467 & 79.9 & 66.6 & 2.74 & 97.3\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_headline_8.pdf}
+\caption{Draper adder, XY routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.765 & 4.20 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 1.351 & 4.50 & 0.9400 & 65.5 & 46.6 & 6.00 & 94.0\\
+ACGP & 1.347 & 4.50 & 0.9395 & 65.8 & 47.7 & 6.14 & 93.9\\
+Dynamic (4) & 0.783 & 2.35 & 0.9465 & 77.6 & 64.0 & 3.00 & 97.0\\
+Dynamic ($\infty$) & 0.611 & 1.50 & 0.9467 & 79.9 & 66.6 & 2.74 & 97.3\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_headline_4all.pdf}
+\caption{Draper adder, XY routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 3.506 & 1.918 & 1.783 & 1.765 & 1.761 & 1.761 & 1.761\\
+CGP & 3.506 & 2.263 & 1.699 & 1.351 & 0.826 & 0.687 & 0.456\\
+ACGP & 3.506 & 2.271 & 1.668 & 1.347 & 0.784 & 0.671 & 0.455\\
+Dynamic & 3.975 & 1.546 & 1.014 & 0.783 & 0.645 & 0.623 & 0.611\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_k_latency_ms.pdf}
+\caption{Draper adder, XY routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9441 & 0.9413 & 0.9400 & 0.9410 & 0.9404 & 0.9405\\
+ACGP & 0.9498 & 0.9441 & 0.9412 & 0.9395 & 0.9410 & 0.9405 & 0.9405\\
+Dynamic & 0.9480 & 0.9454 & 0.9459 & 0.9465 & 0.9467 & 0.9467 & 0.9467\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_k_fidelity.pdf}
+\caption{Draper adder, XY routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 29.2 & 49.7 & 65.5 & 70.9 & 81.5 & 99.2\\
+ACGP & 0.0 & 28.4 & 51.6 & 65.8 & 73.8 & 81.7 & 99.5\\
+Dynamic & 21.0 & 58.1 & 71.3 & 77.6 & 79.7 & 79.2 & 79.9\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_k_hop_coverage_pct.pdf}
+\caption{Draper adder, XY routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 7.18 & 7.07 & 6.00 & 5.66 & 6.00 & 23.84\\
+ACGP & -- & 7.39 & 6.42 & 6.14 & 5.16 & 6.03 & 24.02\\
+Dynamic & 41.98 & 9.78 & 3.73 & 3.00 & 2.68 & 2.43 & 2.74\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_k_wastage_pct.pdf}
+\caption{Draper adder, XY routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 92.8 & 92.9 & 94.0 & 94.3 & 94.0 & 76.2\\
+ACGP & -- & 92.6 & 93.6 & 93.9 & 94.8 & 94.0 & 76.0\\
+Dynamic & 58.0 & 90.2 & 96.3 & 97.0 & 97.3 & 97.6 & 97.3\\
+\bottomrule\end{tabular}
+\caption{Draper adder, XY routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_xy_k_utilisation_pct.pdf}
+\caption{Draper adder, XY routing: utilisation for every K.}\end{figure}

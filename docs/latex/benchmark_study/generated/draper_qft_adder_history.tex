@@ -1,0 +1,94 @@
+\section{Draper adder, history routing}
+6510 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.765 & 4.40 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.689 & 1.90 & 0.9410 & 80.6 & 67.8 & 6.24 & 93.8\\
+ACGP & 0.689 & 1.99 & 0.9410 & 81.1 & 68.1 & 6.14 & 93.9\\
+Dynamic (8) & 0.628 & 1.60 & 0.9467 & 78.5 & 64.9 & 2.58 & 97.4\\
+Dynamic ($\infty$) & 0.611 & 1.50 & 0.9466 & 80.0 & 66.9 & 2.45 & 97.5\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_headline_8.pdf}
+\caption{Draper adder, history routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.768 & 4.40 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 1.352 & 4.45 & 0.9404 & 65.0 & 47.5 & 6.34 & 93.7\\
+ACGP & 1.292 & 4.15 & 0.9409 & 67.2 & 51.0 & 5.98 & 94.0\\
+Dynamic (4) & 0.788 & 2.40 & 0.9462 & 77.5 & 64.5 & 2.86 & 97.1\\
+Dynamic ($\infty$) & 0.611 & 1.50 & 0.9466 & 80.0 & 66.9 & 2.45 & 97.5\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_headline_4all.pdf}
+\caption{Draper adder, history routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 3.445 & 1.929 & 1.789 & 1.768 & 1.765 & 1.765 & 1.765\\
+CGP & 3.445 & 2.233 & 1.675 & 1.352 & 0.823 & 0.689 & 0.455\\
+ACGP & 3.445 & 2.209 & 1.664 & 1.292 & 0.845 & 0.689 & 0.456\\
+Dynamic & 3.857 & 1.505 & 0.993 & 0.788 & 0.650 & 0.628 & 0.611\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_k_latency_ms.pdf}
+\caption{Draper adder, history routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9442 & 0.9416 & 0.9404 & 0.9414 & 0.9410 & 0.9407\\
+ACGP & 0.9498 & 0.9445 & 0.9418 & 0.9409 & 0.9410 & 0.9410 & 0.9405\\
+Dynamic & 0.9478 & 0.9452 & 0.9458 & 0.9462 & 0.9466 & 0.9467 & 0.9466\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_k_fidelity.pdf}
+\caption{Draper adder, history routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 30.7 & 50.5 & 65.0 & 71.2 & 80.6 & 99.4\\
+ACGP & 0.0 & 30.6 & 52.0 & 67.2 & 70.7 & 81.1 & 99.3\\
+Dynamic & 21.9 & 61.6 & 71.9 & 77.5 & 79.5 & 78.5 & 80.0\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_k_hop_coverage_pct.pdf}
+\caption{Draper adder, history routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 6.90 & 6.81 & 6.34 & 5.52 & 6.24 & 23.86\\
+ACGP & -- & 6.56 & 6.56 & 5.98 & 5.96 & 6.14 & 24.23\\
+Dynamic & 42.34 & 9.89 & 4.14 & 2.86 & 2.60 & 2.58 & 2.45\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_k_wastage_pct.pdf}
+\caption{Draper adder, history routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 93.1 & 93.2 & 93.7 & 94.5 & 93.8 & 76.1\\
+ACGP & -- & 93.4 & 93.4 & 94.0 & 94.0 & 93.9 & 75.8\\
+Dynamic & 57.7 & 90.1 & 95.9 & 97.1 & 97.4 & 97.4 & 97.5\\
+\bottomrule\end{tabular}
+\caption{Draper adder, history routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{draper_qft_adder_history_k_utilisation_pct.pdf}
+\caption{Draper adder, history routing: utilisation for every K.}\end{figure}
