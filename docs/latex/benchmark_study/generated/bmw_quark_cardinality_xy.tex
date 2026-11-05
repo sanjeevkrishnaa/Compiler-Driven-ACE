@@ -1,0 +1,94 @@
+\section{BMW cardinality, XY routing}
+306 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.639 & 3.80 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.741 & 2.00 & 0.9243 & 70.1 & 49.4 & 27.87 & 72.1\\
+ACGP & 0.740 & 2.00 & 0.9243 & 70.3 & 49.7 & 27.80 & 72.2\\
+Dynamic (8) & 0.705 & 1.70 & 0.9476 & 67.0 & 45.1 & 5.94 & 94.1\\
+Dynamic ($\infty$) & 0.705 & 1.70 & 0.9476 & 67.0 & 45.1 & 5.94 & 94.1\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_headline_8.pdf}
+\caption{BMW cardinality, XY routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.639 & 3.80 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.867 & 2.45 & 0.9299 & 56.4 & 30.3 & 16.90 & 83.1\\
+ACGP & 0.868 & 2.45 & 0.9301 & 55.7 & 29.4 & 16.97 & 83.0\\
+Dynamic (4) & 0.725 & 1.90 & 0.9475 & 65.4 & 42.9 & 7.17 & 92.8\\
+Dynamic ($\infty$) & 0.705 & 1.70 & 0.9476 & 67.0 & 45.1 & 5.94 & 94.1\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_headline_4all.pdf}
+\caption{BMW cardinality, XY routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 1.639 & 1.639 & 1.639 & 1.639 & 1.639 & 1.639 & 1.639\\
+CGP & 1.639 & 1.357 & 1.022 & 0.867 & 0.638 & 0.741 & 0.468\\
+ACGP & 1.639 & 1.350 & 1.022 & 0.868 & 0.638 & 0.740 & 0.468\\
+Dynamic & 2.123 & 1.042 & 0.767 & 0.725 & 0.705 & 0.705 & 0.705\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_k_latency_ms.pdf}
+\caption{BMW cardinality, XY routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9425 & 0.9375 & 0.9299 & 0.9271 & 0.9243 & 0.9253\\
+ACGP & 0.9498 & 0.9425 & 0.9375 & 0.9301 & 0.9271 & 0.9243 & 0.9253\\
+Dynamic & 0.9487 & 0.9480 & 0.9477 & 0.9475 & 0.9476 & 0.9476 & 0.9476\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_k_fidelity.pdf}
+\caption{BMW cardinality, XY routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 17.8 & 42.8 & 56.4 & 75.7 & 70.1 & 99.3\\
+ACGP & 0.0 & 18.1 & 42.8 & 55.7 & 75.7 & 70.3 & 99.3\\
+Dynamic & 50.7 & 41.8 & 60.6 & 65.4 & 67.0 & 67.0 & 67.0\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_k_hop_coverage_pct.pdf}
+\caption{BMW cardinality, XY routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 22.06 & 15.27 & 16.90 & 13.37 & 27.87 & 54.36\\
+ACGP & -- & 19.66 & 15.27 & 16.97 & 13.10 & 27.80 & 54.36\\
+Dynamic & 28.24 & 23.86 & 10.47 & 7.17 & 5.94 & 5.94 & 5.94\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_k_wastage_pct.pdf}
+\caption{BMW cardinality, XY routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 77.9 & 84.7 & 83.1 & 86.6 & 72.1 & 45.6\\
+ACGP & -- & 80.3 & 84.7 & 83.0 & 86.9 & 72.2 & 45.6\\
+Dynamic & 71.8 & 76.1 & 89.5 & 92.8 & 94.1 & 94.1 & 94.1\\
+\bottomrule\end{tabular}
+\caption{BMW cardinality, XY routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bmw_quark_cardinality_xy_k_utilisation_pct.pdf}
+\caption{BMW cardinality, XY routing: utilisation for every K.}\end{figure}
