@@ -1,0 +1,137 @@
+benchmark,route,K,seed,request_id,target_layer,qubit,hop_in_chain,chain_hops,source_core,destination_core,generation_layer,lead_active,lead_logical,outcome,pair_generated_at_ms,hop_start_ms,fidelity_at_use,hop_latency_ms,generation_phase_ms
+graphstate,history,1,60,0,6,23,1,2,9,5,,,,on demand (no pair generated),,,,5.00012776,3.000074498
+graphstate,history,1,60,1,6,23,2,2,5,4,,,,on demand (no pair generated),,,,15.3004,0.500011998
+graphstate,history,1,60,2,6,79,1,1,5,6,,,,on demand (no pair generated),,,,20.900540260000003,0.400011998
+graphstate,history,1,60,3,6,85,1,5,3,2,,,,on demand (no pair generated),,,,3.20007776,3.000077259
+graphstate,history,1,60,4,6,85,2,5,2,1,,,,on demand (no pair generated),,,,3.8001125,3.000074498
+graphstate,history,1,60,5,6,85,3,5,1,0,,,,on demand (no pair generated),,,,8.2002,8.000199498
+graphstate,history,1,60,6,6,85,4,5,0,4,,,,on demand (no pair generated),,,,0.6000125,0.400011998
+graphstate,history,1,60,7,6,85,5,5,4,8,,,,on demand (no pair generated),,,,3.8001125,3.600111998
+graphstate,history,1,60,8,6,98,1,1,1,0,,,,on demand (no pair generated),,,,17.00042776,1.000024498
+graphstate,history,1,60,9,6,103,1,3,9,10,,,,on demand (no pair generated),,,,1.8000527599999998,1.600052259
+graphstate,history,1,60,10,6,103,2,3,10,11,,,,on demand (no pair generated),,,,22.100575000000003,2.800086997
+graphstate,history,1,60,11,6,103,3,3,11,15,,,,on demand (no pair generated),,,,3.4000999999999997,3.200099499
+graphstate,history,1,60,12,6,136,1,1,8,9,,,,on demand (no pair generated),,,,7.60020276,2.400074498
+graphstate,history,1,60,13,6,155,1,1,8,12,,,,on demand (no pair generated),,,,8.60022776,0.800024498
+graphstate,history,1,60,14,6,163,1,2,0,1,,,,on demand (no pair generated),,,,3.80011526,3.600114759
+graphstate,history,1,60,15,6,163,2,2,1,5,,,,on demand (no pair generated),,,,12.0002875,0.400011998
+graphstate,history,1,60,16,7,7,1,5,0,4,6.0,1.0,1.0,ready (pre-generated),20.90060026,27.30078776,0.9374207148350127,0.400001001,0.2000005
+graphstate,history,1,60,17,7,7,2,5,4,5,,,,on demand (no pair generated),,,,26.000648999000003,0.400011997
+graphstate,history,1,60,18,7,7,3,5,5,9,6.0,1.0,1.0,"pair expired, hop ran on demand",23.10066276,58.601550262,,6.3001499999999995,1.200036997
+graphstate,history,1,60,19,7,7,4,5,9,13,,,,on demand (no pair generated),,,,1.4000374999999998,1.200036999
+graphstate,history,1,60,20,7,7,5,5,13,14,6.0,1.0,1.0,"pair expired, hop ran on demand",0.60007526,61.401625261,,1.000025,0.800024498
+graphstate,history,1,60,21,7,12,1,1,0,1,,,,on demand (no pair generated),,,,2.20005,1.600048497
+graphstate,history,1,60,22,7,30,1,3,3,2,6.0,1.0,1.0,ready (pre-generated),7.70026276,27.30078776,0.9134668775190525,0.500001251,0.30000075
+graphstate,history,1,60,23,7,30,2,3,2,1,,,,on demand (no pair generated),,,,2.9000737489999997,1.000024498
+graphstate,history,1,60,24,7,30,3,3,1,0,,,,on demand (no pair generated),,,,3.200075,3.000074498
+graphstate,history,1,60,25,7,50,1,6,3,7,,,,on demand (no pair generated),,,,9.6002375,2.800086997
+graphstate,history,1,60,26,7,50,2,6,7,6,6.0,1.0,1.0,"pair expired, hop ran on demand",22.10062526,36.901025261,,0.7000124999999999,0.500011998
+graphstate,history,1,60,27,7,50,3,6,6,10,,,,on demand (no pair generated),,,,1.000025,0.800024498
+graphstate,history,1,60,28,7,50,4,6,10,14,,,,on demand (no pair generated),,,,6.800162500000001,1.600049497
+graphstate,history,1,60,29,7,50,5,6,14,13,,,,on demand (no pair generated),,,,2.4000624999999998,0.500011998
+graphstate,history,1,60,30,7,50,6,6,13,12,,,,on demand (no pair generated),,,,1.7000374999999999,1.500036998
+graphstate,history,1,60,31,7,53,1,1,7,11,,,,on demand (no pair generated),,,,13.600325,1.200036998
+graphstate,history,1,60,32,7,147,1,5,15,11,6.0,1.0,1.0,"pair expired, hop ran on demand",1.20008776,27.30078776,,1.2000250000000001,1.000024499
+graphstate,history,1,60,33,7,147,2,5,11,7,,,,on demand (no pair generated),,,,10.30025,1.000024498
+graphstate,history,1,60,34,7,147,3,5,7,3,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011997
+graphstate,history,1,60,35,7,147,4,5,3,2,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011998
+graphstate,history,1,60,36,7,147,5,5,2,1,,,,on demand (no pair generated),,,,3.4000874999999997,2.500061997
+graphstate,history,1,60,37,7,169,1,3,12,13,,,,on demand (no pair generated),,,,19.800487500000003,3.200099247
+graphstate,history,1,60,38,7,169,2,3,13,14,,,,on demand (no pair generated),,,,4.6001125,2.000061998
+graphstate,history,1,60,39,7,169,3,3,14,15,,,,on demand (no pair generated),,,,1.4000375,1.200036998
+graphstate,history,1,60,40,7,222,1,2,8,4,,,,on demand (no pair generated),,,,30.60075,4.000099498
+graphstate,history,1,60,41,7,222,2,2,4,0,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011998
+graphstate,history,1,60,42,10,32,1,3,7,6,7.0,1.0,3.0,ready (pre-generated),43.10116276,62.40167026,0.9139978943736631,0.500001251,0.30000075
+graphstate,history,1,60,43,10,32,2,3,6,10,,,,on demand (no pair generated),,,,3.300103749,2.400074498
+graphstate,history,1,60,44,10,32,3,3,10,14,7.0,1.0,3.0,"pair expired, hop ran on demand",54.50146276,67.401800261,,2.6000625,1.200036998
+graphstate,history,1,60,45,10,55,1,1,3,2,7.0,1.0,3.0,"pair expired, hop ran on demand",38.60106276,62.40167026,,1.20003,1.000029499
+graphstate,history,1,60,46,10,73,1,2,4,5,7.0,1.0,3.0,ready (pre-generated),66.60178776,66.601787761,0.9492537295269501,4.600118502,0.2000005
+graphstate,history,1,60,47,10,73,2,2,5,6,,,,on demand (no pair generated),,,,6.000136498,1.200036998
+graphstate,history,1,60,48,10,86,1,1,13,9,7.0,1.0,3.0,"pair expired, hop ran on demand",56.90151276,67.701800261,,7.0001675,1.500036998
+graphstate,history,1,60,49,10,98,1,1,0,1,7.0,1.0,3.0,"pair expired, hop ran on demand",34.50095026,62.40167026,,1.4000425,1.200041999
+graphstate,history,1,60,50,10,106,1,3,9,5,,,,on demand (no pair generated),,,,5.30013,0.500010996
+graphstate,history,1,60,51,10,106,2,3,5,4,,,,on demand (no pair generated),,,,3.9000875,2.000049497
+graphstate,history,1,60,52,10,106,3,3,4,0,,,,on demand (no pair generated),,,,2.7000625,2.500061998
+graphstate,history,1,60,53,10,205,1,2,14,13,,,,on demand (no pair generated),,,,1.9000424999999999,0.500011998
+graphstate,history,1,60,54,10,205,2,2,13,12,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011998
+graphstate,history,1,60,55,10,216,1,3,14,10,,,,on demand (no pair generated),,,,1.20003,1.000029499
+graphstate,history,1,60,56,10,216,2,3,10,6,,,,on demand (no pair generated),,,,3.8000999999999996,1.000024498
+graphstate,history,1,60,57,10,216,3,3,6,2,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011998
+graphstate,history,1,60,58,11,65,1,3,4,8,10.0,1.0,1.0,"pair expired, hop ran on demand",67.60180026,74.30195026,,0.6000125000000001,0.400011999
+graphstate,history,1,60,59,11,65,2,3,8,9,,,,on demand (no pair generated),,,,1.000025,0.800024498
+graphstate,history,1,60,60,11,65,3,3,9,10,10.0,1.0,1.0,"pair expired, hop ran on demand",73.20195026,75.901987761,,0.6000125,0.400011998
+graphstate,history,1,60,61,13,14,1,4,10,6,11.0,1.0,2.0,"pair expired, hop ran on demand",75.70197526,76.50201026,,1.70004,1.500039499
+graphstate,history,1,60,62,13,14,2,4,6,2,,,,on demand (no pair generated),,,,8.6002125,1.500036998
+graphstate,history,1,60,63,13,14,3,4,2,1,11.0,1.0,2.0,"pair expired, hop ran on demand",78.50205026,86.802262761,,0.7000124999999999,0.500011998
+graphstate,history,1,60,64,13,14,4,4,1,0,,,,on demand (no pair generated),,,,1.7000374999999999,1.500036998
+graphstate,history,1,60,65,13,78,1,2,12,8,11.0,1.0,2.0,ready (pre-generated),76.60200026,76.602000261,0.9490672862598433,0.5999912519999999,0.30000075
+graphstate,history,1,60,66,13,78,2,2,8,4,,,,on demand (no pair generated),,,,2.300073748,1.000024497
+graphstate,history,1,60,67,13,79,1,1,6,5,,,,on demand (no pair generated),,,,14.9003525,1.000024498
+graphstate,history,1,60,68,13,123,1,1,5,4,11.0,1.0,2.0,ready (pre-generated),76.10198776,76.50201026,0.9483219701406236,0.500001251,0.30000075
+graphstate,history,1,60,69,13,136,1,1,9,8,,,,on demand (no pair generated),,,,5.600127499999999,2.500061997
+graphstate,history,1,60,70,13,189,1,4,2,6,,,,on demand (no pair generated),,,,8.600215,2.800086997
+graphstate,history,1,60,71,13,189,2,4,6,5,,,,on demand (no pair generated),,,,2.9000624999999998,1.000024498
+graphstate,history,1,60,72,13,189,3,4,5,9,,,,on demand (no pair generated),,,,2.20005,0.800024497
+graphstate,history,1,60,73,13,189,4,4,9,13,11.0,1.0,2.0,"pair expired, hop ran on demand",77.50202526,90.202337761,,4.6001375,4.400136998
+graphstate,history,1,60,74,14,84,1,1,12,8,13.0,1.0,1.0,ready (pre-generated),84.30218776,94.80247526,0.9297643756193139,0.500001251,0.30000075
+graphstate,history,1,60,75,14,85,1,5,8,9,,,,on demand (no pair generated),,,,1.1000125,0.400010747
+graphstate,history,1,60,76,14,85,2,5,9,10,13.0,1.0,1.0,"pair expired, hop ran on demand",84.30220026,95.902487761,,0.6000125,0.400011998
+graphstate,history,1,60,77,14,85,3,5,10,11,,,,on demand (no pair generated),,,,9.800225,1.200036996
+graphstate,history,1,60,78,14,85,4,5,11,7,13.0,1.0,1.0,"pair expired, hop ran on demand",78.20205026,117.203050261,,12.10035,1.000024498
+graphstate,history,1,60,79,14,85,5,5,7,3,,,,on demand (no pair generated),,,,1.7000374999999999,1.500036998
+graphstate,history,1,60,80,14,93,1,2,14,15,13.0,1.0,1.0,ready (pre-generated),77.10202526,94.80247526,0.9170149541509652,0.400001001,0.2000005
+graphstate,history,1,60,81,14,93,2,2,15,11,,,,on demand (no pair generated),,,,32.300811499000005,1.500036998
+graphstate,history,1,60,82,14,99,1,4,13,14,,,,on demand (no pair generated),,,,1.4000249999999999,0.800023497
+graphstate,history,1,60,83,14,99,2,4,14,15,,,,on demand (no pair generated),,,,1.4000375,1.200036998
+graphstate,history,1,60,84,14,99,3,4,15,11,,,,on demand (no pair generated),,,,24.000612500000003,3.000074498
+graphstate,history,1,60,85,14,99,4,4,11,7,,,,on demand (no pair generated),,,,4.2001,4.000099498
+graphstate,history,1,60,86,14,111,1,3,15,14,,,,on demand (no pair generated),,,,28.0007,1.000024498
+graphstate,history,1,60,87,14,111,2,3,14,10,,,,on demand (no pair generated),,,,1.200025,1.000024498
+graphstate,history,1,60,88,14,111,3,3,10,9,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011998
+graphstate,history,1,60,89,14,128,1,2,7,6,,,,on demand (no pair generated),,,,11.400237500000001,1.000024247
+graphstate,history,1,60,90,14,128,2,2,6,5,13.0,1.0,1.0,"pair expired, hop ran on demand",92.10237526,107.202750261,,1.7000499999999998,0.500011998
+graphstate,history,1,60,91,14,147,1,2,1,5,,,,on demand (no pair generated),,,,12.400275,2.000061747
+graphstate,history,1,60,92,14,147,2,2,5,9,,,,on demand (no pair generated),,,,1.7000375,0.800024498
+graphstate,history,1,60,93,14,155,1,3,12,8,,,,on demand (no pair generated),,,,2.8000499999999997,1.500036998
+graphstate,history,1,60,94,14,155,2,3,8,4,,,,on demand (no pair generated),,,,2.20005,2.000049498
+graphstate,history,1,60,95,14,155,3,3,4,0,13.0,1.0,1.0,"pair expired, hop ran on demand",77.70202526,99.802575261,,1.7000374999999999,1.500036998
+graphstate,history,1,60,96,14,164,1,2,10,14,,,,on demand (no pair generated),,,,30.50075,0.400011998
+graphstate,history,1,60,97,14,164,2,2,14,13,,,,on demand (no pair generated),,,,1.200025,1.000024498
+graphstate,history,1,60,98,14,171,1,1,11,10,,,,on demand (no pair generated),,,,34.40085,1.500036998
+graphstate,history,1,60,99,14,183,1,2,1,2,13.0,1.0,1.0,ready (pre-generated),89.80232526,94.80247526,0.9399919510286558,0.400001001,0.2000005
+graphstate,history,1,60,100,14,183,2,2,2,6,,,,on demand (no pair generated),,,,11.600248999,0.400011998
+graphstate,history,1,60,101,14,184,1,1,3,7,,,,on demand (no pair generated),,,,22.400575,10.800336998
+graphstate,history,1,60,102,14,186,1,1,9,8,,,,on demand (no pair generated),,,,10.1002125,1.000024498
+graphstate,history,1,60,103,14,219,1,2,9,8,,,,on demand (no pair generated),,,,7.700162499999999,2.500061998
+graphstate,history,1,60,104,14,219,2,2,8,4,,,,on demand (no pair generated),,,,1.200025,1.000024498
+graphstate,history,1,60,105,14,223,1,1,11,15,,,,on demand (no pair generated),,,,35.0008625,0.400011998
+graphstate,history,1,60,106,15,124,1,1,0,1,14.0,1.0,1.0,ready (pre-generated),109.40281276,129.80333776,0.9122295616436785,0.400001001,0.2000005
+graphstate,history,1,60,107,15,163,1,1,5,1,,,,on demand (no pair generated),,,,3.4000625,2.000049498
+graphstate,history,1,60,108,15,191,1,3,6,5,14.0,1.0,1.0,ready (pre-generated),110.10281276,129.80333776,0.9132899766062176,0.500001251,0.30000075
+graphstate,history,1,60,109,15,191,2,3,5,4,,,,on demand (no pair generated),,,,0.7000112489999999,0.500010746
+graphstate,history,1,60,110,15,191,3,3,4,8,14.0,1.0,1.0,"pair expired, hop ran on demand",105.90271276,131.003350261,,0.6000125,0.400011998
+graphstate,history,1,60,111,17,103,1,3,15,11,15.0,1.0,2.0,ready (pre-generated),131.00336276,133.20341026,0.9449780101651365,0.500001251,0.30000075
+graphstate,history,1,60,112,17,103,2,3,11,10,,,,on demand (no pair generated),,,,14.900363749,5.500136998
+graphstate,history,1,60,113,17,103,3,3,10,9,15.0,1.0,2.0,"pair expired, hop ran on demand",132.00338776,148.60377526,,1.7000375,1.500036999
+graphstate,history,1,60,114,17,119,1,2,8,4,15.0,1.0,2.0,ready (pre-generated),133.80341276,133.803412761,0.9490672862598433,1.100003752,0.30000075
+graphstate,history,1,60,115,17,119,2,2,4,5,,,,on demand (no pair generated),,,,5.700161248,2.400074498
+graphstate,history,1,60,116,17,126,1,2,7,6,15.0,1.0,2.0,ready (pre-generated),131.00335026,133.20341026,0.9449779869992029,0.500001251,0.30000075
+graphstate,history,1,60,117,17,126,2,2,6,5,,,,on demand (no pair generated),,,,3.700088749,3.500088247
+graphstate,history,1,60,118,17,205,1,5,12,13,15.0,1.0,2.0,ready (pre-generated),133.60345026,133.603450261,0.9492537295269501,0.800041002,0.2000005
+graphstate,history,1,60,119,17,205,2,5,13,14,,,,on demand (no pair generated),,,,2.200061498,2.000060996
+graphstate,history,1,60,120,17,205,3,5,14,10,,,,on demand (no pair generated),,,,6.0001125,2.000049497
+graphstate,history,1,60,121,17,205,4,5,10,6,,,,on demand (no pair generated),,,,0.7000124999999999,0.500011997
+graphstate,history,1,60,122,17,205,5,5,6,2,,,,on demand (no pair generated),,,,2.20005,2.000049498
+graphstate,history,1,60,123,18,161,1,2,2,6,17.0,1.0,1.0,"pair expired, hop ran on demand",138.40352526,150.30381276,,0.6000125000000001,0.400011999
+graphstate,history,1,60,124,18,161,2,2,6,10,,,,on demand (no pair generated),,,,2.3000625,2.000061998
+graphstate,history,1,60,125,18,197,1,4,4,0,17.0,1.0,1.0,ready (pre-generated),142.70363776,150.30381276,0.9350418046006014,0.500001251,0.30000075
+graphstate,history,1,60,126,18,197,2,4,0,1,,,,on demand (no pair generated),,,,1.4000362489999998,1.200035748
+graphstate,history,1,60,127,18,197,3,4,1,2,,,,on demand (no pair generated),,,,0.6000125000000001,0.400011999
+graphstate,history,1,60,128,18,197,4,4,2,3,,,,on demand (no pair generated),,,,1.8000500000000001,1.600049499
+graphstate,history,1,60,129,18,218,1,1,14,10,,,,on demand (no pair generated),,,,0.7000125,0.500011999
+graphstate,history,1,60,130,22,178,1,3,15,14,18.0,1.0,4.0,ready (pre-generated),152.70386276,154.60394276,0.9455341547459188,0.500001251,0.30000075
+graphstate,history,1,60,131,22,178,2,3,14,13,,,,on demand (no pair generated),,,,1.700043749,1.500043247
+graphstate,history,1,60,132,22,178,3,3,13,9,18.0,1.0,4.0,"pair expired, hop ran on demand",151.00382526,156.803987761,,1.200025,1.000024498
+graphstate,history,1,60,133,22,191,1,3,8,4,18.0,1.0,4.0,ready (pre-generated),152.00383776,154.60394276,0.9442369890626782,0.500001251,0.30000075
+graphstate,history,1,60,134,22,191,2,3,4,5,,,,on demand (no pair generated),,,,5.100131249,2.000061997
+graphstate,history,1,60,135,22,191,3,3,5,6,18.0,1.0,4.0,"pair expired, hop ran on demand",156.60398776,160.20407526,,0.6000125000000001,0.400011999

@@ -1,0 +1,94 @@
+\section{Graph state, history routing}
+136 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.738 & 3.95 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.799 & 2.35 & 0.9421 & 74.6 & 51.7 & 29.72 & 70.3\\
+ACGP & 0.799 & 2.35 & 0.9421 & 74.6 & 51.7 & 29.72 & 70.3\\
+Dynamic (8) & 0.716 & 2.00 & 0.9449 & 74.3 & 54.3 & 1.34 & 98.7\\
+Dynamic ($\infty$) & 0.681 & 1.95 & 0.9448 & 77.2 & 60.3 & 2.14 & 97.9\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_headline_8.pdf}
+\caption{Graph state, history routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.744 & 4.20 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 1.398 & 5.00 & 0.9414 & 61.4 & 30.2 & 19.72 & 80.3\\
+ACGP & 1.398 & 5.00 & 0.9414 & 61.4 & 30.2 & 19.72 & 80.3\\
+Dynamic (4) & 0.924 & 2.90 & 0.9447 & 68.8 & 46.6 & 2.42 & 97.6\\
+Dynamic ($\infty$) & 0.681 & 1.95 & 0.9448 & 77.2 & 60.3 & 2.14 & 97.9\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_headline_4all.pdf}
+\caption{Graph state, history routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 3.791 & 1.986 & 1.774 & 1.744 & 1.738 & 1.738 & 1.738\\
+CGP & 3.791 & 2.374 & 1.763 & 1.398 & 0.802 & 0.799 & 0.555\\
+ACGP & 3.791 & 2.374 & 1.763 & 1.398 & 0.802 & 0.799 & 0.555\\
+Dynamic & 4.994 & 1.782 & 1.176 & 0.924 & 0.745 & 0.716 & 0.681\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_k_latency_ms.pdf}
+\caption{Graph state, history routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9450 & 0.9424 & 0.9414 & 0.9435 & 0.9421 & 0.9475\\
+ACGP & 0.9498 & 0.9450 & 0.9424 & 0.9414 & 0.9435 & 0.9421 & 0.9475\\
+Dynamic & 0.9481 & 0.9450 & 0.9450 & 0.9447 & 0.9447 & 0.9449 & 0.9448\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_k_fidelity.pdf}
+\caption{Graph state, history routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 23.2 & 46.7 & 61.4 & 70.6 & 74.6 & 90.8\\
+ACGP & 0.0 & 23.2 & 46.7 & 61.4 & 70.6 & 74.6 & 90.8\\
+Dynamic & 13.2 & 46.0 & 59.9 & 68.8 & 74.6 & 74.3 & 77.2\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_k_hop_coverage_pct.pdf}
+\caption{Graph state, history routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 16.53 & 18.55 & 19.72 & 22.28 & 29.72 & 72.91\\
+ACGP & -- & 16.53 & 18.55 & 19.72 & 22.28 & 29.72 & 72.91\\
+Dynamic & 55.00 & 11.11 & 2.83 & 2.42 & 0.88 & 1.34 & 2.14\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_k_wastage_pct.pdf}
+\caption{Graph state, history routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 83.5 & 81.4 & 80.3 & 77.7 & 70.3 & 27.1\\
+ACGP & -- & 83.5 & 81.4 & 80.3 & 77.7 & 70.3 & 27.1\\
+Dynamic & 45.0 & 88.9 & 97.2 & 97.6 & 99.1 & 98.7 & 97.9\\
+\bottomrule\end{tabular}
+\caption{Graph state, history routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{graphstate_history_k_utilisation_pct.pdf}
+\caption{Graph state, history routing: utilisation for every K.}\end{figure}
