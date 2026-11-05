@@ -37,8 +37,8 @@ HEADLINES = [
      [("ODG", "8", "ODG"), ("CGP", "8", "CGP"), ("ACGP", "8", "ACGP"), ("Dynamic", "8", "Dynamic (8)"),
       ("Dynamic", "inf", "Dynamic (inf)")]),
     ("4all", "4 memories per core, all 4 for pre-generation",
-     "ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and every strategy may fill all 4 with pre-generated "
-     "pairs (CGP and ACGP cache 4, not $\\lfloor0.75\\cdot4\\rfloor=3$ as in the $K$ sweep); Dynamic~($\\infty$) as above.",
+     "ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; "
+     "CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\\infty$) as above.",
      [("ODG", "4all", "ODG"), ("CGP", "4all", "CGP"), ("ACGP", "4all", "ACGP"), ("Dynamic", "4all", "Dynamic (4)"),
       ("Dynamic", "inf", "Dynamic (inf)")]),
 ]

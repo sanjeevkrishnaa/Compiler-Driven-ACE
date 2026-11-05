@@ -4,8 +4,8 @@ Final setting (decided 2026-11-05): 4x4 mesh, 224 logical qubits (16 x 14), 8 me
 Dynamic planner lead 1 / lookahead 2 / age limit 10 / launch budget 8, history routing over ALL past layers (cumulative,
 routing capacity 8), XY and history routes, strategies ODG, CGP, ACGP, Dynamic, seeds 60 and 61.
 Memories per core K = 1, 2, 3, 4, 6, 8, infinity (64), plus "4all" (4 memories, all 4 for pre-generation).
-CGP and ACGP cache floor(0.75 K) pairs. At 4all they starve, so they are stopped after 30 minutes and marked
-`did_not_finish.txt` (shown as n/a).
+CGP and ACGP cache floor(0.75 K) pairs, so at 4 memories (K=4 and 4all) they cache at most 3 (caching all 4 starves
+them and they never finish). At 4all only ODG and Dynamic use all 4 memories.
 
 ## One-time setup
     BTP="/Users/dhruvrpansuriya/Documents/IITG Acad/Sem 7/BTP"
@@ -34,8 +34,7 @@ Each command, for its benchmark: routes the frozen mapping (XY, history) -> runs
 
 ## Results
 * Master workbook: `results/benchmark_study_2026-11-04/benchmark_study.xlsx` (README, Summary, PerSeed, one tab per metric,
-  per-hop lead tabs, Checks, one tab per benchmark and route). The Checks tab must show: runs missing = 0 (4 per
-  benchmark are expected for CGP/ACGP at 4all), completion < 1: 0, audit violations: 0.
+  per-hop lead tabs, Checks, one tab per benchmark and route). The Checks tab must show: runs missing = 0, completion < 1: 0, audit violations: 0.
 * Report with tables and graphs: `docs/latex/benchmark_study/main.pdf` (tables and figures in `generated/`, `figures/`).
 * Per-hop data: `results/benchmark_study_2026-11-04/per_hop/`, raw runs: `output/benchmark_study/runs/`, log:
   `output/benchmark_study/run_everything.log`.

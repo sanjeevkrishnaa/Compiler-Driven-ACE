@@ -44,8 +44,10 @@ CAP_MIN = 30            # wall-clock cap for CGP/ACGP at 4all
 
 def memories(k: str, strategy: str = "dynamic") -> tuple[int, int]:
     """(physical memories per core, of which pre-generation may use) for one K and strategy."""
-    if k.endswith("all"):                 # every memory available to pre-generation, in every strategy
+    if k.endswith("all"):                 # every memory available to pre-generation, except CGP/ACGP
         total = int(k[:-3])
+        if strategy in ("continuous", "adaptive-continuous"):
+            return total, (3 * total) // 4     # CGP/ACGP cache at most 3 of 4 (all 4 starves them; decided 2026-11-05)
         return total, total
     total = INFINITE if k == "inf" else int(k)
     if strategy in ("continuous", "adaptive-continuous"):
@@ -85,7 +87,7 @@ def run(job) -> tuple[str, int, float]:
     start = time.time()
     with (output / "run.log").open("w") as log:
         # CGP/ACGP with every memory cached (4all) starve requests and may never finish: cap them and record it
-        cap = CAP_MIN * 60 if (k.endswith("all") and strategy in ("continuous", "adaptive-continuous")) else None
+        cap = None                      # (CGP/ACGP at 4all now cache 3 of 4 and finish; no wall-clock cap needed)
         try:
             code = subprocess.run(command(benchmark, route, k, strategy, output), cwd=ROOT, env=env,
                                   stdout=log, stderr=subprocess.STDOUT, timeout=cap).returncode
