@@ -1,0 +1,94 @@
+\section{BV, XY routing}
+23 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.550 & 3.40 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.648 & 1.60 & 0.9447 & 73.9 & 60.7 & 72.36 & 27.6\\
+ACGP & 0.648 & 1.60 & 0.9447 & 73.9 & 60.7 & 72.36 & 27.6\\
+Dynamic (8) & 0.691 & 1.70 & 0.9484 & 65.2 & 53.6 & 5.56 & 94.4\\
+Dynamic ($\infty$) & 0.691 & 1.70 & 0.9484 & 65.2 & 53.6 & 5.56 & 94.4\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_headline_8.pdf}
+\caption{BV, XY routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.550 & 3.40 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.811 & 2.40 & 0.9410 & 67.4 & 46.4 & 56.67 & 43.3\\
+ACGP & 0.811 & 2.40 & 0.9410 & 67.4 & 46.4 & 56.67 & 43.3\\
+Dynamic (4) & 0.691 & 1.70 & 0.9484 & 65.2 & 53.6 & 5.56 & 94.4\\
+Dynamic ($\infty$) & 0.691 & 1.70 & 0.9484 & 65.2 & 53.6 & 5.56 & 94.4\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_headline_4all.pdf}
+\caption{BV, XY routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 1.550 & 1.550 & 1.550 & 1.550 & 1.550 & 1.550 & 1.550\\
+CGP & 1.550 & 1.228 & 0.948 & 0.811 & 0.526 & 0.648 & 0.504\\
+ACGP & 1.550 & 1.228 & 0.948 & 0.811 & 0.526 & 0.648 & 0.504\\
+Dynamic & 2.065 & 1.065 & 0.691 & 0.691 & 0.691 & 0.691 & 0.691\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_k_latency_ms.pdf}
+\caption{BV, XY routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9460 & 0.9432 & 0.9410 & 0.9434 & 0.9447 & 0.9473\\
+ACGP & 0.9498 & 0.9460 & 0.9432 & 0.9410 & 0.9434 & 0.9447 & 0.9473\\
+Dynamic & 0.9493 & 0.9477 & 0.9484 & 0.9484 & 0.9484 & 0.9484 & 0.9484\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_k_fidelity.pdf}
+\caption{BV, XY routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 23.9 & 45.7 & 67.4 & 84.8 & 73.9 & 93.5\\
+ACGP & 0.0 & 23.9 & 45.7 & 67.4 & 84.8 & 73.9 & 93.5\\
+Dynamic & 43.5 & 63.0 & 65.2 & 65.2 & 65.2 & 65.2 & 65.2\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_k_hop_coverage_pct.pdf}
+\caption{BV, XY routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 46.43 & 54.19 & 56.67 & 57.98 & 72.36 & 90.97\\
+ACGP & -- & 46.43 & 54.19 & 56.67 & 57.98 & 72.36 & 90.97\\
+Dynamic & 37.50 & 15.00 & 5.56 & 5.56 & 5.56 & 5.56 & 5.56\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_k_wastage_pct.pdf}
+\caption{BV, XY routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 53.6 & 45.8 & 43.3 & 42.0 & 27.6 & 9.0\\
+ACGP & -- & 53.6 & 45.8 & 43.3 & 42.0 & 27.6 & 9.0\\
+Dynamic & 62.5 & 85.0 & 94.4 & 94.4 & 94.4 & 94.4 & 94.4\\
+\bottomrule\end{tabular}
+\caption{BV, XY routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{bv_xy_k_utilisation_pct.pdf}
+\caption{BV, XY routing: utilisation for every K.}\end{figure}
