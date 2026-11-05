@@ -1,0 +1,94 @@
+\section{DJ, history routing}
+30 hops; seeds 60, 61; every run completed every hop and passed the physical audit (Checks sheet of the workbook).
+\subsection{Headline: 8 memories per core, 6 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(8) use 8 memories per core, of which 6 may hold pre-generated pairs; Dynamic~($\infty$) uses 64, which no core ever fills.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.777 & 3.95 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.643 & 1.45 & 0.9427 & 71.7 & 62.5 & 65.73 & 34.3\\
+ACGP & 0.643 & 1.45 & 0.9427 & 71.7 & 62.5 & 65.73 & 34.3\\
+Dynamic (8) & 1.008 & 2.85 & 0.9478 & 56.7 & 53.1 & 2.50 & 97.5\\
+Dynamic ($\infty$) & 1.008 & 2.85 & 0.9478 & 56.7 & 53.1 & 2.50 & 97.5\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing, 8 memories per core, 6 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_headline_8.pdf}
+\caption{DJ, history routing, 8 memories per core, 6 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Headline: 4 memories per core, all 4 for pre-generation}
+ODG, CGP, ACGP and Dynamic~(4) use 4 memories per core and ODG and Dynamic may use all 4 for pre-generation; CGP and ACGP cache at most 3 (all 4 starves them), the same as in the $K$ sweep; Dynamic~($\infty$) as above.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Configuration & Latency (ms) & p95 (ms) & Fidelity & Hop cov. (\%) & Chain full (\%) & Wastage (\%) & Utilisation (\%)\\\midrule
+ODG & 1.777 & 3.95 & 0.9498 & 0.0 & 0.0 & -- & --\\
+CGP & 0.858 & 3.10 & 0.9377 & 68.3 & 50.0 & 49.44 & 50.6\\
+ACGP & 0.858 & 3.10 & 0.9377 & 68.3 & 50.0 & 49.44 & 50.6\\
+Dynamic (4) & 1.008 & 2.85 & 0.9478 & 56.7 & 53.1 & 2.50 & 97.5\\
+Dynamic ($\infty$) & 1.008 & 2.85 & 0.9478 & 56.7 & 53.1 & 2.50 & 97.5\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing, 4 memories per core, all 4 for pre-generation: mean of the seeds.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_headline_4all.pdf}
+\caption{DJ, history routing, 4 memories per core, all 4 for pre-generation. Bars are the mean of the seeds, whiskers the seed range; fidelity bars start at zero, so read the labels.}\end{figure}
+\subsection{Memories per core K}
+Dynamic may use all K memories, except 6 of 8 at $K=8$; CGP and ACGP cache $\lfloor 0.75K\rfloor$ pairs (so at $K=1$ they are ODG). $K=\infty$ is 64 memories.
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Latency & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 1.777 & 1.777 & 1.777 & 1.777 & 1.777 & 1.777 & 1.777\\
+CGP & 1.777 & 1.457 & 1.152 & 0.858 & 0.612 & 0.643 & 0.508\\
+ACGP & 1.777 & 1.457 & 1.152 & 0.858 & 0.612 & 0.643 & 0.508\\
+Dynamic & 2.167 & 1.375 & 1.008 & 1.008 & 1.008 & 1.008 & 1.008\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing: latency (mean latency per hop (ms)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_k_latency_ms.pdf}
+\caption{DJ, history routing: latency for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Fidelity & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498 & 0.9498\\
+CGP & 0.9498 & 0.9433 & 0.9386 & 0.9377 & 0.9392 & 0.9427 & 0.9473\\
+ACGP & 0.9498 & 0.9433 & 0.9386 & 0.9377 & 0.9392 & 0.9427 & 0.9473\\
+Dynamic & 0.9493 & 0.9470 & 0.9478 & 0.9478 & 0.9478 & 0.9478 & 0.9478\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing: fidelity (mean delivered EPR fidelity) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_k_fidelity.pdf}
+\caption{DJ, history routing: fidelity for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Coverage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0\\
+CGP & 0.0 & 26.7 & 45.0 & 68.3 & 80.0 & 71.7 & 90.0\\
+ACGP & 0.0 & 26.7 & 45.0 & 68.3 & 80.0 & 71.7 & 90.0\\
+Dynamic & 36.7 & 46.7 & 56.7 & 56.7 & 56.7 & 56.7 & 56.7\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing: coverage (hops with a ready pair (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_k_hop_coverage_pct.pdf}
+\caption{DJ, history routing: coverage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Wastage & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 40.18 & 47.88 & 49.44 & 52.33 & 65.73 & 91.10\\
+ACGP & -- & 40.18 & 47.88 & 49.44 & 52.33 & 65.73 & 91.10\\
+Dynamic & 38.89 & 14.64 & 2.50 & 2.50 & 2.50 & 2.50 & 2.50\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing: wastage (pairs generated but not used (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_k_wastage_pct.pdf}
+\caption{DJ, history routing: wastage for every K.}\end{figure}
+\begin{table}[H]\centering\small
+\begin{tabular}{lrrrrrrr}\toprule
+Utilisation & $K=1$ & $K=2$ & $K=3$ & $K=4$ & $K=6$ & $K=8$ & $K=\infty$\\\midrule
+ODG & -- & -- & -- & -- & -- & -- & --\\
+CGP & -- & 59.8 & 52.1 & 50.6 & 47.7 & 34.3 & 8.9\\
+ACGP & -- & 59.8 & 52.1 & 50.6 & 47.7 & 34.3 & 8.9\\
+Dynamic & 61.1 & 85.4 & 97.5 & 97.5 & 97.5 & 97.5 & 97.5\\
+\bottomrule\end{tabular}
+\caption{DJ, history routing: utilisation (pairs used / pairs generated (\%)) for every K.}\end{table}
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{dj_history_k_utilisation_pct.pdf}
+\caption{DJ, history routing: utilisation for every K.}\end{figure}
