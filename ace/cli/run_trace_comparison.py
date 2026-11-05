@@ -213,7 +213,8 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         "compiler_not_ready_requests", "late_compiler_pair_uses",
         "on_demand_fallbacks", "on_demand_fallback_rate",
         "generated_compiler_pairs", "utilized_compiler_pairs",
-        "expired_compiler_pairs", "remaining_compiler_pairs",
+        "expired_compiler_pairs", "cancelled_compiler_pairs", "remaining_compiler_pairs",
+        "compiler_cancellation_percentage",
         "compiler_expiry_percentage", "compiler_waste_percentage",
         "average_fidelity_at_creation", "average_fidelity_at_utilization", "average_storage_time_ms",
     )
@@ -249,9 +250,9 @@ def main() -> None:
     refill.add_argument("--no-refill-on-release", action="store_false", dest="refill_on_release",
                         help="use only the 1 ms preparation retry fallback")
     parser.set_defaults(refill_on_release=DEFAULT_COMPILER_POLICY.refill_on_release)
-    parser.add_argument("--preparation-priority", choices=("trace", "dependency", "chain-length"),
+    parser.add_argument("--preparation-priority", choices=("trace",),
                         default=DEFAULT_COMPILER_POLICY.preparation_priority,
-                        help="order preparation by trace, dependency progress, or longest routed hop chain first")
+                        help="allocate and launch compiler preparation in trace-file order")
     parser.add_argument("--borrow-compiler-pairs", action="store_true",
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
     demand_guard = parser.add_mutually_exclusive_group()

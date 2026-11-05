@@ -506,18 +506,23 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         memories = [self.memo_arr[card.memory_index] for card in self.timecards
                     if any(item is reservation for item in card.reservations)]
         lease = self._reservation_leases.get(id(reservation))
-        if lease is None or lease["released"]:
+        if compiler and lease is not None and lease["released"]:
+            return  # A late approval must not resurrect cancelled generation.
+        fresh = lease is None or lease["released"]
+        if fresh:
             lease = {"reservation": reservation, "memories": memories,
                      "events": [], "compiler": compiler, "released": False}
         self._reservation_leases[id(reservation)] = lease
-        self.accepted_reservations.append(reservation)
+        if fresh:
+            self.accepted_reservations.append(reservation)
         for rule in rules:
             event = Event(reservation.start_time,
                           Process(self.owner.resource_manager, "load", [rule]))
             self._track_reservation_event(reservation, event)
-        event = Event(reservation.end_time,
-                      Process(self, "release_reservation", [reservation, "reservation_expired"]))
-        self._track_reservation_event(reservation, event)
+        if fresh:
+            event = Event(reservation.end_time,
+                          Process(self, "release_reservation", [reservation, "reservation_expired"]))
+            self._track_reservation_event(reservation, event)
 
     def load_rules(self, rules, reservation):
         """Own timeout events so early completion cannot reset reused memory."""
@@ -556,8 +561,10 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
             index = manager.memory_manager.get_info_by_memory(memory).index
             if app is not None and app.memo_to_reservation.get(index) is reservation:
                 app.memo_to_reservation.pop(index)
-            adaptive.note_memory_expiration(memory, reason=reason)
-            manager.update(None, memory, MemoryInfo.RAW)
+            # A cancelled future booking does not own the current quantum state.
+            if timeline.now() >= reservation.start_time:
+                adaptive.note_memory_expiration(memory, reason=reason)
+                manager.update(None, memory, MemoryInfo.RAW)
         if held:
             notify_release(self.owner)
         return True

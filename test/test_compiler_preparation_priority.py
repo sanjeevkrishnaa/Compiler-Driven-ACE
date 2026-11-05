@@ -10,24 +10,36 @@ class PreparationPriorityTests(unittest.TestCase):
         self.events, self.calls = [], []
         clock = SimpleNamespace(now=lambda: 10, schedule=self.events.append, remove_event=lambda e: None)
         requests = (CompilerRequest(0, 4, 0, 0, 0, 1),
-                    CompilerRequest(1, 4, 1, 0, 1, 2),
-                    CompilerRequest(2, 4, 2, 1, 0, 1))
+                    CompilerRequest(1, 4, 1, 1, 0, 1),
+                    CompilerRequest(2, 4, 2, 1, 1, 2))
         adaptive = SimpleNamespace(request_compiler_pair=lambda *args: self.calls.append(args))
         return CompilerPreGenerationController(
-            timeline=clock, routers={'router_0_0': SimpleNamespace(adaptive_continuous=adaptive)},
+            timeline=clock, routers={name: SimpleNamespace(adaptive_continuous=adaptive) for name in ('router_0_0', 'router_0_1')},
             requests=requests, schedule=(), strategy='dynamic', columns=2,
             planner_blocked=0, planner_peak_memory=None, fidelity=.01,
             reservation_duration_ms=50, **kwargs)
 
-    def test_unstarted_predecessor_defers_later_hop_behind_independent_first_hop(self):
-        c = self.controller(preparation_priority='dependency')
-        self.assertEqual(sorted([1, 2, 0], key=c._preparation_key), [0, 2, 1])
-        c.deadlines[0] = 5
-        self.assertEqual(sorted([1, 2], key=c._preparation_key), [1, 2])
+    def test_launches_shorter_earlier_trace_request_before_longer_chain(self):
+        c = self.controller()
+        calls = []
+        c.by_generation_layer[3] = [2, 1, 0]
+        c.launch_preparation = calls.append
+        c.on_original_layer(3)
+        self.assertEqual(calls, [0, 1, 2])
 
-    def test_longer_routed_chain_has_preparation_priority(self):
-        c = self.controller(preparation_priority='chain-length')
-        self.assertEqual(sorted([2, 1, 0], key=c._preparation_key), [0, 1, 2])
+    def test_refill_preserves_trace_order_despite_pending_insertion_order(self):
+        c = self.controller()
+        c.pending_preparations = {rid: {} for rid in [2, 1, 0]}
+        c.preparation_retry_events = {rid: object() for rid in [2, 1, 0]}
+        calls = []
+        c.retry_preparation = calls.append
+        c._refill_preparations()
+        self.assertEqual(calls, [0, 1, 2])
+
+    def test_non_trace_preparation_priority_is_rejected(self):
+        for priority in ('dependency', 'chain-length'):
+            with self.subTest(priority=priority), self.assertRaisesRegex(ValueError, 'must be trace'):
+                self.controller(preparation_priority=priority)
 
     def test_release_burst_coalesces_and_does_not_retry_inflight_handshake(self):
         c = self.controller(refill_on_release=True)

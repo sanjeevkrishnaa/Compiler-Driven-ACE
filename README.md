@@ -142,6 +142,23 @@ layer timing model, with the fidelity/storage tradeoff reported explicitly.
 - [Original QFT-96 final report](docs/latex/qft96_final/README.md)
 - [Historical October 25 report](docs/latex/oct25_pre_golden/README.md)
 
+## Compiler preparation cleanup
+
+Completing a request cancels its unused compiler preparation and sends cleanup to
+the peer over the classical channel. Pending approvals cannot restart cancelled
+generation. Already generated pairs discarded by this cleanup are reported as
+`cancelled_compiler_pairs`, separately from physical/reservation expiry, and remain
+included in compiler waste.
+
+The default compiler preparation layer is exactly the second preceding
+communication-active layer (L-2); both lead and lookback are 2.
+
+## Compiler preparation order
+
+Compiler memory allocation, preparation launch, and refill follow trace-file order.
+Longer routed paths do not receive preparation priority. Capacity and current-demand
+guards still apply; blocked candidates can be skipped so other feasible work proceeds.
+
 ## Current preparation timing
 
 Dynamic preparation uses the original logical-layer lookback: the full-chain

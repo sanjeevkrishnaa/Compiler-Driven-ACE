@@ -69,7 +69,7 @@ def worker():
         pairs = [p for p in self.generated_entanglement_pairs if memory.name in (p[0][1], p[1][1])]
         original_expire(self, memory, reason)
         for p in pairs:
-            finish(p, 'expired_' + reason, self.owner.timeline.now())
+            finish(p, ('cancelled_' if reason == 'request_completed' else 'expired_') + reason, self.owner.timeline.now())
     AdaptiveContinuousProtocol.note_memory_expiration = expire
     original_release = AdaptiveContinuousProtocol.adaptive_memory_used_minus_one
     def release(self, memory):
@@ -150,6 +150,8 @@ def prepare(workload):
 def collect():
     rows = []
     for path in sorted((OUT / 'runs').glob('*/*/*/summary.csv')):
+        if not (path.parent / 'pair_lifecycle.json').exists():
+            continue  # A stopped worker may have written its summary before its final checkpoint.
         row = next(csv.DictReader(path.open()))
         workload, route, case = path.parent.relative_to(OUT / 'runs').parts
         life = json.loads((path.parent / 'pair_lifecycle.json').read_text())

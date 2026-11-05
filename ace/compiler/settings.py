@@ -18,15 +18,15 @@ class CompilerPolicyDefaults:
     total_memories: int = 8
     compiler_memories: int = 6
     generation_capacity: int = 8
-    planner_lead_layers: int = 1
-    dynamic_lookahead_layers: int = 8
+    planner_lead_layers: int = 2
+    dynamic_lookahead_layers: int = 2
     coherence_time_layers: float = 10
     empty_layer_gap_ms: float = 0.00001
     dynamic_layer_basis: str = "active"
     scheduler: str = "per-qubit"
     demand_first: bool = True
     refill_on_release: bool = True
-    preparation_priority: str = "chain-length"
+    preparation_priority: str = "trace"
 
 
 DEFAULT_COMPILER_POLICY = CompilerPolicyDefaults()

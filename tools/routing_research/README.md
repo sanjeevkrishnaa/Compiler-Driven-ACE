@@ -14,7 +14,7 @@ barriers, and memory budget unchanged.
 | `xy` | First coordinate, then second coordinate (core = 4 × first + second). |
 | `yx` | Second coordinate, then first. |
 | `greedy` | Longest migrations first; among shortest paths, minimize incremental demand above C=4, then squared core load. |
-| `history` | Same greedy rule, with 0.1 × cumulative prior-layer core visits added to the secondary cost. |
+| `history` | Same greedy rule, with 0.1 × core visits in the previous **two communication-active layers** added to the secondary cost. Current-layer load is still counted independently. |
 | `minexcess` | Joint MILP selection among shortest paths; minimize total core demand above C=4, then hops. |
 | `minhop` | Joint MILP among shortest paths, counting each hop endpoint; an internal relay counts twice to model incoming and outgoing pre-generation memories. |
 | `detour2` | Same MILP, allowing paths up to shortest + two hops. |
@@ -24,6 +24,18 @@ simulator outcomes. The MILP uses a two-second per-layer timeout and reports
 unproved layers. The existing optimizer retains its supplied shortest XY paths
 when there is no overload or no improving solution. Its small hop penalty breaks
 ties; equal-cost shortest solutions can vary with solver versions.
+
+History now defaults to a rolling two-active-layer window. This measures planned
+route visits, **not measured physical memory occupancy**, and runs at compilation
+before SeQUeNCe execution. Empty layers do not age the default window, matching
+the compiler's active-layer preparation axis. Use `--history-layer-basis logical`
+to include empty layers in the window, or `--history-window-layers 0` to reproduce
+the old cumulative policy. The weight (0.1), current-layer objective, shortest-path
+restriction, stable tie breaking, and routing reference capacity are unchanged.
+Each newly built trace has a `routing_policy.json` sidecar with its policy and
+trace hash. Existing frozen traces/results are **not** rewritten; dated results
+and the current presentation study still use cumulative History. Build into a
+fresh output folder and rerun simulations to measure the rolling policy's impact.
 
 Generate new 96-qubit MQT inputs with T-HQA (192 physical slots: eight data and
 four communication slots/core, at least one initial data vacancy). The initial

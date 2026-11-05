@@ -1,7 +1,7 @@
 """Reproducible fixed-placement routing comparison; build, simulate, or plot."""
 from __future__ import annotations
 import argparse
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import csv
 import hashlib
@@ -63,7 +63,42 @@ def choose(records, algorithm, history, capacity=4):
         load.update(selected[i])
     return selected, True
 
-def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS, capacity=4):
+def route_layers(groups, algorithm, capacity=4, history_window_layers=2,
+                 history_layer_basis='active'):
+    """Route with current-layer load and bounded *prior* route-visit history.
+
+    This is compile-time demand, not live SeQUeNCe memory occupancy. By default
+    only the two preceding communication-active layers contribute; empty layers
+    do not age the window. A zero window restores the cumulative legacy policy.
+    """
+    if not isinstance(history_window_layers, int) or history_window_layers < 0:
+        raise ValueError('history window must be a non-negative integer')
+    if history_layer_basis not in ('active', 'logical'):
+        raise ValueError('history layer basis must be active or logical')
+    history = Counter()
+    recent = deque()
+    for layer, records in sorted(groups.items()):
+        if not records:
+            continue
+        if history_window_layers:
+            while recent and (
+                len(recent) > history_window_layers
+                if history_layer_basis == 'active'
+                else layer - recent[0][0] > history_window_layers
+            ):
+                _, visits = recent.popleft()
+                history.subtract(visits)
+                history += Counter()  # Remove zero counts after eviction.
+        paths, optimal = choose(records, algorithm, history, capacity)
+        visits = Counter(c for path in paths for c in path)
+        history.update(visits)
+        if history_window_layers:
+            recent.append((layer, visits))
+        yield layer, records, paths, optimal
+
+
+def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS, capacity=4,
+          history_window_layers=2, history_layer_basis='active'):
     rows = []; manifests = []
     if inputs is not None: inputs=inputs.resolve()
     for workload in workloads:
@@ -89,21 +124,28 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS, capacity
                                migrations=len(records), source=str(source.relative_to(ROOT)),
                                sha256=hashlib.sha256((source/'requests.txt').read_bytes()).hexdigest()))
             for algorithm in algorithms:
-                start=time.perf_counter(); routes={}; qs={}; history=Counter(); unproved=0
+                start=time.perf_counter(); routes={}; qs={}; unproved=0
                 core=np.zeros((trace.layers,16)); link=Counter(); endpoint_bound=0
-                for layer, rs in sorted(groups.items()):
-                    paths, optimal = choose(rs, algorithm, history, capacity); unproved += not optimal
+                for layer, rs, paths, optimal in route_layers(
+                        groups, algorithm, capacity, history_window_layers, history_layer_basis):
+                    unproved += not optimal
                     for r,p in zip(rs,paths):
                         assert p[0]==r['source_core'] and p[-1]==r['destination_core']
                         assert len(set(p))==len(p) and all(b in ADJ[a] for a,b in zip(p,p[1:]))
                         assert len(p)-1 <= ro.shortest_length(ADJ,p[0],p[-1])+(2 if algorithm=='detour2' else 0)
                         for c in p: core[layer,c]+=1
                         link.update(tuple(sorted((a,b))) for a,b in zip(p,p[1:]))
-                    history.update(c for p in paths for c in p)
                     endpoint_bound += ro.lower_bound(paths,capacity,'route')
                     routes[layer]=paths; qs[layer]=[r['qubit'] for r in rs]
                 dest=out/'traces'/workload/f'seed_{seed}'/algorithm
                 ro.write_trace(trace,routes,qs,dest/'requests.txt')
+                (dest/'routing_policy.json').write_text(json.dumps(dict(
+                    algorithm=algorithm, capacity=capacity,
+                    history_window_layers=history_window_layers if algorithm == 'history' else None,
+                    history_layer_basis=history_layer_basis if algorithm == 'history' else None,
+                    history_weight=0.1 if algorithm == 'history' else 0,
+                    history_metric='prior selected route visits per core; not physical occupancy',
+                    trace_sha256=hashlib.sha256((dest/'requests.txt').read_bytes()).hexdigest()),indent=2))
                 check=ro.read_trace(dest/'requests.txt',4,4)
                 assert check.initial==trace.initial and check.layers==trace.layers and check.qubits==trace.qubits
                 # Replay each layer to prove identical placement transitions, including empty layers.
@@ -121,6 +163,8 @@ def build(out, inputs=None, algorithms=ALGORITHMS, workloads=WORKLOADS, capacity
                                  excess=float(np.maximum(core-capacity,0).sum()),endpoint_lower_bound=endpoint_bound,
                                  overloaded_core_layers=int((core>capacity).sum()),peak_demand=float(core.max()),
                                  peak_link_hops=max(link.values(),default=0),unproved_layers=unproved,
+                                 history_window_layers=history_window_layers if algorithm=='history' else None,
+                                 history_layer_basis=history_layer_basis if algorithm=='history' else None,
                                  routing_seconds=time.perf_counter()-start))
                 print(workload,seed,algorithm,rows[-1]['hops'],rows[-1]['excess'],flush=True)
     if (out/'structural.csv').exists():
@@ -166,6 +210,10 @@ def main():
     p.add_argument("--dynamic-layer-basis",choices=["active","logical"],default="logical")
     p.add_argument("--empty-layer-gap-ms",type=float,default=5.0)
     p.add_argument("--layer-activation-order",choices=["execution-first","preparation-first"],default="execution-first")
+    p.add_argument('--history-window-layers', type=int, default=2,
+                   help='Prior layers counted by History routing; 0 restores cumulative history (default: 2).')
+    p.add_argument('--history-layer-basis', choices=['active', 'logical'], default='active',
+                   help='Whether empty layers age the History window (default: active, ignore empty layers).')
     a=p.parse_args(); a.output.mkdir(parents=True,exist_ok=True)
-    build(a.output,a.inputs,a.algorithms,a.workloads) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms,a.dynamic_layer_basis,a.empty_layer_gap_ms,a.layer_activation_order)
+    build(a.output,a.inputs,a.algorithms,a.workloads,history_window_layers=a.history_window_layers,history_layer_basis=a.history_layer_basis) if a.stage=='build' else simulate(a.output,a.seeds,a.algorithms,a.workloads,a.simulation_dir,a.compiler_pair_consumption,a.compiler_reservation_ms,a.dynamic_layer_basis,a.empty_layer_gap_ms,a.layer_activation_order)
 if __name__=='__main__': main()

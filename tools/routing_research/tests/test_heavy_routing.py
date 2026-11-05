@@ -1,11 +1,62 @@
 import sys
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 from collections import Counter
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from heavy_routing import choose, ALGORITHMS, ADJ, ro, migration_latencies
+from heavy_routing import choose, route_layers, ALGORITHMS, ADJ, ro, migration_latencies
 
 class RoutingContracts(unittest.TestCase):
+    def history_inputs(self, layers, **kwargs):
+        seen = []
+        records = [dict(source_core=0,destination_core=1,path=[0,1])]
+        def spy(rs, algorithm, history, capacity):
+            seen.append(history.copy())
+            return choose(rs, algorithm, history, capacity)
+        with patch('heavy_routing.choose', side_effect=spy):
+            list(route_layers({layer:records for layer in layers}, 'history', **kwargs))
+        return seen
+
+    def test_default_history_counts_two_previous_active_layers_only(self):
+        seen = self.history_inputs([0, 1, 2, 3, 4])
+        self.assertEqual([h[0] for h in seen], [0, 1, 2, 2, 2])
+        self.assertEqual([h[1] for h in seen], [0, 1, 2, 2, 2])
+
+    def test_empty_layers_do_not_age_default_active_history(self):
+        self.assertEqual([h[0] for h in self.history_inputs([0, 10, 20, 30])], [0,1,2,2])
+        self.assertEqual([h[0] for h in self.history_inputs(
+            [0, 10, 20, 30], history_layer_basis='logical')], [0,0,0,0])
+        self.assertEqual([h[0] for h in self.history_inputs(
+            [0, 2, 3], history_layer_basis='logical')], [0,1,1])
+
+    def test_cumulative_history_remains_explicitly_reproducible(self):
+        self.assertEqual([h[0] for h in self.history_inputs(
+            [0, 1, 2, 3, 4], history_window_layers=0)], [0,1,2,3,4])
+
+    def test_recent_history_forgets_obsolete_hotspot(self):
+        groups={0:[dict(source_core=0,destination_core=1,path=[0,1]) for _ in range(100)],
+                1:[dict(source_core=4,destination_core=8,path=[4,8])],
+                2:[dict(source_core=4,destination_core=8,path=[4,8])],
+                3:[dict(source_core=0,destination_core=5,path=[0,1,5])]}
+        recent=list(route_layers(groups,'history'))[-1][2]
+        cumulative=list(route_layers(groups,'history',history_window_layers=0))[-1][2]
+        self.assertEqual(recent, [(0,1,5)])
+        self.assertEqual(cumulative, [(0,4,5)])
+
+    def test_history_window_does_not_change_nonhistory_routes(self):
+        records=[dict(source_core=0,destination_core=5,path=[0,1,5]) for _ in range(6)]
+        groups={i:records for i in (0,1,3,5)}
+        for algorithm in ('xy','yx','greedy'):
+            self.assertEqual(list(route_layers(groups,algorithm)),
+                             list(route_layers(groups,algorithm,history_window_layers=0)))
+
+    def test_history_rejects_invalid_window(self):
+        for value in (-1, 1.5):
+            with self.assertRaises(ValueError):
+                list(route_layers({},'history',history_window_layers=value))
+        with self.assertRaises(ValueError):
+            list(route_layers({},'history',history_layer_basis='unknown'))
+
     def test_migration_clock_includes_admission_wait_exactly_once(self):
         # Hop 0: eligible at 10, admitted at 12, completed at 14.
         # Hop 1: eligible at 14, admitted at 15, completed at 17.

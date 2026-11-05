@@ -294,8 +294,8 @@ def plan_preparations(
 
     if planning_mode not in ("offline", "runtime"):
         raise ValueError("planning_mode must be offline or runtime")
-    if preparation_priority not in ("trace", "dependency", "chain-length"):
-        raise ValueError("preparation priority must be trace, dependency, or chain-length")
+    if preparation_priority != "trace":
+        raise ValueError("preparation priority must be trace")
     if compiler_memories_per_core < 0:
         raise ValueError("compiler memory capacity must be non-negative")
     if generation_capacity_per_core < 1:
@@ -328,14 +328,8 @@ def plan_preparations(
         # No offline peak exists: actual occupancy is enforced by timecards.
         return tuple(scheduled), len(trace.requests) - len(scheduled), None
 
+    # Allocate scarce compiler capacity in trace-file order.
     requests = trace.requests
-    if preparation_priority == "chain-length":
-        chain_sizes = Counter((request.layer, request.qubit) for request in requests)
-        requests = tuple(sorted(requests, key=lambda request: (
-            -chain_sizes[(request.layer, request.qubit)],
-            request.layer,
-            request.order,
-        )))
 
     memory_load: defaultdict[tuple[int, int], int] = defaultdict(int)
     generation_load: defaultdict[tuple[int, int], int] = defaultdict(int)

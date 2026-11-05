@@ -87,7 +87,7 @@ class CompilerTraceTests(unittest.TestCase):
                 self.assertEqual(blocked, len(trace.requests))
                 self.assertEqual(peak, 0)
 
-    def test_longest_chain_gets_offline_capacity_before_earlier_trace_entry(self):
+    def test_earlier_trace_entry_gets_capacity_before_longer_chain(self):
         trace = CompilerTrace(
             core_count=4,
             qubit_slots_per_core=4,
@@ -108,12 +108,12 @@ class CompilerTraceTests(unittest.TestCase):
             coherence_time_layers=3,
             dynamic_lookahead_layers=2,
             lead_layers=2,
-            preparation_priority="chain-length",
+            preparation_priority="trace",
         )
         ids = {item.request_id for item in schedule}
-        self.assertIn(1, ids)
-        self.assertNotIn(0, ids)
-        self.assertEqual(blocked, 2)
+        self.assertIn(0, ids)
+        self.assertNotIn(1, ids)
+        self.assertEqual(blocked, 1)
 
     def test_on_demand_accepts_zero_compiler_memory(self):
         trace = self.parse()

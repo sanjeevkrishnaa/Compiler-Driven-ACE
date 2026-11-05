@@ -52,7 +52,7 @@ class RuntimeQueueTests(unittest.TestCase):
                             planner_blocked=blocked, planner_peak_memory=peak, compiler_memories_per_core=2,
                             fidelity=.01, reservation_duration_ms=1000, refill_on_release=True,
                             demand_first=demand_first, borrow_compiler_pairs=borrow)
-                spec.update(preparation_priority="dependency", runtime_generation_capacity=2)
+                spec.update(preparation_priority="trace", runtime_generation_capacity=2)
                 with redirect_stdout(StringIO()):
                     result = run_parallel_experiment(
                         str(ROOT / "config/final_config/grid_4x4_ace_3.json"), False, False,

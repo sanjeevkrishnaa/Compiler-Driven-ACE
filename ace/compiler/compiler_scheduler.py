@@ -57,8 +57,8 @@ class CompilerPreGenerationController:
             raise ValueError("congestion_threshold must be non-negative")
         if trigger not in TRIGGERS:
             raise ValueError(f"unknown preparation trigger {trigger!r}; expected one of {TRIGGERS}")
-        if preparation_priority not in ("trace", "dependency", "chain-length"):
-            raise ValueError("preparation priority must be trace, dependency, or chain-length")
+        if preparation_priority != "trace":
+            raise ValueError("preparation priority must be trace")
         if generation_capacity_per_core is not None and generation_capacity_per_core < 1:
             raise ValueError("generation capacity must be positive")
         self.preparation_priority = preparation_priority
@@ -89,13 +89,10 @@ class CompilerPreGenerationController:
         chains = defaultdict(list)
         for request in requests:
             chains[(request.layer, request.qubit)].append(request)
-        self.chain_position, self.chain_predecessor, self.chain_length = {}, {}, {}
-        self.chain_ancestors = {}
+        self.chain_position, self.chain_predecessor = {}, {}
         for hops in chains.values():
             hops.sort(key=lambda r: r.order)
             for index, request in enumerate(hops):
-                self.chain_length[request.request_id] = len(hops)
-                self.chain_ancestors[request.request_id] = tuple(r.request_id for r in hops[:index])
                 self.chain_position[request.request_id] = index
                 # the hop whose start launches this one: predecessor_distance positions earlier, if the chain has one
                 if index >= predecessor_distance:
@@ -122,6 +119,7 @@ class CompilerPreGenerationController:
         for item in schedule:
             self.by_generation_layer[item.generation_layer].append(item.request_id)
 
+        self.completed_requests = set()
         self.deadlines = {}
         self.pending_preparations = {}
         self.admission_attempts = defaultdict(int)
@@ -205,21 +203,30 @@ class CompilerPreGenerationController:
         for successor in (waiting.pop(request_id, ()) if waiting else ()):
             self.launch_preparation(successor)
 
+    def mark_request_completed(self, request_id: int, completed_at: int) -> None:
+        """Stop request-specific preparation once demand has already been served."""
+        if request_id in self.completed_requests:
+            return
+        self.completed_requests.add(request_id)
+        self.pending_preparations.pop(request_id, None)
+        event = self.preparation_retry_events.pop(request_id, None)
+        if event is not None:
+            self.timeline.remove_event(event)
+        request = self.requests[request_id]
+        source = self.routers[self._router_name(request.source_core)]
+        protocol = source.network_manager.protocol_stack[-1]
+        for lease in tuple(protocol._reservation_leases.values()):
+            reservation = lease["reservation"]
+            if (lease["compiler"] and not lease["released"] and
+                    reservation.compiler_target_request_id == request_id):
+                if protocol.release_reservation(reservation, "request_completed"):
+                    source.adaptive_continuous.send_expire_rules_message(
+                        self._router_name(request.destination_core), reservation,
+                        reason="request_completed")
+
     def _preparation_key(self, request_id):
         request = self.requests[request_id]
-        if self.preparation_priority == "trace":
-            return (request.layer, request.order)
-        if self.preparation_priority == "chain-length":
-            # The trace stores a routed end-to-end movement as consecutive
-            # elementary hops for one qubit in one layer. Prefer the longest
-            # such chain, then its earlier hop, without violating predecessor
-            # eligibility at execution time.
-            return (-self.chain_length[request_id], request.layer,
-                    self.chain_position[request_id], request.order)
-        # A later hop cannot become eligible before its earlier hops start.
-        # Use outstanding starts as a dependency proxy, not a claimed wall-clock ETA.
-        remaining = sum(rid not in self.deadlines for rid in self.chain_ancestors[request_id])
-        return (request.layer, remaining, request.order)
+        return (request.layer, request.order)
 
     def on_resource_release(self) -> None:
         """Retry queued candidates after demand admission has observed a release."""
@@ -405,7 +412,7 @@ class CompilerPreGenerationController:
         record = self.records[active_index]
         if record["status"] == "ready":
             record.update({
-                "status": "expired",
+                "status": "cancelled" if reason == "request_completed" else "expired",
                 "expired_at_ps": expired_at,
                 "expiry_reason": reason,
             })
@@ -433,7 +440,8 @@ class CompilerPreGenerationController:
         ]
         late_compiler_uses = compiler_served - hits
         expired = [record for record in self.records if record["status"] == "expired"]
-        unused = [record for record in self.records if record["status"] in {"expired", "remaining"}]
+        cancelled = [record for record in self.records if record["status"] == "cancelled"]
+        unused = [record for record in self.records if record["status"] in {"expired", "cancelled", "remaining"}]
         creation_fidelities = [record["fidelity_at_creation"] for record in self.records]
         utilization_fidelities = [
             record["fidelity_at_utilization"] for record in utilized
@@ -469,6 +477,8 @@ class CompilerPreGenerationController:
             "generated_compiler_pairs": generated,
             "utilized_compiler_pairs": len(utilized),
             "expired_compiler_pairs": len(expired),
+            "cancelled_compiler_pairs": len(cancelled),
+            "compiler_cancellation_percentage": 100 * len(cancelled) / generated if generated else 0.0,
             "remaining_compiler_pairs": sum(
                 record["status"] == "remaining" for record in self.records
             ),

@@ -22,7 +22,7 @@ class LeaseTests(unittest.TestCase):
         adaptive = SimpleNamespace(adaptive_memory_used=1 if compiler else 0,
                                    note_memory_expiration=lambda *args, **kwargs: expirations.append(args))
         owner = SimpleNamespace(
-            timeline=SimpleNamespace(schedule=events.append, remove_event=removed.append),
+            timeline=SimpleNamespace(now=lambda: 10, schedule=events.append, remove_event=removed.append),
             resource_manager=manager, adaptive_continuous=adaptive, app=app)
         protocol = ResourceReservationProtocolAdaptive.__new__(ResourceReservationProtocolAdaptive)
         protocol.owner = owner
