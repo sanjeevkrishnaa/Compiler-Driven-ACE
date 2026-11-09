@@ -75,6 +75,7 @@ class CompilerPreGenerationController:
         self.readiness_observer = None
         self.reuse_compiler_memory = reuse_compiler_memory
         self.progress_yields = 0
+        self.replacement_requests = []
         self.routers = routers
         self.requests = {request.request_id: request for request in requests}
         self.strategy = strategy
@@ -389,6 +390,9 @@ class CompilerPreGenerationController:
             if target != request_id and target not in self.deadlines:
                 # Replenish the displaced future target under the same quota.
                 self.accepted.discard(target)
+                self.replacement_requests.append({"target_request_id": target,
+                    "borrower_request_id": request_id, "utilized_at_ps": utilized_at,
+                    "requested_at_ps": self.timeline.now()})
                 self.launch_preparation(target)
 
     def can_borrow_pair(self, target_id: int, request_id: int) -> bool:
@@ -397,6 +401,21 @@ class CompilerPreGenerationController:
         target, current = self.requests[target_id], self.requests[request_id]
         return (target.edge == current.edge and
                 (current.layer, current.order) < (target.layer, target.order))
+
+    def pair_available_for_request(self, pair: tuple, request_id: int) -> bool:
+        """Exclude consumed pairs and memories claimed by another application's RSVP."""
+        index = self.active_record_by_pair.get(_pair_key(pair))
+        if index is None or self.records[index]["status"] != "ready":
+            return False
+        for node, memory in pair:
+            protocol = self.routers[node].network_manager.protocol_stack[-1]
+            for card in protocol.timecards:
+                if protocol.memo_arr[card.memory_index].name != memory:
+                    continue
+                for reservation in card.reservations:
+                    if not getattr(reservation, "compiler_directed", False) and reservation.identity != request_id:
+                        return False
+        return True
 
     def on_pair_expired(self, pair: tuple, expired_at: int, reason: str) -> None:
         active_index = self.active_record_by_pair.pop(_pair_key(pair), None)
@@ -445,6 +464,10 @@ class CompilerPreGenerationController:
             "strategy": self.strategy,
             "requests": total_requests,
             "compiler_progress_yields": getattr(self, "progress_yields", 0),
+            "borrowed_compiler_pairs": sum(r["actual_request_id"] != r["target_request_id"] for r in utilized),
+            "replacement_preparations_requested": len(self.replacement_requests),
+            "replacement_attempts_immediate": sum(r["requested_at_ps"] == r["utilized_at_ps"] for r in self.replacement_requests),
+            "replacement_request_trace": self.replacement_requests,
             "completed_requests": len(completed),
             "scheduled_preparations": len(self.schedule),
             "planner_blocked_preparations": self.planner_blocked,

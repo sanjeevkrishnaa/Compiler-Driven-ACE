@@ -203,7 +203,8 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
     # Compiler-only fields.  Every one of these is None for a strategy with no
     # compiler controller, which is a meaningful absence rather than a zero.
     compiler_fields = (
-        "compiler_progress_yields",
+        "compiler_progress_yields", "borrowed_compiler_pairs", "replacement_preparations_requested",
+        "replacement_attempts_immediate",
         "scheduled_preparations", "planner_blocked_preparations",
         "planner_peak_compiler_memory_per_core", "runtime_admission_attempts",
         "runtime_launched_preparations", "runtime_accepted_preparations",
@@ -253,7 +254,10 @@ def main() -> None:
                         default=DEFAULT_COMPILER_POLICY.preparation_priority,
                         help="order preparation by trace, dependency progress, or longest routed hop chain first")
     parser.add_argument("--borrow-compiler-pairs", action="store_true",
+                        default=DEFAULT_COMPILER_POLICY.borrow_compiler_pairs,
                         help="allow earlier eligible demand to consume a future target's ready pair on the same edge")
+    parser.add_argument("--no-borrow-compiler-pairs", action="store_false", dest="borrow_compiler_pairs",
+                        help="disable same-edge borrowing for matched baseline runs")
     demand_guard = parser.add_mutually_exclusive_group()
     demand_guard.add_argument("--demand-first", action="store_true", dest="demand_first",
                               help="defer preparation when eligible demand needs either endpoint (default)")

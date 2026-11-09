@@ -511,30 +511,40 @@ class AdaptiveContinuousProtocol(Protocol):
                 return True
         return False
 
-    def has_ready_compiler_pair(self, remote_node_name: str, request_id: int,
-                                fidelity_threshold: float) -> bool:
-        """Non-consuming readiness check; both endpoints must still cache this pair.
-
-        Reading fidelity applies the same elapsed-time decoherence as matching.
-        It does not select, remove, or credit an EPR pair.
-        """
+    def find_ready_compiler_pair(self, remote_node_name: str, request_id: int,
+                                 fidelity_threshold: float):
+        """Preview one bilateral pair: exact target first, then eligible future targets."""
         remote = self.owner.timeline.get_entity_by_name(remote_node_name).adaptive_continuous
+        candidates = []
         for pair in sorted(self.generated_entanglement_pairs):
             if pair[0][0] != self.owner.name or pair[1][0] != remote_node_name:
                 continue
-            if self.generated_pair_metadata.get(pair, {}).get("target_request_id") != request_id:
+            target = self.generated_pair_metadata.get(pair, {}).get("target_request_id")
+            if target is None:
+                continue
+            observer = getattr(self, "compiler_observer", None)
+            if observer and not observer.pair_available_for_request(pair, request_id):
+                continue
+            if target != request_id and not (observer and
+                    observer.can_borrow_pair(target, request_id)):
                 continue
             reverse = (pair[1], pair[0])
             if reverse not in remote.generated_entanglement_pairs:
                 continue
-            if remote.generated_pair_metadata.get(reverse, {}).get("target_request_id") != request_id:
+            if remote.generated_pair_metadata.get(reverse, {}).get("target_request_id") != target:
                 continue
-            if self.get_fidelity(pair) >= fidelity_threshold:
-                return True
-        return False
+            fidelity = self.get_fidelity(pair)
+            if fidelity >= fidelity_threshold:
+                candidates.append((target != request_id, -fidelity, pair))
+        return min(candidates)[2] if candidates else None
+
+    def has_ready_compiler_pair(self, remote_node_name: str, request_id: int,
+                                fidelity_threshold: float) -> bool:
+        return self.find_ready_compiler_pair(remote_node_name, request_id, fidelity_threshold) is not None
+
 
     def match_generated_entanglement_pair(self, this_node_name: str, remote_node_name: str,
-                                          request_id: int | None = None) -> Optional[tuple]:
+                                          request_id: int | None = None, claimed_pair: tuple | None = None) -> Optional[tuple]:
         '''match (this_node_name, remote_node_name) to an existing entanglement pair
         
         Return:
@@ -551,7 +561,19 @@ class AdaptiveContinuousProtocol(Protocol):
         if len(entanglement_pairs) == 0:
             return None
 
-        if request_id is not None:
+        if request_id is not None and self.compiler_observer is not None:
+            entanglement_pairs = [p for p in entanglement_pairs
+                if p not in self.generated_pair_metadata or
+                self.compiler_observer.pair_available_for_request(p, request_id)]
+
+        if claimed_pair is not None:
+            # RSVP has transferred this exact pair's leases to the application.
+            # Never substitute a different cached pair after claiming its memory.
+            entanglement_pairs = [p for p in entanglement_pairs
+                                  if set(p) == set(claimed_pair)]
+            if not entanglement_pairs:
+                return None
+        elif request_id is not None:
             targeted = [
                 pair for pair in entanglement_pairs
                 if self.generated_pair_metadata.get(pair, {}).get("target_request_id") == request_id

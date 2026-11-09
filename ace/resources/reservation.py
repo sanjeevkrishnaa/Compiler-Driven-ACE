@@ -411,17 +411,21 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         adaptive = self.owner.adaptive_continuous
         if pair is None:
             neighbor = reservation.responder if self.owner.name == reservation.initiator else reservation.initiator
-            if not adaptive.has_ready_compiler_pair(neighbor, reservation.identity, reservation.fidelity):
+            pair = adaptive.find_ready_compiler_pair(neighbor, reservation.identity, reservation.fidelity)
+            if pair is None:
                 return None
-            pair = next(p for p in sorted(adaptive.generated_entanglement_pairs)
-                        if p[1][0] == neighbor and
-                        adaptive.generated_pair_metadata.get(p, {}).get("target_request_id") == reservation.identity)
+        observer = getattr(adaptive, "compiler_observer", None)
+        if observer and not observer.pair_available_for_request(pair, reservation.identity):
+            return None
         memory_name = next((memo for node, memo in pair if node == self.owner.name), None)
         for lease in self._reservation_leases.values():
             if not lease["compiler"] or lease["released"]:
                 continue
-            if lease["reservation"].compiler_target_request_id != reservation.identity:
-                continue
+            target = lease["reservation"].compiler_target_request_id
+            if target != reservation.identity:
+                observer = adaptive.compiler_observer
+                if observer is None or not observer.can_borrow_pair(target, reservation.identity):
+                    continue
             if not any(m.name == memory_name for m in lease["memories"]):
                 continue
             local_pair = pair if pair[0][0] == self.owner.name else (pair[1], pair[0])

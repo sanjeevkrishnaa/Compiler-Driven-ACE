@@ -212,6 +212,7 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
                             matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
                                 this_node_name, remote_node_name,
                                 request_id=self.rule.reservation.identity,
+                                claimed_pair=getattr(self.rule.reservation, "compiler_handoff_pair", None),
                             )
                             if matched_entanglement_pair is None:                        # no pre-generated entanglement pair
                                 self.qc_delay = self.owner.qchannels[self.middle].delay  # send NEGOTIATE message as normal
@@ -264,6 +265,7 @@ class EntanglementGenerationAadaptive(EntanglementProtocol):
                     self.matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
                         this_node_name, remote_node_name,
                         request_id=self.rule.reservation.identity,
+                                claimed_pair=getattr(self.rule.reservation, "compiler_handoff_pair", None),
                     )
                     if self.matched_entanglement_pair is not None:               # has pre-generated entanglement pair
                         log.logger.info(f'{this_node_name} match pre-generated entanglement pair {self.matched_entanglement_pair}')
@@ -769,6 +771,7 @@ class ShEntanglementGenerationAadaptive(EntanglementProtocol):
                     matched_entanglement_pair = adaptive_continuous.match_generated_entanglement_pair(
                         this_node_name, remote_node_name,
                         request_id=self.rule.reservation.identity,
+                                claimed_pair=getattr(self.rule.reservation, "compiler_handoff_pair", None),
                     )
                     if matched_entanglement_pair is None:                        # no pre-generated entanglement pair
                         self.qc_delay = self.owner.qchannels[self.middle].delay  # send NEGOTIATE message as normal
