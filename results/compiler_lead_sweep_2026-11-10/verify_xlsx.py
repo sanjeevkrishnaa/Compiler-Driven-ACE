@@ -31,11 +31,11 @@ with zipfile.ZipFile(target) as z:
     content_types=ET.fromstring(z.read('[Content_Types].xml'))
     charts=[part.attrib['PartName'].lstrip('/') for part in content_types
             if part.attrib.get('ContentType','').endswith('drawingml.chart+xml')]
-    assert len(charts)==2
+    assert len(charts)==3
     for name in charts:
         chart=ET.fromstring(z.read(name))
         formulae=[f.text for f in chart.findall('.//c:f',ns)]
         assert any('$Q$13:$Q$21' in f for f in formulae),formulae
         colors={c.attrib['val'].upper() for c in chart.findall('.//a:srgbClr',ns)}
         assert {'2563EB','D97706'}<=colors,colors
-print(json.dumps(dict(file=str(target),size=target.stat().st_size,winner=data['winner'],checks='cached results, no errors, two native charts, series bindings/colors, frozen panes, ZIP integrity verified'),indent=2))
+print(json.dumps(dict(file=str(target),size=target.stat().st_size,winner=data['winner'],checks='cached results, no errors, three native charts, series bindings/colors, frozen panes, ZIP integrity verified'),indent=2))

@@ -96,6 +96,8 @@ formula(sweep,'C6',data.completed===18?'=INDEX(B13:B21,MATCH(MIN(E13:E21),E13:E2
 sweep.getRange('C6').setNumberFormat('"L-"0');
 formula(sweep,'G6',data.completed===18?'=MIN(E13:E21)':'="pending"');sweep.getRange('G6').setNumberFormat('0.000000');
 formula(sweep,'J6',data.completed===18?'="XY L-"&INDEX(B13:B21,MATCH(MIN(C13:C21),C13:C21,0))&", History L-"&INDEX(B13:B21,MATCH(MIN(D13:D21),D13:D21,0))':'="pending"');
+value(sweep,'B7','Fidelity'); formula(sweep,'C7','=INDEX(G13:G21,MATCH(C6,B13:B21,0))'); sweep.getRange('C7').setNumberFormat('0.000000');
+value(sweep,'E7','Wastage'); formula(sweep,'G7','=INDEX(I13:I21,MATCH(C6,B13:B21,0))'); sweep.getRange('G7').setNumberFormat('0.00%');
 value(sweep,'B8','Selection: lowest pooled mean request latency. Separate route results remain visible.');
 value(sweep,'B9','One matched physics seed. Initial generation lead only; replenishment remains immediate.');
 value(sweep,'B10',`${data.completed} of 18 audited runs available. L-2 and L-3 measurements reused with matching source fingerprints.`);
@@ -137,6 +139,7 @@ function makeChart(title,columns,start,end,format){
 }
 makeChart('Mean request latency (ms)',['C','D','E'],'B24','H41','0.00');
 makeChart('Compiler pair waste',['L','M'],'I24','O41','0.0%');
+makeChart('Fidelity at use',['G','H'],'B44','H61','0.000');
 wb.recalculate();
 const inspection=await wb.inspect({kind:'region',sheetId:'Sweep',range:'B6:M21',maxChars:5000,tableMaxRows:20,tableMaxCols:12});
 await fs.writeFile(path.join(root,'workbook_inspection.ndjson'),inspection.ndjson);
