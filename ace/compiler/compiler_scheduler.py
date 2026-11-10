@@ -123,6 +123,7 @@ class CompilerPreGenerationController:
         for item in schedule:
             self.by_generation_layer[item.generation_layer].append(item.request_id)
 
+        self.completed_requests = set()
         self.deadlines = {}
         self.pending_preparations = {}
         self.admission_attempts = defaultdict(int)
@@ -160,7 +161,7 @@ class CompilerPreGenerationController:
 
     def launch_preparation(self, request_id: int) -> None:
         """Ask the directed protocol for the request's pair now (unless the request has already started)."""
-        if request_id in self.deadlines or request_id in self.accepted:
+        if request_id in self.completed_requests or request_id in self.deadlines or request_id in self.accepted:
             return
         request = self.requests[request_id]
         self.pending_preparations[request_id] = {
@@ -175,7 +176,7 @@ class CompilerPreGenerationController:
 
     def retry_preparation(self, request_id):
         self.preparation_retry_events.pop(request_id, None)
-        if request_id in self.deadlines or request_id in self.accepted:
+        if request_id in self.completed_requests or request_id in self.deadlines or request_id in self.accepted:
             self.pending_preparations.pop(request_id, None)
             return
         metadata = self.pending_preparations.get(request_id)
@@ -205,6 +206,27 @@ class CompilerPreGenerationController:
         waiting = getattr(self, "waiting_for_predecessor", None)      # absent on bare test doubles
         for successor in (waiting.pop(request_id, ()) if waiting else ()):
             self.launch_preparation(successor)
+
+    def mark_request_completed(self, request_id: int, completed_at: int) -> None:
+        """Cancel the target's obsolete compiler work after demand completes."""
+        if request_id in self.completed_requests:
+            return
+        self.completed_requests.add(request_id)
+        self.pending_preparations.pop(request_id, None)
+        event = self.preparation_retry_events.pop(request_id, None)
+        if event is not None:
+            self.timeline.remove_event(event)
+        request = self.requests[request_id]
+        source = self.routers[self._router_name(request.source_core)]
+        protocol = source.network_manager.protocol_stack[-1]
+        for lease in tuple(protocol._reservation_leases.values()):
+            reservation = lease["reservation"]
+            if (lease["compiler"] and not lease["released"] and
+                    reservation.compiler_target_request_id == request_id):
+                if protocol.release_reservation(reservation, "request_completed"):
+                    source.adaptive_continuous.send_expire_rules_message(
+                        self._router_name(request.destination_core), reservation,
+                        reason="request_completed")
 
     def _preparation_key(self, request_id):
         request = self.requests[request_id]
@@ -424,7 +446,7 @@ class CompilerPreGenerationController:
         record = self.records[active_index]
         if record["status"] == "ready":
             record.update({
-                "status": "expired",
+                "status": "cancelled" if reason == "request_completed" else "expired",
                 "expired_at_ps": expired_at,
                 "expiry_reason": reason,
             })
@@ -452,7 +474,8 @@ class CompilerPreGenerationController:
         ]
         late_compiler_uses = compiler_served - hits
         expired = [record for record in self.records if record["status"] == "expired"]
-        unused = [record for record in self.records if record["status"] in {"expired", "remaining"}]
+        cancelled = [record for record in self.records if record["status"] == "cancelled"]
+        unused = [record for record in self.records if record["status"] in {"expired", "cancelled", "remaining"}]
         creation_fidelities = [record["fidelity_at_creation"] for record in self.records]
         utilization_fidelities = [
             record["fidelity_at_utilization"] for record in utilized
@@ -492,6 +515,8 @@ class CompilerPreGenerationController:
             "generated_compiler_pairs": generated,
             "utilized_compiler_pairs": len(utilized),
             "expired_compiler_pairs": len(expired),
+            "cancelled_compiler_pairs": len(cancelled),
+            "compiler_cancellation_percentage": 100 * len(cancelled) / generated if generated else 0.0,
             "remaining_compiler_pairs": sum(
                 record["status"] == "remaining" for record in self.records
             ),

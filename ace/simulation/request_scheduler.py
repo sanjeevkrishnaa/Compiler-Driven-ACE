@@ -392,6 +392,8 @@ class QubitOrderedRequestManager(ParallelLayerRequestManager):
         if request_id in self.request_end_times:
             return          # a second completion is reported by the invariant checker, and counted once
         self.request_end_times[request_id] = completion_time
+        if self.compiler_controller is not None:
+            self.compiler_controller.mark_request_completed(request_id, completion_time)
         self.pending_requests.discard(request_id)
         self.pending_request_data.pop(request_id, None)
         self.in_flight.discard(request_id)

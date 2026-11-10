@@ -69,7 +69,7 @@ def worker():
         pairs = [p for p in self.generated_entanglement_pairs if memory.name in (p[0][1], p[1][1])]
         original_expire(self, memory, reason)
         for p in pairs:
-            finish(p, 'expired_' + reason, self.owner.timeline.now())
+            finish(p, ('cancelled_' if reason == 'request_completed' else 'expired_') + reason, self.owner.timeline.now())
     AdaptiveContinuousProtocol.note_memory_expiration = expire
     original_release = AdaptiveContinuousProtocol.adaptive_memory_used_minus_one
     def release(self, memory):

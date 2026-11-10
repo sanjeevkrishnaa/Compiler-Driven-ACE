@@ -510,18 +510,26 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
         memories = [self.memo_arr[card.memory_index] for card in self.timecards
                     if any(item is reservation for item in card.reservations)]
         lease = self._reservation_leases.get(id(reservation))
+        if compiler and lease is not None and lease["released"]:
+            return  # Late approval cannot revive cancelled compiler work.
         if lease is None or lease["released"]:
             lease = {"reservation": reservation, "memories": memories,
                      "events": [], "compiler": compiler, "released": False}
         self._reservation_leases[id(reservation)] = lease
-        self.accepted_reservations.append(reservation)
+        if not lease.get("registered", False):
+            self.accepted_reservations.append(reservation)
+            lease["registered"] = True
         for rule in rules:
             event = Event(reservation.start_time,
                           Process(self.owner.resource_manager, "load", [rule]))
             self._track_reservation_event(reservation, event)
-        event = Event(reservation.end_time,
-                      Process(self, "release_reservation", [reservation, "reservation_expired"]))
-        self._track_reservation_event(reservation, event)
+        # A pending compiler RSVP already owns a timer. A handoff application's
+        # lease exists before rule loading, but still needs its own timeout.
+        if "expiry_event" not in lease:
+            event = Event(reservation.end_time,
+                          Process(self, "release_reservation", [reservation, "reservation_expired"]))
+            lease["expiry_event"] = event
+            self._track_reservation_event(reservation, event)
 
     def load_rules(self, rules, reservation):
         """Own timeout events so early completion cannot reset reused memory."""
@@ -560,8 +568,11 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
             index = manager.memory_manager.get_info_by_memory(memory).index
             if app is not None and app.memo_to_reservation.get(index) is reservation:
                 app.memo_to_reservation.pop(index)
-            adaptive.note_memory_expiration(memory, reason=reason)
-            manager.update(None, memory, MemoryInfo.RAW)
+            # A future booking may share a memory with its current owner. But
+            # a handoff already owns the cached state, even before its start.
+            if lease.get("handoff", False) or timeline.now() >= reservation.start_time:
+                adaptive.note_memory_expiration(memory, reason=reason)
+                manager.update(None, memory, MemoryInfo.RAW)
         if held:
             notify_release(self.owner)
         return True

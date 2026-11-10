@@ -269,14 +269,14 @@ class ResourceManagerAdaptive(ResourceManager):
         return self.memory_manager.check_entangled_memory(entangled_memory_name)
 
 
-    def expire_rules_by_reservation(self, reservation: Reservation) -> None:
+    def expire_rules_by_reservation(self, reservation: Reservation, reason="completed") -> None:
         '''expire rules created by the reservation
         
         Args:
             reservation: the rules created by this reservation will expire
         '''
         reservation_protocol = self.owner.network_manager.protocol_stack[-1]
-        if reservation_protocol.release_reservation(reservation):
+        if reservation_protocol.release_reservation(reservation, reason):
             return
         rule_to_expire = []
         for rule in self.rule_manager.rules:

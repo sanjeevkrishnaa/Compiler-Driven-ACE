@@ -214,7 +214,8 @@ def _row(strategy: str, seed: int, result: dict, request_count: int, requests=No
         "compiler_not_ready_requests", "late_compiler_pair_uses",
         "on_demand_fallbacks", "on_demand_fallback_rate",
         "generated_compiler_pairs", "utilized_compiler_pairs",
-        "expired_compiler_pairs", "remaining_compiler_pairs",
+        "expired_compiler_pairs", "cancelled_compiler_pairs", "remaining_compiler_pairs",
+        "compiler_cancellation_percentage",
         "compiler_expiry_percentage", "compiler_waste_percentage",
         "average_fidelity_at_creation", "average_fidelity_at_utilization", "average_storage_time_ms",
     )

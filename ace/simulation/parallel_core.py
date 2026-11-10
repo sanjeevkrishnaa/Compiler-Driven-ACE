@@ -383,6 +383,8 @@ class ParallelLayerRequestManager:
         if self.recorder is not None:
             self.recorder.record(RequestCompleted(completion_time, request_id))
         self.request_end_times[request_id] = completion_time
+        if self.compiler_controller is not None:
+            self.compiler_controller.mark_request_completed(request_id, completion_time)
 
         # Remove from pending set
         if request_id in self.pending_requests:
