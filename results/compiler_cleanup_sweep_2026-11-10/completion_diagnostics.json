@@ -1,0 +1,321 @@
+[
+  {
+    "route": "xy",
+    "lead": 1,
+    "before_generated_after_completion": 1080,
+    "before_max_delay_ms": 9.300211497,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 1354,
+      "expired:rejected": 337,
+      "expired:handoff_unavailable": 10
+    },
+    "after_generated_after_completion": 81,
+    "after_max_delay_ms": 0.100000248,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 548,
+      "expired:rejected": 486,
+      "expired:handoff_unavailable": 46
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 2,
+    "before_generated_after_completion": 610,
+    "before_max_delay_ms": 8.100215499,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 760,
+      "expired:rejected": 122,
+      "expired:handoff_unavailable": 7
+    },
+    "after_generated_after_completion": 43,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 252,
+      "expired:rejected": 97,
+      "expired:handoff_unavailable": 13
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 3,
+    "before_generated_after_completion": 438,
+    "before_max_delay_ms": 7.400175,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 549,
+      "expired:rejected": 38,
+      "expired:handoff_unavailable": 4
+    },
+    "after_generated_after_completion": 27,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 166,
+      "expired:rejected": 33,
+      "expired:handoff_unavailable": 2
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 4,
+    "before_generated_after_completion": 342,
+    "before_max_delay_ms": 9.200262499,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 435,
+      "expired:rejected": 31,
+      "expired:handoff_unavailable": 2
+    },
+    "after_generated_after_completion": 23,
+    "after_max_delay_ms": 0.099999998,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 155,
+      "expired:rejected": 21,
+      "expired:handoff_unavailable": 2
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 5,
+    "before_generated_after_completion": 286,
+    "before_max_delay_ms": 7.200197498,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 369,
+      "expired:rejected": 6
+    },
+    "after_generated_after_completion": 24,
+    "after_max_delay_ms": 0.099998249,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 114,
+      "expired:rejected": 7,
+      "expired:handoff_unavailable": 3
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 6,
+    "before_generated_after_completion": 246,
+    "before_max_delay_ms": 9.300268492,
+    "before_loss_reasons": {
+      "expired:rejected": 18,
+      "expired:handoff_unavailable": 2,
+      "expired:reservation_expired": 313
+    },
+    "after_generated_after_completion": 17,
+    "after_max_delay_ms": 0.100000248,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 82,
+      "expired:rejected": 2,
+      "expired:handoff_unavailable": 1
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 7,
+    "before_generated_after_completion": 226,
+    "before_max_delay_ms": 6.400173249,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 285,
+      "expired:rejected": 7,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 15,
+    "after_max_delay_ms": 0.099999994,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 91,
+      "expired:rejected": 3,
+      "expired:reservation_expired": 3
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 8,
+    "before_generated_after_completion": 179,
+    "before_max_delay_ms": 5.400149247,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 246,
+      "expired:rejected": 5,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 15,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 82,
+      "expired:reservation_expired": 3,
+      "expired:rejected": 7
+    }
+  },
+  {
+    "route": "xy",
+    "lead": 9,
+    "before_generated_after_completion": 177,
+    "before_max_delay_ms": 7.200115499,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 257,
+      "expired:rejected": 5,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 9,
+    "after_max_delay_ms": 0.099999748,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 65,
+      "expired:reservation_expired": 6,
+      "expired:rejected": 5
+    }
+  },
+  {
+    "route": "history",
+    "lead": 1,
+    "before_generated_after_completion": 1114,
+    "before_max_delay_ms": 8.100326998,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 1436,
+      "expired:rejected": 325,
+      "expired:handoff_unavailable": 10
+    },
+    "after_generated_after_completion": 96,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "expired:rejected": 480,
+      "cancelled:request_completed": 640,
+      "expired:handoff_unavailable": 41
+    }
+  },
+  {
+    "route": "history",
+    "lead": 2,
+    "before_generated_after_completion": 671,
+    "before_max_delay_ms": 7.500039247,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 875,
+      "expired:rejected": 173,
+      "expired:handoff_unavailable": 3
+    },
+    "after_generated_after_completion": 58,
+    "after_max_delay_ms": 0.099999999,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 315,
+      "expired:rejected": 96,
+      "expired:handoff_unavailable": 8
+    }
+  },
+  {
+    "route": "history",
+    "lead": 3,
+    "before_generated_after_completion": 489,
+    "before_max_delay_ms": 9.10025,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 625,
+      "expired:rejected": 44,
+      "expired:handoff_unavailable": 2
+    },
+    "after_generated_after_completion": 43,
+    "after_max_delay_ms": 0.100000248,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 246,
+      "expired:rejected": 35,
+      "expired:handoff_unavailable": 4
+    }
+  },
+  {
+    "route": "history",
+    "lead": 4,
+    "before_generated_after_completion": 423,
+    "before_max_delay_ms": 8.800244246,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 538,
+      "expired:rejected": 33,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 27,
+    "after_max_delay_ms": 0.100000248,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 176,
+      "expired:rejected": 24
+    }
+  },
+  {
+    "route": "history",
+    "lead": 5,
+    "before_generated_after_completion": 316,
+    "before_max_delay_ms": 8.900236248,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 409,
+      "expired:rejected": 7,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 26,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 123,
+      "expired:rejected": 9,
+      "expired:handoff_unavailable": 5
+    }
+  },
+  {
+    "route": "history",
+    "lead": 6,
+    "before_generated_after_completion": 297,
+    "before_max_delay_ms": 8.200273749,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 381,
+      "expired:rejected": 13,
+      "expired:handoff_unavailable": 1
+    },
+    "after_generated_after_completion": 23,
+    "after_max_delay_ms": 0.099999999,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 112,
+      "expired:rejected": 9,
+      "expired:handoff_unavailable": 1
+    }
+  },
+  {
+    "route": "history",
+    "lead": 7,
+    "before_generated_after_completion": 261,
+    "before_max_delay_ms": 9.400172999,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 341,
+      "expired:rejected": 7
+    },
+    "after_generated_after_completion": 15,
+    "after_max_delay_ms": 0.100000248,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 117,
+      "expired:reservation_expired": 1
+    }
+  },
+  {
+    "route": "history",
+    "lead": 8,
+    "before_generated_after_completion": 235,
+    "before_max_delay_ms": 8.600224247,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 310,
+      "expired:rejected": 4
+    },
+    "after_generated_after_completion": 15,
+    "after_max_delay_ms": 0.099997496,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 98,
+      "expired:rejected": 7,
+      "expired:reservation_expired": 2
+    }
+  },
+  {
+    "route": "history",
+    "lead": 9,
+    "before_generated_after_completion": 224,
+    "before_max_delay_ms": 5.799062499,
+    "before_loss_reasons": {
+      "expired:reservation_expired": 301,
+      "expired:rejected": 3
+    },
+    "after_generated_after_completion": 27,
+    "after_max_delay_ms": 0.1,
+    "after_loss_reasons": {
+      "cancelled:request_completed": 103,
+      "expired:reservation_expired": 1,
+      "expired:rejected": 5,
+      "expired:handoff_unavailable": 1
+    }
+  }
+]

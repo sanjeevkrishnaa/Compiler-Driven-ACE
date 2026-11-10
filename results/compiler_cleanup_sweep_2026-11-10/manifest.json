@@ -1,0 +1,110 @@
+[
+  {
+    "route": "xy",
+    "lead": 1,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L1",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 2,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L2",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 3,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L3",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 4,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L4",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 5,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L5",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 6,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L6",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 7,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L7",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 8,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L8",
+    "reused": false
+  },
+  {
+    "route": "xy",
+    "lead": 9,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\xy-L9",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 1,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L1",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 2,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L2",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 3,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L3",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 4,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L4",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 5,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L5",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 6,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L6",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 7,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L7",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 8,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L8",
+    "reused": false
+  },
+  {
+    "route": "history",
+    "lead": 9,
+    "folder": "C:\\Users\\sanje\\Desktop\\BTP\\repo\\SeQUeNCe\\.tmp\\ace-l2-borrow\\output\\qaoa-cleanup-sweep-final-2026-11-10\\history-L9",
+    "reused": false
+  }
+]
