@@ -10,6 +10,12 @@ The initiating compiler reservation owns its booking and timeout while approval
 is still in flight. A late approval or rejection cannot recreate cancelled rules
 or decrement its quota twice. The cleanup is idempotent.
 
+Pending approval is tracked explicitly: rejecting or cancelling an unapproved
+booking frees its quota/timecards but never clears quantum state, even after its
+proposed start time. It never activated generation and cannot own an existing
+cached pair in the memory. A regression protects this distinction. Preliminary
+runs without this guard were discarded and excluded from the final comparison.
+
 The old RSVP-expiry regression came from treating an in-place handoff as an
 ordinary future reservation. Future bookings must not reset their memory's
 current owner, but a handoff already owns the cached quantum state even before
@@ -36,7 +42,7 @@ physical fidelity/noise parameters, memory quota and 50 ms reservation duration
 are unchanged. Previous sweep workbooks describe the pre-cleanup implementation
 and are retained as historical evidence.
 
-Validation before the full QAOA rerun: 186 compiler tests passed, including the
+Validation before the full QAOA rerun: 187 compiler tests passed, including the
 previously failing expiry-during-RSVP physical test, pending-handshake cleanup,
 quota idempotency, future-memory ownership, handoff application timers, and
 borrowing/replenishment in both directions. A 448-transfer QAOA L-9 prefix

@@ -238,6 +238,7 @@ class AdaptiveContinuousProtocol(Protocol):
             return False
         # Own the initial booking while its approval is in flight.
         self.resource_reservation._load_owned_rules([], reservation, compiler=True)
+        self.resource_reservation._reservation_leases[id(reservation)]["pending_approval"] = True
         if self.compiler_observer:
             self.compiler_observer.on_preparation_launched(request_metadata["request_id"])
         self.owner.send_message(
@@ -327,6 +328,8 @@ class AdaptiveContinuousProtocol(Protocol):
                         msg.reservation.compiler_target_request_id, "remote_memory_or_timecard"
                     )
             else:                             # neighbor has available memory
+                if msg.reservation.compiler_directed and lease is not None:
+                    lease["pending_approval"] = False
                 rules = self.resource_reservation.create_rules_adaptive(msg.path, msg.reservation)
                 self.resource_reservation.load_rules_adaptive(rules, msg.reservation)
                 log.logger.info(f'{self.owner.name} attempting to establish entanglement link {self.owner.name}-{src}')

@@ -570,7 +570,8 @@ class ResourceReservationProtocolAdaptive(ResourceReservationProtocol):
                 app.memo_to_reservation.pop(index)
             # A future booking may share a memory with its current owner. But
             # a handoff already owns the cached state, even before its start.
-            if lease.get("handoff", False) or timeline.now() >= reservation.start_time:
+            if (not lease.get("pending_approval", False) and
+                    (lease.get("handoff", False) or timeline.now() >= reservation.start_time)):
                 adaptive.note_memory_expiration(memory, reason=reason)
                 manager.update(None, memory, MemoryInfo.RAW)
         if held:

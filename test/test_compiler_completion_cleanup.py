@@ -11,6 +11,16 @@ from test import test_compiler_lifecycle as lifecycle
 
 
 class CompletionCleanupTests(unittest.TestCase):
+    def test_rejected_unapproved_booking_never_resets_another_pairs_state(self):
+        helper=lifecycle.LeaseTests()
+        reservation=helper.reservation()
+        protocol,_,_,updates=helper.protocol(reservation)
+        protocol.owner.timeline.now=lambda: 20  # Even at/after the planned start.
+        protocol._reservation_leases[id(reservation)]['pending_approval']=True
+        protocol.release_reservation(reservation,'rejected')
+        self.assertEqual(updates,[])
+        self.assertEqual(protocol.owner.adaptive_continuous.adaptive_memory_used,0)
+
     def test_rejected_handoff_releases_its_state_even_before_application_start(self):
         helper=lifecycle.LeaseTests()
         reservation=helper.reservation()
