@@ -1,0 +1,13 @@
+{
+  "events": 106143,
+  "completion_required": true,
+  "completed_requests": 6510,
+  "total_requests": 6510,
+  "violations": [
+    {
+      "invariant": "BOOKING_SURVIVES_COMPLETION",
+      "time_ps": null,
+      "detail": "request 6462 completed but its reservation still held router_0_1[1] at the end"
+    }
+  ]
+}

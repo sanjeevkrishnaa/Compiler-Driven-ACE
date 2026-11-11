@@ -1,0 +1,14 @@
+{
+  "generated": 6498,
+  "statuses": {
+    "used": 6320,
+    "cancelled_request_completed": 145,
+    "expired_rejected": 32,
+    "expired_handoff_unavailable": 1
+  },
+  "ready_requests": 5943,
+  "observed_requests": 6510,
+  "readiness_definition": "cached physical pair before first application submission; not guaranteed adoption",
+  "eviction_count": 0,
+  "eviction_note": "No separate cache eviction operation exists; removals are use or expiry."
+}

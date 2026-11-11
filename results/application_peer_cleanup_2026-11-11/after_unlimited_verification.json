@@ -1,0 +1,9 @@
+{
+  "verified": true,
+  "slots": 256,
+  "planner_peak": 14,
+  "planner_blocked": 2,
+  "physical_demand_bound": 25,
+  "reference_slots": 13021,
+  "reference_plan_identical": true
+}

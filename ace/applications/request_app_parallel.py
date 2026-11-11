@@ -174,6 +174,19 @@ class RequestAppLatencyParallel(RequestAppLatency):
                     log.logger.info(f'{self.node.name}: Memory fidelity {info.fidelity:.6f} '
                                   f'below threshold {reservation.fidelity}')
     
+    def send_expire_rules_message(self, reservation):
+        """Notify every remote booking owner after initiator completion.
+
+        The base application notifies only intermediate routers, assuming the
+        responder independently credits the pair and releases its lease. That
+        callback is not guaranteed when generation/consumption callbacks race.
+        Release is idempotent, and this uses the real classical-channel delay:
+        never clear the peer's memory directly from the initiator.
+        """
+        for node in dict.fromkeys(reservation.path):
+            if node != self.node.name:
+                self.node.adaptive_continuous.send_expire_rules_message(node, reservation)
+
     def schedule_reservation(self, reservation):
         """Bind app-map events to the same cancellable local memory lease."""
         if reservation.initiator == self.node.name:
