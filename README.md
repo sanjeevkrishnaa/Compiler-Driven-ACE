@@ -24,6 +24,12 @@ The compiler reservation lifetime defaults to **50 ms**; see the [window sweep a
 
 ## One-command workload run
 
+For the 224-qubit, ten-workload final comparison (History/XY; ODG, CGP, ACGP,
+CD at 4/8 communication slots plus CD unlimited), run
+`python -B tools/run_final_matrix.py --jobs 2 --output output/final-results-224`.
+See the [final matrix guide](docs/final-matrix-runner.md) for setup, CSV metric
+definitions, progress reporting, resume and multiple physics seeds.
+
 With the study Python environment active and GNU Make installed:
 
 ```text
