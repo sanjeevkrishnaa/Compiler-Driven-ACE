@@ -125,7 +125,12 @@ def worker():
          eviction_count=0, eviction_note='No separate cache eviction operation exists; removals are use or expiry.'))
 
 
-def prepare(workload):
+def routed_directory(out, capacity=4):
+    """Keep legacy C4 traces separate from capacity-matched reroutes."""
+    return out / ('routed' if capacity == 4 else f'routed-c{capacity}')
+
+
+def prepare(workload, capacity=4):
     """Map the actual committed QASM once, then freeze two routing variants."""
     sys.path[:0] = [str(ROOT), str(ROOT / 'mapper'), str(ROOT / 'tools/routing_research')]
     from tools.congestion_study import run_study as generator
@@ -141,10 +146,21 @@ def prepare(workload):
         folder.mkdir(parents=True, exist_ok=True)
         generator.map_and_export(ir, architecture, 42, args, folder)
         save(folder / 'source.json', source)
-    if not all((OUT / 'routed/traces' / workload / 'seed_42' / r / 'requests.txt').exists()
+    if capacity < 1:
+        raise ValueError('Routing capacity must be positive')
+    routed = routed_directory(OUT, capacity)
+    marker = routed / 'routing_specification.json'
+    routing_spec = dict(capacity=capacity, history='cumulative-all-past-layers')
+    if marker.exists() and json.loads(marker.read_text()) != routing_spec:
+        raise ValueError(f'Routing specification changed: {routed}')
+    if not marker.exists() and capacity != 4 and (routed/'traces').exists():
+        raise ValueError(f'Unverified routing capacity: {routed}; use a new output')
+    # Persist before building so an interrupted build can resume with a known C.
+    save(marker, routing_spec)
+    if not all((routed / 'traces' / workload / 'seed_42' / r / 'requests.txt').exists()
                for r in ('xy', 'history')):
-        (OUT / 'routed').mkdir(parents=True, exist_ok=True)
-        heavy_routing.build(OUT / 'routed', OUT / 'inputs', ('xy', 'history'), (workload,))
+        routed.mkdir(parents=True, exist_ok=True)
+        heavy_routing.build(routed, OUT / 'inputs', ('xy', 'history'), (workload,), capacity=capacity)
 
 
 def collect():

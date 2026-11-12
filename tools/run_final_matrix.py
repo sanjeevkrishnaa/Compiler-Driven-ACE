@@ -19,6 +19,16 @@ import benchmark_matrix as matrix
 CASES = {name: (strategy, slots, quota) for name, strategy, slots, quota in matrix.CASES}
 
 
+def routing_capacity(case):
+    # Unlimited remains the existing C4-routed ideal-resource reference.
+    # Its routing is not implicitly changed to the finite bound (256).
+    return 8 if CASES[case][1] == 8 else 4
+
+
+def trace_path(out, workload, route, case):
+    return matrix.routed_directory(out, routing_capacity(case)) / 'traces' / workload / 'seed_42' / route / 'requests.txt'
+
+
 def save(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + '.tmp')
@@ -132,7 +142,10 @@ def result(folder, workload, route, case, seed, args):
         raise ValueError(f'Coverage observer missed requests: {folder}')
     if case == 'CD-unlimited': verify_unlimited(folder, row, args)
     waste = expired+cancelled+unused
+    trace = trace_path(folder.parents[4], workload, route, case)
     return dict(workload=workload, route=route, case=case, physics_seed=seed,
+        history_routing_capacity=routing_capacity(case) if route == 'history' else '',
+        trace_sha256=hashlib.sha256(trace.read_bytes()).hexdigest() if trace.exists() else '',
         latency_ms=float(row['average_request_latency_ms']),
         makespan_ms=float(row['end_to_end_latency_ms']),
         avg_fidelity=float(row['average_delivered_epr_fidelity']) if row['average_delivered_epr_fidelity'] else '',
@@ -184,6 +197,8 @@ def main():
         mesh='4x4', data_slots_per_core=16, initially_occupied_per_core=14, logical_qubits=224,
         mapping_seed=42, lead_layers=2, preparation_priority='trace', borrow_and_refill=True,
         autonomous_cache=args.autonomous_cache, unlimited_slots=args.unlimited_slots,
+        history_routing_capacity_by_case={c:routing_capacity(c) for c in args.cases},
+        history_mode='cumulative-all-past-layers',
         stop_time_s=args.stop_time_s, total_runs=len(jobs), sources=fingerprint())
     if args.dry_run:
         print(json.dumps(spec, indent=2)); return
@@ -205,12 +220,14 @@ def main():
     matrix.OUT = out
     for w in dict.fromkeys(args.workloads):
         print(f'MAPPING {w} (16 cores, 14 occupied + 2 spare data slots/core)', flush=True)
-        subprocess.run([sys.executable, '-B', str(Path(__file__).resolve()), '--prepare', str(out), w],
-                       cwd=ROOT, env=env, check=True)
+        for capacity in sorted({routing_capacity(c) for c in args.cases}):
+            print(f'ROUTING {w} (History capacity {capacity})', flush=True)
+            subprocess.run([sys.executable, '-B', str(Path(__file__).resolve()), '--prepare', str(out), w, str(capacity)],
+                           cwd=ROOT, env=env, check=True)
     rows=[]; pending=[]
     for job in jobs:
         w,r,c,s=job; folder=out/'runs'/w/r/c/f'seed_{s}'
-        trace=out/'routed/traces'/w/'seed_42'/r/'requests.txt'
+        trace=trace_path(out,w,r,c)
         from ace.compiler.compiler_trace import parse_compiler_trace
         from collections import Counter
         parsed=parse_compiler_trace(trace)
@@ -222,7 +239,8 @@ def main():
                 sorted(Counter(parsed.initial_placement.values()).values()) != [14]*16:
             raise ValueError(f'Trace does not match the requested 16-core/224-qubit architecture: {trace}')
         digest=hashlib.sha256(trace.read_bytes()).hexdigest()
-        identity=dict(job=list(job), trace_sha256=digest)
+        identity=dict(job=list(job), trace_sha256=digest,
+                      history_routing_capacity=routing_capacity(c) if r == 'history' else None)
         marker=folder/'validated.json'
         if marker.exists():
             if json.loads(marker.read_text()) != identity: raise ValueError(f'Changed trace/job: {folder}')
@@ -268,6 +286,6 @@ if __name__ == '__main__':
     if '--worker' in sys.argv:
         sys.argv.remove('--worker');worker()
     elif '--prepare' in sys.argv:
-        matrix.OUT=Path(sys.argv[2]);matrix.prepare(sys.argv[3])
+        matrix.OUT=Path(sys.argv[2]);matrix.prepare(sys.argv[3], int(sys.argv[4]) if len(sys.argv)>4 else 4)
     else:
         main()

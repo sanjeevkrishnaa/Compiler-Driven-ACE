@@ -91,3 +91,37 @@ Subset example (use a separate output directory):
 ```powershell
 python -B tools/run_final_matrix.py --workloads ghz --routes xy --cases ODG-4 CD-4 CD-unlimited --output output/final-smoke
 ```
+
+## Capacity-matched eight-slot rerun (2026-11-13)
+
+The final runner now uses cumulative History routing with capacity **4** for
+four-slot cases and **8** for eight-slot cases. XY is independent of this score.
+Mapping still uses the same seed-42 placement with 16 data slots per core;
+the exported 20-slot header is the mapper's 16+4 reference, not runtime memory.
+Physical seed indexing remains at the four-memory reference to preserve the
+previous random-stream convention. Runtime slots and History routing capacity
+are separate settings; both now equal eight in the eight-slot History runs.
+
+Run only ODG/CGP/ACGP/CD with eight slots (240 simulations):
+
+```powershell
+python -B tools/run_final_matrix.py --cases ODG-8 CGP-8 ACGP-8 CD-8 --routes history xy --seeds 60,61,62 --jobs 4 --output output/final-results-224-3seed-history-c8
+```
+
+Use a **new** output directory; never reuse the old C4-routed output. Repeating
+this exact command resumes validated completed jobs and restarts interrupted
+jobs. Do not edit simulator sources during the run. CSV output is
+`output/final-results-224-3seed-history-c8/results.csv`; it records
+`history_routing_capacity` (blank for XY) and `trace_sha256`. The output
+specification and routed-trace manifest also record capacity. C8 traces live
+under `routed-c8`, separately from legacy `routed` (C4).
+
+Keep the old complete CSV. The corrected final matrix will replace only its
+240 eight-slot observations, keyed by workload, route, case and physics seed,
+with these 240 new rows; retain its 240 four-slot rows and 60 CD-unlimited rows.
+CD-unlimited intentionally retains its original C4-routed ideal-resource
+reference; this command does not rerun or relabel it as C8. Its routing is
+therefore different from the corrected eight-slot History results, and it
+cannot be described as a same-trace memory-only comparison against those rows.
+Earlier eight-slot History numbers and their derived plots/sweeps must not be
+presented as capacity-matched C8 evidence. XY traces should remain unchanged.
